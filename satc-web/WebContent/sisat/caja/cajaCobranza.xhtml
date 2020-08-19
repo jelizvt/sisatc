@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<script type="text/javascript">
+		function cobrarEnter(e) {
+		  tecla = (document.all) ? e.keyCode : e.which;
+		  if (tecla==Event.KEY_RETURN) $('incCajaCob:frmResumenCobrar:btnCobrarDeuda').focus();
+		}
+
+		function focusPressEnter(e,id) {
+			  tecla = (document.all) ? e.keyCode : e.which;
+			  if (tecla==Event.KEY_RETURN) $(id).focus();
+		}
+	</script>
+
+	<h:form id="frmFormasPago">
+		<table width="100%" cellpadding="0" cellspacing="0">
+			<tr>
+				<td
+					style="background-color: #cccccc; border-bottom: 1px solid silver;"><h:selectOneRadio
+						value="#{cajaCobranzaManaged.selectedFormasPago}"
+						valueChangeListener="#{cajaCobranzaManaged.changeFormasPago}"
+						style="border-spacing: 5px; border-collapse: separate; font-weight: bold; font-size: 12px;">
+						<f:selectItem itemValue="EF" itemLabel="Efectivo" />
+						<f:selectItem itemValue="VF" itemLabel="Varias formas de pago" />
+						<a4j:support event="onchange"
+							reRender="frmFormasPago,frmSelectedFP,frmResumenCobrar"
+							ajaxSingle="true"></a4j:support>
+					</h:selectOneRadio></td>
+			</tr>
+		</table>
+
+		<div style="padding: 5px; margin-top: 5px;">
+			<table cellpadding="5">
+				<h:panelGroup
+					rendered="#{cajaCobranzaManaged.selectedFormasPago == 'VF'}">
+					<tr>
+						<td>Forma de pago:<span style="color: red;"> *</span></td>
+						<td><rich:comboBox
+								value="#{cajaCobranzaManaged.selectedFormaPago}"
+								valueChangeListener="#{cajaCobranzaManaged.changeFormaPago}"
+								enableManualInput="false"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems value="#{cajaCobranzaManaged.lstFormaPago}" />
+								<a4j:support event="onchange" ajaxSingle="true"
+									reRender="frmFormasPago"
+									oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrorBonoCajam\')' : ''}"></a4j:support>
+							</rich:comboBox></td>
+						<h:panelGroup
+							rendered="#{cajaCobranzaManaged.selectedFormaPagoId==5}">
+							<td>Numero de Cuyes :<span style="color: red;"> *</span>
+							</td>
+							<td><h:inputText id="txtNroCuyes" style="width:30px"
+									size="2" maxlength="2"
+									value="#{cajaCobranzaManaged.numeroCuyes}"
+									onkeypress="focusPressEnter(event,'incCajaCob:frmFormasPago:btnAgregar')"
+									disabled="#{cajaCobranzaManaged.selectedFormaPagoId!=5}">
+									<a4j:support event="onblur"
+										reRender="txtNroCuotas,txtMontoSolesVF"
+										oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrorBonoCajam\')' : ''}"
+										ajaxSingle="true"></a4j:support>
+
+								</h:inputText></td>
+							<td>Numero de Cuotas :<span style="color: red;"> *</span>
+							</td>
+							<!-- 							<td><h:inputText id="txtNroCuotas" style="width:30px" -->
+							<!-- 									size="2" maxlength="2" -->
+							<!-- 									value="#{cajaCobranzaManaged.numeroCuotas}" -->
+							<!-- 									onkeypress="focusPressEnter(event,'incCajaCob:frmFormasPago:btnAgregar')" -->
+							<!-- 									disabled="true"> -->
+							<!-- 									<a4j:support event="onkeyup" reRender="txtMontoSolesVF" -->
+							<!-- 										ajaxSingle="true"></a4j:support> -->
+
+							<!-- 								</h:inputText></td> -->
+							<td><h:inputText id="txtNroCuotas" style="width:30px"
+									size="2" maxlength="2"
+									value="#{cajaCobranzaManaged.numeroCuotas}" disabled="true">
+								</h:inputText></td>
+							<td style="font-weight: bold; font-size: 12px;"><h:outputText
+									value="#{cajaCobranzaManaged.msgDescAplicacionBono}" /></td>
+						</h:panelGroup>
+					</tr>
+					<tr>
+						<td width="90px">Tipo de moneda:<span style="color: red;">
+								*</span></td>
+						<td><rich:comboBox
+								value="#{cajaCobranzaManaged.selectedTipoMoneda}"
+								valueChangeListener="#{cajaCobranzaManaged.changeTipoMoneda}"
+								enableManualInput="false"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems value="#{cajaCobranzaManaged.lstTipoMoneda}" />
+								<a4j:support event="onchange" ajaxSingle="true"
+									reRender="frmFormasPago,frmResumenCobrar"
+									oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrorTipoCambio\')' : ''}"></a4j:support>
+							</rich:comboBox></td>
+						<h:panelGroup
+							rendered="#{cajaCobranzaManaged.selectedTipoMoneda != 'Soles'}">
+							<td style="font-weight: bold; font-size: 12px;">Monto:<span
+								style="color: red;"> *</span></td>
+							<td><h:inputText id="txtMontoVF"
+									value="#{cajaCobranzaManaged.monto}" styleClass="inputMoney"
+									onkeypress="focusPressEnter(event,'incCajaCob:frmFormasPago:btnAgregar')"
+									style="font-size: 16px;">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="en" />
+									<a4j:support event="onkeyup" oncomplete="numberCurrency(this)"
+										reRender="txtMontoSoles,frmResumenCobrar" ajaxSingle="true"></a4j:support>
+								</h:inputText></td>
+							<td>Tipo de cambio:<span style="color: red;"> *</span></td>
+							<td><h:inputText disabled="true"
+									value="#{cajaCobranzaManaged.tipoCambio.valorVenta}"
+									style="width: 60px;" /></td>
+						</h:panelGroup>
+						<td style="font-weight: bold; font-size: 12px;">Monto
+							(Soles):<span style="color: red;"> *</span>
+						</td>
+						<td><h:inputText id="txtMontoSolesVF"
+								value="#{cajaCobranzaManaged.montoSoles}"
+								onkeypress="focusPressEnter(event,'incCajaCob:frmFormasPago:btnAgregar')"
+								disabled="#{(cajaCobranzaManaged.selectedTipoMoneda != 'Soles') or (cajaCobranzaManaged.selectedFormaPagoId==5)}"
+								styleClass="inputMoney" style="font-size: 16px;">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="en" />
+								<a4j:support event="onkeyup" oncomplete="numberCurrency(this)"
+									reRender="frmResumenCobrar" ajaxSingle="true"></a4j:support>
+							</h:inputText></td>
+					</tr>
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{cajaCobranzaManaged.selectedFormasPago == 'EF'}">
+					<tr>
+						<td width="90px">Tipo de moneda:<span style="color: red;">
+								*</span></td>
+						<td><rich:comboBox
+								value="#{cajaCobranzaManaged.selectedTipoMoneda}"
+								valueChangeListener="#{cajaCobranzaManaged.changeTipoMoneda}"
+								enableManualInput="false"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems value="#{cajaCobranzaManaged.lstTipoMoneda}" />
+								<a4j:support event="onchange" ajaxSingle="true"
+									reRender="frmFormasPago,frmResumenCobrar"
+									oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrorTipoCambio\')' : ''}"></a4j:support>
+							</rich:comboBox></td>
+						<h:panelGroup
+							rendered="#{cajaCobranzaManaged.selectedTipoMoneda != 'Soles'}">
+							<td style="font-weight: bold; font-size: 12px;">Monto:<span
+								style="color: red;"> *</span></td>
+							<td><h:inputText id="txtMonto"
+									value="#{cajaCobranzaManaged.monto}" styleClass="inputMoney"
+									onkeypress="focusPressEnter(event,'incCajaCob:frmResumenCobrar:btnCobrarDeuda')"
+									style="font-size: 16px;">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="en" />
+									<a4j:support event="onkeyup" oncomplete="numberCurrency(this)"
+										reRender="txtMontoSoles,frmResumenCobrar" ajaxSingle="true"></a4j:support>
+								</h:inputText></td>
+							<td>Tipo de cambio:<span style="color: red;"> *</span></td>
+							<td><h:inputText disabled="true"
+									value="#{cajaCobranzaManaged.tipoCambio.valorVenta}"
+									style="width: 60px;" /></td>
+						</h:panelGroup>
+						<td style="font-weight: bold; font-size: 12px;">Monto
+							(Soles):<span style="color: red;"> *</span>
+						</td>
+						<td><h:inputText id="txtMontoSoles"
+								value="#{cajaCobranzaManaged.montoSoles}"
+								onkeypress="focusPressEnter(event,'incCajaCob:frmResumenCobrar:btnCobrarDeuda')"
+								disabled="#{(cajaCobranzaManaged.selectedTipoMoneda != 'Soles') or (cajaCobranzaManaged.selectedFormaPagoId==5)}"
+								styleClass="inputMoney" style="font-size: 16px;">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="en" />
+								<a4j:support event="onkeyup" oncomplete="numberCurrency(this)"
+									reRender="frmResumenCobrar" ajaxSingle="true"></a4j:support>
+							</h:inputText></td>
+					</tr>
+				</h:panelGroup>
+				<h:panelGroup
+					rendered="#{(cajaCobranzaManaged.selectedFormasPago == 'VF') and (cajaCobranzaManaged.selectedFormaPagoId != 1) and (cajaCobranzaManaged.selectedFormaPagoId != 5)}">
+					<tr>
+						<h:panelGroup
+							rendered="#{cajaCobranzaManaged.selectedFormaPagoId != 4}">
+							<td>Tipo de tarjeta:<span style="color: red;"> *</span></td>
+							<td><rich:comboBox
+									value="#{cajaCobranzaManaged.selectedTipoTarjeta}"
+									defaultLabel="Seleccione"
+									onkeypress="return showListCbo(this,event)"
+									onblur="validaInputCbo(this)">
+									<f:selectItems value="#{cajaCobranzaManaged.lstTipoTarjeta}" />
+								</rich:comboBox></td>
+						</h:panelGroup>
+						<td>Banco:<span style="color: red;"> *</span></td>
+						<td><rich:comboBox
+								value="#{cajaCobranzaManaged.selectedBanco}"
+								defaultLabel="Seleccione"
+								onkeypress="return showListCbo(this,event)"
+								onblur="validaInputCbo(this)">
+								<f:selectItems value="#{cajaCobranzaManaged.lstBanco}" />
+							</rich:comboBox></td>
+						<td>Número #{cajaCobranzaManaged.labelTarjetaCheque}:<span
+							style="color: red;"> *</span></td>
+						<td><h:inputText value="#{cajaCobranzaManaged.numTarCheq}"
+								maxlength="#{cajaCobranzaManaged.labelTarjetaCheque=='cheque' ? 30 : 4}"
+								onkeypress="#{cajaCobranzaManaged.labelTarjetaCheque=='cheque' ?  '' : 'return validaEnteroPositivo(event)'}" /></td>
+					</tr>
+				</h:panelGroup>
+				<tr>
+					<td><h:panelGroup
+							rendered="#{cajaCobranzaManaged.selectedFormasPago=='VF'}">Observación:</h:panelGroup></td>
+					<td colspan="7"><h:panelGroup
+							rendered="#{cajaCobranzaManaged.selectedFormasPago=='VF'}">
+							<h:inputText value="#{cajaCobranzaManaged.observacion}"
+								style="width: 100%;" />
+						</h:panelGroup></td>
+				</tr>
+			</table>
+		</div>
+
+		<h:panelGroup
+			rendered="#{cajaCobranzaManaged.selectedFormasPago == 'VF'}"
+			style="padding: 10px;">
+			<a4j:commandButton id="btnAgregar" value="Agregar"
+				status="ajaxStatus" action="#{cajaCobranzaManaged.agregarPago}"
+				oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}"
+				reRender="frmSelectedFP,frmResumenCobrar,frmFormasPago"
+				style="width: 80px;" focus="txtMontoSolesVF">
+			</a4j:commandButton>
+		</h:panelGroup>
+
+	</h:form>
+	<h:form id="frmSelectedFP">
+		<h:panelGroup
+			rendered="#{cajaCobranzaManaged.selectedFormasPago == 'VF'}">
+			<div style="padding: 10px;">
+				<rich:extendedDataTable
+					value="#{cajaCobranzaManaged.lstPagodetalle}" var="item"
+					enableContextMenu="false" height="150px">
+					<rich:column width="100px">
+						<f:facet name="header">Forma de pago</f:facet>
+						<h:outputText value="#{item.formaPago}" />
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">Tipo de moneda</f:facet>
+						<h:outputText value="#{item.tipoMoneda}" />
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">Monto otra mon.</f:facet>
+						<h:outputText value="#{item.monto}" />
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">Tipo de cambio</f:facet>
+						<h:outputText value="#{item.tipoCambio}" />
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">Monto (Soles)</f:facet>
+						<h:outputText value="#{item.montoTotalSoles}" />
+					</rich:column>
+					<rich:column width="110px">
+						<f:facet name="header">Banco</f:facet>
+						<h:outputText value="#{item.banco}" />
+					</rich:column>
+					<rich:column width="110px">
+						<f:facet name="header">Tipo de tarjeta</f:facet>
+						<h:outputText value="#{item.tipoTarjeta}" />
+					</rich:column>
+					<rich:column width="110px">
+						<f:facet name="header">Nro Tarjeta/Cheque</f:facet>
+						<h:outputText value="#{item.nroCheque}" />
+					</rich:column>
+					<rich:column>
+						<f:facet name="header">Observación</f:facet>
+						<h:outputText value="#{item.observacion}" />
+					</rich:column>
+					<rich:column width="60px" style="text-align: center">
+						<a4j:commandButton title="#{msg['gn.eliminar']}"
+							status="ajaxStatus"
+							actionListener="#{cajaCobranzaManaged.removeRowDetallePago}"
+							immediate="true" reRender="frmSelectedFP,frmResumenCobrar"
+							image="/images/remove.png" style="width: 16px; height: 16px;"></a4j:commandButton>
+					</rich:column>
+				</rich:extendedDataTable>
+			</div>
+		</h:panelGroup>
+	</h:form>
+	<h:form id="frmResumenCobrar">
+		<div style="padding: 10px;">
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<table>
+								<tr>
+									<td width="95px" style="font-size: 9px">Deuda Sin
+										Descuento:</td>
+									<td align="right"><h:outputLabel
+											value="#{cajaCobranzaManaged.montoSinDescuento}"
+											disabled="true" styleClass="inputMoney"
+											style="font-size: 12px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:outputLabel></td>
+								</tr>
+								<tr>
+									<td style="font-size: 10px">Descuento:</td>
+									<td><h:inputText
+											value="#{cajaCobranzaManaged.montoDescuento}" disabled="true"
+											styleClass="inputMoney"
+											style="font-size: 13px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:inputText></td>
+								</tr>
+								<tr>
+									<td width="95px">Deuda:</td>
+									<td><h:inputText
+											value="#{cajaCobranzaManaged.contrib.montoCobrar}"
+											disabled="true" styleClass="inputMoney"
+											style="font-size: 16px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:inputText></td>
+								</tr>
+								<tr>
+									<td>Ingresado:</td>
+									<td><h:inputText
+											value="#{cajaCobranzaManaged.montoIngresado}" disabled="true"
+											styleClass="inputMoney"
+											style="font-size: 16px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:inputText></td>
+								</tr>
+								<tr>
+									<td>#{cajaCobranzaManaged.montoVuelto == null ? 'Resta' :
+										'Vuelto'}:</td>
+									<td><h:inputText value="#{cajaCobranzaManaged.montoResta}"
+											rendered="#{cajaCobranzaManaged.montoVuelto == null}"
+											disabled="true" styleClass="inputMoney"
+											style="font-size: 16px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:inputText> <h:inputText value="#{cajaCobranzaManaged.montoVuelto}"
+											rendered="#{cajaCobranzaManaged.montoVuelto != null}"
+											disabled="true" styleClass="inputMoney"
+											style="font-size: 16px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:inputText></td>
+								</tr>
+							</table>
+						</td>
+						<td><h:panelGroup>
+								<table>
+									<tr>
+										<td style="padding-left: 50px;">Referencia:<span
+											style="color: red;"> *</span></td>
+										<td><h:inputTextarea style="width: 200px;"
+												required="true"
+												requiredMessage="Ingrese alguna referencia como el DNI"
+												value="#{cajaCobranzaManaged.referencia}" /></td>
+									</tr>
+								</table>
+							</h:panelGroup></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div style="padding: 10px; margin-bottom: 10px;">
+			<script type="text/javascript">												
+				function openImprimir(){					
+					 window.open('../sisat/caja/imprimirRecibo.jsf','Recibo de Pago', 'height=500,width=500,top=150, left=150');					
+				}        
+			</script>
+			<a4j:commandButton id="btnCobrarDeuda" value="Cobrar deuda"
+				action="#{cajaCobranzaManaged.cobrarDeuda}"
+				reRender="mpResCobrarDeu,frmCtaCte,tblDeudaCobrar"
+				status="ajaxStatus"
+				oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')':'openImprimir();Richfaces.hideModalPanel(\'mpResCobrarDeu\');Richfaces.hideModalPanel(\'modalCobrar\');'}"
+				style="width: 150px;">
+			</a4j:commandButton>
+
+			<a4j:commandButton value="Cancelar"
+				oncomplete="Richfaces.hideModalPanel('modalCobrar')"
+				style="width: 150px; margin-left: 4px;">
+			</a4j:commandButton>
+		</div>
+	</h:form>
+
+	<rich:modalPanel id="mpErrorTipoCambio" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Advertencia" />
+		</f:facet>
+		<h:form id="frmErrorTipoCambio">
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton value="#{msg['gn.aceptar']}" immediate="true"
+					status="ajaxStatus"
+					oncomplete="Richfaces.hideModalPanel('mpErrorTipoCambio')"
+					style="width: 80px;" ajaxSingle="true" reRender="frmFormasPago">
+					<f:setPropertyActionListener value="Soles"
+						target="#{cajaCobranzaManaged.selectedTipoMoneda}" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+
+	<rich:modalPanel id="mpErrorBonoCajam" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Advertencia" />
+		</f:facet>
+		<h:form id="frmErrorBonoCajam">
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton value="#{msg['gn.aceptar']}" immediate="true"
+					status="ajaxStatus"
+					oncomplete="Richfaces.hideModalPanel('mpErrorBonoCajam')"
+					style="width: 80px;" ajaxSingle="true" reRender="frmFormasPago">
+					<f:setPropertyActionListener value="Efectivo"
+						target="#{cajaCobranzaManaged.selectedFormaPago}" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mpResCobrarDeu" width="250" height="120">
+		<f:facet name="header">
+			<h:outputText value="Mensaje" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideMpResCobDeu"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpResCobrarDeu"
+					attachTo="hideMpResCobDeu" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal == 0 ? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton value="Aceptar" status="ajaxStatus"
+					rendered="#{cajaCobranzaManaged.correct}"
+					onclick="Richfaces.hideModalPanel('mpResCobrarDeu');Richfaces.hideModalPanel('modalCobrar');window.open('../sisat/caja/imprimirRecibo.jsf','Recibo de Pago', 'height=500,width=500,top=150, left=150,status=yes,toolbar=no,menubar=no,location=no')"
+					reRender="frmCtaCte,tblDeudaCobrar"></a4j:commandButton>
+				<a4j:commandButton value="Aceptar" status="ajaxStatus"
+					rendered="#{!cajaCobranzaManaged.correct}"
+					onclick="Richfaces.hideModalPanel('mpResCobrarDeu')"></a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

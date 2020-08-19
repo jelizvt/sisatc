@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:form id="formReporteControlRequ">
+	<style>
+.col1 {
+	vertical-align: top;
+	width: 480px;
+}
+
+.col2 {
+	vertical-align: top;
+	width: 260px;
+}
+
+.col3 {
+	vertical-align: top;
+	width: 260px;
+}
+</style>
+	<rich:panel id="idPanelParam">
+		<f:facet name="header">REPORTE</f:facet>
+		<h:outputText value="Seleccione una opción:" />
+		<h:panelGrid columns="12">
+			<h:outputText value="Por año:" />
+			<rich:spacer width="10" height="0"/>
+			<a4j:outputPanel id="checkAnio" layout="block">
+				<h:selectBooleanCheckbox 
+					value="#{reporteControlFiscalizacionIP.disabledFecha}" disabled="#{reporteControlFiscalizacionIP.disabledAnio}">
+					<a4j:support event="onclick" reRender="calendarIni,calendarFin,checkFec" />
+<!-- 						<a4j:support event="onclick" reRender="inputIni,inputFin,checkAnio" /> -->
+				</h:selectBooleanCheckbox>
+			</a4j:outputPanel><rich:spacer width="16" height="0"/>
+			<h:outputText value="Entre:" />
+			<a4j:outputPanel id="inputIni" layout="block">
+					<h:inputText maxlength="4" style=" width:40px;" styleClass="prueba"
+						value="#{reporteControlFiscalizacionIP.anioInicio}"
+						disabled="#{reporteControlFiscalizacionIP.disabledAnio}"
+						onkeypress="return numbersonly(this.value,event)"
+						validatorMessage="Anio no es valido">
+					</h:inputText><span class="requiredField">*</span>
+			</a4j:outputPanel><rich:spacer width="96" height="0"/>
+			<h:outputText value="Y:" />
+			<a4j:outputPanel id="inputFin" layout="block">
+					<h:inputText maxlength="4" style=" width:40px;"
+						disabled="#{reporteControlFiscalizacionIP.disabledAnio}"
+						onkeypress="return numbersonly(this.value,event)"
+						value="#{reporteControlFiscalizacionIP.anioFin}"
+						validatorMessage="Anio no es valido">
+					</h:inputText><span class="requiredField">*</span>
+			</a4j:outputPanel>
+		</h:panelGrid>
+			<h:panelGrid columns="12">
+			<h:outputText value="Por fechas:" />
+			<a4j:outputPanel id="checkFec" layout="block">
+				<h:selectBooleanCheckbox
+					value="#{reporteControlFiscalizacionIP.disabledAnio}" disabled="#{reporteControlFiscalizacionIP.disabledFecha}">
+					<a4j:support event="onclick" reRender="inputIni,inputFin,checkAnio" />
+<!-- 						<a4j:support event="onclick" reRender="calendarIni,calendarFin" /> -->
+				</h:selectBooleanCheckbox>
+			</a4j:outputPanel>
+			<h:outputText value="Fec.Inicio:" />
+			<a4j:outputPanel id="calendarIni" layout="block">
+				<rich:calendar locale="#{msg['param.localedate']}"
+					datePattern="#{msg['param.datepattern']}"
+					timeZone="#{aplicationManaged.timeZone}" enableManualInput="true"
+					inputClass="maskDate"
+					value="#{reporteControlFiscalizacionIP.fechaInicio}"
+					disabled="#{reporteControlFiscalizacionIP.disabledFecha}"
+					required="#{reporteControlFiscalizacionIP.disabledFecha}" requiredMessage="Ingrese una fecha de inicio" 
+					inputStyle="width:90px">
+				</rich:calendar>
+				<rich:jQuery selector=".maskDate" query="mask('99/99/9999')" timing="onload" />
+				
+			</a4j:outputPanel>
+			<span class="requiredField">*</span>
+			<h:outputText value="Fec.Fin:" />
+			<a4j:outputPanel id="calendarFin" layout="block">
+				<rich:calendar locale="#{msg['param.localedate']}"
+					datePattern="#{msg['param.datepattern']}"
+					timeZone="#{aplicationManaged.timeZone}" enableManualInput="true"
+					inputClass="maskDate"
+					value="#{reporteControlFiscalizacionIP.fechaFin}"
+					disabled="#{reporteControlFiscalizacionIP.disabledFecha}"
+					requiredMessage="Ingrese una fecha fin" 
+					inputStyle="width:90px">
+				</rich:calendar>
+				<rich:jQuery selector=".maskDate" query="mask('99/99/9999')" timing="onload" />
+				
+			</a4j:outputPanel>
+			<span class="requiredField">*</span>
+		</h:panelGrid>
+	</rich:panel>
+	 <rich:spacer width="1" height="5"/>
+	<rich:panel id="idPanelLista">
+		<h:panelGrid columns="4">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Reporte de Control de Expedientes - Imp.Predial:">
+				</h:outputLabel>
+			</h:panelGrid>
+			<rich:spacer width="41" height="0"/>
+			<h:panelGrid columns="1">
+				<a4j:commandButton id="id_buttona"
+					action="#{reporteControlFiscalizacionIP.previewDJ}" value="Generar"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.LAXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+				</a4j:commandButton>
+			</h:panelGrid>
+			<h:commandLink id="linkIdAXLS" styleClass="LAXLS" value="s1"
+				style="display: none;"
+				action="#{reporteControlFiscalizacionIP.generarReporte}" />
+		</h:panelGrid>
+
+		<h:panelGrid columns="4">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Reporte de Resultados de Fiscalización - Imp.Predial:">
+				</h:outputLabel>
+			</h:panelGrid>
+			<rich:spacer width="20" height="0"/>
+			<h:panelGrid columns="1">
+				<a4j:commandButton id="id_buttonBI"
+					action="#{reporteControlFiscalizacionIP.previewDJ}" value="Generar"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.biXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+				</a4j:commandButton>
+			</h:panelGrid>
+			<h:commandLink id="linkIdXLS" styleClass="biXLS" value="s1"
+				style="display: none;"
+				action="#{reporteControlFiscalizacionIP.generarReporteBI}" />
+		</h:panelGrid>
+
+		<h:panelGrid columns="4">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Predio(s) Pendiente(s) de Inscripción/Descargo:">
+				</h:outputLabel>
+			</h:panelGrid>
+			<rich:spacer width="46" height="0"/>
+			<h:panelGrid columns="1">
+				<a4j:commandButton
+					action="#{reporteControlFiscalizacionIP.previewDJ}" value="Generar"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.reporte3XLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+				</a4j:commandButton>
+			</h:panelGrid>
+			<h:commandLink styleClass="reporte3XLS" value="s1"
+				style="display: none;"
+				action="#{reporteControlFiscalizacionIP.generarReporteDescargo}" />
+		</h:panelGrid>
+	</rich:panel>
+
+</h:form>
+</html>

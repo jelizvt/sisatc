@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<script type="text/javascript">
+		function cobrarEnter(e) {
+		  tecla = (document.all) ? e.keyCode : e.which;
+		  if (tecla==Event.KEY_RETURN) $('incCajaCobPap:frmResumenCobrar:btnCobrarDeuda').focus();
+		}
+	</script>
+	<div style="max-height: 430px; overflow: auto;">
+		<h:form id="formCajaCobranzaPapeleta">
+			<a4j:outputPanel id="panelMensajePapeleta"
+				rendered="#{not empty cajaCobranzaPapeletaManaged.lstResumenDeudasCobranzaCoactivaDTOs}">
+				<div
+					style="background-color: #FFFFAA; color: #FF5555; padding-left: 10px;">
+					La(s) papeleta(s) seleccionada(s) se encuentran en cobranza
+					coactiva. <br /> <a
+						style="font-size: 10pt; font-weight: bold; color: #FF5555;"> <ui:repeat
+							var="iterPal"
+							value="#{cajaCobranzaPapeletaManaged.lstResumenDeudasCobranzaCoactivaDTOs}">
+							<h:outputText
+								value="#{iterPal.anho} - #{iterPal.conceptoDescripcion} - #{iterPal.nroPapeleta}" />
+							<br />
+						</ui:repeat>
+					</a>
+				</div>
+			</a4j:outputPanel>
+			<a4j:outputPanel id="panelMensajeAtencionPapeleta"
+				rendered="#{not empty cajaCobranzaPapeletaManaged.listUsuariosAtencion}">
+				<div
+					style="background-color: #FF5555; color: #FFFFAA; padding-left: 10px;">
+					La(s) papeleta(s) seleccionada(s) estan siendo atendidas por
+					el(los) usuario(s):. <br /> <a
+						style="font-size: 10pt; font-weight: bold; color: #FFFFAA;"> <ui:repeat
+							var="iterUsu"
+							value="#{cajaCobranzaPapeletaManaged.listUsuariosAtencion}">
+							<h:outputText value=" - #{iterUsu}" />
+							<br />
+						</ui:repeat>
+					</a>
+				</div>
+			</a4j:outputPanel>
+			<table width="100%" cellpadding="0" cellspacing="0">
+				<tr>
+					<td
+						style="background-color: #cccccc; border-bottom: 1px solid silver;"><h:selectOneRadio
+							value="#{cajaCobranzaPapeletaManaged.selectedFormasPago}"
+							valueChangeListener="#{cajaCobranzaPapeletaManaged.changeFormasPago}"
+							style="border-spacing: 5px; border-collapse: separate; font-weight: bold; font-size: 12px;">
+							<f:selectItem itemValue="EF" itemLabel="Efectivo" />
+							<f:selectItem itemValue="VF" itemLabel="Varias formas de pago" />
+							<a4j:support event="onchange"
+								reRender="formCajaCobranzaPapeleta,frmSelectedFP,frmResumenCobrar"
+								ajaxSingle="true"></a4j:support>
+						</h:selectOneRadio></td>
+				</tr>
+			</table>
+			<div style="padding: 5px; margin-top: 5px;">
+				<rich:dataTable id="id_papeletas" var="record"
+					value="#{cajaCobranzaPapeletaManaged.listPapeletas}" width="100%">
+					<rich:column id="l2" width="95px" style="text-align: center;">
+						<f:facet name="header">Fecha Infraccion</f:facet>
+						<h:outputText value="#{record.fechaInfraccion}">
+							<f:convertDateTime locale="#{msg['param.localedate']}"
+								timeZone="#{aplicationManaged.timeZone}"
+								pattern="#{msg['param.datepattern']}" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="40px">
+						<f:facet name="header">Infraccion</f:facet>
+						<div align="center">
+							<h:outputText value="#{record.descInfraccion}" />
+						</div>
+					</rich:column>
+					<rich:column width="40px">
+						<f:facet name="header">Monto </f:facet>
+						<div align="right">
+							<h:outputText value="#{record.montoSinDescuento}" />
+						</div>
+					</rich:column>
+					<rich:column width="40px">
+						<f:facet name="header">Monto A Pagar</f:facet>
+						<div align="right">
+							<h:outputText value="#{record.montoConDescuento}" />
+						</div>
+					</rich:column>
+					<rich:column id="l3" width="110px">
+						<f:facet name="header">Nro Papeleta</f:facet>
+						<div align="center">
+							<h:outputText value="#{record.nroPapeleta}" />
+						</div>
+					</rich:column>
+					<rich:column id="l4" width="90px">
+						<f:facet name="header">Placa </f:facet>
+						<div align="center">
+							<h:outputText value="#{record.placa}" />
+						</div>
+					</rich:column>
+					<rich:column width="150px">
+						<f:facet name="header">Nro Res.</f:facet>
+						<div align="center">
+							<h:outputText value="#{record.nroResolucion}" />
+						</div>
+					</rich:column>
+					<rich:column width="75px">
+						<f:facet name="header">Fecha Notifi.</f:facet>
+						<div align="center">
+							<h:outputText value="#{record.fechaNotificacion}" />
+						</div>
+					</rich:column>
+					<rich:column id="l5" width="380px">
+						<f:facet name="header">Nombre Infractor</f:facet>
+						<h:outputText value="#{record.infractor}" />
+					</rich:column>
+				</rich:dataTable>
+			</div>
+
+			<a4j:outputPanel
+				rendered="#{not empty cajaCobranzaPapeletaManaged.listResumenObligacionDTOs}">
+				<div style="padding-left: 5px;">
+					<rich:dataTable
+						value="#{cajaCobranzaPapeletaManaged.listResumenObligacionDTOs}"
+						var="itemResumen">
+						<rich:column>
+							<f:facet name="header"> Concepto</f:facet>
+							<h:panelGroup layout="block" style="text-align: center;">
+								<h:outputText value="#{itemResumen.conceptoAsString}" />
+							</h:panelGroup>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"> Monto</f:facet>
+							<h:panelGroup layout="block"
+								style="width:70px;text-align: right;">
+								<h:outputText value="#{itemResumen.monto}" />
+							</h:panelGroup>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"> Fecha liquidación</f:facet>
+							<h:panelGroup layout="block" style="text-align: center;">
+								<h:outputText value="#{itemResumen.fechaLiquidacion}">
+									<f:convertDateTime locale="#{msg['param.localedate']}"
+										timeZone="#{aplicationManaged.timeZone}"
+										pattern="#{msg['param.datepattern']}" />
+								</h:outputText>
+							</h:panelGroup>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"> Nro Papeleta</f:facet>
+							<h:panelGroup layout="block" style="text-align: center;">
+								<h:outputText value="#{itemResumen.nroPapeleta}" />
+							</h:panelGroup>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"> Nro Expediente</f:facet>
+							<h:panelGroup layout="block">
+								<h:outputText value="#{itemResumen.nroValor}" />
+							</h:panelGroup>
+						</rich:column>
+					</rich:dataTable>
+				</div>
+			</a4j:outputPanel>
+
+			<div style="padding: 5px; margin-top: 5px;">
+				<table cellpadding="5">
+					<h:panelGroup
+						rendered="#{cajaCobranzaPapeletaManaged.selectedFormasPago == 'VF'}">
+						<tr>
+							<td>Forma de pago:<span style="color: red;"> *</span></td>
+							<td colspan="7"><rich:comboBox
+									value="#{cajaCobranzaPapeletaManaged.selectedFormaPago}"
+									valueChangeListener="#{cajaCobranzaPapeletaManaged.changeFormaPago}"
+									enableManualInput="false"
+									onkeypress="return showListCbo(this,event);"
+									onblur="validaInputCbo(this)">
+									<f:selectItems
+										value="#{cajaCobranzaPapeletaManaged.lstFormaPago}" />
+									<a4j:support event="onchange"
+										reRender="formCajaCobranzaPapeleta" ajaxSingle="true"></a4j:support>
+								</rich:comboBox></td>
+						</tr>
+					</h:panelGroup>
+					<tr>
+						<td width="90px">Tipo de moneda:<span style="color: red;">
+								*</span></td>
+						<td><rich:comboBox
+								value="#{cajaCobranzaPapeletaManaged.selectedTipoMoneda}"
+								valueChangeListener="#{cajaCobranzaPapeletaManaged.changeTipoMoneda}"
+								enableManualInput="false"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems
+									value="#{cajaCobranzaPapeletaManaged.lstTipoMoneda}" />
+								<a4j:support event="onchange" ajaxSingle="true"
+									reRender="formCajaCobranzaPapeleta,frmResumenCobrar"
+									oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrorTipoCambio\')' : ''}"></a4j:support>
+							</rich:comboBox></td>
+						<h:panelGroup
+							rendered="#{cajaCobranzaPapeletaManaged.selectedTipoMoneda != 'Soles'}">
+							<td style="font-weight: bold; font-size: 12px;">Monto:<span
+								style="color: red;"> *</span></td>
+							<td><h:inputText id="txtMonto"
+									value="#{cajaCobranzaPapeletaManaged.monto}"
+									styleClass="inputMoney" style="font-size: 16px;">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="en" />
+									<a4j:support event="onkeyup" oncomplete="numberCurrency(this)"
+										reRender="txtMontoSoles,frmResumenCobrar" ajaxSingle="true"></a4j:support>
+								</h:inputText></td>
+							<td>Tipo de cambio:<span style="color: red;"> *</span></td>
+							<td><h:inputText disabled="true"
+									value="#{cajaCobranzaPapeletaManaged.tipoCambio.valorVenta}"
+									style="width: 60px;" /></td>
+						</h:panelGroup>
+						<td style="font-weight: bold; font-size: 12px;">Monto
+							(Soles):<span style="color: red;"> *</span>
+						</td>
+						<td><h:inputText id="txtMontoSoles"
+								value="#{cajaCobranzaPapeletaManaged.montoSoles}"
+								onkeypress="cobrarEnter(event)"
+								disabled="#{(cajaCobranzaPapeletaManaged.selectedTipoMoneda != 'Soles') or (cajaCobranzaPapeletaManaged.selectedFormaPagoId==5)}"
+								styleClass="inputMoney" style="font-size: 16px;">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="en" />
+								<a4j:support event="onkeyup" oncomplete="numberCurrency(this)"
+									reRender="frmResumenCobrar" ajaxSingle="true"></a4j:support>
+							</h:inputText></td>
+					</tr>
+					<h:panelGroup
+						rendered="#{(cajaCobranzaPapeletaManaged.selectedFormasPago == 'VF') and (cajaCobranzaPapeletaManaged.selectedFormaPagoId != 1) and (cajaCobranzaPapeletaManaged.selectedFormaPagoId != 5)}">
+						<tr>
+							<h:panelGroup
+								rendered="#{cajaCobranzaPapeletaManaged.selectedFormaPagoId != 4}">
+								<td>Tipo de tarjeta:<span style="color: red;"> *</span></td>
+								<td><rich:comboBox
+										value="#{cajaCobranzaPapeletaManaged.selectedTipoTarjeta}"
+										defaultLabel="Seleccione"
+										onkeypress="return showListCbo(this,event);"
+										onblur="validaInputCbo(this)">
+										<f:selectItems
+											value="#{cajaCobranzaPapeletaManaged.lstTipoTarjeta}" />
+									</rich:comboBox></td>
+							</h:panelGroup>
+							<td>Banco:<span style="color: red;"> *</span></td>
+							<td><rich:comboBox
+									value="#{cajaCobranzaPapeletaManaged.selectedBanco}"
+									defaultLabel="Seleccione"
+									onkeypress="return showListCbo(this,event)"
+									onblur="validaInputCbo(this)">
+									<f:selectItems value="#{cajaCobranzaPapeletaManaged.lstBanco}" />
+								</rich:comboBox></td>
+							<td>Número
+								#{cajaCobranzaPapeletaManaged.labelTarjetaCheque}:<span
+								style="color: red;"> *</span>
+							</td>
+							<td><h:inputText
+									value="#{cajaCobranzaPapeletaManaged.numTarCheq}"
+									maxlength="#{cajaCobranzaPapeletaManaged.labelTarjetaCheque=='cheque' ? 30 : 4}"
+									onkeypress="#{cajaCobranzaPapeletaManaged.labelTarjetaCheque=='cheque' ?  '' : 'return validaEnteroPositivo(event)'}" /></td>
+						</tr>
+					</h:panelGroup>
+					<tr>
+						<td><h:panelGroup
+								rendered="#{cajaCobranzaPapeletaManaged.selectedFormasPago=='VF'}">Observación:</h:panelGroup></td>
+						<td colspan="7"><h:panelGroup
+								rendered="#{cajaCobranzaPapeletaManaged.selectedFormasPago=='VF'}">
+								<h:inputText value="#{cajaCobranzaPapeletaManaged.observacion}"
+									style="width: 100%;" />
+							</h:panelGroup></td>
+					</tr>
+				</table>
+			</div>
+			<h:panelGroup
+				rendered="#{cajaCobranzaPapeletaManaged.selectedFormasPago == 'VF'}"
+				style="padding: 10px;">
+				<a4j:commandButton value="Agregar" status="ajaxStatus"
+					action="#{cajaCobranzaPapeletaManaged.agregarPago}"
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}"
+					reRender="frmSelectedFP,frmResumenCobrar" style="width: 80px;"></a4j:commandButton>
+			</h:panelGroup>
+		</h:form>
+		<h:form id="frmSelectedFP">
+			<h:panelGroup
+				rendered="#{cajaCobranzaPapeletaManaged.selectedFormasPago == 'VF'}">
+				<div style="padding: 10px;">
+					<rich:extendedDataTable
+						value="#{cajaCobranzaPapeletaManaged.lstPagodetalle}" var="item"
+						enableContextMenu="false" height="150px">
+						<rich:column width="100px">
+							<f:facet name="header">Forma de pago</f:facet>
+							<h:outputText value="#{item.formaPago}" />
+						</rich:column>
+						<rich:column width="100px">
+							<f:facet name="header">Tipo de moneda</f:facet>
+							<h:outputText value="#{item.tipoMoneda}" />
+						</rich:column>
+						<rich:column width="100px">
+							<f:facet name="header">Monto otra mon.</f:facet>
+							<h:outputText value="#{item.monto}" />
+						</rich:column>
+						<rich:column width="100px">
+							<f:facet name="header">Tipo de cambio</f:facet>
+							<h:outputText value="#{item.tipoCambio}" />
+						</rich:column>
+						<rich:column width="100px">
+							<f:facet name="header">Monto (Soles)</f:facet>
+							<h:outputText value="#{item.montoTotalSoles}" />
+						</rich:column>
+						<rich:column width="110px">
+							<f:facet name="header">Banco</f:facet>
+							<h:outputText value="#{item.banco}" />
+						</rich:column>
+						<rich:column width="110px">
+							<f:facet name="header">Tipo de tarjeta</f:facet>
+							<h:outputText value="#{item.tipoTarjeta}" />
+						</rich:column>
+						<rich:column width="110px">
+							<f:facet name="header">Nro Tarjeta/Cheque</f:facet>
+							<h:outputText value="#{item.nroCheque}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">Observación</f:facet>
+							<h:outputText value="#{item.observacion}" />
+						</rich:column>
+						<rich:column width="60px" style="text-align: center">
+							<a4j:commandButton title="#{msg['gn.eliminar']}"
+								status="ajaxStatus"
+								actionListener="#{cajaCobranzaPapeletaManaged.removeRowDetallePago}"
+								immediate="true" reRender="frmSelectedFP,frmResumenCobrar"
+								image="/images/remove.png" style="width: 16px; height: 16px;"></a4j:commandButton>
+						</rich:column>
+					</rich:extendedDataTable>
+				</div>
+			</h:panelGroup>
+		</h:form>
+		<h:form id="frmResumenCobrar">
+			<div style="padding: 10px;">
+				<table>
+					<tbody>
+						<tr>
+							<td>
+								<table>
+									<tr>
+										<td width="95px" style="font-size: 9px">Deuda Sin
+											Descuento:</td>
+										<td align="right"><h:outputLabel
+												value="#{cajaCobranzaPapeletaManaged.montoSinDescuento}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 12px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:outputLabel></td>
+									</tr>
+									<tr>
+										<td style="font-size: 10px">Descuento:</td>
+										<td><h:inputText
+												value="#{cajaCobranzaPapeletaManaged.montoDescuento}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 13px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText></td>
+									</tr>
+									<tr>
+										<td width="95px">Deuda:</td>
+										<td><h:inputText
+												value="#{cajaCobranzaPapeletaManaged.montoACobrar}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 16px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText></td>
+									</tr>
+									<tr>
+										<td>Ingresado:</td>
+										<td><h:inputText
+												value="#{cajaCobranzaPapeletaManaged.montoIngresado}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 16px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText></td>
+									</tr>
+									<tr>
+										<td>#{cajaCobranzaPapeletaManaged.montoVuelto == null ?
+											'Resta' : 'Vuelto'}:</td>
+										<td><h:inputText
+												value="#{cajaCobranzaPapeletaManaged.montoResta}"
+												rendered="#{cajaCobranzaPapeletaManaged.montoVuelto == null}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 16px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText> <h:inputText
+												value="#{cajaCobranzaPapeletaManaged.montoVuelto}"
+												rendered="#{cajaCobranzaPapeletaManaged.montoVuelto != null}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 16px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText></td>
+									</tr>
+								</table>
+							</td>
+							<td><h:panelGroup>
+									<table>
+										<tr>
+											<td style="padding-left: 50px;">Referencia:<span
+												style="color: red;"> *</span></td>
+											<td><h:inputTextarea style="width: 200px;"
+													required="true"
+													requiredMessage="Ingrese alguna referencia como el DNI"
+													value="#{cajaCobranzaPapeletaManaged.referencia}" /></td>
+										</tr>
+									</table>
+								</h:panelGroup></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div style="padding: 10px; margin-bottom: 10px;">
+				<script type="text/javascript">												
+				function openImprimir(){					
+					 window.open('../sisat/caja/imprimirRecibo.jsf','Recibo de Pago', 'height=500,width=500,top=150, left=150');					
+				}        
+			</script>
+				<a4j:commandButton id="btnCobrarDeuda" value="Cobrar deuda"
+					action="#{cajaCobranzaPapeletaManaged.cobrarDeuda}"
+					reRender="tbllistaPersona" status="ajaxStatus"
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')':'Richfaces.hideModalPanel(\'modalCobrando\');openImprimir();Richfaces.hideModalPanel(\'mpResCobrarDeu\');'}"
+					style="width: 150px;"></a4j:commandButton>
+				<a4j:commandButton value="Cancelar"
+					action="#{cajaCobranzaPapeletaManaged.liberarContribuyente}"
+					ajaxSingle="true" reRender="tbllistaPersona"
+					oncomplete="Richfaces.hideModalPanel('modalCobrando')"
+					style="width: 150px; margin-left: 4px;"></a4j:commandButton>
+			</div>
+		</h:form>
+	</div>
+	<rich:modalPanel id="mpErrorTipoCambio" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Advertencia" />
+		</f:facet>
+		<h:form id="frmErrorTipoCambio">
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton value="#{msg['gn.aceptar']}" immediate="true"
+					oncomplete="Richfaces.hideModalPanel('mpErrorTipoCambio')"
+					style="width: 80px;" ajaxSingle="true" status="ajaxStatus"
+					reRender="formCajaCobranzaPapeleta">
+					<f:setPropertyActionListener value="Soles"
+						target="#{cajaCobranzaPapeletaManaged.selectedTipoMoneda}" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mpResCobrarDeu" width="250" height="120">
+		<f:facet name="header">
+			<h:outputText value="Resultado" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideMpResCobDeu"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpResCobrarDeu"
+					attachTo="hideMpResCobDeu" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton value="Aceptar" status="ajaxStatus"
+					rendered="#{cajaCobranzaPapeletaManaged.correct}"
+					onclick="Richfaces.hideModalPanel('mpResCobrarDeu');Richfaces.hideModalPanel('modalCobrando')"
+					reRender="tbllistaPersona"
+					oncomplete="window.open('../sisat/caja/imprimirRecibo.jsf',null, 'height=500,width=500,status=yes,toolbar=no,menubar=no,location=no')"></a4j:commandButton>
+				<a4j:commandButton value="Aceptar" status="ajaxStatus"
+					rendered="#{!cajaCobranzaPapeletaManaged.correct}"
+					onclick="Richfaces.hideModalPanel('mpResCobrarDeu')"></a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

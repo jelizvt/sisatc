@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<style type="">
+		.className {
+		    text-align: right;
+		}
+		.classNameCenter {
+		    text-align: center;
+		}
+	</style>	
+	<!-- usa creaCarteraMedidaCautelarManaged -->
+	<h:form id="formCreaCarteraExigibilidad">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscar')}.click()"
+			selector="#formCreaCarteraExigibilidad" />
+			
+		    <rich:panel>
+		        <f:facet name="header">
+		        	Segmentación de cartera de expedientes 
+		        </f:facet>
+				
+		        	<fieldset>
+		            	<legend><b>Segmentación Masiva</b></legend>
+		            	<h:panelGrid columns="2">
+		            	
+		            		<h:outputText for="txtPeriodo" value="Período de Expediente" />
+			        		<h:inputText id="txtPeriodo" value="#{creaCarteraMedidaCautelarManaged.periodo}" />
+			        		
+			        		<h:outputText for="idSelectOneTipContribuyente" value="Tipo de Contribuyente" />
+				        	<h:selectOneMenu id="idSelectOneTipContribuyente" style="width:150px;"
+				        	value="#{creaCarteraMedidaCautelarManaged.tipoPersonaId}">
+				        		<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+								<f:selectItems
+									value="#{creaCarteraMedidaCautelarManaged.listaTipoPersona}"
+									var="item" itemLabel="#{item.descripcion}"
+									itemValue="#{item.id}"></f:selectItems>
+				        	</h:selectOneMenu>
+				        	
+			        		<h:outputText for="txtTipDeuda" value="Tipo de Deuda(materia)" />
+				        	<h:selectOneMenu id="idSelectOneTipDeuda" style="width:150px;"
+				        	value="#{creaCarteraMedidaCautelarManaged.tipoDeuda}">
+				        		<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+								<f:selectItem itemLabel="Tributario" itemValue="1" />
+								<f:selectItem itemLabel="No Tributario" itemValue="2" />	
+				        	</h:selectOneMenu>
+				       	</h:panelGrid>
+		            </fieldset>
+		      
+		        	<fieldset>
+		            	<legend><b>Segmentación Selectiva</b></legend>
+		            	
+		            	<h:panelGrid columns="2">
+		            	
+			            	<h:outputText for="txtNroValor" value="Nro. Expediente" />
+				        	<h:inputText id="txtNroValor" value="#{creaCarteraMedidaCautelarManaged.nroExpediente}"/>
+				        	
+				        	<h:outputText for="txtCodContribuyente" value="Código de Contribuyente" />
+				        	<h:inputText id="txtCodContribuyente" value="#{creaCarteraMedidaCautelarManaged.contribuyenteId}"/>
+		            	</h:panelGrid>
+		            	
+		            	<h:panelGrid columns="5">
+		            	
+			            	<h:outputText value="Rango de deuda" />
+			            	
+			            	<h:outputText for="txtMinimo" value="Mínimo" />
+			            	<h:inputText id="txtMinimo" value="#{creaCarteraMedidaCautelarManaged.montoMinimo}"/>
+			            	
+			            	<h:outputText for="txtMaximo" value="Máximo" />
+			            	<h:inputText id="txtMaximo" value="#{creaCarteraMedidaCautelarManaged.montoMaximo}" />
+		            	
+		            	</h:panelGrid>
+		            </fieldset>
+		    
+		    		<a4j:commandButton id="cmdBuscar" value="Buscar" style="width:100px;"
+		        		action="#{creaCarteraMedidaCautelarManaged.buscar()}"	
+				 		status="ajaxStatus" reRender="rpanelresultadoscabecera" />  
+			</rich:panel>
+			
+	        <rich:panel  id="rpanelresultadoscabecera" style = "width:100%;">
+	        	<f:facet name="header">
+		         	Relación de Expedientes
+		        </f:facet>
+	    		
+		        <rich:extendedDataTable 
+					id="edt" value="#{creaCarteraMedidaCautelarManaged.records}" var="record" width="100%" height="190px"
+					sortMode="single" selectionMode="single" enableContextMenu="false" 
+					rowKeyVar="row" rows="8" >
+					<rich:column id="x0" style="text-align:center" width="3%" >
+		                <f:facet name="header" >Item</f:facet>
+		                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		            </rich:column>
+					<rich:column id="x1" style="text-align:center" width="8%" >
+		                <f:facet name="header" >Nro Expediente</f:facet>
+		                <h:outputText value="#{record.nroExpediente}"/>
+		            </rich:column>
+		            <rich:column id="x11" style="text-align:center" width="4%" >
+		                <f:facet name="header" >Periodo</f:facet>
+		                <h:outputText value="#{record.annoExpediente}"/>
+		            </rich:column>
+		            <rich:column id="x2" style="text-align:center" width="4%" >
+		                <f:facet name="header" >Codigo</f:facet>
+		                <h:outputText value="#{record.personaId}"/>
+		            </rich:column>
+		            <rich:column id="x3" style="text-align:center" width="17%" >
+		                <f:facet name="header" >Contribuyente</f:facet>
+		                <h:outputText value="#{record.apellidosNombresPersona}"/>
+		            </rich:column>
+		            <rich:column id="x4" style="text-align:center" width="25%" >
+		                <f:facet name="header" >Direccion</f:facet>
+		                <h:outputText value="#{record.direccion}"/>
+		            </rich:column>
+		            <rich:column id="x5" style="text-align:right" width="5%" >
+		                <f:facet name="header" >Deuda</f:facet>
+		                <h:outputText value="#{record.totalDeuda}"/>
+		            </rich:column>
+		            <rich:column id="x6" style="text-align:center" width="6%" >
+		                <f:facet name="header" >Exigibilidad</f:facet>
+		                <h:outputText value="#{record.exigibilidad}"/>
+		            </rich:column>
+		            <rich:column id="x14" style="text-align:center" width="5%" >
+		                <f:facet name="header" >Nro REC</f:facet>
+		                <h:outputText value="#{record.nroRec}"/>
+		            </rich:column>
+		            <rich:column id="x15" style="text-align:center" width="10%" >
+		                <f:facet name="header" >Fecha REC</f:facet>
+		                <h:outputText value="#{record.fechaRec}"/>
+		            </rich:column>
+		            <rich:column id="x151" style="text-align:center" width="10%" >
+		                <f:facet name="header" >Fecha Notif</f:facet>
+		                <h:outputText value="#{record.fechaNotificacion}"/>
+		            </rich:column>
+		            <rich:column id="x13" style="text-align:center" width="3%" >
+						<f:facet name="header" width="10%">
+							<h:selectBooleanCheckbox value="#{creaCarteraMedidaCautelarManaged.selTodos}" 
+							valueChangeListener="#{creaCarteraMedidaCautelarManaged.valueChangeListenerSelTodos}" >
+								<a4j:support event="onchange" ajaxSingle="true" reRender="sbc01"></a4j:support>
+							</h:selectBooleanCheckbox>
+						</f:facet>
+						<div style="text-align: center;">
+							<h:selectBooleanCheckbox id="sbc01" value="#{record.selected}">
+								<a4j:support event="onchange" ajaxSingle="true" />
+							</h:selectBooleanCheckbox>
+						</div>
+					</rich:column>
+		     	</rich:extendedDataTable>
+		     	<rich:datascroller for="edt" maxPages="5" fastStep="3"/>
+		     	<h:panelGrid width="95%" columnClasses="className">
+			        <a4j:commandButton id="cmdAgregar" value="Agregar a cartera" style="width:100px;"	
+					action="#{creaCarteraMedidaCautelarManaged.agregarCartera}" status="ajaxStatus" reRender="rpanelresultadoscabecera,rpanelcarteravalores" />
+		        </h:panelGrid>
+		   	</rich:panel>
+		    	            
+	       	<rich:panel  id="rpanelcarteravalores" style = "width:100%;">
+	        	<f:facet name="header">
+		         	Cartera de Expedientes
+		        </f:facet>
+		        
+				<h:panelGrid columns="2" >
+					<h:commandLink id="btnExcel"
+						action="#{creaCarteraMedidaCautelarManaged.descargarExcel()}"
+						styleClass="button1" immediate="true">
+						<h:graphicImage value="/images/modal/excel.png"
+							style="border:0;width:23px;height:23px;" />
+					</h:commandLink>
+					<h:outputText value="#{creaCarteraMedidaCautelarManaged.recordsCartera.size()} registros encontrados"/>
+				</h:panelGrid>
+	    		
+		        <rich:extendedDataTable 
+					id="edt1"  var="record" width="100%" height="190px" value="#{creaCarteraMedidaCautelarManaged.recordsCartera}"
+					sortMode="single" selectionMode="single" enableContextMenu="false" 
+					rowKeyVar="row" rows="8" >
+					<rich:column id="x0" style="text-align:center" width="10%" >
+		                <f:facet name="header" >Item</f:facet>
+		                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		            </rich:column>
+					<rich:column id="x13" style="text-align:center" width="10%" >
+		                <f:facet name="header" >Nro Expediente</f:facet>
+		                <h:outputText value="#{record.nroExpediente}" />
+		            </rich:column>
+		            <rich:column id="x14" style="text-align:center" width="10%" >
+		                <f:facet name="header" >Codigo</f:facet>
+		                <h:outputText value="#{record.personaId}" />
+		            </rich:column>
+		            <rich:column id="x16" style="text-align:center" width="20%" >
+		                <f:facet name="header" >Contribuyente</f:facet>
+		                <h:outputText value="#{record.apellidosNombresPersona}" />
+		            </rich:column>
+		            <rich:column id="x17" style="text-align:center" width="30%" >
+		                <f:facet name="header" >Direccion</f:facet>
+		                <h:outputText value="#{record.direccion}" />
+		            </rich:column>
+		            <rich:column id="x20" style="text-align:center" width="10%" >
+		                <f:facet name="header" >Deuda</f:facet>
+		                <h:outputText value="#{record.totalDeuda}" />
+		            </rich:column>
+		         </rich:extendedDataTable>
+		         <rich:datascroller for="edt1" maxPages="5" fastStep="3"/>
+		         <h:panelGrid>
+		        <a4j:commandButton id="cmdGenerarLote" value="Asignar cartera" style="width:100px;"	
+				 status="ajaxStatus"
+				 oncomplete="#{rich:component('mpAsignarCoactivo')}.show();" 
+				 reRender="mpAsignarCoactivo" />
+	        </h:panelGrid>
+			</rich:panel>
+	    </h:form>   
+	    <rich:modalPanel id="mpAsignarCoactivo" autosized="true" minWidth="350" >
+	    	<f:facet name="header">
+				<h:outputText value="Asignar Ejecutor Coactivo" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						id="imgclose1" styleClass="hidelink" />
+					<rich:componentControl for="mpAsignarCoactivo"
+						attachTo="imgclose1" operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+	    	<h:form>
+	            <h:panelGrid columns="1">
+	            	<h:outputText for="txtAsignar" value="Desea Generar de cartera de Medida Cautelar : #{creaCarteraMedidaCautelarManaged.carteraId} ?" />
+	            </h:panelGrid>
+	            <h:panelGrid columns="2" align="center">
+		        	<a4j:commandButton value="Asignar"
+					action="#{creaCarteraMedidaCautelarManaged.registraAsignacion()}"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirmaAsignacion\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					reRender="panelconfirmaAsignacion"/>
+		        	<a4j:commandButton value="Cancelar" onclick="#{rich:component('mpAsignarCoactivo')}.hide(); return false;" />
+	        	</h:panelGrid>
+		   	</h:form>
+		</rich:modalPanel>
+		<rich:modalPanel id="panelconfirmaAsignacion" autosized="true" width="300">
+			<f:facet name="header">
+				<h:outputText value="Confirmación" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						id="imgclose2" styleClass="hidelink" />
+					<rich:componentControl for="panelconfirmaAsignacion"
+						attachTo="imgclose2" operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				<h:panelGrid columns="1" columnClasses="classNameCenter">
+					<h:outputText id="otSucc2" style="font-weight:bold;color:green"
+						value="El registro se realizó satisfactoriamente" />
+					<a4j:commandButton value="Aceptar" style="width:100px;" action="#{sessionManaged.sendRedirectPrincipal}" >
+						<f:setPropertyActionListener
+							value="/sisat/coactivav2/consultaCarteraMedidaCautelar.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandButton>
+				</h:panelGrid>
+			</h:form>	
+		</rich:modalPanel>
+		
+</ui:composition>

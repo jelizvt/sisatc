@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<rich:jQuery query="focus().select()" selector="#btnGuardar" name="focusGuardarPersona"/>
+    <a4j:loadScript src="/js/sisat.js"></a4j:loadScript>
+	<script type="text/javascript">
+	 function validaNroDocumento(nroDocumento){
+		 if(jQuery.trim(nroDocumento).length==8){
+				 return true;
+		 }
+		 return false;
+	 }
+	</script>
+	
+	<h:form id="idformregistropersona">
+		<h:panelGroup id="id_registropersona" >
+			
+					<table border="0" width="100%" cellpadding="2" cellspacing="2">
+						<tr>
+							<td>
+								<h:panelGroup id="id_datospersona"  >
+									<table border="0" width="100%" cellpadding="2" cellspacing="2">
+										<tr>
+											<td width="100px"><h:outputLabel
+												value="#{msg['gn.tipodoc']}: " />
+											</td>
+											<td >
+												<rich:comboBox width="125px" defaultLabel="Seleccione"  id="idPerTipoDocumento" 
+												    value="#{registroPersonasPapeletasManaged.tipoDocumento}"
+													valueChangeListener="#{registroPersonasPapeletasManaged.selectTipoDocumento}"  
+													selectFirstOnUpdate="true" directInputSuggestions="false"
+													immediate="true" enableManualInput="true"
+													onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)" 
+													ajaxSingle="true" 
+													reRender = "id_registropersona"
+													binding = "#{registroPersonasPapeletasManaged.cmbTipoDocumento}"
+													required = "true"
+												 	requiredMessage = "Ingrese Tipo de Documento"
+													>
+													<a4j:support id="idInfSupportTipDoc" event="onchange" reRender = "id_registropersona" immediate="true"  ajaxSingle="true"> </a4j:support>
+													<f:selectItems id="idlstInfTipoDocumento" value="#{registroPersonasPapeletasManaged.lstTipoDocumento}"/>
+												</rich:comboBox>
+											</td>
+											<td width="100px">
+												<h:outputLabel value="#{msg['gn.nrodoc']}: " />
+											</td>
+											<td >
+												<h:inputText value="#{registroPersonasPapeletasManaged.numDocumentPersona}"
+												 required = "true"
+												 requiredMessage = "Ingrese Numero de Documento"
+												 styleClass="textUpperCase" converter="uppeCaseConverter"
+												 id = "idnrodoc"
+												 binding = "#{registroPersonasPapeletasManaged.txtNumDocumento}"
+												 style="width:100%;"
+												 maxlength="#{registroPersonasPapeletasManaged.maxlengthNroDocumento}"	 
+												 >
+													  <a4j:support event="onblur" 
+														  ajaxSingle="true" 
+														  immediate="true"
+														  status="ajaxStatus"  
+														  action="#{registroPersonasPapeletasManaged.buscarPersonaDNI}" 
+														  reRender="id_registropersona,id_datospersona_natural"
+														  oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+													  > 
+													  </a4j:support>
+												 </h:inputText>
+											</td>
+										</tr>
+									</table>
+								</h:panelGroup>		
+							</td>
+						</tr>	
+						<tr>
+							<td >
+							   	<h:panelGroup id="id_datospersona_natural" rendered="#{registroPersonasPapeletasManaged.isPersonaNatural}" >
+									<table border="0" width="100%" cellpadding="2" cellspacing="2">
+										<tr>
+											<td width="100px"><h:outputLabel value="#{msg['mp.apellidopaterno']}: " 
+											id = "idLabelApePat"
+											/></td>
+											<td><h:inputText value="#{registroPersonasPapeletasManaged.apellidoPaterno}"
+											binding = "#{registroPersonasPapeletasManaged.txtApePaterno}"
+											style="width:100%;"
+											styleClass="textUpperCase" converter="uppeCaseConverter"
+											required = "true"
+											requiredMessage = "Ingrese Apellido Paterno" 
+											 /></td>
+											<td width="100px"><h:outputLabel value="#{msg['mp.apellidomaterno']}: " /></td>
+											<td><h:inputText value = "#{registroPersonasPapeletasManaged.apellidoMaterno}" 
+											onkeypress = "return soloLetras(event);" style="width:100%;"
+											styleClass="textUpperCase" converter="uppeCaseConverter"
+											binding = "#{registroPersonasPapeletasManaged.txtApeMaterno}"
+											required = "true"
+											requiredMessage = "Ingrese Apellido Materno"
+											/></td>
+										</tr>
+										<tr>
+											<td width="100px"><h:outputLabel value="Primer Nombre:" /></td>
+											<td><h:inputText value = "#{registroPersonasPapeletasManaged.primerNombre}"
+											required = "true" style="width:100%;"
+											requiredMessage = "Ingrese Primer Nombre"
+											onkeypress = "return soloLetras(event);"
+											styleClass="textUpperCase" converter="uppeCaseConverter"
+											binding = "#{registroPersonasPapeletasManaged.txtPrimerNombre}"
+											maxlength = "15"/></td>
+											<td width="100px"><h:outputLabel value="Segundo Nombre:" /></td>
+											<td><h:inputText value = "#{registroPersonasPapeletasManaged.segundoNombre}"
+											onkeypress = "return soloLetras(event);" style="width:100%;"
+											binding = "#{registroPersonasPapeletasManaged.txtSegundoNombre}"
+											styleClass="textUpperCase" converter="uppeCaseConverter"
+											maxlength = "15"/></td>
+										</tr>
+									</table>
+								</h:panelGroup>
+								
+								<h:panelGroup id="id_datospersona_juridica" rendered="#{!registroPersonasPapeletasManaged.isPersonaNatural}" >
+									<table border="0" width="100%" cellpadding="2" cellspacing="2">
+										<tr>
+											<td width="100px"><h:outputLabel value="#{msg['mp.razonsocial']}: "  /></td>
+											<td colspan="3"><h:inputText value = "#{registroPersonasPapeletasManaged.razonSocial}"
+											onkeypress = "return soloLetras(event);" style="width:100%;"  
+											binding = "#{registroPersonasPapeletasManaged.txtRazonSocial}"  styleClass="textUpperCase" converter="uppeCaseConverter"
+											maxlength = "100"
+											required = "true"
+											requiredMessage = "Ingrese Direccion Completa"
+											/></td>
+										</tr>
+										
+										<tr>
+											<td colspan="4">
+												<br />
+											</td>
+										</tr>
+									</table>
+								</h:panelGroup>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div style="width: 100%; text-align: center; margin-top: 10px;">
+									<a4j:commandButton value="#{msg['gn.guardar']}" action = "#{registroPersonasPapeletasManaged.registrarPersona}"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'modalRegistroPersona\')': 'Richfaces.showModalPanel(\'mpErrors\');'};" 
+										id="btnGuardar" reRender = "tblPersonas,pnlBuscarPersona,id_registropersona" style="width:100px;"
+										status="ajaxStatus"
+									></a4j:commandButton>
+									
+									<a4j:commandButton value="#{msg['gn.salir']}" action="#{registroPersonasPapeletasManaged.limpiar}"
+										onclick="Richfaces.hideModalPanel('modalRegistroPersona');" reRender="id_registropersona" ajaxSingle="true"
+										style="width:100px;"
+									></a4j:commandButton>
+								</div>
+							</td>
+						</tr>
+					</table>
+		</h:panelGroup>	
+	</h:form>
+ 	
+</ui:composition>

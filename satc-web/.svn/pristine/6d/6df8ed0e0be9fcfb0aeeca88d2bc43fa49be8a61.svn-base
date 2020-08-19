@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form id="formregistroLotesRS">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+
+		<style type="text/css">
+.extdt-empty-cell {
+	width: 0;
+}
+
+th.extdt-empty-cell {
+	width: 0;
+}
+/* Disables resizing */
+.extdt-hsep {
+	display: none;
+}
+</style>
+
+		<a4j:outputPanel id="id_panelprincipalesquela">
+			<a4j:outputPanel id="outputesquelas">
+				<rich:panel style="width:100%;  height: 100px;"
+					id="id_paneldatosesquela">
+					<f:facet name="header">
+						<h:outputLabel value="Generación de Esquelas" />
+					</f:facet>
+					<table border="0" align="center" width="100%">
+						<tr>
+							<td align="left" width="130px"><h:outputText id="idLote"
+									value="Tipo de recordatorio : " /></td>
+							<td align="left" width="180px"><rich:comboBox width="180px"
+									defaultLabel="Selecccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									binding="#{generarEsquelasManaged.cmbTipoRecordatorio}"
+									onblur="validaInputCbo(this)" id="id_cmbtiporecordatorio"
+									immediate="true"
+									valueChangeListener="#{generarEsquelasManaged.loadSeleccionTipoRecordatorio}">
+									<f:selectItem
+										itemValue="#{generarEsquelasManaged.deudaPorVencer}"
+										itemLabel="1" />
+									<f:selectItem
+										itemValue="#{generarEsquelasManaged.deudaVencida}"
+										itemLabel="0" />
+
+									<a4j:support id="idEventTipRec" event="onchange"
+										BypassUpdates="false" ajaxSingle="true" />
+								</rich:comboBox></td>
+							<td colspan="4"></td>
+						</tr>
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Monto Mínimo :" /></td>
+							<td align="left" width="180px"><h:inputText id="id_periodo"
+									maxlength="10" style="width:50%"
+									value="#{generarEsquelasManaged.montoMinimo}"
+									onkeypress="validaEnteroPositivo(event);">
+								</h:inputText></td>
+							<td align="left" width="130px"><h:outputText
+									value="Estado de Ubicación :" /></td>
+							<td width="180px"><rich:comboBox width="180px"
+									defaultLabel="Selecccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									binding="#{generarEsquelasManaged.cmbEstadoDireccion}"
+									onblur="validaInputCbo(this)" id="id_cmbestadoubicacion"
+									immediate="true"
+									valueChangeListener="#{generarEsquelasManaged.loadSeleccionEstadoDireccion}">
+									<f:selectItem itemValue="Ubicables" itemLabel="1" />
+									<f:selectItem itemValue="InUbicables" itemLabel="0" />
+									<a4j:support id="idEventEstUbic" event="onchange"
+										BypassUpdates="false" ajaxSingle="true" />
+								</rich:comboBox></td>
+							<td colspan="2"></td>
+						</tr>
+					</table>
+				</rich:panel>
+			</a4j:outputPanel>
+
+			<a4j:outputPanel id="outputpaginacion">
+				<table align="center" border="0" width="40%">
+					<tr>
+						<td align="center" width="40%"><a4j:commandButton
+								id="id_btnPreliminar" value="Generacion Preliminar"
+								style="width:150px;"
+								action="#{generarEsquelasManaged.motrarLotePreliminar}"
+								oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+								reRender="outputpaginacion,outputrespreliminar"
+								status="ajaxStatus">
+							</a4j:commandButton></td>
+						<td align="center" width="40%">
+							<!-- 
+								<rich:comboBox width="150px"
+								 	defaultLabel="Selecccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									binding="#{generarEsquelasManaged.cmbPagina}"
+									onblur="validaInputCbo(this)" id="id_cmbpagina" immediate="true"
+									valueChangeListener="#{generarEsquelasManaged.loadSeleccionPagina}">
+									<a4j:support id="idEventPagina" event="onchange" BypassUpdates="false" ajaxSingle="true" />
+								</rich:comboBox>
+							 -->
+						</td>
+						<td align="left" width="20%">
+							<!-- 							<h:commandLink rendered="#{generarEsquelasManaged.lstlotePreliminar.size()>0}" id="newlinkDownload" action="#{generarEsquelasManaged.generacionArchivosXml}" immediate="true" > -->
+							<!-- 				            	<h:graphicImage value="/images/modal/excel.png" style="border:0" width="22" height="22" /> -->
+							<!-- 				            </h:commandLink> -->
+							 <h:commandLink rendered="#{generarEsquelasManaged.lstlotePreliminar.size()>0}"
+								id="exportarLstExc"
+								action="#{generarEsquelasManaged.exportarTablaExcel}"
+								styleClass="button1">
+								<h:graphicImage value="/images/modal/excel.png"
+									style="border:0;width:25px;height:25px;" />
+								<rich:toolTip for="exportarLstExc">Descargar Lista en Excel.</rich:toolTip>
+							</h:commandLink>
+						</td>
+					</tr>
+				</table>
+			</a4j:outputPanel>
+
+			<table align="center" width="100%">
+				<tr>
+					<td><a4j:outputPanel id="outputrespreliminar">
+							<rich:datascroller for="resultadofinal" maxPages="10"></rich:datascroller>
+
+							<rich:extendedDataTable id="resultadofinal"
+								value="#{generarEsquelasManaged.lstlotePreliminar}"
+								var="lotePreliminar" width="100%" height="480px" rows="20"
+								selectionMode="single"
+								noDataLabel="No Se Encontro Información para esta Busqueda"
+								rowKeyVar="row" enableContextMenu="false">
+
+								<rich:column id="c1" width="5%" style="text-align:center"
+									filterBy="#{lotePreliminar.personaId}"
+									sortBy="#{lotePreliminar.personaId}">
+									<f:facet name="header">Cod. Per.</f:facet>
+									<h:outputText value="#{lotePreliminar.personaId}" />
+								</rich:column>
+								<rich:column sortBy="#{lotePreliminar.descripcionPersona}"
+									id="c2" width="15%"
+									filterBy="#{lotePreliminar.descripcionPersona}">
+									<f:facet name="header">Apellidos Y Nombres</f:facet>
+									<h:outputText value="#{lotePreliminar.descripcionPersona}" />
+								</rich:column>
+								<rich:column id="c3" width="5%" style="text-align:center"
+									filterBy="#{lotePreliminar.nroDocumento}"
+									sortBy="#{lotePreliminar.nroDocumento}">
+									<f:facet name="header">Nro Doc</f:facet>
+									<h:outputText value="#{lotePreliminar.nroDocumento}" />
+								</rich:column>
+
+								<rich:column id="c4" width="35%" style="text-align:left"
+									sortBy="#{lotePreliminar.direccion}">
+									<f:facet name="header">Direccion</f:facet>
+									<h:outputText value="#{lotePreliminar.direccion}" />
+								</rich:column>
+								<rich:column sortBy="#{lotePreliminar.sector}" id="c5"
+									width="5%" filterBy="#{lotePreliminar.sector}">
+									<f:facet name="header">Sector</f:facet>
+									<h:outputText value="#{lotePreliminar.sector}" />
+								</rich:column>
+								<rich:column id="c6" width="5%" style="text-align:center">
+									<f:facet name="header">Predial</f:facet>
+									<h:outputText value="#{lotePreliminar.totalDeudaPredial}" />
+								</rich:column>
+								<rich:column id="c7" width="5%" style="text-align:center">
+									<f:facet name="header">Predial Dcto</f:facet>
+									<h:outputText value="#{lotePreliminar.totalDeudaPredialDcto}" />
+								</rich:column>
+
+								<rich:column id="c8" width="5%" style="text-align:center">
+									<f:facet name="header">Vehicular</f:facet>
+									<h:outputText value="#{lotePreliminar.totalDeudaVehicular}" />
+								</rich:column>
+								<rich:column id="c9" width="5%" style="text-align:center">
+									<f:facet name="header">Vehicular Dcto</f:facet>
+									<h:outputText value="#{lotePreliminar.totalDeudaVehicularDcto}" />
+								</rich:column>
+								<rich:column id="c10" width="5%" style="text-align:center">
+									<f:facet name="header">Arbitrios</f:facet>
+									<h:outputText value="#{lotePreliminar.totalDeudaArbitrios}" />
+								</rich:column>
+								<rich:column id="c11" width="5%" style="text-align:center">
+									<f:facet name="header">Arbitrios Dcto</f:facet>
+									<h:outputText value="#{lotePreliminar.totalDeudaArbitriosDcto}" />
+								</rich:column>
+							</rich:extendedDataTable>
+
+						</a4j:outputPanel></td>
+				</tr>
+			</table>
+
+		</a4j:outputPanel>
+	</h:form>
+</ui:composition>

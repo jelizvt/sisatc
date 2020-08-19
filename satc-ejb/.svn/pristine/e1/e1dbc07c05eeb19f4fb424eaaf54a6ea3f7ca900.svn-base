@@ -1,0 +1,83 @@
+package com.sat.sisat.usuario.business;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.ejb.Local;
+
+import com.sat.sisat.cobranzacoactiva.dto.PerfilCoactivo;
+import com.sat.sisat.common.dto.PermisoDTO;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.persistence.entity.SgRol;
+import com.sat.sisat.persistence.entity.SgUsuario;
+import com.sat.sisat.persistence.entity.SgUsuarioAcceso;
+import com.sat.sisat.usuario.dto.MenusPermisosDTO;
+import com.sat.sisat.usuario.dto.RolesUsuarioDTO;
+import com.sat.sisat.usuario.dto.UsuarioDTO;
+
+@Local
+public interface UsuarioBoLocal {
+
+	/**
+	 * Obtiene los datos del usuario que ha hecho log in.
+	 * 
+	 * @param userName Nombre de usuario.
+	 * @return Datos de usuario.
+	 * @throws SisatException
+	 */
+	public abstract UsuarioDTO getUsuarioLoginData(String userName) throws SisatException;
+	
+	/**
+	 * Obtiene los roles que tiene asignado un usuairo.
+	 * 
+	 * @param userId Identificador del rol.
+	 * @return Roles del usuario.
+	 */
+	public abstract Map<Integer,String> getRolesUsuario(int userId);
+
+	public abstract Set<PermisoDTO> getPermisos(int userId) throws SisatException;
+	public abstract List<MenusPermisosDTO> getSubmenusPermisos(int userId,int tipoMenuId) throws SisatException;
+	
+	public abstract List<MenusPermisosDTO> getMenusPermisos(int userId,int tipoMenuId) throws SisatException;
+	
+	public abstract List<SgUsuario> getAllSgUsuario();
+	
+	public abstract List<SgRol> getAllSgRol();
+	
+	public abstract List<RolesUsuarioDTO> getRolesHabilitados(int userId);
+	
+	public abstract Integer crearUsuario(SgUsuario us) throws SisatException;
+	
+	public abstract boolean actualizaUsuario(SgUsuario us);
+	
+	/**
+	 *  Guarda los datos de un usuario y sus roles.
+	 *  
+	 * @param userId PK. Usuario.
+	 * @param roles Lista de roles del usuario.
+	 * @param terminal
+	 * @return
+	 */
+	public abstract boolean guardarRolUsuario(int userId, Set<RolesUsuarioDTO> roles, String terminal);
+	
+	public abstract List<SgUsuarioAcceso> getUsuarioAcceso(int usuarioId, int rolId);
+	
+	/**
+	 * Guarda el tiempo de acceso de un usuario segun su rol.
+	 * 
+	 * @param ua Datos de tiempo de acceso.
+	 * @param rolId Indentificador de rol.
+	 * @param usuarioId Identificador de usuario.
+	 * @return PK. de registro creado.
+	 */
+	public abstract Integer crearUsuarioAcceso(SgUsuarioAcceso ua, int rolId, int usuarioId);
+	
+	public abstract boolean changePassword(int userId, String claveActual, String claveNueva) throws SisatException, Exception;
+	
+	/**
+	 * Obtiene el perfil relacionado al modulo de coactiva
+	 */
+	public PerfilCoactivo getCargoUsuario(Integer usuarioId) throws Exception;
+}

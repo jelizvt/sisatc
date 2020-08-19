@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rs_adulto_dj" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5000000000000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="dj_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ruta_imagen" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Liz Vigo\\REPO-OFICIAL\\satc-web\\WebContent\\sisat\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[{call stp_td_Dj_data_resolucion_adulto_pens($P{dj_id})}]]>
+	</queryString>
+	<field name="dj_id" class="java.lang.Integer"/>
+	<field name="contribuyente_id" class="java.lang.Integer"/>
+	<field name="nro_doc_identidad" class="java.lang.String"/>
+	<field name="apellidos_nombres" class="java.lang.String"/>
+	<field name="domicilio_completo" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="nro_expediente" class="java.lang.String"/>
+	<field name="nro_resolucion" class="java.lang.String"/>
+	<field name="nro_folios" class="java.lang.Integer"/>
+	<field name="tipo_bien" class="java.lang.String"/>
+	<field name="anno_inicio_beneficio" class="java.lang.Integer"/>
+	<field name="porc_benef" class="java.math.BigDecimal"/>
+	<field name="fecha_emision_completa_reso" class="java.lang.String"/>
+	<field name="fecha_emision_completa_Dj" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="69" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="112" height="65"/>
+				<imageExpression><![CDATA[$P{ruta_imagen}+"logosatcaj.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="733">
+			<staticText>
+				<reportElement x="0" y="205" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[I. ANTECEDENTE:]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement x="0" y="225" width="555" height="44"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA["La/El recurrente presenta el expediente Nº "+$F{nro_expediente}+" de fecha "+$F{fecha_emision_completa_Dj}+" , sobre Beneficio Tributario de Deducción de 50 UIT de la Base Imponible para el cálculo del Impuesto Predial por tener la calidad de Pensionista, del predio declarado bajo el código de contribuyente N° "+ $F{contribuyente_id}+";"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="45" y="268" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONSIDERANDO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="65" width="145" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CÓDIGO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="145" y="65" width="50" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{contribuyente_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="85" width="410" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellidos_nombres}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="105" width="112" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DNI CONTRIBUYENTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="145" width="100" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TELÉFONO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="145" y="105" width="120" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_doc_identidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="145" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telefono}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="371" y="185" width="184" height="20"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_emision_completa_reso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="43" width="555" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N° "+$F{nro_resolucion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="165" width="145" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CORREO ELECTRÓNICO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="145" y="165" width="410" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="287" width="555" height="118"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[	Que, el artículo 19º del T.U.O. de la Ley de Tributación Municipal, aprobado mediante Dec. Sup. Nº 156-2004-EF, establece: “Los pensionistas propietarios de un solo predio, a nombre propio o de la sociedad conyugal, que esté destinado a vivienda de los mismos, y cuyo ingreso bruto esté constituido por la pensión que reciben y ésta no exceda de 1 UIT mensual, deducirán de la base imponible del Impuesto Predial, un monto equivalente a 50 U.I.T. Para efecto de este artículo el valor de la UIT será el vigente al 1 de enero de cada ejercicio gravable. Se considera que se cumple el requisito de la única propiedad, cuando además de la vivienda, el pensionista posea otra unidad inmobiliaria constituida por la cochera. El uso parcial del inmueble con fines productivos, comerciales y/o profesionales, con aprobación de la Municipalidad respectiva, no afecta la deducción que establece este artículo” (Concordante con la Resolución emitida por el Tribunal Fiscal N 06439-5-2003 y N° 674-4-97);]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="405" width="555" height="42"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA["Que, de la verificación realizada a la declaración jurada en referencia (total folios ("+$F{nro_folios}+")), se ha determinado que la/el recurrente cumple con los requisitos establecidos en la norma legal antes descrita, advirtiendo que el predio por el cual se solicita el beneficio tributario tiene la calidad de: "+$F{tipo_bien}+";"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="446" width="555" height="60"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[	Se precisa, respecto de la declaración jurada y documentación presentada por la/el recurrente, las mismas se encuentran sujetas a las normas establecidas en la Ley Nº 27444, Ley de Procedimiento Administrativo General; debiéndose entender que de acreditarse la falsedad de la información, la/el declarante será pasible de las sanciones administrativas, civiles y penales previstas en el numeral 32.3 del artículo 32º del mismo texto legal;]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="505" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[II.RESUELVE:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="525" width="555" height="17"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA["Primero. - DECLARAR FUNDADA  la solicitud presentada por la/el recurrente "+ $F{apellidos_nombres}+"."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="541" width="555" height="65"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA["Segundo.- OTÓRGUESE el Beneficio Tributario de Deducción de 50 UIT de la Base Imponible para el cálculo del Impuesto Predial por tener la calidad de Pensionista  a partir del primer trimestre del ejercicio fiscal "+$F{anno_inicio_beneficio}+", por el "+$F{nro_folios}+"% de la base de manera PERMANENTE,  respecto del predio declarado bajo el código de contribuyente Nº "+$F{contribuyente_id}+"; el beneficio no exime la obligación del pago por Derechos de Emisión del Impuesto Predial, ni los Arbitrios Municipales."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="605" width="555" height="45"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[Tercero.- Finalmente se deja a salvo el derecho de la Administración Tributaria de realizar inspecciones discrecionales al inmueble materia de la presente solicitud, a fin de determinar la pérdida o continuidad del beneficio otorgado (Artículo 62º del Código Tributario). ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="650" width="245" height="20"/>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[REGÍSTRESE, COMUNÍQUESE Y ARCHÍVESE.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="705" width="30" height="28"/>
+				<textElement>
+					<font size="5" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Cc.
+Archivo
+Interesado
+HDRRP
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="125" width="100" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOMICILIO FISCAL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="85" width="145" height="20"/>
+				<textElement>
+					<font fontName="SansSerif" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTRIBUYENTE:]]></text>
+			</staticText>
+			<image>
+				<reportElement x="112" y="-2" width="443" height="45"/>
+				<imageExpression><![CDATA[$P{ruta_imagen}+"resolucionDepartamento.jpg"]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="145" y="125" width="410" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{domicilio_completo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

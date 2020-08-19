@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form  id="myform">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+		<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+		<a4j:loadScript src="/js/sisat.js"/>
+		
+		<a4j:outputPanel id="idPanelPrincipalRegistroPapeleta">
+				<table align="center" style="width:100%;" >
+					<tr>
+						<td >
+							<rich:panel style="width:100%;">
+								<table style="width:100%;" border="0" cellpadding="2" cellspacing="0">
+									<tr>
+										<td width="80px">
+											<h:outputText value="Nro de oficio : " />
+										</td>
+										<td width="80px">
+											<h:inputText value="#{registroDetalleLotePapeletasManaged.cargaLote.numOficio}" style="border:none" readonly="true" />
+										</td>
+										<td width="80px">
+											<h:outputText value="Nro de lote : " />
+										</td>
+										<td width="80px">
+											<h:inputText value="#{registroDetalleLotePapeletasManaged.cargaLote.cargaLotesId}" style="border:none" readonly="true"  />
+										</td>
+										<td>
+										</td>
+									</tr>
+								</table>	
+							</rich:panel>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<rich:panel style="width:100%; " id="idPanelDatosInfractor">
+							    	<f:facet name="header">		
+										VERIFICAR  PAPELETAS  - DETALLE DE LOTE
+									</f:facet>
+									<table style="width:100%;">
+										<tr>
+											<td align="center">
+											
+												<table width="100%" border="1" cellpadding="1" cellspacing="0">
+													<tr>
+														<th rowspan="2" bgcolor="#69b4f1">
+														    <h:outputText value="Item" />
+														</th>
+														<th bgcolor="#69b4f1" rowspan="2">
+															<h:outputText value="Infractor" />
+														</th>
+														<th bgcolor="#69b4f1" colspan="2">
+															<h:outputText value="Nro Papeleta" />
+														</th>
+														<th bgcolor="#69b4f1" colspan="2">
+															<h:outputText value="Infraccion" />
+														</th>
+														<th bgcolor="#69b4f1" colspan="2">
+															<h:outputText value="Fecha Infraccion" />
+														</th>
+														<th bgcolor="#69b4f1" colspan="2">
+															<h:outputText value="Placa" />
+														</th>
+														<th bgcolor="#69b4f1" rowspan="2">
+															<h:outputText value="Estado" />
+														</th>
+														<th bgcolor="#69b4f1" rowspan="2">
+															<h:outputText value="Act." />
+														</th>	
+													</tr>
+													<tr>
+														<th bgcolor="#69b4f1">
+														    <h:outputText value="Actual" />
+														</th>
+														<th bgcolor="#69b4f1">
+														    <h:outputText value="Historico" />
+														</th>
+														<th bgcolor="#69b4f1">
+														    <h:outputText value="Actual" />
+														</th>
+														<th bgcolor="#69b4f1">
+														    <h:outputText value="Historico" />
+														</th>
+														<th bgcolor="#69b4f1">
+														    <h:outputText value="Actual" />
+														</th>
+														<th bgcolor="#69b4f1">
+														    <h:outputText value="Historico" />
+														</th>
+														<th bgcolor="#69b4f1">
+														    <h:outputText value="Actual" />
+														</th>
+														<th bgcolor="#69b4f1">
+														    <h:outputText value="Historicoss" />
+														</th>
+													</tr>
+													<a4j:repeat value="#{verificarLotesPapeletasManaged.gridDetalleLotes}" var="record" rowKeyVar="index">
+														<tr>
+															<td bgcolor="#FFFFFF">
+												                <h:outputText value="#{index+1}"/>
+												           </td>
+												           <td bgcolor="#FFFFFF"  >
+												                <h:outputText value="#{record.nombresApellidosInfractor}"/>
+												            </td>
+												           <td bgcolor="#FFFFFF"  >
+												                <h:outputText value="#{record.numPapeleta}"/>
+												            </td>
+												            <td bgcolor="#FFFFFF"  >
+												                <h:outputText value="#{record.historico.nropapeleta}"/>
+												            </td>
+												            <td bgcolor="#FFFFFF"  >
+												                <h:outputText value="#{record.infraccion}"/>
+												            </td>
+												            <td bgcolor="#FFFFFF"  >
+												                <h:outputText value="#{record.historico.infraccion}"/>
+												            </td>
+												             <td bgcolor="#FFFFFF"  >
+												                <h:outputText value="#{record.fechaInfraccion}">
+												               		 <f:convertDateTime pattern="dd/MM/yyyy"/>
+												                </h:outputText>
+												            </td> 
+												            <td bgcolor="#FFFFFF"  >
+												                <h:outputText value="#{record.historico.fecha_infraccion}">
+												                	<f:convertDateTime pattern="dd/MM/yyyy"/>
+												                </h:outputText>
+												            </td> 
+												            <td bgcolor="#FFFFFF"  >
+												                <h:outputText value="#{record.placa}"/>
+												            </td>
+												            <td bgcolor="#FFFFFF"  >
+												                <h:outputText value="#{record.historico.placa_vehiculo}"/>
+												            </td>
+												            <td bgcolor="#FFFFFF"  >
+												            	<h:outputText value = "#{record.estado}"/>
+												            </td>	
+												           <td bgcolor="#FFFFFF"  >
+												            	<a4j:commandLink id="newlink3" action="#{verificarLotesPapeletasManaged.actualizacion}" immediate="true" reRender="panelinclude" >
+												                    <h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+												                    <f:setPropertyActionListener value="#{record}" target="#{verificarLotesPapeletasManaged.currentItem}" id="r427"/>
+												                    <f:setPropertyActionListener value="/sisat/papeletas/registropapeleta.xhtml" target="#{sessionManaged.page}" />
+												                </a4j:commandLink>
+												                <rich:toolTip for="newlink3" value="Actualizacion" />
+													       </td>
+													    </tr>
+													</a4j:repeat>
+													
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td align="center">
+												<a4j:commandButton id="btnregresar" value = "Regresar"  action="#{sessionManaged.sendRedirectPrincipal}" reRender="panelinclude" style="width:100px;">
+													<f:setPropertyActionListener value="/sisat/papeletas/buscaroficiolotes.xhtml" target="#{sessionManaged.page}" />
+												</a4j:commandButton>
+											</td>
+										</tr>
+									</table>
+								</rich:panel>	
+							</td>
+						</tr>
+				</table>
+		</a4j:outputPanel>
+	</h:form>
+ </ui:composition>

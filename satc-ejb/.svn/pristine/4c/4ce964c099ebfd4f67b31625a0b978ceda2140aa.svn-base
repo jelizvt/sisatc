@@ -1,0 +1,74 @@
+
+package com.sat.sisat.estadocuenta.business;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
+import com.sat.sisat.caja.dto.CjGenerico;
+import com.sat.sisat.estadocuenta.dao.EstadoCuentaDao;
+import com.sat.sisat.estadocuenta.dto.ReciboPago;
+import com.sat.sisat.persistence.entity.CjReciboPago;
+import com.sat.sisat.predial.business.BaseBusiness;
+
+@Stateless
+public class EstadoCuentaBo extends BaseBusiness implements EstadoCuentaBoRemote {
+
+	private EstadoCuentaDao service;
+	
+	public EstadoCuentaDao getService() {
+    	return this.service;
+	}
+    @PostConstruct
+    public void initialize(){
+    	this.service=new EstadoCuentaDao();
+    	setDataManager(this.service);
+    }
+   
+      
+    public ArrayList<CjGenerico> obtenerDeuda(int personaId,
+			String ListaConcepto,String ListaSubConcepto, String ListaPredio, String ListaVehiculo,
+			String ListaPapeletas, String ListaCuota, String ListaYear,
+			Timestamp FechaInteres,boolean mostrarDeuda,boolean detallado) {
+    	return service.obtenerDeuda(personaId, ListaConcepto,ListaSubConcepto, ListaPredio, ListaVehiculo, ListaPapeletas, ListaCuota, ListaYear,FechaInteres,mostrarDeuda,detallado);
+    }
+    
+    public ArrayList<CjGenerico> obtenerSubConceptoTodos(int personaId,int mostrarDeuda) {
+    	return service.obtenerSubConceptoTodos(personaId, mostrarDeuda);
+    }
+    public ArrayList<CjGenerico> obtenerNroCuotasTodos(int personaId,int mostrarDeuda) {
+    	return service.obtenerNroCuotasTodos(personaId, mostrarDeuda);
+    }
+    public ArrayList<CjGenerico> obtenerAnyoTodos(int personaId,int mostrarDeuda) {
+    	return service.obtenerAnyoTodos(personaId, mostrarDeuda);
+    }
+    public ArrayList<CjGenerico> obtenerVehiculoTodos(int personaId,int mostrarDeuda) {
+    	return service.obtenerVehiculoTodos(personaId, mostrarDeuda);
+    }
+    public ArrayList<CjGenerico> obtenerPredioTodos(int personaId,int mostrarDeuda) {
+    	return service.obtenerPredioTodos(personaId, mostrarDeuda);
+    }
+    public ArrayList<CjGenerico> obtenerPapeletaResumen(int personaId,
+			String nroPapeleta,int mostrarDeuda) {
+    	return service.obtenerPapeletaResumen(personaId, nroPapeleta, mostrarDeuda);
+    }
+    public ArrayList<CjGenerico> obtenerTipoUsos(int personaId,int mostrarDeuda) {
+    	return service.obtenerTipoUsos(personaId, mostrarDeuda);
+    }
+	@Override
+	public ArrayList<CjReciboPago> obtenerRecibosPago(int personaId,
+			String nroRecibo, Date fechaCancIni, Date fechaCancFin)throws Exception{
+		return service.obtenerRecibosPago(personaId, nroRecibo, fechaCancIni, fechaCancFin);
+	}
+	public int obtenerDeudas(int personaId)throws Exception{
+    	return service.obtenerDeudas(personaId);
+    }
+	@Override
+	public ArrayList<ReciboPago> obtenerRecibosPagoNew(int personaId, String nroRecibo, Date fechaCancIni,
+			Date fechaCancFin) throws Exception {
+		return service.obtenerRecibosPagoNew(personaId, nroRecibo, fechaCancIni, fechaCancFin);
+	}
+ 
+}

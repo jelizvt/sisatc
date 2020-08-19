@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form id="formAcumulaCarteraExigibilidad">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscar')}.click()"
+			selector="#formAcumulaCarteraExigibilidad" />
+	
+		<rich:panel>
+        <f:facet name="header">
+        	Acumulación / Desacumulación de Expedientes
+        </f:facet>
+		<h:panelGrid columns="2">
+			<h:outputText for="txtNroLotAsignado" value="Nro. cartera asignado: " />
+        	<h:outputText id="txtNroLotAsignado" value="#{acumulaCarteraMedidaCautelarManaged.carteraExigibilidad.nroCartera} - #{acumulaCarteraMedidaCautelarManaged.carteraExigibilidad.ejecutorCoactivo}" />
+		</h:panelGrid>
+		
+        <h:panelGrid columns="2" rendered="#{acumulaCarteraMedidaCautelarManaged.carteraExigibilidad.situacionCarteraId==2 and sessionManaged.coPerfil.cargoId==1}">
+       		<a4j:commandButton id="btnAcumularTodo" value="Acumular Todo" oncomplete="#{rich:component('mpConfirmacionAcumulaTodo')}.show()"
+       		reRender="mpConfirmacionAcumulaTodo" />
+       		<a4j:commandButton id="btnDesAcumularTodo" value="Desacumular Todo" oncomplete="#{rich:component('mpConfirmacionDesAcumulaTodo')}.show()"
+       		reRender="mpConfirmacionDesAcumulaTodo" />
+       	</h:panelGrid>
+       	
+       	<h:panelGrid columns="2" id="pgdescarga" >
+			<h:commandLink id="btnExcel"
+				action="#{acumulaCarteraMedidaCautelarManaged.descargarExcel()}"
+				styleClass="button1" immediate="true">
+				<h:graphicImage value="/images/modal/excel.png"
+					style="border:0;width:23px;height:23px;" />
+			</h:commandLink>
+			<h:outputText value="#{acumulaCarteraMedidaCautelarManaged.expedienteCartera.size()} registros encontrados"/>
+		</h:panelGrid>
+			
+       	<rich:extendedDataTable id="edtValoresCartera" value="#{acumulaCarteraMedidaCautelarManaged.expedienteCartera}" width="100%" height="190px"
+				sortMode="single" selectionMode="single" enableContextMenu="false" 
+				rowKeyVar="row" rows="8" var="record">
+				<rich:column id="x0" style="text-align:center" width="3%" >
+	                <f:facet name="header" >Item</f:facet>
+	                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+	            </rich:column>
+				<rich:column id="x1" style="text-align:center" width="15%" filterBy="#{record.nroExpediente}" >
+					<f:facet name="header" width="10%">Nro expediente</f:facet>
+					<h:outputText value="#{record.nroExpediente}" />
+				</rich:column>
+				<rich:column id="x2" style="text-align:center" width="10%" filterBy="#{record.personaId}" >
+					<f:facet name="header" width="10%">Codigo</f:facet>
+					<h:outputText value="#{record.personaId}" />
+				</rich:column>
+				<rich:column id="x4" style="text-align:center" width="20%" >
+					<f:facet name="header" width="10%">Contribuyente</f:facet>
+					<h:outputText value="#{record.apellidosNombresPersona}" />
+				</rich:column>
+				<rich:column id="x8" style="text-align:center" width="8%" >
+					<f:facet name="header" width="10%">Deuda</f:facet>
+					<h:outputText value="#{record.totalDeuda}" />
+				</rich:column>
+				<rich:column id="x13" style="text-align:center" width="8%" >
+					<f:facet name="header" width="10%">Nro Rec</f:facet>
+					<h:outputText value="#{record.nroRec}" />
+				</rich:column>
+				<rich:column id="x9" style="text-align:center" width="8%" >
+					<f:facet name="header" width="10%">Periodo Rec</f:facet>
+					<h:outputText value="#{record.annoRec}" />
+				</rich:column>
+				<rich:column id="x15" style="text-align:center" width="8%" >
+					<f:facet name="header" width="10%">Situacion</f:facet>
+					<h:outputText value="#{record.situacion}" />
+				</rich:column>
+				<rich:column id="x10" style="text-align:center" width="5%" rendered="#{acumulaCarteraMedidaCautelarManaged.carteraExigibilidad.situacionCarteraId==2 and sessionManaged.coPerfil.cargoId==1}" >
+					<f:facet name="header" width="10%">Acumula</f:facet>
+					<a4j:commandLink ajaxSingle="true" id="clAcumula" 
+						action="#{acumulaCarteraMedidaCautelarManaged.expedientesContribuyente}" oncomplete="#{rich:component('mpValoreContribuyente')}.show()" 
+						reRender="mpValoreContribuyente">
+						<h:graphicImage value="/images/acumula.png" style="border:0;" />
+						<f:setPropertyActionListener value="#{record}"	target="#{acumulaCarteraMedidaCautelarManaged.selExpedienteAcumula}" id="palAcumula" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="x12" style="text-align:center" width="5%" rendered="#{acumulaCarteraMedidaCautelarManaged.carteraExigibilidad.situacionCarteraId==2 and sessionManaged.coPerfil.cargoId==1}" >
+					<f:facet name="header" width="10%">Retirar </f:facet>
+					<a4j:commandLink ajaxSingle="true" id="clRetirarValor" 
+						oncomplete="#{rich:component('mpConfirmacionRetiraProspecto')}.show()">
+						<h:graphicImage value="/images/extorno_icon.jpg" style="border:0;" />
+						<f:setPropertyActionListener value="#{record}"	target="#{acumulaCarteraMedidaCautelarManaged.selExpedienteAcumula}" id="palRetiraValor" />
+					</a4j:commandLink>
+				</rich:column>
+			</rich:extendedDataTable>
+			<rich:datascroller for="edtValoresCartera" maxPages="5" fastStep="3"/>
+	        
+	        <h:panelGrid rendered="#{acumulaCarteraMedidaCautelarManaged.carteraExigibilidad.situacionCarteraId==2 and sessionManaged.coPerfil.cargoId==1}">
+	        	<a4j:commandButton id="btnGenLotExigible" value="Generar cartera masiva" oncomplete="#{rich:component('mpConfirmacionGeneraExpediente')}.show()" />
+	        </h:panelGrid>
+		</rich:panel>
+	</h:form>
+	<rich:modalPanel id="mpValoreContribuyente" modal="true" resizeable="true" width="850" height="320">
+		<f:facet name="header">
+			<h:outputText value="Acumula expedientes contribuyente" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose50" styleClass="hidelink" />
+				<rich:componentControl for="mpValoreContribuyente"
+					attachTo="imgclose50" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+        <h:form>
+            <rich:extendedDataTable id="edtValoresContribuyente" value="#{acumulaCarteraMedidaCautelarManaged.expedienteContrib}" width="100%" height="190px"
+				sortMode="single" selectionMode="single" enableContextMenu="false" 
+				rowKeyVar="row" rows="8" var="record">
+					<rich:column id="x20" style="text-align:center" width="5%" >
+		                <f:facet name="header" >Item</f:facet>
+		                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		            </rich:column>
+					<rich:column id="x21" style="text-align:center" width="15%" >
+						<f:facet name="header" width="10%">Nro Expediente</f:facet>
+						<h:outputText value="#{record.nroExpediente}" />
+					</rich:column>
+					<rich:column id="x23" style="text-align:center" width="10%" >
+						<f:facet name="header" width="10%">Código</f:facet>
+						<h:outputText value="#{record.personaId}" />
+					</rich:column>
+					<rich:column id="x24" style="text-align:center" width="25%" >
+						<f:facet name="header" width="10%">Contribuyente</f:facet>
+						<h:outputText value="#{record.apellidosNombresPersona}" />
+					</rich:column>
+					<rich:column id="x25" style="text-align:center" width="10%" >
+						<f:facet name="header" width="10%">Nro Rec</f:facet>
+						<h:outputText value="#{record.nroRec}" />
+					</rich:column>
+					<rich:column id="x27" style="text-align:center" width="10%" >
+						<f:facet name="header" width="10%">Deuda</f:facet>
+						<h:outputText value="#{record.totalDeuda}" />
+					</rich:column>
+					<rich:column id="x28" style="text-align:center" width="5%" >
+						<f:facet name="header" width="10%">
+						<h:selectBooleanCheckbox value="#{acumulaCarteraMedidaCautelarManaged.selTodos}" 
+						valueChangeListener="#{acumulaCarteraMedidaCautelarManaged.valueChangeListenerSelTodos}" >
+							<a4j:support event="onchange" ajaxSingle="true" reRender="sbc01"></a4j:support>
+						</h:selectBooleanCheckbox>
+						</f:facet>
+						<div style="text-align: center;">
+							<h:selectBooleanCheckbox id="sbc01" value="#{record.selected}">
+								<a4j:support event="onchange" ajaxSingle="true" />
+							</h:selectBooleanCheckbox>
+						</div>
+					</rich:column>
+	        </rich:extendedDataTable>
+            <rich:datascroller for="edtValoresContribuyente" maxPages="5" fastStep="3"/>
+            
+            <h:panelGrid columns="2" align="center">
+	        	<a4j:commandButton value="Aceptar"
+					action="#{acumulaCarteraMedidaCautelarManaged.acumularValores()}" 
+					oncomplete="#{rich:component('mpValoreContribuyente')}.hide();" reRender="edtValoresCartera" />
+	        	<a4j:commandButton value="Cancelar"
+					onclick="#{rich:component('mpValoreContribuyente')}.hide();return false;" />
+        	</h:panelGrid>
+        </h:form>
+    </rich:modalPanel>
+    
+    <rich:modalPanel id="mpConfirmacionDesAcumulaValores" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose" styleClass="hidelink" />
+				<rich:componentControl for="mpConfirmacionDesAcumulaValores"
+					attachTo="imgclose" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea desacumular los expedientes del contribuyente #{acumulaCarteraMedidaCautelarManaged.selExpedienteAcumula.apellidosNombresPersona} ?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{acumulaCarteraMedidaCautelarManaged.desAcumulaContribuyente()}" 
+						oncomplete="#{rich:component('mpConfirmacionDesAcumulaValores')}.hide();"
+						reRender="edtValoresCartera"
+						 />
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('mpConfirmacionDesAcumulaValores')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+	 <rich:modalPanel id="mpConfirmacionAcumulaTodo" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose1" styleClass="hidelink" />
+				<rich:componentControl for="mpConfirmacionAcumulaTodo"
+					attachTo="imgclose1" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea Acumular todos los expedientes?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{acumulaCarteraMedidaCautelarManaged.acumularTodo()}"  
+						oncomplete="#{rich:component('mpConfirmacionAcumulaTodo')}.hide();"
+						reRender="edtValoresCartera"
+						 />
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('mpConfirmacionAcumulaTodo')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>      
+	      
+	<rich:modalPanel id="mpConfirmacionDesAcumulaTodo" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose2" styleClass="hidelink" />
+				<rich:componentControl for="mpConfirmacionDesAcumulaTodo"
+					attachTo="imgclose2" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea DesAcumular todos los expedientes?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{acumulaCarteraMedidaCautelarManaged.desAcumularTodo()}"  
+						oncomplete="#{rich:component('mpConfirmacionDesAcumulaTodo')}.hide();"
+						reRender="edtValoresCartera"
+						 />
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('mpConfirmacionDesAcumulaTodo')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="mpConfirmacionGeneraExpediente" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose3" styleClass="hidelink" />
+				<rich:componentControl for="mpConfirmacionGeneraExpediente"
+					attachTo="imgclose3" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea Registrar Cartera Medida Cautelar?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{acumulaCarteraMedidaCautelarManaged.registraExpediente()}"  
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirmaAsignacion\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="panelconfirmaAsignacion"/>
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('mpConfirmacionGeneraExpediente')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>    
+	
+	<rich:modalPanel id="panelconfirmaAsignacion" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose5" styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaAsignacion"
+					attachTo="imgclose5" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1" columnClasses="classNameCenter">
+				<h:outputText id="otSucc5" style="font-weight:bold;color:green"
+					value="El registro se realizó satisfactoriamente" />
+				<a4j:commandButton value="Aceptar" style="width:100px;" action="#{sessionManaged.sendRedirectPrincipal}" >
+					<f:setPropertyActionListener
+						value="/sisat/coactivav2/consultaCarteraMedidaCautelar.xhtml"
+						target="#{sessionManaged.page}" />
+				</a4j:commandButton>
+			</h:panelGrid>
+		</h:form>	
+	</rich:modalPanel>
+		
+	<rich:modalPanel id="mpConfirmacionRetiraProspecto" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose4" styleClass="hidelink" />
+				<rich:componentControl for="mpConfirmacionRetiraProspecto"
+					attachTo="imgclose4" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea retirar valor de cartera?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{acumulaCarteraMedidaCautelarManaged.retirarExpediente()}"  
+						oncomplete="#{rich:component('mpConfirmacionRetiraProspecto')}.hide();"
+						reRender="edtValoresCartera,pgdescarga"/>
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('mpConfirmacionRetiraProspecto')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+</ui:composition>

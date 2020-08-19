@@ -1,0 +1,315 @@
+@CHARSET "UTF-8";
+/*
+textarea,input,select {
+	text-transform: uppercase;
+}*/
+textarea[type="textarea"][disabled],input[type="text"][disabled],input[type="password"][disabled],select[disabled]
+	{
+	color: #000000;
+	border: none;
+}
+
+.tablaBorde {
+	border-width: 1px;
+	border-style: dotted;
+	border-color: #cccccc;
+	border-collapse: collapse;
+}
+
+.tablaBorde td {
+	border-width: 1px;
+	border-style: dotted;
+	border-color: #cccccc;
+}
+
+.boldText {
+	font-weight: bold;
+}
+
+input[type="button"].nueva_djvehicular {
+	background-image: url(../images/nuevo_vehiculo.png);
+	width: 48px;
+	height: 27px;
+	color: #FFF;
+	cursor: pointer;
+	background-color: transparent;
+	font-family: inherit;
+	border: 0px;
+}
+
+input[type="button"].verDatos {
+	background-image: url(../images/ver2.png);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+	background-color: transparent;
+	border: 0px;
+}
+
+input[type="button"].actualizarDatos {
+	background-image: url(../images/editar2.png);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 17px;
+	height: 16px;
+	cursor: pointer;
+	background-color: transparent;
+	border: 0px;
+}
+
+input[type="button"][disabled].actualizarDatos {
+	background-image: url(../images/editar2_ds.png);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 17px;
+	height: 16px;
+	cursor: default;
+	background-color: transparent;
+	border: 0px;
+}
+
+input[type="button"].determinarDj {
+	background-image: url(../images/calculo2.png);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 11px;
+	height: 16px;
+	cursor: pointer;
+	background-color: transparent;
+	border: 0px;
+}
+
+input[type="button"][disabled].determinarDj {
+	background-image: url(../images/calculo2_ds.png);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 11px;
+	height: 16px;
+	cursor: default;
+	background-color: transparent;
+	border: 0px;
+}
+
+input[type="button"].copiarDjOtroAnio {
+	background-image: url(../images/copiar_dj.png);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 29px;
+	height: 16px;
+	cursor: pointer;
+	background-color: transparent;
+	border: 0px;
+}
+
+input[type="button"][disabled].copiarDjOtroAnio {
+	background-image: url(../images/copiar_dj_ds.png);
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+	width: 29px;
+	height: 16px;
+	cursor: default;
+	background-color: transparent;
+	border: 0px;
+}
+
+.sisatPanel .rich-panel-body {
+	margin: 0px;
+	padding: 0px;
+}
+
+.sisatPanel2 .rich-panel-body {
+	margin: 0px;
+	padding: 2px;
+}
+
+.sisatPanel .extdt-maindiv {
+	border: 0px;
+}
+
+/* caja cta cte*/
+.tooltipAnios {
+	background-color: #ffffff;
+	position: relative;
+	z-index: 1;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	width: 80px;
+	border-left: 1px solid silver;
+	border-right: 1px solid silver;
+	border-bottom: 1px solid silver;
+	display: none;
+}
+
+.tooltipSubconc {
+	background-color: #ffffff;
+	position: relative;
+	z-index: 1;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	width: 200px;
+	border-left: 1px solid silver;
+	border-right: 1px solid silver;
+	border-bottom: 1px solid silver;
+	display: none;
+}
+
+.tooltipCuota {
+	background-color: #ffffff;
+	position: relative;
+	z-index: 1;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	width: 70px;
+	border-left: 1px solid silver;
+	border-right: 1px solid silver;
+	border-bottom: 1px solid silver;
+	display: none;
+}
+.tooltipPlacas {
+	background-color: #ffffff;
+	position: relative;
+	z-index: 1;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	width: 80px;
+	border-left: 1px solid silver;
+	border-right: 1px solid silver;
+	border-bottom: 1px solid silver;
+	display: none;
+}
+
+.tooltipPredios {
+	background-color: #ffffff;
+	position: relative;
+	z-index: 1;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	width: 157px;
+	border-left: 1px solid silver;
+	border-right: 1px solid silver;
+	border-bottom: 1px solid silver;
+	display: none;
+}
+
+.tooltipUso {
+	background-color: #ffffff;
+	position: relative;
+	z-index: 1;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	width: 157px;
+	border-left: 1px solid silver;
+	border-right: 1px solid silver;
+	border-bottom: 1px solid silver;
+	display: none;
+}
+
+.buttons a:visited {
+	color: #ffffff;
+}
+
+.buttonRed {
+	background-color: #d14836;
+	border: 1px solid transparent;
+	color: #ffffff;
+	text-decoration: none;
+	text-align: center;
+	border-radius: 4px 4px 4px 4px;
+	padding: 2px 4px 2px 4px;
+	font-weight: bold;
+	margin-left: -2px;
+}
+
+.sisatModalPanel .rich-mpnl-body {
+	margin: 0px;
+	padding: 0px;
+}
+
+.sisatModalPanel .rich-mpnl-body table {
+	margin: 0px;
+	padding: 0px;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+.inputMoney {
+	width: 110px;
+	height: 20px;
+	font-weight: bold;
+}
+.requiredField{
+	color: red;
+}
+
+.textUpperCase{
+	text-transform:uppercase;
+}
+
+.columnButtonL {
+	text-align: right;
+}
+
+.columnButtonM {
+	text-align: center;
+	width: 1px;
+}
+
+
+.columnButtonR {
+	text-align: left;
+}
+
+.rich-separator {
+background-color: #C0C0C0;
+background-image: none !important;
+}
+
+
+.coldialogContentDialogRejectSize {
+	text-align: center;
+}
+
+
+.row1{
+	background-color: #F2F2F2;
+color: #000000;
+}
+.row2{
+	background-color: #FFFFFF;
+color: #000000;
+}
+
+.rich-table tr:nth-child(even){
+	background-color: #F2F2F2;
+	color: #000;
+}
+
+
+.extdt-table-layout tr:nth-child(even){
+	background-color: #F2F2F2;
+	color: #000;	
+}
+
+.extdt-row-selected {
+ background-color: #A6D7F3 !important;
+}
+
+input[type="text"] {
+	padding-left: 5px;
+}

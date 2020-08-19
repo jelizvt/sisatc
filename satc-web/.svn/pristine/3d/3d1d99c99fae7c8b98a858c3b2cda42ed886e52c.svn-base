@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rec_inicio_predial_tributaria" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\ESPACE_SAT\\satc-web\\WebContent\\sisat\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ruta_imagen" class="java.lang.String"/>
+	<parameter name="p_usuario" class="java.lang.Integer"/>
+	<parameter name="p_expediente_id" class="java.lang.Integer"/>
+	<parameter name="p_rec_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[exec dbo.co_stp_formato_rc_cabecera $P{p_expediente_id},$P{p_rec_id}]]>
+	</queryString>
+	<field name="rec_id" class="java.lang.Integer"/>
+	<field name="fecha_emision" class="java.sql.Timestamp"/>
+	<field name="persona_id" class="java.lang.Integer"/>
+	<field name="nro_docu_identidad" class="java.lang.String"/>
+	<field name="apellidos_nombres" class="java.lang.String"/>
+	<field name="anno_rec" class="java.lang.Integer"/>
+	<field name="deuda_total" class="java.math.BigDecimal"/>
+	<field name="monto_letras" class="java.lang.String"/>
+	<field name="nro_expediente" class="java.lang.String"/>
+	<field name="domicilio_completo" class="java.lang.String"/>
+	<field name="concepto" class="java.lang.String"/>
+	<field name="anno_determinacion" class="java.lang.Integer"/>
+	<field name="anno_deuda" class="java.lang.Integer"/>
+	<field name="fecha_total_calculado" class="java.lang.String"/>
+	<field name="nro_acto" class="java.lang.String"/>
+	<field name="lote_id" class="java.lang.Integer"/>
+	<field name="nro_rec" class="java.lang.String"/>
+	<field name="nombre_auxiliar" class="java.lang.String"/>
+	<field name="nombre_coactivo" class="java.lang.String"/>
+	<field name="nro_registro" class="java.lang.String"/>
+	<field name="nro_registro_auxiliar" class="java.lang.String"/>
+	<field name="titulo" class="java.lang.String"/>
+	<field name="titulo_auxiliar" class="java.lang.String"/>
+	<group name="cabecera_datos_rec_inicio" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{rec_id}]]></groupExpression>
+		<groupHeader>
+			<band height="213">
+				<subreport>
+					<reportElement x="29" y="170" width="500" height="43"/>
+					<subreportParameter name="rec_id">
+						<subreportParameterExpression><![CDATA[$F{rec_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="lote_id">
+						<subreportParameterExpression><![CDATA[$F{lote_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["co_rc_embargo_inscripcion_vehiculos_detalle.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement x="29" y="87" width="41" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cajamarca,]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="70" y="87" width="442" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("dd MMMMM yyyy", new Locale("es", "ES")).format($F{fecha_emision})+"."]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="29" y="74" width="345" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[msg("RESOLUCIÓN COACTIVA N° "+$F{nro_rec})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Transparent" x="29" y="41" width="125" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[CÓDIGO DEL CONTRIBUYENTE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="29" y="2" width="125" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[EXPEDIENTE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="29" y="15" width="125" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[EJECUTADO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="29" y="28" width="125" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[DOMICILIO FISCAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Transparent" x="29" y="54" width="125" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="Times New Roman" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[TRIBUTO]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="154" y="2" width="375" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[": "+$F{nro_expediente}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="154" y="15" width="375" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[": "+$F{apellidos_nombres}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="154" y="41" width="375" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[": "+$F{persona_id}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="154" y="28" width="375" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[": "+$F{domicilio_completo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="154" y="54" width="375" height="13"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[": "+$F{concepto}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="32" y="111" width="495" height="59"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA["VISTO.- El estado del procedimiento coactivo; y, CONSIDERANDO: PRIMERO.- Vencido el plazo concedido sin que el ejecutado haya cumplido con el pago ordenado de la deuda pendiente, corresponde hacer efectivo los apercibimientos decretados y, en consecuencia ordenar la medida cautelar más efectiva dentro de las establecidas por el artículo 33 del D.S. N° 018-2008-JUS. SEGUNDO.- La deuda actualizada a la fecha, incluyendo intereses moratorios y costas procesales, asciende al importe total siguiente:"]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="56">
+			<staticText>
+				<reportElement x="177" y="0" width="352" height="30"/>
+				<textElement textAlignment="Center">
+					<font isBold="true" isUnderline="true" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[
+DEPARTAMENTO DE CONTROL DE LA DEUDA Y COBRANZA COACTIVA]]></text>
+			</staticText>
+			<image>
+				<reportElement x="42" y="2" width="84" height="40"/>
+				<imageExpression><![CDATA[$P{ruta_imagen}+"logosatcaj.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="473" splitType="Stretch">
+			<textField>
+				<reportElement x="29" y="0" width="498" height="114"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Por tanto, SE RESUELVE: ORDENAR se trabe medida cautelar de EMBARGO EN FORMA DE INSCRIPCIÓN hasta la suma de S/. "+$F{monto_letras}+" , sobre el(os) vehículo(s) de propiedad del ejecutado "+$F{apellidos_nombres}+", identificado con DNI N° "+$F{nro_docu_identidad}+", inscrito(s) en la(s) Partida(s) Electrónica(s) N° [_______] del Registro de Propiedad Vehicular de la Zona Registral N° II – Sede [_______] – Oficina Registral  [_______]. CÚRSENSE los oficios correspondientes."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="29" y="421" width="97" height="11"/>
+				<textElement>
+					<font size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[DATOS DEL PREDIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="390" width="78" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Persona no capaz]]></text>
+			</staticText>
+			<line>
+				<reportElement x="120" y="460" width="156" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="29" y="432" width="110" height="11"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[N° SUMINISTRO/MEDIDOR:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="495" y="349" width="17" height="12"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="259" y="349" width="17" height="12"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="202" y="319" width="10" height="10"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="109" y="390" width="17" height="12"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<line>
+				<reportElement mode="Opaque" x="371" y="319" width="172" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<image>
+				<reportElement x="29" y="153" width="50" height="30"/>
+				<imageExpression><![CDATA[$P{ruta_imagen}+"logosatcaj.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement mode="Transparent" x="29" y="336" width="472" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="true" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[CERTIFICACIÓN DE LA NEGATIVA DE LA RECEPCIÓN POR PERSONA MAYOR DE EDAD Y CAPAZ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="191" width="41" height="11"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOTAS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="264" width="56" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Recibido por:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="312" y="402" width="76" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NOTIFICADOR:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="452" width="91" height="11"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MATERIAL DE INMUEBLE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="408" y="263" width="55" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Mostró DNI:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="473" y="263" width="12" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[SI:]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Opaque" x="319" y="273" width="85" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="147" y="391" width="81" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Domicilio cerrado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="287" y="264" width="34" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DNI N°:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="276" y="442" width="90" height="11"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[/ Nº DE PISOS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="252" width="100" height="12"/>
+				<textElement>
+					<font size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ACUSE DE RECIBO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="310" y="401" width="186" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="312" y="414" width="76" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DNI:]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Opaque" x="139" y="294" width="148" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="499" y="432" width="28" height="11"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(IZQ.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="442" width="97" height="11"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COLOR DE INMUEBLE:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="527" y="263" width="10" height="10"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="109" y="404" width="17" height="12"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="304" y="349" width="197" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Recibió el documento y se negó a brindar datos:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="509" y="263" width="18" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NO:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="366" y="461" width="189" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="85" y="152" width="166" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<rectangle>
+				<reportElement x="485" y="263" width="10" height="10"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="29" y="284" width="110" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Relación con el contribuyente:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="222" y="391" width="17" height="12"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="202" y="308" width="10" height="10"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="29" y="404" width="78" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Dirección no existe]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="259" y="362" width="17" height="12"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="120" y="313" width="25" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Hora:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="442" y="319" width="35" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[FIRMA]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Opaque" x="29" y="251" width="526" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="137" y="441" width="139" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="366" y="451" width="189" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="29" y="349" width="186" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Recibió el documento y se negó a firmar:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="458" y="441" width="97" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="51" y="201" width="483" height="47" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top" rotation="None" markup="styled">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[1)   Esta Resolución lleva acompañada copia del acto(s) administrativo(s) generador(es) de la obligación puesta a cobro, con su constancia de notificación y su constancia de exigibilidad.
+2)   Los intereses moratorios han sido calculados a la fecha de emisión de ésta Resolución, y se actualizarán a la fecha del pago efectivo de la deuda.
+3)   Si el pago del total de la deuda puesta a cobro se produce luego de iniciado el procedimiento de cobranza coactiva, el Ejecutor Coactivo liquidará las costas que se hubieran generado (lo que implica mayor deuda al ejecutado).
+
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="177" y="311" width="25" height="8"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[A.M.:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="120" y="471" width="435" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="32" y="313" width="88" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Fecha:       /      /      .]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="362" width="230" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Se negó a recibir el documento:]]></text>
+			</staticText>
+			<image>
+				<reportElement x="280" y="153" width="50" height="30"/>
+				<imageExpression><![CDATA[$P{ruta_imagen}+"logosatcaj.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="120" y="451" width="156" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="29" y="463" width="91" height="10"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="276" y="432" width="182" height="11"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[/ NUMERACIÓN DE INMUEBLES CONTINUOS: (DER.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="276" y="452" width="90" height="11"/>
+				<textElement>
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[/ OTROS DETALLES:]]></text>
+			</staticText>
+			<line>
+				<reportElement mode="Opaque" x="84" y="274" width="203" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement mode="Opaque" x="145" y="323" width="32" height="1" forecolor="#000000" backcolor="#FFFFFF"/>
+				<graphicElement fill="Solid">
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="335" y="152" width="166" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="30" y="378" width="110" height="12"/>
+				<textElement>
+					<font size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[MOTIVOS DE NO ACUSE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="177" y="322" width="25" height="8"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[P.M.:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="85" y="177" width="166" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_registro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="335" y="177" width="164" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_registro_auxiliar}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="84" y="153" width="167" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{titulo}+' '+$F{nombre_coactivo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="335" y="153" width="164" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{titulo_auxiliar}+' '+$F{nombre_auxiliar}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="84" y="166" width="167" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[EJECUTOR COACTIVO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="332" y="166" width="167" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[AUXILIAR COACTIVO]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="44">
+			<componentElement>
+				<reportElement mode="Transparent" x="18" y="0" width="252" height="24"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="true" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{nro_acto}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<componentElement>
+				<reportElement mode="Transparent" x="303" y="0" width="252" height="24"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="true" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{nro_expediente}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+		</band>
+	</pageFooter>
+</jasperReport>

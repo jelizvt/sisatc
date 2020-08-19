@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_constacia_no_adeudo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.3310000000000015"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="persona_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="recibo_id" class="java.lang.Integer"/>
+	<parameter name="ruta_imagen" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\Informatica\\Documents\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[exec [stp_cr_obtener_constancia_recibo] $P{persona_id},$P{recibo_id}]]>
+	</queryString>
+	<field name="constancia_id" class="java.lang.Integer"/>
+	<field name="nro_constancia" class="java.lang.String"/>
+	<field name="persona_id" class="java.lang.Integer"/>
+	<field name="apellidos_nombres" class="java.lang.String"/>
+	<field name="direccion_fiscal" class="java.lang.String"/>
+	<field name="tipo_docu_identidad" class="java.lang.String"/>
+	<field name="nro_docu_identidad" class="java.lang.String"/>
+	<field name="anno" class="java.lang.String"/>
+	<field name="subconcepto" class="java.lang.String"/>
+	<field name="recibo_id" class="java.lang.Integer"/>
+	<field name="nro_recibo" class="java.lang.String"/>
+	<field name="monto_a_cobrar" class="java.math.BigDecimal"/>
+	<field name="fecha_recibo" class="java.sql.Timestamp"/>
+	<field name="nombre_usuario" class="java.lang.String"/>
+	<field name="dia" class="java.lang.Integer"/>
+	<field name="mes" class="java.lang.String"/>
+	<field name="annio" class="java.lang.Integer"/>
+	<field name="tipo_constancia" class="java.lang.Integer"/>
+	<field name="cuotas" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="55">
+			<image>
+				<reportElement x="428" y="0" width="116" height="46"/>
+				<imageExpression><![CDATA[$P{ruta_imagen}+"logosatcaj.jpg"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="10" y="0" width="116" height="46"/>
+				<imageExpression><![CDATA[$P{ruta_imagen}+"logosatcaj.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="9" y="42" width="521" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineColor="#666666"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="157" y="43" width="272" height="12" forecolor="#999999" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Calibri" size="9" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[“AÑO DE LA LUCHA CONTRA LA CORRUPCIÓN Y LA IMPUNIDAD”]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="80">
+			<textField>
+				<reportElement mode="Transparent" x="0" y="4" width="555" height="34"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="27" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CONSTANCIA DE NO ADEUDO"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="195" y="59" width="167" height="16" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N° "+$F{nro_constancia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="0" y="38" width="555" height="16" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["(T.U.O. de la Ley de Tributación Municipal – D.S. N° 156-2004-EF)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="114">
+			<staticText>
+				<reportElement mode="Transparent" x="22" y="83" width="83" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Domicilio Fiscal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="22" y="47" width="83" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="22" y="27" width="204" height="16" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[I. DATOS DEL CONTRIBUYENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="22" y="59" width="83" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Contribuyente]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="22" y="71" width="83" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_docu_identidad}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="106" y="44" width="5" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="106" y="56" width="5" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="106" y="80" width="5" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="112" y="47" width="114" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{persona_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="112" y="59" width="396" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellidos_nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="112" y="83" width="396" height="24" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion_fiscal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="106" y="68" width="5" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="112" y="71" width="83" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="9" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_docu_identidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="283" y="12" width="222" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Times New Roman" size="10" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cajamarca "+$F{dia}+" de "+$F{mes}+" del "+$F{annio}+"."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="508" y="0" width="47" height="72"/>
+				<textElement textAlignment="Center" rotation="Right" markup="styled">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isBold='true'>NRO.DE RECIBO:</style>"+"\n"+$F{nro_recibo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="508" y="73" width="47" height="37"/>
+				<textElement textAlignment="Center" rotation="Right" markup="styled">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isBold='true'>MONTO: </style>"+"\n"+"s/. "+$F{monto_a_cobrar}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="22" y="108" width="483" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineColor="#666666"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="167" splitType="Stretch">
+			<subreport>
+				<reportElement x="22" y="0" width="483" height="148"/>
+				<subreportParameter name="anio">
+					<subreportParameterExpression><![CDATA[$F{anno}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="cuotas">
+					<subreportParameterExpression><![CDATA[$F{cuotas}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="subconcepto">
+					<subreportParameterExpression><![CDATA[$F{subconcepto}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="tipo_constancia">
+					<subreportParameterExpression><![CDATA[$F{tipo_constancia}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="persona_id">
+					<subreportParameterExpression><![CDATA[$F{persona_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="recibo_id">
+					<subreportParameterExpression><![CDATA[$P{recibo_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["reporte_constacia_no_adeudo_detalle.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="508" y="4" width="47" height="107"/>
+				<textElement textAlignment="Center" rotation="Right" markup="styled">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isBold='true'>FECHA Y HORA DE PAGO:</style> "+"\n"+$F{fecha_recibo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="508" y="114" width="47" height="44"/>
+				<textElement textAlignment="Center" rotation="Right" markup="styled">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isBold='true'>USUARIO:</style> "+$F{nombre_usuario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="53" splitType="Stretch">
+			<line>
+				<reportElement x="155" y="5" width="1" height="35" forecolor="#000000"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="10" y="18" width="147" height="14" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[         www.satcajamarca.gob.pe]]></text>
+			</staticText>
+			<line>
+				<reportElement x="10" y="1" width="521" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineColor="#666666"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="158" y="14" width="291" height="33"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font size="6"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isBold='true'>Av. Alameda de los Incas S/N - Complejo Qhapac Ñan</style> de Lunes a Viernes de 08:00 a.m. a 05:00 p.m.  <style isBold='true'>  C.C. El Quinde - 2° piso</style> de Lunes a Viernes de 1:00 p.m. a 08:00 p.m.-Sábados de 01:00 p.m.a 06:00 p.m.<style isBold='true'>  Jr. Junín N°1031 </style> de Lunes a Viernes de 09:00 a.m. a 01:00 p.m. y de 03:00 p.m. a 06:00 p.m. - Sábados de 09:00 a.m. a 12:00 p.m."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="158" y="5" width="291" height="9"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font size="6" isBold="true" isUnderline="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[<style isBold='true'>Horarios y Centros de Atención</style>]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

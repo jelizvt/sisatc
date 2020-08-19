@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+<head>
+<title>SISAT Cajamarca</title>
+<SCRIPT type="text/javascript" src="/satc/js/jquery-1.7.1.js"></SCRIPT>
+<script type="text/javascript">
+   jQuery(document).ready(function () {
+      $("#j_username").focus();
+   });
+</script>
+</head>
+<body>
+	<a4j:loadStyle src="/css/login.css"></a4j:loadStyle>
+	<div id="main">
+		<div>
+			<img width="200" height="120" src="#{request.contextPath}/images/logo.png" />
+		</div>
+		<div class="spacer-logo-form"></div>
+		<div class="fondito">
+			<div class="layer-one"></div>
+			<p:outputLabel value="Fecha Inicio"
+								for="id_fechainicio">
+							</p:outputLabel>
+			<table width="100%" class="title-login-form">
+				<tbody>
+					<tr>
+						<td width="40" align="right"><img
+							src="#{request.contextPath}/images/llave.png" /></td>
+						<td style="padding-left: 10px;">SAT-CAJAMARCA Acceso al Sistema</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="layer-two"></div>
+			<form id="security_check" name="j_security_check"
+				action="j_security_check" method="post">
+				<table width="325" border="0" cellspacing="2" cellpadding="3">
+					<tbody>
+						<tr>
+							<td width="90" align="right" valign="top">Usuario:</td>
+							<td width="220" valign="middle"><span id="sprytextfield1">
+									<label> <input id="j_username" name="j_username"
+										type="text" class="style_caja"  />
+								</label>
+							</span>*</td>
+						</tr>
+						<tr>
+							<td align="right" valign="top">Contraseña:</td>
+							<td valign="middle"><span id="sprytextfield2"> <label>
+										<input id="j_password" name="j_password" type="password"
+										class="style_caja" />
+								</label>
+							</span>*</td>
+						</tr>
+						<tr>
+							<td colspan="2" align="center"><label> <input
+									id="ingresar" name="ingresar" type="submit" value="Ingresar"
+									class="style_btn_ingresar" />
+							</label></td>
+						</tr> 
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<div class="msg-error-login">
+			<c:if test="${param['auth-error']}">
+				Datos incorrectos. Porfavor verifique sus datos.
+			</c:if>
+		</div>
+	</div>
+</body>
+</html>

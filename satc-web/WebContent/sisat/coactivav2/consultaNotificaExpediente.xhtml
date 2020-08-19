@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<style type="">
+		.classRight {
+		    text-align: right;
+		}
+		.classCenter {
+		    text-align: center;
+		}
+		.classLeft {
+		    text-align: left;
+		}
+	</style>
+	
+	<h:form id="formNotificacionExpediente">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		
+	<rich:hotKey key="return"
+			handler="#{rich:element('btnBuscar')}.click()"
+			selector="#formNotificacionExpediente" />	
+		
+	<h:panelGrid columns="1" style="width:100%;" cellpadding="0" cellspacing="0">	
+		    <rich:panel>
+		        <f:facet name="header">
+		        	Notificacion de Expedientes
+		        </f:facet>
+				<h:panelGrid columns="2" rendered="#{consultaNotificaExpedienteManaged.permisoBuscar}">
+				
+					<h:outputText for="txtLotUltimaREC" value="Última REC Emitida."/>					
+                    <h:selectBooleanCheckbox value="#{consultaNotificaExpedienteManaged.ultimaRec}" />
+				
+					<h:outputText for="txtLotExigible" value="Nro Cartera: " />
+					<h:inputText id="txtLotExigible" value="#{consultaNotificaExpedienteManaged.nroCartera}"/>
+					
+					<h:outputText for="txtNroExpediente" value="Nro. Expediente" />
+		        	<h:inputText id="txtNroExpediente" value="#{consultaNotificaExpedienteManaged.nroExpediente}"/>
+		        	
+		        	<h:outputText for="txtNumeroPapeleta" value="Nro Papeleta" />
+		        	<h:inputText id="txtNumeroPapeleta" value="#{consultaNotificaExpedienteManaged.nroPapeleta}"/>
+		        	
+		        	<h:outputText for="txtCodContribuyente" value="Código de Contribuyente" />
+		        	<h:inputText id="txtCodContribuyente" value="#{consultaNotificaExpedienteManaged.contribuyenteId}"/>
+		        	    	
+					<a4j:commandButton id="btnBuscar" value="Buscar" style="width:100px" action="#{consultaNotificaExpedienteManaged.buscar()}" reRender="panelNotificaExpediente" />
+				</h:panelGrid>
+			</rich:panel>			
+			
+			<rich:panel id="panelNotificaExpediente">
+				<h:panelGrid columns="2">
+					<h:commandLink id="btnExcel"
+						action="#{consultaNotificaExpedienteManaged.exportXls()}"
+						styleClass="button1" immediate="true">
+						<h:graphicImage value="/images/modal/excel.png"
+							style="border:0;width:23px;height:23px;" />
+					</h:commandLink>
+					<h:outputText value="#{consultaNotificaExpedienteManaged.records.size()} registros encontrados"/>
+				</h:panelGrid>
+				
+				<rich:extendedDataTable id="edtExpedientes" value="#{consultaNotificaExpedienteManaged.records}" width="100%" height="300px"
+					sortMode="single" selectionMode="single" enableContextMenu="false" var="record"
+					rowKeyVar="row" >
+					
+					<rich:column id="c0" style="text-align:center" width="4%" >
+						<f:facet name="header" width="15%">Gestión</f:facet>
+						
+						<a4j:commandLink  ajaxSingle="true" title="Registrar Notificación y Gastos." id="clDetExpediente" 
+						rendered="#{record.notificacionId==0 and consultaNotificaExpedienteManaged.permisoAgregarRegistrar}"
+							oncomplete="#{rich:component('mpNotifica')}.show()" reRender="mpNotifica">
+							<h:graphicImage value="/images/new_wind.png" style="border:0;;" />
+							<f:setPropertyActionListener value="#{record}"
+								target="#{consultaNotificaExpedienteManaged.selExpediente}" id="palExpediente" />
+						</a4j:commandLink>
+						
+						<a4j:commandLink ajaxSingle="true" title="Actualizar datos de Notificación" id="clDetExpedienteModified" 
+							rendered="#{record.notificacionId!=0 and consultaNotificaExpedienteManaged.permisoModificarActualizar}"
+							oncomplete="#{rich:component('mpNotificaModified')}.show()" reRender="mpNotificaModified">
+							<h:graphicImage value="/images/editar2.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{record}"
+								target="#{consultaNotificaExpedienteManaged.selExpediente}" id="palExpediente2" />
+						</a4j:commandLink>
+												
+					</rich:column>
+					
+					<rich:column id="c1" style="text-align:center" width="3%" >
+		                <f:facet name="header" >Item</f:facet>
+		                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		            </rich:column>
+		            <rich:column id="c2" style="text-align:center" width="8%" >
+						<f:facet name="header" width="10%">Expediente</f:facet>
+						<h:outputText value="#{record.nroExpediente}" />
+					</rich:column>
+					<rich:column id="c9" style="text-align:center" width="8%" >
+						<f:facet name="header" width="10%">Nro REC</f:facet>
+						<h:outputText value="#{record.nroRec}" />
+					</rich:column>
+					<rich:column id="c3" style="text-align:center" width="5%" >
+						<f:facet name="header" width="10%">Codigo</f:facet>
+						<h:outputText value="#{record.personaId}" />
+					</rich:column>
+					
+					<rich:column id="c4" style="text-align:left" width="18%" >
+						<f:facet name="header" width="10%">Apellidos y Nombres</f:facet>
+						<h:outputText value="#{record.apellidosNombresPersona}" />
+					</rich:column>
+					
+					<rich:column id="c5" style="text-align:center" width="10%" >
+						<f:facet name="header" width="10%">Fecha Expediente</f:facet>
+						<h:outputText value="#{record.fechaExpediente}" />
+					</rich:column>
+					
+					<rich:column id="c5-1" style="text-align:center" width="10%" >
+						<f:facet name="header" width="10%">Emisión REC</f:facet>
+						<h:outputText value="#{record.fechaFormatoEmision}" />
+					</rich:column>
+					
+					<rich:column id="c6" style="text-align:center" width="10%" >
+						<f:facet name="header" width="10%">Fecha Notificacion</f:facet>
+						<h:outputText value="#{record.fechaNotificacion}" />
+					</rich:column>
+					
+					<rich:column id="c7" style="text-align:left" width="15%" >
+						<f:facet name="header" width="10%">Notificador</f:facet>
+						<h:outputText value="#{record.apellidosNombresNotificador }" />
+					</rich:column>
+					
+					<rich:column id="c8" style="text-align:left" width="10%" >
+						<f:facet name="header" width="10%">Forma Notif.</f:facet>
+						<h:outputText value="#{record.formaNotificacion}" />
+					</rich:column>
+					<rich:column id="c10" style="text-align:center" width="5%" >
+						<f:facet name="header" width="10%">Registrado</f:facet>
+						<h:outputText value="#{record.usuario}" />
+					</rich:column>
+				</rich:extendedDataTable>
+				<rich:datascroller for="edtExpedientes" maxPages="5" fastStep="3"/>
+			</rich:panel>
+		</h:panelGrid>
+	</h:form>
+	
+	
+	
+	<rich:modalPanel id="mpNotifica" modal="true" minWidth="480" height="240" >
+		<f:facet name="header">
+			<h:outputText value="Registrar Notificación y Generación de Gastos" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose11" styleClass="hidelink" />
+				<rich:componentControl for="mpNotifica"
+					attachTo="imgclose11" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+    	<h:form>
+            <h:panelGrid columns="2">
+            	<h:outputText value="Codigo :" />
+           		<h:outputText value="#{consultaNotificaExpedienteManaged.selExpediente.personaId}" />
+           		
+           		<h:outputText value="Apellidos Nombres :" />
+           		<h:outputText value="#{consultaNotificaExpedienteManaged.selExpediente.apellidosNombresPersona}" />
+           		
+           		<h:outputText value="Nro Expediente :" />
+           		<h:outputText value="#{consultaNotificaExpedienteManaged.selExpediente.nroExpediente}" />
+           		
+           		<h:outputText value="Nro REC :" />
+           		<h:outputText value="#{consultaNotificaExpedienteManaged.selExpediente.nroRec}" />
+           	
+           		<h:outputText value="Fecha emision :" />
+           		<h:outputText value="#{consultaNotificaExpedienteManaged.selExpediente.fechaExpediente}" />
+           	
+           		<h:panelGrid columns="1">
+           		</h:panelGrid>
+           		<h:panelGrid columns="1">
+           		</h:panelGrid>
+           		
+           		<h:panelGroup>
+					<h:outputText
+						value="Forma de Notificación:" /> <span style="color: red;">*</span>
+				</h:panelGroup>		
+				
+				<h:selectOneMenu id="cmbFormaNotif" value="#{consultaNotificaExpedienteManaged.formaNotificacionId}"
+					 style="width:250px;" required="true" requiredMessage="Seleccione la forma de notificacion" >
+					<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems
+							value="#{consultaNotificaExpedienteManaged.listaFormaNotificacion}"
+							var="item" itemLabel="#{item.descripcion}"
+							itemValue="#{item.motivoNotificacionId}"></f:selectItems>
+				</h:selectOneMenu>
+				
+				<h:panelGroup>
+					<h:outputText value="Notificador:" />
+					<span style="color: red;">*</span>
+				</h:panelGroup>
+				<h:selectOneMenu id="cmbNotificador" value="#{consultaNotificaExpedienteManaged.notificadorId}"
+					 style="width:250px;" required="true" requiredMessage="Seleccione notificador" >
+					<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems
+							value="#{consultaNotificaExpedienteManaged.listaNotificador}"
+							var="item" itemLabel="#{item.apellidosNombres}"
+							itemValue="#{item.notificadorId}"></f:selectItems>
+				</h:selectOneMenu>
+				
+				<h:panelGroup>
+					<h:outputText value="Fecha Notificación" /> <span style="color: red;">*</span>
+				</h:panelGroup>
+				<h:panelGroup>
+					<rich:calendar locale="en/US" required="true" requiredMessage="Seleccione la fecha de notificacion"
+						datePattern="dd/MM/yyyy HH:mm" direction="top-right"
+						enableManualInput="true" inputClass="maskDate"
+						inputStyle="width:100px" id="id_fechadeclaracion"
+						value="#{consultaNotificaExpedienteManaged.fechaNotificacion}"
+						showApplyButton="true"
+						>
+					</rich:calendar> <rich:jQuery id="maskedo3" selector=".maskDate"
+						query="mask('99/99/9999 99:99')" timing="onload" />
+				</h:panelGroup>			
+			</h:panelGrid>
+            
+            <h:panelGrid columns="2" align="center">
+            	<a4j:commandButton value="Registrar"
+					action="#{consultaNotificaExpedienteManaged.registraNotificacion()}" 
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpNotifica\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };" 
+					reRender="panelNotificaExpediente" status="ajaxStatus" />
+	        	<a4j:commandButton value="Cancelar"
+					onclick="#{rich:component('mpNotifica')}.hide();return false;" />
+        	</h:panelGrid>
+	   	</h:form>
+	</rich:modalPanel>
+	
+	<!-- Agregado: omar-->	
+	<rich:modalPanel id="mpNotificaModified" modal="true" minWidth="480" height="240" >
+		<f:facet name="header" >
+			<h:outputText value="Modificar Notificación" />
+		</f:facet>
+		
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose12" styleClass="hidelink" />
+				<rich:componentControl for="mpNotificaModified"
+					attachTo="imgclose12" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+    	
+    	<h:form>
+            <h:panelGrid columns="2">
+            	<h:outputText value="Codigo :" />
+           		<h:outputText value="#{consultaNotificaExpedienteManaged.selExpediente.personaId}" />
+           		
+           		<h:outputText value="Apellidos Nombres :" />
+           		<h:outputText value="#{consultaNotificaExpedienteManaged.selExpediente.apellidosNombresPersona}" />
+           		
+           		<h:outputText value="Nro Expediente :" />
+           		<h:outputText value="#{consultaNotificaExpedienteManaged.selExpediente.nroExpediente}" />
+           		
+           		<h:outputText value="Nro REC :" />
+           		<h:outputText value="#{consultaNotificaExpedienteManaged.selExpediente.nroRec}" />
+           	
+           		<h:outputText value="Fecha emision :" />
+           		<h:outputText value="#{consultaNotificaExpedienteManaged.selExpediente.fechaExpediente}" />
+           	
+           		<h:panelGrid columns="1">
+           		</h:panelGrid>
+           		<h:panelGrid columns="1">
+           		</h:panelGrid>
+           		
+           		<h:panelGroup>
+					<h:outputText
+						value="Forma de Notificación:" style="font-weight:bold;color:red;" /> 
+				</h:panelGroup>		
+				
+				<h:selectOneMenu id="cmbFormaNotifModified" value="#{consultaNotificaExpedienteManaged.formaNotificacionId}"
+					 style="width:250px;" required="true" requiredMessage="Seleccione la forma de notificacion" >
+					<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems
+							value="#{consultaNotificaExpedienteManaged.listaFormaNotificacion}"
+							var="item" itemLabel="#{item.descripcion}"
+							itemValue="#{item.motivoNotificacionId}"></f:selectItems>
+				</h:selectOneMenu>
+				
+				<h:panelGroup>
+					<h:outputText value="Notificador:" style="font-weight:bold;color:red;" />
+				</h:panelGroup>
+				
+				
+				<h:selectOneMenu id="cmbNotificador" value="#{consultaNotificaExpedienteManaged.notificadorId}"
+					 style="width:250px;" required="true" requiredMessage="Seleccione notificador" >
+					<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems
+							value="#{consultaNotificaExpedienteManaged.listaNotificador}"
+							var="item" itemLabel="#{item.apellidosNombres}"
+							itemValue="#{item.notificadorId}"></f:selectItems>
+				</h:selectOneMenu>
+				
+				<h:panelGroup>
+					<h:outputText value="Fecha Notificación" style="font-weight:bold;color:red;" />
+				</h:panelGroup>
+				
+				<h:panelGroup>
+					<rich:calendar locale="en/US" required="true" requiredMessage="Seleccione la fecha de notificacion"
+						datePattern="dd/MM/yyyy HH:mm" direction="top-right"
+						enableManualInput="true" inputClass="maskDate"
+						inputStyle="width:100px" id="id_fechadeclaracion"
+						value="#{consultaNotificaExpedienteManaged.fechaNotificacion}"
+						showApplyButton="true"
+						>
+					</rich:calendar> <rich:jQuery id="maskedo3" selector=".maskDate"
+						query="mask('99/99/9999 99:99')" timing="onload" />
+				</h:panelGroup>			
+				
+			</h:panelGrid>
+            
+            <h:panelGrid columns="2" align="center">
+            	<a4j:commandButton value="Actualizar"
+					action="#{consultaNotificaExpedienteManaged.actualizarNotificacion()}" 
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpNotificaModified\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };" 
+					reRender="panelNotificaExpediente" status="ajaxStatus" />
+	        	<a4j:commandButton value="Cancelar"
+					onclick="#{rich:component('mpNotificaModified')}.hide();return false;" />
+        	</h:panelGrid>
+        	
+	   	</h:form>
+	</rich:modalPanel>
+	
+</ui:composition>

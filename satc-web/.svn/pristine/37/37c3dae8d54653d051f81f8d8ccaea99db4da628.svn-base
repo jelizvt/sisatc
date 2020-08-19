@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" hideDelay="0"
+	submitMode="client">
+	<h:form style="top:20px ;position:relative;">
+		<h:panelGrid columns="4">
+			<h:outputLabel />
+			<h:outputLabel style="font-weight:bold;"
+				value="REPORTES DE EXPEDIENTES EN COACTIVA" />
+			<h:outputLabel />
+			<h:outputLabel />
+			<h:outputText value="Tipo Deuda:" />
+			<rich:comboBox width="150px" defaultLabel="Selecccione"
+				enableManualInput="false" selectFirstOnUpdate="true"
+				directInputSuggestions="true"
+				binding="#{reporteExpedienteManaged.cmbHtmlTipoDeuda}"
+				onblur="validaInputCbo(this)" id="idTipoDeuda" immediate="true"
+				value="#{reporteExpedienteManaged.selecionTipoDeuda}"
+				valueChangeListener="#{reporteExpedienteManaged.loadSeleccion}">
+				<f:selectItem id="id1" itemValue="Tributaria" />
+				<f:selectItem id="id2" itemValue="No Tributaria" />
+				<a4j:support id="idEventTd" event="onchange" BypassUpdates="false"
+					ajaxSingle="true" />
+			</rich:comboBox>
+			<h:outputText value="Tipo REC :" />
+			<rich:comboBox defaultLabel="Seleccione" enableManualInput="false"
+				width="420" value="#{reporteExpedienteManaged.selecionTipoRec}"
+				required="true"
+				requiredMessage="Porfavor seleccione un Tipo de REC." id="idTipoRec"
+				binding="#{reporteExpedienteManaged.cmbNoTipoRec}"
+				valueChangeListener="#{reporteExpedienteManaged.loadTipoRecById}">
+				<f:selectItem id="idx1"
+					itemValue="All Expedientes igual a : (Total RECs Inicio)" />
+				<f:selectItems value="#{reporteExpedienteManaged.listTipoRec}" />
+				<a4j:support reRender="idDescripcionTipoRec" event="onchange"
+					bypassUpdates="false" ajaxSingle="true"></a4j:support>
+			</rich:comboBox>
+
+		</h:panelGrid>
+		<h:panelGroup
+			style="font-weight:bold; width:85%; color:#black; text-align:center;">
+			<h:outputText id="idDescripcionTipoRec"
+				style="font-weight:bold;font-size:14px;"
+				value="#{msg['obl.descripcionSubConcepto']} #{reporteExpedienteManaged.selecionTipoRec}" />
+		</h:panelGroup>
+		<rich:panel bodyClass="body3" style="width:100%;height:450px"
+			id="pnlReportes">
+			<h:panelGrid columns="2"
+				style="font-weight:bold; width:85%; color:#black; text-align:center;">
+				<a4j:commandButton id="cmdConsultar" value="Consultar"
+					action="#{reporteExpedienteManaged.consultarReporte}"
+					reRender="pnlReportes"
+					oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+					style="width:150px;" immediate="true" status="ajaxStatus">
+				</a4j:commandButton>
+
+			</h:panelGrid>
+			<rich:datascroller for="idTablaReportes" maxPages="10"></rich:datascroller>
+			<rich:extendedDataTable id="idTablaReportes"
+				value="#{reporteExpedienteManaged.listReporteExpedientes}" var="rep"
+				selectionMode="single" rows="15" width="100%" height="400px"
+				noDataLabel="No se encontró registros" enableContextMenu="false"
+				rowKeyVar="key1">
+				<f:facet name="header">
+					<h:commandLink id="exportarLstExc"
+						rendered="#{reporteExpedienteManaged.listReporteExpedientes.size()>0}"
+						action="#{reporteExpedienteManaged.exportarTablaExcel}">
+						<h:graphicImage value="/images/modal/excel.png"
+							style="border:0;width:25px;height:25px;" />
+						<rich:toolTip for="exportarLstExc">Descargar Lista en Excel.</rich:toolTip>
+					</h:commandLink>
+				</f:facet>
+				<rich:column filterBy="#{rep.personaId}" id="idcam1" width="6%">
+					<f:facet name="header">PersonaId</f:facet>
+					<h:outputText value="#{rep.personaId}" />
+				</rich:column>
+				<rich:column filterBy="#{rep.apellidosNombres}" id="idcam2"
+					width="15%">
+					<f:facet name="header">Administrado</f:facet>
+					<h:outputText value="#{rep.apellidosNombres}" />
+				</rich:column>
+				<!-- 				<rich:column id="idcam3" width="15%" filterBy="#{e.direccion}"> -->
+				<!-- 					<f:facet name="header">Dirección</f:facet> -->
+				<!-- 					<h:outputText value="#{e.direccion}" /> -->
+				<!-- 				</rich:column> -->
+				<rich:column id="idcam4" style="text-align:center;" width="4%">
+					<f:facet name="header">Tipo Valor</f:facet>
+					<h:outputText value="#{rep.tipoActo}" />
+				</rich:column>
+				<rich:column id="idcam5" width="6%">
+					<f:facet name="header">Concepto</f:facet>
+					<h:outputText value="#{rep.concepto}" />
+				</rich:column>
+				<rich:column id="idcam6" width="11%" filterBy="#{rep.nroActo}"
+					style="text-align:center;">
+					<f:facet name="header">Nro. Valor</f:facet>
+					<h:outputText value="#{rep.nroActo}" />
+				</rich:column>
+				<rich:column id="idcam7" width="11%" filterBy="#{rep.nroExpediente}"
+					style="text-align:center;">
+					<f:facet name="header">Nro. Expediente</f:facet>
+					<h:outputText value="#{rep.nroExpediente}" />
+				</rich:column>
+				<rich:column id="idcam8" filterBy="#{rep.estadoExpediente}"
+					style="text-align:center;">
+					<f:facet name="header">Est. Expediente</f:facet>
+					<h:outputText value="#{rep.estadoExpediente}" />
+				</rich:column>
+				<rich:column id="idcam9" width="10%">
+					<f:facet name="header">Fecha Emisión</f:facet>
+					<h:outputText
+						value="#{rep.fechaEmision==null? '--':rep.fechaEmision}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss a" timeZone="EST" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="idcam10" width="10%">
+					<f:facet name="header">Fecha Notificación</f:facet>
+					<h:outputText
+						value="#{rep.fechaNotificacion==null? '--':rep.fechaNotificacion}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss a" timeZone="EST" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="idcam11" width="10%" style="text-align:right;">
+					<f:facet name="header">Saldos</f:facet>
+					<h:outputText value="S/. #{rep.montoDeuda}" />
+				</rich:column>
+				<rich:column id="idcam12" width="10%" style="text-align:center;">
+					<f:facet name="header">Est. Deuda</f:facet>
+					<h:outputText value="#{rep.estado_deuda}" />
+				</rich:column>
+			</rich:extendedDataTable>
+		</rich:panel>
+	</h:form>
+</ui:composition>

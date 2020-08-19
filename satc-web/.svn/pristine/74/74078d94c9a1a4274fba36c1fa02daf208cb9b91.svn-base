@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form id="form">	
+		<rich:panel style="width:100%; height:550px;" id="panel"> <!-- contenedor de componentes -->
+<!-- 			<h:outputText style="font-weight:bold" value="REGISTRO DE FISCALIZADORES, NOTIFICADORES" /> -->
+			<f:facet name="header">
+				<h:outputText style="font-weight:bold" value="REGISTRO DE FISCALIZADORES" />
+			</f:facet>
+			<table border="0">
+				
+				<tr>				
+					<td><h:outputText value="Código: " />
+					<span style="color: red;">*</span>
+					</td>
+					<td>
+							<h:inputText required="true" requiredMessage="Indique un codigo al inspector"
+								value="#{fiscalizadorManaged.codigo}"
+								id="Codigo" size="6" maxlength="9"
+								style="width:81px">
+	<!-- 							<f:convertNumber integerOnly="true"/> -->
+	                        	<f:validateLongRange minimum="1" maximum="1000"/>  
+	                        	<rich:ajaxValidator event="onblur"/>                      		
+							</h:inputText>							
+<!-- 						<a4j:commandButton value="Buscar" -->
+<!-- 							style="width:80px;" -->
+<!-- 							action="#{fiscalizadorManaged.buscar}" -->
+<!-- 							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };" -->
+<!-- 							id="buscar" reRender="Nombres,Dni,celular,id_fechaIni,id_fechaFin" -->
+<!-- 							/> -->
+<!-- 						<a4j:commandButton value="Eliminar" -->
+<!-- 							style="width:80px;" -->
+<!-- 							action="#{fiscalizadorManaged.eliminar}" -->
+<!-- 							id="eliminar" reRender="Codigo,Nombres,Dni,celular,id_fechaIni,id_fechaFin,tablaPrincipal" -->
+<!-- 							/> -->
+					</td>		
+					<td>
+						
+					</td>	
+
+				</tr>
+				
+				<tr>
+					<td><h:outputText value="Apellidos y Nombres:" />
+					<span style="color: red;">*</span>
+					</td>
+					<td>
+						<h:inputText required="true" requiredMessage="Indique el nombre del Inspector"
+							value="#{fiscalizadorManaged.nombresApellidos}"
+							id="Nombres" size="25" maxlength="70"
+							style="width:200px">
+							 <f:validateLength minimum="5" maximum="50"/>
+	               			  <rich:ajaxValidator event="onblur"/>
+							</h:inputText>
+					</td>
+					<td>
+						
+					</td>	
+<!-- 					<td> -->
+<!-- 						<rich:message for="Nombres" /> -->
+<!-- 					</td>	 -->
+				</tr>
+				
+				<tr>
+					<td><h:outputText value="Nro. Dni:" />
+					<span style="color: red;">*</span>
+					</td>
+					<td><h:inputText required="true" requiredMessage="Indique el DNI"
+							value="#{fiscalizadorManaged.dni}" id="Dni" size="10"
+							maxlength="8" style="width:81px">
+							<f:validateLength minimum="8" maximum="8" />
+							<rich:ajaxValidator event="onblur" />
+						</h:inputText>
+					</td>
+					<td><h:outputText value="Nro. Celular:" />
+					<span style="color: red;">*</span>
+					</td>
+					<td><h:inputText required="true"
+							requiredMessage="Indique el Nro. de Celular"
+							value="#{fiscalizadorManaged.celular}" id="celular" size="10"
+							maxlength="9" style="width:81px">
+							<f:validateLength minimum="5" maximum="9" />
+							<rich:ajaxValidator event="onblur" />
+						</h:inputText></td>
+					<td>
+						
+					</td>	
+				</tr>
+				<tr>
+					<td><h:outputText value="Dirección:" />
+					</td>
+					<td>
+						<h:inputText
+							value="#{fiscalizadorManaged.direccion}"
+							id="direccion"  maxlength="40"
+							style="width:200px">
+							<f:validateLength minimum="10" maximum="50"/>
+	               			<rich:ajaxValidator event="onblur"/>
+							</h:inputText>
+					</td>
+					<td>
+						
+					</td>	
+					
+				</tr>
+				
+				<tr>
+				<td><h:outputText value="Fecha de Inicio: " />
+					</td>
+					<td>
+						<rich:calendar locale="en/US" required="true" requiredMessage="Selecciona una fecha de inicio"
+							datePattern="dd/MM/yyyy" enableManualInput="true"
+							id="id_fechaIni" value="#{fiscalizadorManaged.fini}" inputStyle="width:90px">						
+							<rich:ajaxValidator event="onblur"/>
+						</rich:calendar>
+					</td>
+					<td><h:outputText value="Fecha de Fin: " />
+					</td>
+					<td>
+						<rich:calendar locale="en/US" required="true" requiredMessage="Selecciona una fecha final"
+							datePattern="dd/MM/yyyy" enableManualInput="true"
+							id="id_fechaFin" value="#{fiscalizadorManaged.ffin}" inputStyle="width:90px">							
+							<rich:ajaxValidator event="onblur"/>
+						</rich:calendar>
+					</td>
+					<td>
+						
+					</td>	
+<!-- 					<td> -->
+<!-- 						<rich:message for="id_fechaIni" /> -->
+<!-- 						<rich:message for="id_fechaFin" /> -->
+<!-- 					</td> -->
+				</tr>
+				<tr>
+				<td><h:outputText value="Área: " />
+				<span style="color: red;">*</span>
+				</td>
+				
+				<td>
+																	<rich:comboBox id="id_cmbunidad" 
+																			value="#{fiscalizadorManaged.cmbTipoUnidad}"
+																			valueChangeListener="#{fiscalizadorManaged.loadUnidad}"
+																			defaultLabel="#{msg['obl.defaultLabelCmbSubConcepto']}"
+																			required="true"
+																			requiredMessage="Indique la unidad a la que pertenece"
+																			width="280" tabindex="3"
+																			onkeypress="return showListCbo(this,event);"
+																			onblur="validaInputCbo(this)">
+																			<f:selectItems
+																				value="#{fiscalizadorManaged.listaUnidad}" />
+
+																		</rich:comboBox>
+				</td>
+				
+								
+				</tr>
+					<tr></tr>	
+					<tr></tr>
+				<tr>				
+					<td>						
+					</td>
+					<td>
+<!-- 					<a4j:commandButton value="Guardar" -->
+<!-- 							style="width:80px;" -->
+<!-- 							action="#{fiscalizadorManaged.guardar}" -->
+<!-- 							id="guardar" reRender="Codigo,Nombres,dni,celular,id_fechaIni,id_fechaFin,tablaPrincipal" -->
+<!-- 							/> -->
+
+							<a4j:commandButton value="Guardar" style="width:100px;" rendered="#{fiscalizadorManaged.editable==true}"
+							action="#{fiscalizadorManaged.guardar}"
+							reRender="Codigo,Nombres,Dni,celular,id_fechaIni,id_fechaFin,tablaPrincipal"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							id="id_guardarcommand" /> 
+							
+<!-- 							<a4j:commandButton value="Limpiar" -->
+<!-- 							style="width:80px;" -->
+<!-- 							action="#{fiscalizadorManaged.Limpiar}" -->
+<!-- 							id="limpiar" type="reset"/> -->
+
+						<a4j:commandButton value="Editar" rendered="#{fiscalizadorManaged.editable==false}"
+							style="width:80px;"
+							action="#{fiscalizadorManaged.editar}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							id="editar" reRender="Codigo,Nombres,Dni,celular,id_fechaIni,id_fechaFin,tablaPrincipal"
+							/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					<h:commandLink action="#{fiscalizadorManaged.imprimirPdf}" value="Imprimir en formato PDF" />
+					</td>
+					</tr>
+			</table>	
+			
+			<rich:extendedDataTable value="#{fiscalizadorManaged.listarFiscalizadores}" var="dataItem" id="tablaPrincipal"
+                    rows="15" 
+                    onRowMouseOver="this.style.backgroundColor='#B5F3FB'"
+                    onRowMouseOut="this.style.backgroundColor='#{a4jSkin.rowBackgroundColor}'"
+                    width="100%" height="300px" selectionMode="single" noDataLabel="NO HAY REGISTROS" rowKeyVar="row"
+                    enableContextMenu="false">
+<!--                     <f:facet name="header"> -->
+<!--                         <h:outputText value="LISTAR NOTIFICADORES" /> -->
+<!--                     </f:facet> -->
+                     <rich:column width="150px">
+                        <f:facet name="header">Código de Inspector</f:facet>
+                        <h:outputText value="#{dataItem.codigo}"/>
+                    </rich:column>
+                    <rich:column width="250px">
+                        <f:facet name="header">Apellidos y Nombres</f:facet>
+                        <h:outputText value="#{dataItem.nombresApellidos}" />
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">DNI</f:facet>
+                        <h:outputText value="#{dataItem.dni}" />
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">Nro. Celular</f:facet>
+                        <h:outputText value="#{dataItem.celular}" />
+                    </rich:column>
+                    <rich:column width="250px">
+                        <f:facet name="header">Dirección</f:facet>
+                        <h:outputText value="#{dataItem.direccion}" />
+                    </rich:column>
+                    <rich:column>
+                        <f:facet name="header">Fecha Inicio</f:facet>
+                        <h:outputText value="#{dataItem.fini}" />
+                    </rich:column>
+                     <rich:column>
+                        <f:facet name="header">Fecha Fin</f:facet>
+                        <h:outputText value="#{dataItem.ffin}" />
+                    </rich:column>
+                    <rich:column width="250px">
+                        <f:facet name="header">Área</f:facet>
+                        <h:outputText value="#{dataItem.termninal}" />
+                    </rich:column>
+                   
+          </rich:extendedDataTable>   
+						 <rich:datascroller for="tablaPrincipal" maxPages="10"></rich:datascroller> 
+						 
+		</rich:panel>	
+			
+	</h:form>
+</ui:composition>

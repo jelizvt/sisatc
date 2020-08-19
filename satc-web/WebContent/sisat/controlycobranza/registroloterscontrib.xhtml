@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+
+	<style type="text/css">
+.extdt-empty-cell {
+	width: 0;
+}
+
+th.extdt-empty-cell {
+	width: 0;
+}
+/* Disables resizing */
+.extdt-hsep {
+	display: none;
+}
+</style>
+
+	<h:form id="formregistroLotesRS">
+		<a4j:outputPanel id="id_panelprincipalregistroLoteRS">
+			<h:outputText id="idLote" value="Numero de Lote : " />
+			<h:outputText id="idNroLote"
+				value="Numero de Lote : #{registroLoteRSContribManaged.ccLote.loteId} - #{registroLoteRSContribManaged.ccLote.annoLote}" />
+
+			<rich:comboBox width="150px" defaultLabel="Selecccione"
+				rendered="#{registroLoteRSContribManaged.findCcLoteItem.flag_generacion!=2}"
+				enableManualInput="false" selectFirstOnUpdate="true"
+				directInputSuggestions="false"
+				binding="#{registroLoteRSContribManaged.cmbgnRsUbicable}"
+				onblur="validaInputCbo(this)" id="id_rsubicable" immediate="true"
+				valueChangeListener="#{registroLoteRSContribManaged.loadSeleccion}">
+				<f:selectItem id="id1" itemValue="RS Ubicables" />
+				<f:selectItem id="id2" itemValue="RS Inubicables S/N" />
+				<f:selectItem id="id3" itemValue="RS Inubicables OTROS" />
+				<a4j:support id="idEventRs" event="onchange" BypassUpdates="false"
+					ajaxSingle="true" />
+			</rich:comboBox>
+
+
+			<h:panelGrid id="idBloquesRs" columns="8" style="float:right;"
+				rendered="#{registroLoteRSContribManaged.findCcLoteItem.flag_generacion==2}">
+				<h:outputText style="font-weight:bold; color:black;" id="idValMin"
+					value="Ingrese el Primer Registro : " />
+				<h:inputText id="id_valorMin" maxlength="5" style="width:100%"
+					value="#{registroLoteRSContribManaged.valorMinimo}"
+					onkeypress="validaEnteroPositivo(event);">
+					<a4j:support ajaxSingle="true" event="onblur"
+						reRender="idBloquesRs" />
+				</h:inputText>
+				<h:outputText style="font-weight:bold; color:black;" id="idValMax"
+					value="Ingrese el Último Registro: " />
+				<h:inputText id="id_valorMax" maxlength="5" style="width:100%"
+					value="#{registroLoteRSContribManaged.valorMaximo}"
+					onkeypress="validaEnteroPositivo(event);">
+					<a4j:support ajaxSingle="true" event="onblur"
+						reRender="idBloquesRs" />
+				</h:inputText>
+				<a4j:commandButton id="id_buttonReporteSinReparticion"
+					action="#{registroLoteRSContribManaged.previewRs}"
+					value="Descargar Rs"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.prueba2\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' }; ">
+
+				</a4j:commandButton>
+				<h:commandLink id="linkId2" styleClass="prueba2" value="xxxx"
+					style="display: none;"
+					action="#{registroLoteRSContribManaged.generacionArchivos}" />
+				<h:panelGrid id="idResumenRs" columns="4" style="float:right;">
+					<h:outputText style="font-weight:bold; color:black;"
+						value="Resumen de RS :" />
+					<h:commandLink id="newBtnResumenRs"
+						action="#{registroLoteRSContribManaged.generacionResumenRs}"
+						immediate="true">
+						<h:graphicImage value="/images/modal/pdf.png" style="border:0"
+							title="Resumen de Rs" />
+					</h:commandLink>
+				</h:panelGrid>
+
+			</h:panelGrid>
+			<table align="center" width="100%">
+
+
+				<tr>
+					<td align="center"><a4j:outputPanel id="idBotones">
+							<h:panelGrid
+								style="font-weight:bold; width:100%; color:#0770D9; text-align:center;">
+								<h:commandLink id="exportarExc"
+									action="#{registroLoteRSContribManaged.exportarTablaExcel}">
+									<h:graphicImage value="/images/modal/excel.png"
+										style="border:0;width:25px;height:25px;" />
+									<rich:toolTip for="exportar22">Exportar Lista a Excel.</rich:toolTip>
+								</h:commandLink>
+							</h:panelGrid>
+							<a4j:commandButton id="id_btnPreliminar"
+								value="Generacion Preliminar" style="width:150px;"
+								immediate="true"
+								action="#{registroLoteRSContribManaged.motrarLotePreliminar}"
+								disabled="#{registroLoteRSContribManaged.findCcLoteItem.flag_generacion==2}"
+								oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+								reRender="id_panelprincipalregistroLoteRS,outputrespreliminar"
+								status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton value="Guardar" style="width:100px;"
+								id="id_btnguardar"
+								action="#{registroLoteRSContribManaged.guardar}"
+								reRender="id_panelprincipalregistroLoteRS,outputrespreliminar"
+								disabled="#{registroLoteRSContribManaged.findCcLoteItem.flag_generacion==2}"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton value="Generacion Valores"
+								id="idBtnGenerarValores" style="width:150px;" immediate="true"
+								action="#{registroLoteRSContribManaged.generacionValores}"
+								disabled="#{registroLoteRSContribManaged.findCcLoteItem.flag_generacion==2}"
+								oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								reRender="id_panelprincipalregistroLoteRS,outputrespreliminar"
+								status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton id="idBtnSalir" value="Salir"
+								style="width:100px;"
+								action="#{registroLoteRSContribManaged.salir}" immediate="true"
+								reRender="panelinclude">
+								<f:setPropertyActionListener
+									value="/sisat/controlycobranza/buscarloters.xhtml"
+									target="#{sessionManaged.page}" />
+							</a4j:commandButton>
+						</a4j:outputPanel></td>
+				</tr>
+			</table>
+			<table align="center" width="100%">
+				<tr>
+					<td><a4j:outputPanel id="outputrespreliminar">
+							<rich:datascroller for="resultadofinal1" maxPages="10"></rich:datascroller>
+							<rich:extendedDataTable id="resultadofinal1"
+								value="#{registroLoteRSContribManaged.lstlotePreliminar}"
+								var="lotePreliminar" width="100%" height="480px" rows="20"
+								selectionMode="single"
+								noDataLabel="No Se Encontro Información para esta Busqueda"
+								rowKeyVar="row" enableContextMenu="false">
+								<rich:column id="x1" width="5%" style="text-align:center"
+									filterBy="#{lotePreliminar.personaId}"
+									sortBy="#{lotePreliminar.personaId}">
+									<f:facet name="header">Cod. Per.</f:facet>
+									<h:outputText value="#{lotePreliminar.personaId}" />
+								</rich:column>
+								<rich:column sortBy="#{lotePreliminar.descripcionPersona}"
+									id="x2" width="20%"
+									filterBy="#{lotePreliminar.descripcionPersona}">
+									<f:facet name="header">Apellidos Y Nombres/Razón Social</f:facet>
+									<h:outputText value="#{lotePreliminar.descripcionPersona}" />
+								</rich:column>
+								<rich:column id="x3" width="5%" style="text-align:center"
+									filterBy="#{lotePreliminar.nroDocumento}"
+									sortBy="#{lotePreliminar.nroDocumento}">
+									<f:facet name="header">Nro Doc</f:facet>
+									<h:outputText value="#{lotePreliminar.nroDocumento}" />
+								</rich:column>
+								<rich:column id="x4" width="15%" style="text-align:center"
+									sortBy="#{lotePreliminar.direccion}">
+									<f:facet name="header">Direccion</f:facet>
+									<h:outputText value="#{lotePreliminar.direccion}" />
+								</rich:column>
+								<rich:column id="x5" width="10%" style="text-align:center"
+									sortBy="#{lotePreliminar.placa}">
+									<f:facet name="header">Placa</f:facet>
+									<h:outputText value="#{lotePreliminar.placa}" />
+								</rich:column>
+								<rich:column id="x6" width="5%" style="text-align:center"
+									sortBy="#{lotePreliminar.nroPapeleta}"
+									filterBy="#{lotePreliminar.nroPapeleta}">
+									<f:facet name="header">Nro Papeleta</f:facet>
+									<h:outputText value="#{lotePreliminar.nroPapeleta}" />
+								</rich:column>
+								<rich:column id="x12" width="5%" style="text-align:center"
+									sortBy="#{lotePreliminar.montoMulta}">
+									<f:facet name="header">Total Deuda</f:facet>
+									<h:outputText value="#{lotePreliminar.montoMulta}" />
+								</rich:column>
+								<rich:column id="x13" width="10%" style="text-align:center"
+									sortBy="#{lotePreliminar.nroActo}"
+									filterBy="#{lotePreliminar.nroActo}">
+									<f:facet name="header">Nro Valor</f:facet>
+									<h:outputText value="#{lotePreliminar.nroActo}" />
+								</rich:column>
+							</rich:extendedDataTable>
+						</a4j:outputPanel></td>
+				</tr>
+			</table>
+
+		</a4j:outputPanel>
+	</h:form>
+</ui:composition>

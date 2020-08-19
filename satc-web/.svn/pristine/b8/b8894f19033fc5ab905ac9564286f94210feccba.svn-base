@@ -1,0 +1,991 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+
+	<h:form id="formGestionExpediente">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+		<rich:hotKey key="return"
+			handler="#{rich:element('btnBuscar')}.click()"
+			selector="#formGestionExpediente" />
+
+		<h:panelGrid columns="1" style="width:100%;" cellpadding="0"
+			cellspacing="0">
+			<rich:panel>
+				<f:facet name="header">
+		        	Gestión de Expedientes
+		        </f:facet>
+		        
+
+								
+				<h:panelGrid columns="8" rendered="#{gestionExpedienteManaged.permisoBuscar}">
+					
+
+					<h:outputText for="txtLotExigible" value="Nro Cartera: " />
+					<h:inputText id="txtLotExigible"
+						value="#{gestionExpedienteManaged.nroCartera}" />
+
+					<h:outputText for="txtNroExpediente" value="Nro. Expediente" />
+					<h:inputText id="txtNroExpediente"
+						value="#{gestionExpedienteManaged.nroExpediente}" />
+
+					<h:outputText for="txtNumeroPapeleta" value="Nro Papeleta" />
+					<h:inputText id="txtNumeroPapeleta"
+						value="#{gestionExpedienteManaged.nroPapeleta}" />
+
+					<h:outputText for="txtPlaca" value="Placa" />
+					<h:inputText id="txtPlaca"
+						value="#{gestionExpedienteManaged.placa}" />
+
+					<h:outputText for="txtCodContribuyente"
+						value="Código de Contribuyente" />
+					<h:inputText id="txtCodContribuyente"
+						value="#{gestionExpedienteManaged.contribuyenteId}" />
+
+					<a4j:commandButton id="btnBuscar" value="Buscar"
+						style="width:100px" action="#{gestionExpedienteManaged.buscar()}"
+						reRender="panelGestionExpediente,pgButtonGenerarRec"
+						status="ajaxStatus" />
+
+				</h:panelGrid>
+			</rich:panel>			
+			
+			
+			
+							
+
+			<rich:panel id="panelGestionExpediente">			
+			
+			<!-- 
+			
+				<h:panelGroup rendered="false" >
+					<h:panelGrid columns="1" id="pgButtonGenerarRec" border="0"
+						cellpadding="0" cellspacing="0" width="95%">
+						<h:panelGrid columns="4">
+							<a4j:commandButton id="btnGenRec" value="Generar REC/RC Masivo"
+								action="#{gestionExpedienteManaged.gestionTodos()}"
+								oncomplete="#{rich:component('mpAsignarRecMasivo')}.show();"
+								reRender="mpAsignarRec" />						
+
+						</h:panelGrid>
+
+					</h:panelGrid>
+				</h:panelGroup>
+			 -->
+
+				<h:panelGrid columns="2" style="width:100%;" cellpadding="0"
+					cellspacing="0">
+						
+					<h:panelGrid columns="1" width="380px" cellpadding="0"
+						cellspacing="0">
+
+						<rich:extendedDataTable id="edtExpedientes"
+							value="#{gestionExpedienteManaged.records}" width="400px"
+							height="515px" sortMode="single" selectionMode="single"
+							enableContextMenu="false" var="record" rowKeyVar="row">
+
+							<rich:column rendered="#{gestionExpedienteManaged.permisoVerDetalle}" id="c0" style="text-align:center" width="7%">
+								<f:facet name="header" width="10%">Ver</f:facet>
+								<a4j:commandLink ajaxSingle="true" id="clDetExpediente"
+									action="#{gestionExpedienteManaged.verDetalle()}"
+									reRender="id_panelg001,pgdatosexpediente,edtValores,edtEventos,edtCostasGastos">
+									<h:graphicImage value="/images/ver2.png" style="border:0;" />
+									<f:setPropertyActionListener value="#{record}"
+										target="#{gestionExpedienteManaged.selExpediente}"
+										id="palExpediente" />
+								</a4j:commandLink>
+							</rich:column>
+
+							<rich:column id="c1" style="text-align:center" width="10%">
+								<f:facet name="header">Item</f:facet>
+								<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+							</rich:column>
+
+							<rich:column id="c2" style="text-align:center" width="35%">
+								<f:facet name="header" width="10%">Expediente</f:facet>
+								<h:outputText value="#{record.nroExpediente}" />
+							</rich:column>
+
+							<!-- 
+						<rich:column id="c3" style="text-align:right" width="20%" >
+							<f:facet name="header" width="10%">Deuda</f:facet>
+							<h:outputText value="#{record.totalDeuda}" />
+						</rich:column>
+						 -->
+
+							<rich:column style="text-align:right" width="20%">
+								<f:facet name="header" width="10%">Nº Cartera</f:facet>
+								<h:outputText value="#{record.carteraId}" />
+							</rich:column>
+
+
+							<rich:column id="c4" width="12%">
+								<f:facet name="header" width="10%">Estado</f:facet>
+								<h:outputText value="#{record.situacion}" />
+							</rich:column>
+
+							<rich:column id="c_desbloquear" style="text-align:center"
+								width="12%">
+								<f:facet name="header" >Est.Deu</f:facet>
+								
+									<h:graphicImage id="id_imagen1" rendered="#{record.deudaBloqueada == true}"
+										width="14" height="14" value="/images/candadoCerrado.png"
+										style="border:0;" />
+									<rich:toolTip for="id_imagen1" value="BLOQUEADA" />
+											
+									<h:graphicImage id="id_imagen2"  rendered="#{record.deudaBloqueada == false}"
+										width="14" height="14" value="/images/candadoAbierto.png"
+										style="border:0;" />	
+									<rich:toolTip for="id_imagen2" value="DESBLOQUEADA" />
+									
+																	
+								
+							</rich:column>
+
+						</rich:extendedDataTable>
+
+
+					</h:panelGrid>
+												
+
+					<h:panelGrid id="pgdetallexpediente" columns="1" width="900px"
+						cellpadding="0" cellspacing="0">
+						
+						
+
+						<h:panelGrid id="pgdatosexpediente" columns="2" width="100%"
+							cellpadding="0" cellspacing="0" columnClasses="classLeft">
+
+							<h:column style="width:50px">
+							
+							<h:panelGrid id="id_panelg001" columns="2">
+							
+							<h:outputText style="font-weight:bold;font-size:10px"									
+									value="Cambiar Estado Deuda "
+									rendered="#{gestionExpedienteManaged.selExpediente.personaId>0 and gestionExpedienteManaged.permisoBloquerDesbloquearDeuda}" />
+							
+							
+							
+							<a4j:commandLink  ajaxSingle="true"
+									id="id_setestado_deudaBloqueada"
+									action="#{gestionExpedienteManaged.bloquedarDeuda()}"
+									rendered="#{gestionExpedienteManaged.selExpediente.personaId>0 and gestionExpedienteManaged.permisoBloquerDesbloquearDeuda}" 
+									reRender="id_panelg001,c_desbloquear">
+
+									<h:graphicImage id="id_imagen001" rendered="#{gestionExpedienteManaged.selExpediente.deudaBloqueada == true}"
+										width="25" height="25" value="/images/candadoCerrado.png"
+										style="border:0;"  />
+									<h:graphicImage id="id_imagen002" rendered="#{gestionExpedienteManaged.selExpediente.deudaBloqueada == false}"
+										width="25" height="25" value="/images/candadoAbierto.png"
+										style="border:0;" />
+									
+									<rich:toolTip for="id_imagen001"
+											value="DESBLOQUEAR DEUDA" />
+									
+									<rich:toolTip for="id_imagen002"
+											value="BLOQUEAR DEUDA" />
+											
+									<a4j:support
+											immediate="true"
+											reRender="#{rich:clientId('id_panelg001')}"
+											event="onclick" BypassUpdates="false" ajaxSingle="true" />
+									
+									
+								</a4j:commandLink>
+						</h:panelGrid>
+						
+								
+							</h:column>
+
+
+							
+							
+							<h:column >
+								<h:outputText style="font-weight:bold;font-size:12px" 
+									id="otNroExpediente"
+									value="Nº de Expediente: #{gestionExpedienteManaged.selExpediente.nroExpediente}"
+									rendered="#{gestionExpedienteManaged.selExpediente.personaId>0}" />
+							</h:column>
+							
+							<h:column >
+									<h:outputText style="font-weight:bold;font-size:10px;"									
+									value="Descargar Evento(s)"
+									rendered="#{gestionExpedienteManaged.selExpediente.personaId>0}" />
+									
+								<h:commandLink id="clPdf"
+									action="#{gestionExpedienteManaged.downloadEventos}"
+									rendered="#{gestionExpedienteManaged.selExpediente.personaId>0}" 
+									immediate="true">
+									<h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+								</h:commandLink>
+							</h:column>
+							
+							
+							
+							<h:column>
+							
+							
+							<h:panelGrid columns="2">
+							
+								<h:outputText style="font-weight:bold;font-size:10px"									
+									value="Código Contribuyente:  "
+									rendered="#{gestionExpedienteManaged.selExpediente.personaId>0}" />
+							
+								<h:outputText 
+									value="#{gestionExpedienteManaged.selExpediente.personaId}"
+									rendered="#{gestionExpedienteManaged.selExpediente.personaId>0}" />
+								
+								<h:outputText style="font-weight:bold;font-size:10px"									
+									value="Contribuyente:  "
+									rendered="#{gestionExpedienteManaged.selExpediente.personaId>0}" />
+							
+								<h:outputText 
+									value="#{gestionExpedienteManaged.selExpediente.apellidosNombresPersona}"
+										rendered="#{gestionExpedienteManaged.selExpediente.personaId>0}" />
+							
+								
+								
+							
+							</h:panelGrid>
+							</h:column>
+							
+							
+							
+							
+						</h:panelGrid>
+
+						<h:panelGrid columns="1" width="900px" cellpadding="0"
+							cellspacing="0" id="pgEventosGestion">
+							
+							
+							<rich:extendedDataTable id="edtEventos"
+								value="#{gestionExpedienteManaged.recordsEventos}" width="900px"
+								height="210px" sortMode="single" selectionMode="single"
+								enableContextMenu="false" var="record" rowKeyVar="row">
+
+								<rich:column id="e1" style="text-align:center" width="3%">
+									<f:facet name="header">Item</f:facet>
+									<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+								</rich:column>
+
+								<rich:column rendered="#{gestionExpedienteManaged.permisoModificarActualizar}" id="e0" style="text-align:center" width="3%">
+									<f:facet name="header" width="10%">Edit</f:facet>
+									<a4j:commandLink ajaxSingle="true" id="clEdit"
+										oncomplete="#{rich:component('mpAgregaResena')}.show()"
+										reRender="mpAgregaResena">
+										<h:graphicImage value="/images/editable.jpg" style="border:0;" />
+										<f:setPropertyActionListener value="#{record}"
+											target="#{gestionExpedienteManaged.selEvento}" id="palResena" />
+									</a4j:commandLink>
+								</rich:column>
+
+								<rich:column id="e2" style="text-align:center" width="12%">
+									<f:facet name="header" width="10%">Fecha gestion</f:facet>
+									<h:outputText value="#{record.fechaGestion}" />
+								</rich:column>
+
+								<rich:column id="e3" style="text-align:left" width="15%">
+									<f:facet name="header" width="10%">Tipo gestion</f:facet>
+									<h:outputText value="#{record.tipoGestion}" />
+								</rich:column>
+								<rich:column id="e4" style="text-align:left" width="20%">
+									<f:facet name="header" width="10%">Resena gestion</f:facet>
+									<h:outputText value="#{record.resenaGestion}" />
+								</rich:column>
+								<rich:column id="e41" style="text-align:left" width="20%">
+									<f:facet name="header" width="10%">Observacion</f:facet>
+									<h:outputText value="#{record.observacion}" />
+								</rich:column>
+
+								<rich:column id="e5" style="text-align:center" width="10%">
+									<f:facet name="header" width="10%">Fecha Notif.</f:facet>
+									<h:outputText value="#{record.fechaNotificacion}" />
+								</rich:column>
+
+								<rich:column id="e6" style="text-align:center" width="5%">
+									<f:facet name="header" width="10%">Resp.</f:facet>
+									<h:outputText value="#{record.responsable}" />
+								</rich:column>
+
+								<rich:column rendered="#{gestionExpedienteManaged.permisoDescargaPDF}" id="e7" style="text-align:center" width="3%">
+									<f:facet name="header" width="10%">Doc</f:facet>
+
+									<h:commandLink  id="clWrd0"
+										action="#{gestionExpedienteManaged.download}" immediate="true"
+										rendered="#{record.recId>0 and record.documentoPdf==0 }">
+										<h:graphicImage value="/images/modal/word6.png" height="18px"
+											width="16px" style="border:0" />
+										<f:setPropertyActionListener value="#{record}" id="pal1w0"
+											target="#{gestionExpedienteManaged.selEvento}" />
+									</h:commandLink>
+
+
+									<h:commandLink id="clPdf0"
+										action="#{gestionExpedienteManaged.download}" immediate="true"
+										reRender="tempoFormato"
+										rendered="#{record.recId>0 and record.documentoPdf==1}">
+										<h:graphicImage value="/images/modal/pdf.png" height="18px"
+											width="16px" style="border:0" />
+										<f:setPropertyActionListener value="#{record}" id="pal1p0"
+											target="#{gestionExpedienteManaged.selEvento}" />
+									</h:commandLink>
+
+
+								</rich:column>
+
+								<rich:column id="e10" style="text-align:center" width="3%">
+									<f:facet name="header" width="10%">Pdf</f:facet>
+									<h:commandLink id="clPdf"
+										action="#{gestionExpedienteManaged.downloadAdj}"
+										immediate="true" rendered="#{record.recDocumentoId>0}">
+										<h:graphicImage value="/images/modal/pdf.png" height="18px"
+											width="16px" style="border:0" />
+										<f:setPropertyActionListener value="#{record}" id="pal1p"
+											target="#{gestionExpedienteManaged.selEvento}" />
+									</h:commandLink>
+								</rich:column>
+								<rich:column rendered="#{gestionExpedienteManaged.permisoAdjuntar}" id="e01" style="text-align:center" width="3%">
+									<f:facet name="header" width="10%">Adj</f:facet>
+									<a4j:commandLink ajaxSingle="true" id="clEdit1"
+										action="#{gestionExpedienteManaged.mantenerEvento()}"
+										oncomplete="#{rich:component('panelfileupload')}.show()"
+										reRender="panelfileupload" rendered="#{record.recId>0}">
+										<h:graphicImage value="/images/attach.png" height="18px"
+											style="border:0;" />
+										<f:setPropertyActionListener value="#{record}"
+											target="#{gestionExpedienteManaged.selEvento}"
+											id="palResena1" />
+									</a4j:commandLink>
+								</rich:column>
+
+
+
+
+							</rich:extendedDataTable>
+						</h:panelGrid>
+
+						<rich:extendedDataTable id="edtValores"
+							value="#{gestionExpedienteManaged.recordsValores}" width="900px"
+							height="150px" sortMode="single" selectionMode="single"
+							enableContextMenu="false" var="record" rowKeyVar="row">
+							<rich:column id="v1" style="text-align:center" width="5%">
+								<f:facet name="header">Item</f:facet>
+								<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+							</rich:column>
+							<rich:column id="v2" style="text-align:center" width="5%">
+								<f:facet name="header">Tipo</f:facet>
+								<h:outputText value="#{record.tipoValor}" />
+							</rich:column>
+							<rich:column id="v10" style="text-align:center" width="8%">
+								<f:facet name="header">Concepto</f:facet>
+								<h:outputText value="#{record.concepto}" />
+							</rich:column>
+
+							<rich:column id="v1placa" style="text-align:center" width="15%">
+								<f:facet name="header">Placa/Papeleta</f:facet>
+								<h:outputText value="#{record.placaNroPap}" />
+							</rich:column>
+
+							<rich:column id="v3" style="text-align:center" width="13%">
+								<f:facet name="header">Nro Valor</f:facet>
+								<h:outputText value="#{record.nroActo}" />
+							</rich:column>
+							<rich:column id="v6" style="text-align:center" width="5%">
+								<f:facet name="header">Periodo</f:facet>
+								<h:outputText value="#{record.periodoActo}" />
+							</rich:column>
+							<rich:column id="v7" style="text-align:center" width="13%">
+								<f:facet name="header">Nro Expediente</f:facet>
+								<h:outputText value="#{record.nroExpediente}" />
+							</rich:column>
+							<rich:column id="v4" style="text-align:right" width="8%">
+								<f:facet name="header">Deuda Valor</f:facet>
+								<h:outputText value="#{record.montoDeuda}" />
+							</rich:column>
+							<rich:column id="v8" style="text-align:right" width="8%">
+								<f:facet name="header">Deuda Actual</f:facet>
+								<h:outputText value="#{record.deudaActual}" />
+							</rich:column>
+							<rich:column id="v9" style="text-align:right" width="10%">
+								<f:facet name="header">Estado Deuda</f:facet>
+								<h:outputText value="#{record.estadoDeuda}" />
+							</rich:column>
+							<rich:column id="v5" style="text-align:center" width="10%">
+								<f:facet name="header">Exigibilidad</f:facet>
+								<h:outputText value="#{record.exigibiliad}" />
+							</rich:column>
+						</rich:extendedDataTable>
+
+						<rich:extendedDataTable id="edtCostasGastos"
+							value="#{gestionExpedienteManaged.recordsCostas}" width="900px"
+							height="150px" sortMode="single" selectionMode="single"
+							enableContextMenu="false" var="record" rowKeyVar="row">
+							<rich:column id="g1" style="text-align:center" width="5%">
+								<f:facet name="header">Item</f:facet>
+								<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+							</rich:column>
+
+							<rich:column id="g2" style="text-align:center" width="20%">
+								<f:facet name="header" width="10%">Tipo de REC</f:facet>
+								<h:outputText value="#{record.concepto}" />
+							</rich:column>
+
+							<!-- 
+							<rich:column id="g3" style="text-align:center" width="20%" >
+								<f:facet name="header" width="10%">SubConcepto</f:facet>
+								<h:outputText value="#{record.subConcepto}" />
+							</rich:column>
+							 -->
+
+							<rich:column id="g8" style="text-align:center" width="20%">
+								<f:facet name="header" width="10%">Nro Expediente</f:facet>
+								<h:outputText value="#{record.nroExpediente}" />
+							</rich:column>
+
+							<rich:column id="g9" style="text-align:center" width="10%">
+								<f:facet name="header" width="10%">Nro REC</f:facet>
+								<h:outputText value="#{record.nroRec}" />
+							</rich:column>
+
+							<rich:column id="g4" style="text-align:center" width="15%">
+								<f:facet name="header" width="10%">Fec. Emision</f:facet>
+								<h:outputText value="#{record.fechaEmision}" />
+							</rich:column>
+
+							<rich:column id="g6" style="text-align:right" width="10%">
+								<f:facet name="header" width="10%">Monto</f:facet>
+								<h:outputText value="#{record.montoDeuda}" />
+							</rich:column>
+
+							<rich:column id="g7" style="text-align:right" width="10%">
+								<f:facet name="header" width="10%">Estado Deuda</f:facet>
+								<h:outputText value="#{record.estadoDeuda}" />
+							</rich:column>
+
+							<rich:column  id="g1_8" style="text-align:center" width="10%">
+								<f:facet name="header" width="10%">Descargar</f:facet>
+
+								<a4j:commandLink ajaxSingle="true" id="clDescargo"
+									oncomplete="#{rich:component('paneldescargo')}.show()"
+									reRender="paneldescargo"
+									rendered="#{gestionExpedienteManaged.permisoEliminaREC and record.estadoDeuda == 'PENDIENTE'}">
+
+									<h:graphicImage value="/images/modal/delete.gif"
+										style="border:0;" />
+									<f:setPropertyActionListener value="#{record}"
+										target="#{gestionExpedienteManaged.selCostas}"
+										id="palDescargo" />
+								</a4j:commandLink>
+
+							</rich:column>
+
+
+						</rich:extendedDataTable>
+					</h:panelGrid>
+
+					<rich:contextMenu id="cmEventos" event="oncontextmenu"
+						attachTo="pgEventosGestion" submitMode="ajax">
+						<rich:menuItem value="Generar REC/RC" id="mi1"
+							action="#{gestionExpedienteManaged.gestionExpediente()}"
+							oncomplete="Richfaces.showModalPanel('mpAsignarRec')"
+							reRender="mpAsignarRec" />
+
+						<rich:menuItem value="Acumulacion Expediente" id="mi3"
+							action="#{gestionExpedienteManaged.expedientesContribuyenteAcum}"
+							oncomplete="Richfaces.showModalPanel('mpExpedienteContribuyenteAcum')"
+							reRender="mpExpedienteContribuyenteAcum" />
+
+						<rich:menuItem value="DesAcumulacion Expediente" id="mi4"
+							action="#{gestionExpedienteManaged.expedientesContribuyenteDesAcum}"
+							oncomplete="Richfaces.showModalPanel('mpExpedienteContribuyenteDesAcum')"
+							reRender="mpExpedienteContribuyenteDesAcum" />
+
+						<rich:menuItem value="Generar Gastos" id="mi5"
+							action="#{gestionExpedienteManaged.gestionExpediente()}"
+							oncomplete="Richfaces.showModalPanel('mpAsignarGasto')"
+							reRender="mpAsignarGasto" />
+
+					</rich:contextMenu>
+
+				</h:panelGrid>
+			</rich:panel>
+					
+					
+		</h:panelGrid>
+		
+		
+	</h:form>
+
+	<rich:modalPanel id="mpAsignarGasto" modal="true" minWidth="510"
+		height="230">
+		<f:facet name="header">
+			<h:outputText value="Generacion de Gastos" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="imgclose11"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpAsignarGasto" attachTo="imgclose11"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="2">
+				<h:outputText value="Nro Expediente :" />
+				<h:outputText
+					value="#{gestionExpedienteManaged.selGestion.nroExpediente}" />
+
+				<h:outputLabel value="Fecha Liquidacion :" />
+				<h:panelGroup>
+					<rich:calendar id="calendarfechaliquidaciongastos"
+						value="#{gestionExpedienteManaged.fechaGasto}"
+						enableManualInput="true" inputClass="maskDate"
+						locale="#{msg['param.localedate']}"
+						datePattern="#{msg['param.datepattern']}"
+						requiredMessage="#{msg['obl.requiredFechaLiquidacion']}"
+						required="true" converterMessage="#{msg['obl.converterFecha']}"
+						inputSize="10" tabindex="5" inputStyle="text-align:center">
+					</rich:calendar>
+					<rich:jQuery id="maskedo001" selector=".maskDate"
+						query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+				</h:panelGroup>
+
+				<h:outputText value="Nro de Comprobante :" />
+				<h:inputText value="#{gestionExpedienteManaged.comprobanteGasto}"
+					size="13" maxlength="100">
+				</h:inputText>
+
+				<h:outputText value="Monto Gasto :" />
+				<h:inputText value="#{gestionExpedienteManaged.montoGasto}"
+					style="text-align:right;padding-right: 4px;" size="6" maxlength="8">
+					<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+						locale="#{msg['param.localecurrency']}" />
+				</h:inputText>
+
+				<h:outputText for="itResenaGasto" value="Resena Gasto :" />
+				<h:inputTextarea id="itResenaGasto"
+					value="#{gestionExpedienteManaged.resenaGasto}" cols="50" rows="5"
+					maxlength="500" size="500" required="true"
+					requiredMessage="Indique la Resena de la Gestion">
+				</h:inputTextarea>
+
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" align="center">
+				<a4j:commandButton value="Generar"
+					action="#{gestionExpedienteManaged.registraAsignacionGasto()}"
+					oncomplete="#{rich:component('mpAsignarGasto')}.hide();"
+					status="ajaxStatus"
+					reRender="pgEventosGestion,cmEventos,edtCostasGastos" />
+				<a4j:commandButton value="Cancelar"
+					onclick="#{rich:component('mpAsignarGasto')}.hide(); return false;" />
+			</h:panelGrid>
+
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mpAsignarRec" modal="true" minWidth="600"
+		height="120">
+		<f:facet name="header">
+			<h:outputText value="Generación de REC/RC" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="imgclose1"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpAsignarRec" attachTo="imgclose1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="2">
+				<h:outputText value="Nro Expediente :"
+					rendered="#{gestionExpedienteManaged.selGestion.expedienteId>0}" />
+				<h:outputText
+					value="#{gestionExpedienteManaged.selGestion.nroExpediente}"
+					rendered="#{gestionExpedienteManaged.selGestion.expedienteId>0}" />
+
+				<h:outputText for="cmbTipoRec" value="Tipo de REC/RC :" />
+				<h:selectOneMenu id="cmbTipoRec"
+					value="#{gestionExpedienteManaged.tipoRecId}" style="width:450px;"
+					required="true" requiredMessage="Seleccione el tipo de REC/RC">
+					<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems value="#{gestionExpedienteManaged.listaTipoRec}"
+						var="item" itemLabel="#{item.descripcionTipoRec}"
+						itemValue="#{item.tipoRecId}"></f:selectItems>
+				</h:selectOneMenu>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" align="center">
+				<a4j:commandButton value="Generar"
+					action="#{gestionExpedienteManaged.registraAsignacionRec()}"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpAsignarRec\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					status="ajaxStatus"
+					reRender="edtExpedientes,pgEventosGestion,cmEventos,edtCostasGastos,pgButtonGenerarRec" />
+				<a4j:commandButton value="Cancelar"
+					onclick="#{rich:component('mpAsignarRec')}.hide(); return false;" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mpAsignarRecMasivo" modal="true" minWidth="600"
+		height="120">
+		<f:facet name="header">
+			<h:outputText value="Generacion de REC/RC Masivo" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="imgclose1M"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpAsignarRecMasivo"
+					attachTo="imgclose1M" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="2">
+				<h:outputText value="Nro cartera :" />
+				<h:outputText value="#{gestionExpedienteManaged.nroCartera}" />
+
+				<h:outputText for="cmbTipoRecMasivo" value="Tipo de REC/RC :" />
+				<h:selectOneMenu id="cmbTipoRecMasivo"
+					value="#{gestionExpedienteManaged.tipoRecIdMasivo}"
+					style="width:450px;" required="true"
+					requiredMessage="Seleccione el tipo de REC/RC">
+					<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems
+						value="#{gestionExpedienteManaged.listaTipoRecMasivo}" var="item"
+						itemLabel="#{item.descripcionTipoRec}"
+						itemValue="#{item.tipoRecId}"></f:selectItems>
+				</h:selectOneMenu>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" align="center">
+				<a4j:commandButton value="Generar"
+					action="#{gestionExpedienteManaged.registraAsignacionRecMasivo()}"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpAsignarRecMasivo\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					status="ajaxStatus"
+					reRender="edtExpedientes,pgEventosGestion,cmEventos,edtCostasGastos,pgButtonGenerarRec" />
+				<a4j:commandButton value="Cancelar"
+					onclick="#{rich:component('mpAsignarRecMasivo')}.hide(); return false;" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mpExpedienteContribuyenteAcum" modal="true"
+		resizeable="true" width="850" height="230">
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="imgclose9"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpExpedienteContribuyenteAcum"
+					attachTo="imgclose9" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:extendedDataTable id="edtValoresContribuyenteAcum"
+				value="#{gestionExpedienteManaged.expedienteContrib}" width="100%"
+				height="150px" sortMode="single" selectionMode="single"
+				enableContextMenu="false" rowKeyVar="row" rows="8" var="record">
+				<rich:column id="x20" style="text-align:center" width="5%">
+					<f:facet name="header">Item</f:facet>
+					<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+				</rich:column>
+				<rich:column id="x21" style="text-align:center" width="15%">
+					<f:facet name="header" width="10%">Nro Expediente</f:facet>
+					<h:outputText value="#{record.nroExpediente}" />
+				</rich:column>
+				<rich:column id="x23" style="text-align:center" width="10%">
+					<f:facet name="header" width="10%">Código</f:facet>
+					<h:outputText value="#{record.personaId}" />
+				</rich:column>
+				<rich:column id="x24" style="text-align:center" width="25%">
+					<f:facet name="header" width="10%">Contribuyente</f:facet>
+					<h:outputText value="#{record.apellidosNombresPersona}" />
+				</rich:column>
+				<rich:column id="x25" style="text-align:center" width="10%">
+					<f:facet name="header" width="10%">Nro Rec</f:facet>
+					<h:outputText value="#{record.nroRec}" />
+				</rich:column>
+				<rich:column id="x26" style="text-align:center" width="10%">
+					<f:facet name="header" width="10%">Fecha Notif.</f:facet>
+					<h:outputText value="#{record.fechaNotificacion}" />
+				</rich:column>
+				<rich:column id="x27" style="text-align:center" width="10%">
+					<f:facet name="header" width="10%">Deuda</f:facet>
+					<h:outputText value="#{record.totalDeuda}" />
+				</rich:column>
+				<rich:column id="x28" style="text-align:center" width="5%">
+					<f:facet name="header" width="10%">
+						<h:selectBooleanCheckbox
+							value="#{gestionExpedienteManaged.selTodos}"
+							valueChangeListener="#{gestionExpedienteManaged.valueChangeListenerSelTodos}">
+							<a4j:support event="onchange" ajaxSingle="true" reRender="sbc01"></a4j:support>
+						</h:selectBooleanCheckbox>
+					</f:facet>
+					<div style="text-align: center;">
+						<h:selectBooleanCheckbox id="sbc01" value="#{record.selected}">
+							<a4j:support event="onchange" ajaxSingle="true" />
+						</h:selectBooleanCheckbox>
+					</div>
+				</rich:column>
+			</rich:extendedDataTable>
+			<rich:datascroller for="edtValoresContribuyenteAcum" maxPages="5"
+				fastStep="3" />
+
+			<h:panelGrid columns="2" align="center">
+				<a4j:commandButton value="Aceptar"
+					action="#{gestionExpedienteManaged.acumularExpedientes()}"
+					oncomplete="#{rich:component('mpExpedienteContribuyenteAcum')}.hide();"
+					reRender="edtValores,edtExpedientes,pgEventosGestion,cmEventos,edtCostasGastos" />
+
+				<a4j:commandButton value="Cancelar"
+					onclick="#{rich:component('mpExpedienteContribuyenteAcum')}.hide();return false;" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+
+	<rich:modalPanel id="mpExpedienteContribuyenteDesAcum" modal="true"
+		resizeable="true" width="850" height="230">
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="imgclose10"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpExpedienteContribuyenteDesAcum"
+					attachTo="imgclose10" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:extendedDataTable id="edtValoresContribuyenteDesAcum"
+				value="#{gestionExpedienteManaged.expedienteContrib}" width="100%"
+				height="150px" sortMode="single" selectionMode="single"
+				enableContextMenu="false" rowKeyVar="row" rows="8" var="record">
+				<rich:column id="xd20" style="text-align:center" width="5%">
+					<f:facet name="header">Item</f:facet>
+					<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+				</rich:column>
+				<rich:column id="xd21" style="text-align:center" width="15%">
+					<f:facet name="header" width="10%">Nro Expediente</f:facet>
+					<h:outputText value="#{record.nroExpediente}" />
+				</rich:column>
+				<rich:column id="xd23" style="text-align:center" width="10%">
+					<f:facet name="header" width="10%">Código</f:facet>
+					<h:outputText value="#{record.personaId}" />
+				</rich:column>
+				<rich:column id="xd24" style="text-align:center" width="25%">
+					<f:facet name="header" width="10%">Contribuyente</f:facet>
+					<h:outputText value="#{record.apellidosNombresPersona}" />
+				</rich:column>
+				<rich:column id="xd25" style="text-align:center" width="10%">
+					<f:facet name="header" width="10%">Nro Rec</f:facet>
+					<h:outputText value="#{record.nroRec}" />
+				</rich:column>
+				<rich:column id="xd26" style="text-align:center" width="10%">
+					<f:facet name="header" width="10%">Fecha Notif.</f:facet>
+					<h:outputText value="#{record.fechaNotificacion}" />
+				</rich:column>
+				<rich:column id="xd27" style="text-align:center" width="10%">
+					<f:facet name="header" width="10%">Deuda</f:facet>
+					<h:outputText value="#{record.totalDeuda}" />
+				</rich:column>
+				<rich:column id="xd28" style="text-align:center" width="5%">
+					<f:facet name="header" width="10%">
+						<h:selectBooleanCheckbox
+							value="#{gestionExpedienteManaged.selTodos}"
+							valueChangeListener="#{gestionExpedienteManaged.valueChangeListenerSelTodos}">
+							<a4j:support event="onchange" ajaxSingle="true" reRender="sbc01"></a4j:support>
+						</h:selectBooleanCheckbox>
+					</f:facet>
+					<div style="text-align: center;">
+						<h:selectBooleanCheckbox id="sbcd01" value="#{record.selected}">
+							<a4j:support event="onchange" ajaxSingle="true" />
+						</h:selectBooleanCheckbox>
+					</div>
+				</rich:column>
+			</rich:extendedDataTable>
+			<rich:datascroller for="edtValoresContribuyenteDesAcum" maxPages="5"
+				fastStep="3" />
+
+			<h:panelGrid columns="2" align="center">
+				<a4j:commandButton value="Aceptar"
+					action="#{gestionExpedienteManaged.desAcumularExpedientes()}"
+					oncomplete="#{rich:component('mpExpedienteContribuyenteDesAcum')}.hide();"
+					reRender="edtValores,edtExpedientes,pgEventosGestion,cmEventos,edtCostasGastos" />
+				<a4j:commandButton value="Cancelar"
+					onclick="#{rich:component('mpExpedienteContribuyenteDesAcum')}.hide();return false;" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel onshow="autofocus('formFileUpload')"
+		id="panelfileupload" moveable="true" resizeable="false" minWidth="450"
+		minHeight="120">
+		<f:facet name="header">ADJUNTAR ARCHIVO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imagefileupload" styleClass="hidelink" />
+				<rich:componentControl for="panelfileupload"
+					attachTo="id_imagefileupload" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formFileUpload">
+			<h:panelGrid>
+				<a4j:include viewId="/sisat/coactivav2/fileuploadrec.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mpAgregaResena" modal="true" minWidth="550"
+		height="180">
+		<f:facet name="header">
+			<h:outputText value="Agregar Resena de Gestion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="imgclose5"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpAgregaResena" attachTo="imgclose5"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="2">
+				<h:outputText value="Fecha de gestion :" />
+				<h:outputText
+					value="#{gestionExpedienteManaged.selEvento.fechaGestion}" />
+
+				<h:outputText value="Tipo de gestion :" />
+				<h:outputText
+					value="#{gestionExpedienteManaged.selEvento.tipoGestion}" />
+
+				<h:outputText value="Resena Gestion :" />
+				<h:outputText
+					value="#{gestionExpedienteManaged.selEvento.resenaGestion}" />
+
+				<h:outputText value="Observacion :" />
+				<h:inputTextarea id="itResenaGestion"
+					value="#{gestionExpedienteManaged.selEvento.observacion}" cols="65"
+					rows="3" maxlength="200" size="200">
+				</h:inputTextarea>
+			</h:panelGrid>
+
+			<h:panelGrid columns="2" align="center">
+				<a4j:commandButton value="Generar"
+					action="#{gestionExpedienteManaged.registraResenaGestion()}"
+					oncomplete="#{rich:component('mpAgregaResena')}.hide();"
+					status="ajaxStatus" reRender="pgEventosGestion,cmEventos" />
+				<a4j:commandButton value="Cancelar"
+					onclick="#{rich:component('mpAgregaResena')}.hide(); return false;" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+
+	<!--Panel de Descargo Costas/Gastos-->
+	<rich:modalPanel id="paneldescargo" autosized="true" moveable="true"
+		resizeable="false" minWidth="450" minHeight="250">
+		<f:facet name="header">DESCARGO COSTAS/GASTOS</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="iconclosepaneldescargo" styleClass="hidelink" />
+				<rich:componentControl for="paneldescargo"
+					attachTo="iconclosepaneldescargo" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmDescargo">
+			<rich:panel style="width:100%;" id="id_descargoDescargo">
+				<table border="0" width="100%">
+					<tr>
+						<td align="left" width="130px"><h:outputText
+								value="Documento " /><span style="color: red">*</span></td>
+
+						<td width="320px" colspan="3"><h:selectOneMenu
+								id="cmbFormaNotifModified"
+								value="#{gestionExpedienteManaged.tipoDocumentoId}"
+								style="width:250px;" required="true"
+								requiredMessage="Seleccione Documento">
+								<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+								<f:selectItems
+									value="#{gestionExpedienteManaged.listaDocumentoDescargo}"
+									var="item" itemLabel="#{item.descripcion}"
+									itemValue="#{item.tipoDocumentoId}"></f:selectItems>
+							</h:selectOneMenu></td>
+
+					</tr>
+
+					<tr>
+						<td align="left" width="130px"><h:outputText
+								value="Nro. de Documento" /><span style="color: red">*</span></td>
+
+						<td align="left" width="320px" colspan="3"><h:inputText
+								size="100" value="#{gestionExpedienteManaged.nroDocumento}"
+								maxlength="100" required="true"
+								requiredMessage="Indique el Número de Documento" /></td>
+					</tr>
+					<tr>
+						<td align="left" width="130px"><h:outputText
+								value="Fecha de Documento" /><span style="color: red">*</span>
+						</td>
+						<td width="320px"><rich:calendar locale="en/US"
+								direction="bottom-right" datePattern="dd/MM/yyyy"
+								enableManualInput="true" inputClass="maskDate"
+								inputStyle="width:100px" id="id_fechadedocumento"
+								value="#{gestionExpedienteManaged.fechaDocumento}"
+								required="true" requiredMessage="Indique la Fecha de Documento">
+							</rich:calendar> <rich:jQuery id="maskedo1" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" /></td>
+
+					</tr>
+					<tr>
+						<td align="left" width="130px"><h:outputText
+								value="Observacion (max 300)" /><span style="color: red">*</span>
+						</td>
+						<td align="left" width="320px" colspan="3"><h:inputTextarea
+								value="#{gestionExpedienteManaged.observacion}" cols="100"
+								rows="5" maxlength="500" size="500" required="true"
+								requiredMessage="Indique la Observacion">
+							</h:inputTextarea></td>
+					</tr>
+
+				</table>
+			</rich:panel>
+
+			<br />
+			<h:outputText id="succ2" style="font-weight:bold;color:green"
+				value="¿Desea proceder con el Descargo de Costas/Gastos Administrativos.?" />
+			<br />
+
+			<h:panelGrid id="buttons2" columns="2" width="100%">
+				<a4j:commandButton value="Aceptar" style="width:100px;"
+					action="#{gestionExpedienteManaged.descargoCostas}"
+					oncomplete="#{gestionExpedienteManaged.verDetalle()} #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'paneldescargo\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');'};"
+					reRender="edtCostasGastos" status="ajaxStatus" />
+
+
+				<a4j:commandButton value="Cancelar" style="width:100px;"
+					onclick="#{rich:component('paneldescargo')}.hide();return false;" />
+			</h:panelGrid>
+
+
+		</h:form>
+	</rich:modalPanel>
+
+</ui:composition>

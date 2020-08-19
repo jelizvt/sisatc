@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:form id="formReporteDJVehicular">
+	<style>
+.col1 {
+	vertical-align: top;
+	width: 480px;
+}
+
+.col2 {
+	vertical-align: top;
+	width: 260px;
+}
+
+.col3 {
+	vertical-align: top;
+	width: 260px;
+}
+.col1recaudacion{
+	width: 160px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+	height: 25px;
+}
+.col2recaudacion{
+	width: 88px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+}
+</style>
+	<rich:panel id="idPanelReporteVehicular">
+		<f:facet name="header">REPORTE DE DECLARACIONES JURADAS VEHICULARES - PENDIENTES DE REGISTRO</f:facet>
+		<h:panelGrid columns="7">
+			<h:outputLabel value="Fecha inicio de la declaración:">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{reporteDJVehicularManaged.fechaInicio}" datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Fecha inicio de la declaración:" enableManualInput="true" >
+			</rich:calendar>
+			<h:outputLabel value="Fecha fin de la declaración">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{reporteDJVehicularManaged.fechaFin}" datePattern="dd/MM/yyyy" inputSize="8" required="true" 
+				requiredMessage="Fecha fin de la declaración:" enableManualInput="true">
+			</rich:calendar>
+			
+			<a4j:commandButton id="id_buttonVehicularPDF" action="#{reporteDJVehicularManaged.previewDJ}"
+				value="Generar Reporte en PDF"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaPendientesPDF\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+			
+			<h:commandLink id="linkIdVehiPDF" styleClass="pruebaPendientesPDF" value="sasas" style="display: none;" action="#{reporteDJVehicularManaged.imprimirPdf}" />
+
+
+			<a4j:commandButton id="id_buttonVehicularXLS"
+				action="#{reporteDJVehicularManaged.previewDJ}"
+				value="Generar Reporte en XLS"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaPendientesXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+
+			<h:commandLink id="linkIdVehiXLS" styleClass="pruebaPendientesXLS" value="sasas" style="display: none;" action="#{reporteDJVehicularManaged.imprimirXlsVehicular}" />
+		
+		
+		</h:panelGrid>
+	</rich:panel>
+
+</h:form>
+</html>

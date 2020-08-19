@@ -1,0 +1,1157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+<a4j:loadScript src="/js/sisat.js"/>
+	<style type="text/css">
+.extdt-empty-cell {
+	width: 0;
+}
+
+th.extdt-empty-cell {
+	width: 0;
+}
+/* Disables resizing */
+.extdt-hsep {
+	display: none;
+}
+</style>
+
+<h:form id="formProgramacionLoteOrdinario">
+	<a4j:outputPanel   id="id_panelprincipalProgramacionLoteOrdinario">
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+				<tr>
+					<td valign="top" width="20%">
+						<table align="center" border="0" width="100%">
+							<tr>
+						    	<td>
+									<rich:panel style="width:100%;">
+										<h:outputText value="Programación de lote:  "/><a4j:commandLink value="#{programacionLoteCoactivoManaged.findCcLoteItem.loteId} - #{programacionLoteCoactivoManaged.findCcLoteItem.annoLote}" 
+										action="#{programacionLoteCoactivoManaged.programacionInformacionLote}" reRender="formProgramacionLoteOrdinario" />
+									</rich:panel>
+								</td>
+							</tr>		
+						</table>	
+					
+						<table align="center" border="0" width="100%">
+						    <tr>
+						    	<td align="left">
+							    	<rich:panel style="width:100%;  height: 70px;" id="id_lotepreliminar">
+								    	<f:facet name="header">		
+												<h:outputLabel value="Lote Preliminar" /> 
+										</f:facet>
+												<table border="0" width="100%"   >
+														<tr>
+														
+														<td align="left" width="130px" >
+														<a4j:commandLink rendered="#{programacionLoteCoactivoManaged.estadoProcesoLote==0 || programacionLoteCoactivoManaged.estadoProcesoLote==1}" value="Programación Lote Preliminar" action="#{programacionLoteCoactivoManaged.programacionLotePreliminar}" reRender="formProgramacionLoteOrdinario" />
+														</td>
+														</tr>
+														<tr>
+														
+														<td align="left" width="130px" >
+															
+															<a4j:commandLink rendered="#{programacionLoteCoactivoManaged.estadoProcesoLote==1 || programacionLoteCoactivoManaged.estadoProcesoLote==2}" value="Resultado Preliminar"  action="#{programacionLoteCoactivoManaged.resultadoLotePreliminar}" reRender="formProgramacionLoteOrdinario" />  
+															
+														</td>
+													</tr>
+												</table>
+									</rich:panel>	
+								</td>
+							</tr>
+							  <tr>
+						    	<td align="left">
+							    	<rich:panel style="width:100%;  height: 70px;" id="id_lotefinal">
+								    	<f:facet name="header">		
+												<h:outputLabel value="Lote Final" /> 
+										</f:facet>
+												<table border="0" width="100%"   >
+														<tr>
+														
+														<td align="left" width="130px" >
+															<a4j:commandLink  rendered="#{programacionLoteCoactivoManaged.estadoProcesoLote==2 || programacionLoteCoactivoManaged.estadoProcesoLote==3}" value="Programación Lote Final"  action="#{programacionLoteCoactivoManaged.programacionLoteFinal}" reRender="formProgramacionLoteOrdinario" />
+														</td>
+														</tr>
+														<tr>
+														
+														<td align="left" width="130px" >
+															
+														<a4j:commandLink rendered="#{programacionLoteCoactivoManaged.estadoProcesoLote==3 || programacionLoteCoactivoManaged.estadoProcesoLote==4}" value="Resultado Final"   action="#{programacionLoteCoactivoManaged.resultadoLoteFinal}" reRender="formProgramacionLoteOrdinario" />
+														
+														</td>
+													</tr>
+												</table>
+									</rich:panel>	
+								</td>
+							</tr>
+							  <tr>
+						    	<td align="left">
+							    	<rich:panel style="width:100%;  height: 50px;" id="id_generacionarchivos">
+								    	<f:facet name="header">		
+												<h:outputLabel value="Generación Archivos" /> 
+										</f:facet>
+												<table border="0" width="100%"   >
+														<tr>
+														
+														<td align="left" width="130px" >
+															<a4j:commandLink  rendered="#{programacionLoteCoactivoManaged.estadoProcesoLote==4}" value="Generación de Archivos"   action="#{programacionLoteCoactivoManaged.generacionArchivo}" reRender="formProgramacionLoteOrdinario" /> 
+														</td>
+												
+													</tr>
+												</table>
+									</rich:panel>	
+								</td>
+							</tr>
+						
+						</table>
+						</td>
+					<td valign="top" width="80%">
+									<table align="center" border="0" width="100%">
+									    <tr>
+									    	<td align="left">
+									    	
+													<a4j:outputPanel id="id_panelprincipalregistroLoteOrdinario"  rendered="#{programacionLoteCoactivoManaged.accion==0}" >
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+	<tr><td>
+			<table align="center" width="100%">
+				
+				<tr>
+					<td>
+						<table align="center" border="0" width="100%">
+						    <tr>
+						    	<td align="left" width="60%">
+							    	<rich:panel style="width:100%;  height: 150px;" id="id_paneldatosloteordinario">
+								    	<f:facet name="header">		
+												<h:outputLabel value="#{msg['cc.lotescoactivo']}" /> 
+										</f:facet>
+	
+												<table border="0" width="100%"   >
+														<tr>
+															<td align="left" width="130px" >
+															<h:panelGroup>
+															<h:outputText value="Tipo de Acto"  />
+															</h:panelGroup>
+														</td>
+														<td align="left" width="300px" >
+															<h:outputLabel value="#{programacionLoteCoactivoManaged.findCcLoteItem.tipoActo}" />
+														</td>
+														
+												
+												<td align="left" width="130px"  >
+														<h:panelGroup>
+														<h:outputText value="Concepto"  />
+														</h:panelGroup>
+													</td>
+													
+												<td>
+													<h:outputLabel value="#{programacionLoteCoactivoManaged.concepto}" />
+												</td>
+													</tr>
+												<tr></tr>
+												<tr>
+													<td align="left" width="130px" >
+													<h:panelGroup>
+														<h:outputText value="Tipo de Persona:" />
+														</h:panelGroup>
+													</td>
+													<td>
+														 <h:selectManyListbox id="selProcedimientos" value="#{registroLoteOrdinarioManaged.lstMpTipoPersonaSeleccionados}"  size="5">
+                     									  <f:selectItems value="#{programacionLoteCoactivoManaged.lstFindCcLoteTipoPersona}"/>
+                  									 </h:selectManyListbox>
+													</td>
+												
+													
+												
+													<td align="left" width="130px" >
+													<h:panelGroup>
+														<h:outputText value="Sub Concepto:" />
+														</h:panelGroup>
+													</td>
+												<td>
+													 <h:selectManyListbox id="selsubconcepto" value="#{registroLoteOrdinarioManaged.lstGnSubConceptoSeleccionados}" style="width:150px"   size="6">
+					                									  <f:selectItems value="#{programacionLoteCoactivoManaged.lstCcLoteConcepto}"/>
+					             									 	  <a4j:support id="id_supportlstsubconcepto" reRender="selperiodocuota" event="onchange"  BypassUpdates="false" ajaxSingle="true"/>	
+													</h:selectManyListbox>
+													</td>
+													
+													
+												
+												
+												</tr>
+												</table>
+									</rich:panel>	
+								</td>
+									<td style="width:40%">
+									<a4j:outputPanel>
+											<rich:panel id="id_agrupacion" style="width:100%; height: 150px;">	
+											<f:facet name="header">		
+												Criterios de Agrupación
+											</f:facet>
+											<table border="0" width="100%"  >
+											 <tr>
+												<td align="left" width="130px" >
+											 	<h:panelGroup>
+												<h:outputText value="Agrupación Por Acto" />
+												</h:panelGroup>
+												</td>
+												<td align="left" width="200px" >
+												<h:outputText value="#{programacionLoteCoactivoManaged.agrupacionActo}" />
+												
+												</td>
+				
+										</tr>
+										<tr>
+												<td align="left" width="130px" >
+												<h:panelGroup>
+												<h:outputText value="Monto Minimo" />
+												</h:panelGroup>
+												</td>
+												<td align="left" width="100px" >
+														<h:outputText value="#{programacionLoteCoactivoManaged.ccLote.montoInicio}"  />
+												</td>
+												</tr>
+												<tr>
+					 							<td align="left" width="130px" >
+												<h:panelGroup>
+												<h:outputText value="Monto Fin" />
+												</h:panelGroup>
+												</td>
+												<td align="left" width="100px" >
+														<h:outputText value="#{programacionLoteCoactivoManaged.ccLote.montoFin}"  />
+												</td>
+											</tr>
+											<tr>
+					 							<td align="left" width="130px" >
+												<h:panelGroup>
+												<h:outputText value="Fecha Vencimiento" />
+												</h:panelGroup>
+												</td>
+												<td align="left" width="100px" >
+														<h:outputText value="#{programacionLoteCoactivoManaged.findCcLoteItem.fechaVencimiento}"/>
+												</td>
+											</tr>
+											</table>
+										</rich:panel>
+								  </a4j:outputPanel>	
+								 </td>
+							</tr>
+						</table>
+						</td>
+				</tr>
+				<tr>
+				<td>
+						<table align="center" border="0" width="100%">
+					    	<tr>	
+								
+								 <td style="width:60%">
+								  		<a4j:outputPanel>
+								       		 <rich:panel id="id_firmantes" style="width:100%; height: 175px;" >	
+										<f:facet name="header">		
+												Firmantes
+										</f:facet>
+									<table border="0" width="100%"  >
+											<tr>
+											<td>
+												 <h:selectManyListbox id="selfirmantes" value="#{registroLoteOrdinarioManaged.lstPeriodoCuotaSeleccionados}" style="width:400px"  size="5">
+                      									  <f:selectItems value="#{programacionLoteCoactivoManaged.lstCcFirmantes}"/>
+                   									 </h:selectManyListbox>
+											 </td>
+											</tr>
+										</table>
+											</rich:panel>
+										</a4j:outputPanel>	
+								</td>
+								 <td style="width:40%">
+								
+								       		 <rich:panel id="id_orden_impresion" style="width:100%; height: 175px;" >	
+										<f:facet name="header">		
+												Impresión
+										</f:facet>
+										<table border="0" width="100%"  >
+											<tr>
+												<td>
+												 <h:selectManyListbox id="selimpresion" value="#{registroLoteOrdinarioManaged.lstPeriodoCuotaSeleccionados}" style="width:100px"  size="5">
+                      									  <f:selectItems value="#{programacionLoteCoactivoManaged.listFindCcLoteOrdenImpresion}"/>
+                   									 </h:selectManyListbox>
+										       </td>
+											</tr>
+										</table>
+										</rich:panel>
+								 </td>
+							</tr>
+						</table>
+							
+					</td>
+				</tr>
+			</table>
+		
+	</td></tr>
+	
+</table>
+</a4j:outputPanel>
+											
+														<a4j:outputPanel id="id_panelprogramacionLoteOrdinario" rendered="#{programacionLoteCoactivoManaged.accion==1}" >
+															<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+															<tr><td>
+																	<table align="center" width="100%">
+																	
+																		<tr>
+																			<td>
+																				<table align="center" border="0" width="100%">
+																				    <tr>
+																				    	<td align="left">
+																					    	<rich:panel style="width:100%;  height: 210px;" id="id_panelprogramacion">
+																						    	<f:facet name="header">		
+																										<h:outputLabel value="Programación Preliminar lote de Cobranza Coactiva" /> 
+																								</f:facet>
+																								<table border="0" width="100%"   >
+																												<tr>
+																												
+																												<td align="left" width="130px" >
+																													<h:outputText value="Programar Dia y Hora:" />
+																												</td>
+																												
+																												<td align="left" width="250px" >
+																												  	<rich:calendar
+																									                        locale="en/US"
+																									                        datePattern="dd/MM/yyyy HH:mm"
+																									                        inputClass="maskDate"
+																									                           inputStyle="width:100px"
+																									                           popup="true"
+																									                         id="id_fechaprogramacion" value="#{programacionLoteCoactivoManaged.fechaProgramacion}" >
+																									                     </rich:calendar>
+																									                        <rich:jQuery id="maskedo3" selector=".maskDate" query="mask('99/99/9999 99:99')" timing="onload" />  
+																													</td>
+																												</tr>
+																								</table>
+																									<a4j:commandButton value="Guardar" style="width:100px;"
+																										 	 			id="id_btnguardar"	action="#{programacionLoteCoactivoManaged.guardarProgramacion}" 
+																										 	 			 reRender="panelinclude,id_lotepreliminar"
+																														oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+																											</a4j:commandButton>
+																																
+																											<a4j:commandButton value="Salir" style="width:100px;" action="#{registroPersonaManaged.sendRedirectPrincipal}" 	immediate="true" reRender="panelinclude" >
+																														<f:setPropertyActionListener value="/sisat/controlycobranza/buscarloteordinaria.xhtml" target="#{sessionManaged.page}" />
+																									</a4j:commandButton>
+																							</rich:panel>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																	</td>
+																</tr>
+															</table>
+														</a4j:outputPanel>
+														
+														<a4j:outputPanel id="id_panelresultadoPreliminarLoteOrdinario" rendered="#{programacionLoteCoactivoManaged.accion==2}" >
+															<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+															<tr><td>
+																	<table align="center" width="100%">
+																	
+																		<tr>
+																			<td>
+																				<table align="center" border="0" width="100%">
+																				    <tr>
+																				    	<td align="left">
+																					    	<rich:panel style="width:100%;  height: 385px;" id="id_panelresulPreliminar">
+																						    	<f:facet name="header">		
+																										<h:outputLabel value="Resultado Preliminar lote de Cobranza Coactiva" /> 
+																								</f:facet>
+																								<table border="0" width="50%">
+																								    <tr>
+																									    <td>
+																									     <h:outputText  style="font-weight:bold" value="Tipo de Acto:  "/>
+																									     <h:outputText  value="#{programacionLoteCoactivoManaged.tipoActo}"/>
+																									   </td>
+																									   <td>
+																									    <h:outputText  style="font-weight:bold" value="Tipo de Acto REC:  "/>
+																									    <h:outputText value="#{programacionLoteCoactivoManaged.tipoActoREC}"/>
+																									   </td>
+																								   </tr>
+																								    </table>
+																									<table border="0" width="100%">
+																												<tr>
+																												
+																												<td align="left" width="130px" >
+																												   <rich:datascroller for="resultadoprelimi" maxPages="10" ></rich:datascroller>
+																													 <rich:extendedDataTable 
+																																id="resultadoprelimi" value="#{programacionLoteCoactivoManaged.lstloteRecPreliminar}" 
+																																var="lotepreliminar" width="100%" height="310px" rows="10"
+																																 selectionMode="single"   noDataLabel="No Se Encontro Información para esta Busqueda"
+																																rowKeyVar="row" enableContextMenu="false"	>
+																																
+																																<rich:column id="x1"  style="text-align:center" width="5%">
+																																  <f:facet name="header" width="10%" >Ver</f:facet>
+																												
+																													            	<a4j:commandLink ajaxSingle="true" id="newlink1"  reRender="formProgramacionLoteOrdinario" action="#{programacionLoteCoactivoManaged.programacionLotePreliminarActoDetalle}" >
+																																		  <f:setPropertyActionListener value="#{lotepreliminar.actoId}" target="#{programacionLoteCoactivoManaged.actoId}" id="r4251"/>
+	                																													  <f:setPropertyActionListener value="#{lotepreliminar.recId}" target="#{programacionLoteCoactivoManaged.recId}" id="r42531"/>
+																													            		  <f:setPropertyActionListener value="#{lotepreliminar.personaId}" target="#{programacionLoteCoactivoManaged.personaId}" id="r42541"/>
+	                  																													  <f:setPropertyActionListener value="#{lotepreliminar.descripcionPersona}" target="#{programacionLoteCoactivoManaged.nombreCompleto}" id="r42551"/>
+																													            		  <f:setPropertyActionListener value="#{lotepreliminar.tipoActo}" target="#{programacionLoteCoactivoManaged.tipoActo}" id="r42561"/>
+	                  																													
+																													                    <h:graphicImage value="/images/modal/lupa.gif" style="border:0" />
+																												
+																													                </a4j:commandLink>
+																													                <rich:toolTip for="newlink1" value="Detalle de Acto" />
+																														        </rich:column>
+													
+																																	<rich:column id="x11"  style="text-align:center" filterBy="#{lotepreliminar.personaId}" >
+																													                <f:facet name="header" width="10%" >Cod. Per.</f:facet>
+																												
+																													                 <h:outputText value="#{lotepreliminar.personaId}"/>
+																													         		  </rich:column>
+																															 	<rich:column id="x2"  style="text-align:center" filterBy="#{lotepreliminar.nroDocumento}" >
+																													                <f:facet name="header" width="8%" >Nro Doc</f:facet>
+																												
+																													                 <h:outputText value="#{lotepreliminar.nroDocumento}"/>
+																													         		  </rich:column>
+																												
+																													     
+																													           <rich:column id="x3" width="20%"  filterBy="#{lotepreliminar.descripcionPersona}" >
+																													                <f:facet name="header">Apellidos Y Nombres/Razón Social</f:facet>
+																													                <h:outputText value="#{lotepreliminar.descripcionPersona}"/>
+																													            </rich:column>            				                
+																													            <rich:column id="x4"  style="text-align:center" width="5%">
+																													                <f:facet name="header">Nro Rec</f:facet>
+																													                <h:outputText value="#{lotepreliminar.recId}"/>
+																													            </rich:column>
+																													            <rich:column id="x6" width="10%">
+																													                <f:facet name="header">Fecha Emision</f:facet>
+																													                <h:outputText value="#{lotepreliminar.fechaEmision}"/>
+																													            </rich:column>
+																													             <rich:column id="x7"  style="text-align:center" width="10%">
+																													                <f:facet name="header">Deuda Total</f:facet>
+																													                <h:outputText value="#{lotepreliminar.deudaTotal}"/>
+																													            </rich:column>
+																													            
+																												   			</rich:extendedDataTable>
+		
+																												</td>
+																												</tr>
+																								</table>
+																									
+																							</rich:panel>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																	</td>
+																</tr>
+															</table>
+														</a4j:outputPanel>
+														
+														
+															<a4j:outputPanel id="id_panelresultadoPreliminarLoteCoactivoActos" rendered="#{programacionLoteCoactivoManaged.accion==201}" >
+															<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+															<tr><td>
+																	<table align="center" width="100%">
+																	
+																		<tr>
+																			<td>
+																				<table align="center" border="0" width="100%">
+																				    <tr>
+																				    	<td align="left">
+																					    	<rich:panel style="width:100%;  height: 385px;" id="id_panelresulPreliminarActos">
+																						    	<f:facet name="header" >	
+																						    			<h:panelGroup>
+																											<h:outputLabel value="Detalle de la Rec:  #{programacionLoteCoactivoManaged.recId}" /> 
+																											
+																												<h:commandLink title="Regresar" 
+																													action="#{programacionLoteCoactivoManaged.resultadoLotePreliminar}">
+																													<img src="#{request.contextPath}/images/regresar.jpg" border="0"
+																														width="24" height="20" />
+																											</h:commandLink>
+																										</h:panelGroup>	
+																								</f:facet>
+																								<table border="0" width="50%">
+																								   <tr>
+																										<td align="left">
+																						    				<h:outputLabel  style="font-weight:bold" value="Cod. Persona:  " />
+																						    				<h:outputLabel value="#{programacionLoteCoactivoManaged.personaId}" />
+																									    </td>
+																									    <td align="left">
+																						    				<h:outputLabel   style="font-weight:bold" value="Contribuyente:  " />
+																						    				<h:outputLabel value="#{programacionLoteCoactivoManaged.nombreCompleto}" />
+																									    </td>
+																									</tr>
+																								    <tr>
+																									    <td>
+																									     <h:outputText  style="font-weight:bold" value="Tipo de Acto:  "/>
+																									     <h:outputText  value="#{programacionLoteCoactivoManaged.tipoActo}"/>
+																									   </td>
+																									   <td>
+																									    <h:outputText  style="font-weight:bold" value="Tipo de Acto REC:  "/>
+																									    <h:outputText value="#{programacionLoteCoactivoManaged.tipoActoREC}"/>
+																									   </td>
+																								   </tr>
+																								
+																													
+																								    </table>
+																									<table border="0" width="100%">
+																												<tr>
+																												
+																												<td align="left" width="130px" >
+																												   <rich:datascroller for="resultadoprelimiActo" maxPages="10" ></rich:datascroller>
+																													 <rich:extendedDataTable 
+																																id="resultadoprelimiActo" value="#{programacionLoteCoactivoManaged.lstloteActoRec}" 
+																																var="lotepreliminarActo" width="100%" height="310px" rows="10"
+																																 selectionMode="single"   noDataLabel="No Se Encontro Información para esta Busqueda"
+																																rowKeyVar="row" enableContextMenu="false"	>
+																																<rich:column id="x16"  style="text-align:center" width="5%">
+																																  <f:facet name="header" width="10%" >Ver</f:facet>
+																													            	<a4j:commandLink ajaxSingle="true" id="newlink16"  reRender="formProgramacionLoteOrdinario" action="#{programacionLoteCoactivoManaged.programacionLotePreliminarDetalle}" >
+																																		  <f:setPropertyActionListener value="#{lotepreliminarActo.actoId}" target="#{programacionLoteCoactivoManaged.actoId}" id="r4251"/>
+	                																								                  	  <f:setPropertyActionListener value="#{lotepreliminarActo.loteId}" target="#{programacionLoteCoactivoManaged.loteIdActo}" id="r4251"/>
+	                																								                	    <f:setPropertyActionListener value="#{lotepreliminarActo.nroActo}" target="#{programacionLoteCoactivoManaged.nroActo}" id="r4251"/>
+	                																								                	
+	                																								                    <h:graphicImage value="/images/modal/lupa.gif" style="border:0" />
+																													                </a4j:commandLink>
+																													                <rich:toolTip for="newlink1116" value="Detalle de Acto" />
+																														        </rich:column>
+																																	<rich:column id="x116"  style="text-align:center" filterBy="#{lotepreliminarActo.personaId}" >
+																													                <f:facet name="header" width="10%" >Cod. Per.</f:facet>
+																													                 <h:outputText value="#{lotepreliminarActo.personaId}"/>
+																													         		  </rich:column>
+																															 	<rich:column id="x26"  style="text-align:center" filterBy="#{lotepreliminarActo.nroActo}" >
+																													                <f:facet name="header" width="8%" >Nro Acto</f:facet>
+																													                 <h:outputText value="#{lotepreliminarActo.nroActo}"/>
+																													         		  </rich:column>
+																													            <rich:column id="x46"  style="text-align:center" width="8%">
+																													                <f:facet name="header">Fecha Notificación Acto</f:facet>
+																													                <h:outputText value="#{lotepreliminarActo.fechaNotificacion}"/>
+																													            </rich:column>
+																													            <rich:column id="x66" width="8%">
+																													                <f:facet name="header">Fecha Emision Acto</f:facet>
+																													                <h:outputText value="#{lotepreliminarActo.fechaEmision}"/>
+																													            </rich:column>
+																													             <rich:column id="x76"  style="text-align:center" width="10%">
+																													                <f:facet name="header">Deuda Total Acto</f:facet>
+																													                <h:outputText value="#{lotepreliminarActo.montoDeuda}"/>
+																													            </rich:column>
+																													            <rich:column id="x77"  style="text-align:center" width="10%">
+																													                <f:facet name="header">Deuda Total Rec</f:facet>
+																													                <h:outputText value="#{lotepreliminarActo.deudaTotalRecActo}"/>
+																													            </rich:column>
+																													            
+																												   			</rich:extendedDataTable>
+		
+																												</td>
+																												</tr>
+																								</table>
+																									
+																							</rich:panel>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																	</td>
+																</tr>
+															</table>
+														</a4j:outputPanel>
+														
+														<a4j:outputPanel id="id_panelresultadoPreliminarDetalleLoteOrdinario" rendered="#{programacionLoteCoactivoManaged.accion==21}" >
+															<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+															<tr><td>
+																	<table align="center" width="100%">
+																	
+																		<tr>
+																			<td>
+																				<table align="center" border="0" width="100%">
+																				    <tr>
+																				    	<td align="left">
+																					    	<rich:panel style="width:100%;  height: 450px;" id="id_panelresulPreliminardetalle">
+																						    	<f:facet name="header">	
+																						    	 <h:panelGroup>	
+																										<h:outputLabel value="Detalle del Acto:  #{programacionLoteCoactivoManaged.nroActo}" /> 
+																										<h:commandLink title="Regresar" 
+																													action="#{programacionLoteCoactivoManaged.programacionLotePreliminarActoDetalle}" >
+																													<img src="#{request.contextPath}/images/regresar.jpg" border="0"
+																														width="24" height="20" />
+																											</h:commandLink>
+																								</h:panelGroup>
+																								</f:facet>
+																									<table border="0" width="100%"   >
+																												 <tr>
+																												    	<td align="left">
+																													    				<h:outputLabel value="Cod. Persona" />
+																													    </td>
+																													    <td align="left">
+																													    				<h:outputLabel value="#{programacionLoteCoactivoManaged.personaId}" />
+																													    </td>
+																													    <td align="left">
+																													    				<h:outputLabel value="Contribuyente" />
+																													    </td>
+																													    <td align="left">
+																													    				<h:outputLabel value="#{programacionLoteCoactivoManaged.nombreCompleto}" />
+																													    </td>
+																													</tr>
+																														 <tr>
+																												    	<td align="left">
+																													    				<h:outputLabel value="Tipo Acto" />
+																													    </td>
+																													    <td align="left">
+																													    				<h:outputLabel value="#{programacionLoteCoactivoManaged.tipoActo}" />
+																													    				</td>
+																													    
+																													</tr>
+																									</table>
+																								<table border="0" width="100%"   >
+																												<tr>
+																												
+																												<td align="left" width="130px" >
+																												  	 <rich:extendedDataTable 
+																																id="resultadoprelimidetalle" value="#{programacionLoteCoactivoManaged.lstDetallelotePreliminar}" 
+																																var="actodetalle" width="100%" height="350px" 
+																																 selectionMode="single"   noDataLabel="No Se Encontro Información para esta Busqueda"
+																																rowKeyVar="row" enableContextMenu="false"	>
+																																
+																															
+													
+																																	<rich:column id="x11" width="5%"  filterBy="#{actodetalle.annoDeuda}" >
+																													                <f:facet name="header" >Periodo</f:facet>
+																												
+																													                 <h:outputText value="#{actodetalle.annoDeuda}" rendered="#{actodetalle.annoDeuda !=0}"/>
+																													                 <h:outputText value="Total" rendered="#{actodetalle.annoDeuda ==0}"/>
+																													         		  </rich:column>
+																															 	<rich:column id="x21" width="5%"  filterBy="#{actodetalle.cuota}" >
+																													                <f:facet name="header" >Cuota</f:facet>
+																												
+																													                 <h:outputText value="#{actodetalle.cuota}" rendered="#{actodetalle.cuota !=0}"/>
+																													                 <h:outputText value="" rendered="#{actodetalle.cuota ==0}"/>
+																													         		  </rich:column>
+																												
+																													            <rich:column id="x41" width="10%"  filterBy="#{actodetalle.concepto}">
+																													                <f:facet name="header">Concepto</f:facet>
+																													                <h:outputText value="#{actodetalle.concepto}"/>
+																													            </rich:column>
+																													             <rich:column id="x51" width="10%"  filterBy="#{actodetalle.subConcepto}">
+																													                <f:facet name="header">Sub Concepto</f:facet>
+																													                <h:outputText value="#{actodetalle.subConcepto}"/>
+																													            </rich:column>
+																													            <rich:column id="x511" width="12%">
+																													                <f:facet name="header">Uso(s)</f:facet>
+																													                <h:outputText value="#{actodetalle.uso}"/>
+																													            </rich:column>
+																													       <rich:column id="x4444" width="12%">
+																													                <f:facet name="header">Descrip.</f:facet>
+																													                <h:outputText id="descrip_preliminar" value="#{actodetalle.descripcion}"/>
+																													                <rich:toolTip for="descrip_preliminar" value="#{actodetalle.descripcion}" />
+																													            </rich:column>     
+																													      <rich:column id="x71" width="8%">
+																													                <f:facet name="header">Insoluto</f:facet>
+																													                <h:outputText value="#{actodetalle.insoluto}" />
+																													            </rich:column>
+																													            <rich:column id="x7111" width="5%">
+																													                <f:facet name="header">Der. Em.</f:facet>
+																													                <h:outputText value="#{actodetalle.derechoEmision}" />
+																													            </rich:column>
+																													                <rich:column id="x61" width="8%">
+																													                <f:facet name="header">Reajuste</f:facet>
+																													                <h:outputText value="#{actodetalle.reajuste}" />
+																													            </rich:column>
+																													             
+																													              <rich:column id="x81" width="10%">
+																													                <f:facet name="header">Interes </f:facet>
+																													                <h:outputText value="#{actodetalle.interesAnual}"/>
+																													            </rich:column> 
+																													            
+																													              <rich:column id="x91" width="10%">
+																													                <f:facet name="header">Total</f:facet>
+																													                <h:outputText value="#{actodetalle.deudaTotal}"/>
+																													            </rich:column> 
+																												   			</rich:extendedDataTable>
+		
+																												</td>
+																												</tr>
+																								</table>
+																									
+																							</rich:panel>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																	</td>
+																</tr>
+															</table>
+														</a4j:outputPanel>
+											
+														<a4j:outputPanel id="id_panelprogramacionFinalLoteOrdinario" rendered="#{programacionLoteCoactivoManaged.accion==3}" >
+															<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+															<tr><td>
+																	<table align="center" width="100%">
+																	
+																		<tr>
+																			<td>
+																				<table align="center" border="0" width="100%">
+																				    <tr>
+																				    	<td align="left">
+																					    	<rich:panel style="width:100%;  height: 210px;" id="id_panelprogramacionfinal">
+																						    	<f:facet name="header">		
+																										<h:outputLabel value="Programación Final lote de Cobranza Coactiva" /> 
+																								</f:facet>
+																								<table border="0" width="100%"   >
+																												<tr>
+																												
+																												<td align="left" width="130px" >
+																													<h:outputText value="Programar Dia y Hora:" />
+																												</td>
+																												
+																												<td align="left" width="250px" >
+																												  	<rich:calendar
+																									                        locale="en/US"
+																									                        datePattern="dd/MM/yyyy HH:mm"
+																									                        inputClass="maskDate"
+																									                           inputStyle="width:100px"
+																									                           popup="true"
+																									                         id="id_fechaprogramacion_final" value="#{programacionLoteCoactivoManaged.fechaProgramacion}" >
+																									                     </rich:calendar>
+																									                        <rich:jQuery id="maskedo33" selector=".maskDate" query="mask('99/99/9999 99:99')" timing="onload" />  
+																													</td>
+																												</tr>
+																								</table>
+																									<a4j:commandButton value="Guardar" style="width:100px;"
+																										 	 			id="id_btnguardar_final"	action="#{programacionLoteCoactivoManaged.guardarProgramacionFinal}" 
+																										 	 			 reRender="panelinclude"
+																														oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+																											</a4j:commandButton>
+																																
+																											<a4j:commandButton value="Salir" style="width:100px;" action="#{registroPersonaManaged.sendRedirectPrincipal}" 	immediate="true" reRender="panelinclude" >
+																																				<f:setPropertyActionListener value="/sisat/controlycobranza/buscarloteordinaria.xhtml" target="#{sessionManaged.page}" />
+																									</a4j:commandButton>
+																							</rich:panel>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																	</td>
+																</tr>
+															</table>
+														</a4j:outputPanel>
+											
+														<a4j:outputPanel id="id_panelresultadoFinalLoteOrdinario" rendered="#{programacionLoteCoactivoManaged.accion==4}" >
+															<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+															<tr><td>
+																	<table align="center" width="100%">
+																	
+																		<tr>
+																			<td>
+																				<table align="center" border="0" width="100%">
+																				    <tr>
+																				    	<td align="left">
+																					    	<rich:panel style="width:100%;  height: 385px;" id="id_panelresulFinal">
+																						    	<f:facet name="header">		
+																										<h:outputLabel value="Resultado Final lote de Cobranza Coactiva" /> 
+																								</f:facet>
+																						
+																									<table border="0" width="50%">
+																								    <tr>
+																									    <td>
+																									    	<a4j:commandButton value="Generar Archivo" style="width:100px;"
+																											 	 			id="id_generar"	action="#{programacionLoteCoactivoManaged.imprimirLote}" 
+																											 	 			 reRender="panelinclude,id_generacionarchivos,id_lotefinal"
+																															oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+																												</a4j:commandButton>
+																									    </td>
+																									    <td>
+																									     <h:outputText  style="font-weight:bold" value="Tipo de Acto:  "/>
+																									     <h:outputText  value="#{programacionLoteCoactivoManaged.tipoActo}"/>
+																									   </td>
+																									   <td>
+																									    <h:outputText  style="font-weight:bold" value="Tipo de Acto REC:  "/>
+																									    <h:outputText value="#{programacionLoteCoactivoManaged.tipoActoREC}"/>
+																									   </td>
+																								   </tr>
+																								    </table>
+																												<rich:datascroller for="resultadofinal" maxPages="10" ></rich:datascroller>
+																													 <rich:extendedDataTable 
+																																id="resultadofinal" value="#{programacionLoteCoactivoManaged.lstloteRecPreliminar}" 
+																																var="lotefinal"  width="100%" height="310px" rows="10"
+																																 selectionMode="single"   noDataLabel="No Se Encontro Información para esta Busqueda"
+																																rowKeyVar="row" enableContextMenu="false"	>
+																																
+																																<rich:column  style="text-align:center" id="x01" width="5%">
+																																  <f:facet name="header" >Ver</f:facet>
+																																	<a4j:commandLink ajaxSingle="true" id="newlink11"  reRender="formProgramacionLoteOrdinario" action="#{programacionLoteCoactivoManaged.programacionLoteFinalActoDetalle}" >
+																																		  <f:setPropertyActionListener value="#{lotefinal.actoId}" target="#{programacionLoteCoactivoManaged.actoId}" id="r4252"/>
+	                  																													  <f:setPropertyActionListener value="#{lotefinal.recId}" target="#{programacionLoteCoactivoManaged.recId}" id="r4253"/>
+																													            		  <f:setPropertyActionListener value="#{lotefinal.personaId}" target="#{programacionLoteCoactivoManaged.personaId}" id="r4254"/>
+	                  																													  <f:setPropertyActionListener value="#{lotefinal.descripcionPersona}" target="#{programacionLoteCoactivoManaged.nombreCompleto}" id="r4255"/>
+																													            		  <f:setPropertyActionListener value="#{lotefinal.tipoActo}" target="#{programacionLoteCoactivoManaged.tipoActo}" id="r4256"/>
+	                  																										               <f:setPropertyActionListener value="#{lotefinal.nroRec}" target="#{programacionLoteCoactivoManaged.nroREC}" id="r4256"/>
+	                  																										             <h:graphicImage value="/images/modal/lupa.gif" style="border:0" />
+																													               </a4j:commandLink>
+																													                <rich:toolTip for="newlink11" value="Detalle de REC" />
+																														        </rich:column>
+													
+																																	<rich:column id="x12" width="8%"  style="text-align:center" filterBy="#{lotefinal.personaId}"  >
+																													                <f:facet name="header"  >Cod. Per.</f:facet>
+																												
+																													                 <h:outputText value="#{lotefinal.personaId}"/>
+																													         		  </rich:column>
+																															 	
+																												
+																													     
+																													           <rich:column id="x13" width="20%" filterBy="#{lotefinal.descripcionPersona}" >
+																													                <f:facet name="header">Apellidos Y Nombres/Razón Social</f:facet>
+																													                <h:outputText value="#{lotefinal.descripcionPersona}"/>
+																													            </rich:column>            				                
+																													            <rich:column id="x14" width="10%"  style="text-align:center">
+																													                <f:facet name="header">Nro REC</f:facet>
+																													                <h:outputText value="#{lotefinal.nroRec}"/>
+																													            </rich:column>
+																													            <rich:column id="x144" width="10%"  style="text-align:center">
+																													                <f:facet name="header">Nro Expediente</f:facet>
+																													                <h:outputText value="#{lotefinal.nroExpediente}"/>
+																													            </rich:column>
+																													            <rich:column id="x15"  style="text-align:center" filterBy="#{lotefinal.nroDocumento}" >
+																													                <f:facet name="header" width="8%" >Nro Doc</f:facet>
+																												
+																													                 <h:outputText value="#{lotefinal.nroDocumento}"/>
+																													         		  </rich:column>
+																													            <rich:column id="x16" width="8%"  style="text-align:center">
+																													                <f:facet name="header">Fecha Emision</f:facet>
+																													                <h:outputText value="#{lotefinal.fechaEmision}"/>
+																													                
+																													            </rich:column>
+																													             <rich:column id="x17" width="8%"  style="text-align:center">
+																													                <f:facet name="header">Deuda Total</f:facet>
+																													                <h:outputText value="#{lotefinal.deudaTotal}"/>
+																													            </rich:column>
+																													            
+																												   			</rich:extendedDataTable>
+		
+																												
+																									
+																							</rich:panel>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																	</td>
+																</tr>
+															</table>
+														</a4j:outputPanel>
+														
+														<a4j:outputPanel id="id_panelresultadoFinalLoteCoactivoActos" rendered="#{programacionLoteCoactivoManaged.accion==401}" >
+															<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+															<tr><td>
+																	<table align="center" width="100%">
+																	
+																		<tr>
+																			<td>
+																				<table align="center" border="0" width="100%">
+																				    <tr>
+																				    	<td align="left">
+																					    	<rich:panel style="width:100%;  height: 385px;" id="id_panelresulFinalActos">
+																						    	<f:facet name="header" >	
+																						    			<h:panelGroup>
+																											<h:outputLabel value="Detalle de la Rec:  #{programacionLoteCoactivoManaged.nroREC}" /> 
+																											
+																												<h:commandLink title="Regresar" 
+																													action="#{programacionLoteCoactivoManaged.resultadoLoteFinal}">
+																													<img src="#{request.contextPath}/images/regresar.jpg" border="0"
+																														width="24" height="20" />
+																											</h:commandLink>
+																										</h:panelGroup>	
+																								</f:facet>
+																								<table border="0" width="50%">
+																								   <tr>
+																										<td align="left">
+																						    				<h:outputLabel  style="font-weight:bold" value="Cod. Persona:  " />
+																						    				<h:outputLabel value="#{programacionLoteCoactivoManaged.personaId}" />
+																									    </td>
+																									    <td align="left">
+																						    				<h:outputLabel   style="font-weight:bold" value="Contribuyente:  " />
+																						    				<h:outputLabel value="#{programacionLoteCoactivoManaged.nombreCompleto}" />
+																									    </td>
+																									</tr>
+																								    <tr>
+																									    <td>
+																									     <h:outputText  style="font-weight:bold" value="Tipo de Acto:  "/>
+																									     <h:outputText  value="#{programacionLoteCoactivoManaged.tipoActo}"/>
+																									   </td>
+																									   <td>
+																									    <h:outputText  style="font-weight:bold" value="Tipo de Acto REC:  "/>
+																									    <h:outputText value="#{programacionLoteCoactivoManaged.tipoActoREC}"/>
+																									   </td>
+																								   </tr>
+																								
+																													
+																								    </table>
+																									<table border="0" width="100%">
+																												<tr>
+																												
+																												<td align="left" width="130px" >
+																												   <rich:datascroller for="resultadofinalActo" maxPages="10" ></rich:datascroller>
+																													 <rich:extendedDataTable 
+																																id="resultadofinalActo" value="#{programacionLoteCoactivoManaged.lstloteActoRec}" 
+																																var="lotefinalActo" width="100%" height="310px" rows="10"
+																																 selectionMode="single"   noDataLabel="No Se Encontro Información para esta Busqueda"
+																																rowKeyVar="row" enableContextMenu="false"	>
+																																<rich:column id="x1666"  style="text-align:center" width="5%">
+																																  <f:facet name="header" width="10%" >Ver</f:facet>
+																													            	<a4j:commandLink ajaxSingle="true" id="newlink166"  reRender="formProgramacionLoteOrdinario" action="#{programacionLoteCoactivoManaged.programacionLoteFinalDetalle}" >
+																																		  <f:setPropertyActionListener value="#{lotefinalActo.actoId}" target="#{programacionLoteCoactivoManaged.actoId}" id="r4251"/>
+	                																								                  	  <f:setPropertyActionListener value="#{lotefinalActo.loteId}" target="#{programacionLoteCoactivoManaged.loteIdActo}" id="r4251"/>
+	                																								                	    <f:setPropertyActionListener value="#{lotefinalActo.nroActo}" target="#{programacionLoteCoactivoManaged.nroActo}" id="r4251"/>
+	                																								                	
+	                																								                    <h:graphicImage value="/images/modal/lupa.gif" style="border:0" />
+																													                </a4j:commandLink>
+																													                <rich:toolTip for="newlink11166" value="Detalle de Acto" />
+																														        </rich:column>
+																																	<rich:column id="x1166"  style="text-align:center" filterBy="#{lotefinalActo.personaId}" >
+																													                <f:facet name="header" width="10%" >Cod. Per.</f:facet>
+																													                 <h:outputText value="#{lotefinalActo.personaId}"/>
+																													         		  </rich:column>
+																															 	<rich:column id="x266"  style="text-align:center" filterBy="#{lotefinalActo.nroActo}" >
+																													                <f:facet name="header" width="8%" >Nro Acto</f:facet>
+																													                 <h:outputText value="#{lotefinalActo.nroActo}"/>
+																													         		  </rich:column>
+																													            <rich:column id="x466"  style="text-align:center" width="8%">
+																													                <f:facet name="header">Fecha Notificación Acto</f:facet>
+																													                <h:outputText value="#{lotefinalActo.fechaNotificacion}"/>
+																													            </rich:column>
+																													            <rich:column id="x666" width="8%">
+																													                <f:facet name="header">Fecha Emision Acto</f:facet>
+																													                <h:outputText value="#{lotefinalActo.fechaEmision}"/>
+																													            </rich:column>
+																													             <rich:column id="x766"  style="text-align:center" width="10%">
+																													                <f:facet name="header">Deuda Total Acto</f:facet>
+																													                <h:outputText value="#{lotefinalActo.montoDeuda}"/>
+																													            </rich:column>
+																													            <rich:column id="x776"  style="text-align:center" width="10%">
+																													                <f:facet name="header">Deuda Total Rec</f:facet>
+																													                <h:outputText value="#{lotefinalActo.deudaTotalRecActo}"/>
+																													            </rich:column>
+																													            
+																												   			</rich:extendedDataTable>
+		
+																												</td>
+																												</tr>
+																								</table>
+																									
+																							</rich:panel>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																	</td>
+																</tr>
+															</table>
+														</a4j:outputPanel>
+														
+														<a4j:outputPanel id="id_panelresultadoFinalDetalleLoteOrdinario" rendered="#{programacionLoteCoactivoManaged.accion==41}" >
+															<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+															<tr><td>
+																	<table align="center" width="100%">
+																	
+																		<tr>
+																			<td>
+																				<table align="center" border="0" width="100%">
+																				    <tr>
+																				    	<td align="left">
+																					    	<rich:panel style="width:100%;  height: 385px;" id="id_panelresulFinaldetalle">
+																						    	<f:facet name="header">		
+																						    	 <h:panelGroup>	
+																										<h:outputLabel value="Detalle del Acto:  #{programacionLoteCoactivoManaged.nroActo}" /> 
+																										<h:commandLink title="Regresar" 
+																													action="#{programacionLoteCoactivoManaged.programacionLoteFinalActoDetalle}" >
+																													<img src="#{request.contextPath}/images/regresar.jpg" border="0"
+																														width="24" height="20" />
+																										</h:commandLink>
+																								</h:panelGroup>
+																										
+																								</f:facet>
+																								<table border="0" width="100%"   >
+																												 <tr>
+																												    	<td align="left">
+																													    				<h:outputLabel value="Cod. Persona" />
+																													    </td>
+																													    <td align="left">
+																													    				<h:outputLabel value="#{programacionLoteCoactivoManaged.personaId}" />
+																													    </td>
+																													    <td align="left">
+																													    				<h:outputLabel value="Contribuyente" />
+																													    </td>
+																													    <td align="left">
+																													    				<h:outputLabel value="#{programacionLoteCoactivoManaged.nombreCompleto}" />
+																													    </td>
+																													</tr>
+																														 <tr>
+																												    	<td align="left">
+																													    				<h:outputLabel value="Tipo Acto" />
+																													    </td>
+																													    <td align="left">
+																													    				<h:outputLabel value="#{programacionLoteCoactivoManaged.tipoActo}" />
+																													    				</td>
+																													    
+																													</tr>
+																									</table>
+																									<table border="0" width="100%"   >
+																												<tr>
+																												
+																												<td align="left" width="130px" >
+																													 <rich:extendedDataTable 
+																																id="resultadofinaldetalle" value="#{programacionLoteCoactivoManaged.lstDetallelotePreliminar}" 
+																																var="actodetallefinal" width="100%" height="300px"
+																																 selectionMode="single"   noDataLabel="No Se Encontro Información para esta Busqueda"
+																																rowKeyVar="row" enableContextMenu="false"	>
+																																
+																															
+													
+																																	<rich:column id="x41" width="5%" filterBy="#{actodetallefinal.annoDeuda}" >
+																													                <f:facet name="header"  >Periodo</f:facet>
+																												
+																													                 <h:outputText value="#{actodetallefinal.annoDeuda}" rendered="#{actodetallefinal.annoDeuda !=0}"/>
+																													                 <h:outputText value="Total" rendered="#{actodetallefinal.annoDeuda ==0}"/>
+																													         		  </rich:column>
+																															 	<rich:column id="x42" width="5%" filterBy="#{actodetallefinal.cuota}" >
+																													                <f:facet name="header"  >Cuota</f:facet>
+																												
+																													                 <h:outputText value="#{actodetallefinal.cuota}" rendered="#{actodetallefinal.cuota !=0}"/>
+																													                 <h:outputText value="" rendered="#{actodetallefinal.cuota ==0}"/>
+																													         		  </rich:column>
+																												
+																													            <rich:column id="x43" width="10%" filterBy="#{actodetallefinal.concepto}">
+																													                <f:facet name="header">Concepto</f:facet>
+																													                <h:outputText value="#{actodetallefinal.concepto}"/>
+																													            </rich:column>
+																													             <rich:column id="x44" width="10%" filterBy="#{actodetallefinal.subConcepto}">
+																													                <f:facet name="header">Sub Concepto</f:facet>
+																													                <h:outputText value="#{actodetallefinal.subConcepto}"/>
+																													            </rich:column>
+																													             <rich:column id="x441" width="10%">
+																													                <f:facet name="header">Uso(s)</f:facet>
+																													                <h:outputText value="#{actodetallefinal.uso}"/>
+																													            </rich:column>
+																													           <rich:column id="x444" width="10%">
+																													                <f:facet name="header">Descrip.</f:facet>
+																													                <h:outputText id="descrip_final" value="#{actodetallefinal.descripcion}"/>
+																													                   <rich:toolTip for="descrip_final" value="#{actodetallefinal.descripcion}" />
+																													            </rich:column>
+																													       <rich:column id="x46" width="10%">
+																													                <f:facet name="header">Insoluto</f:facet>
+																													                <h:outputText value="#{actodetallefinal.insoluto}" />
+																													            </rich:column>
+																													             <rich:column id="x4666" width="10%">
+																													                <f:facet name="header">Derec. Emisión</f:facet>
+																													                <h:outputText value="#{actodetallefinal.derechoEmision}" />
+																													            </rich:column>
+																													                <rich:column id="x45" width="10%">
+																													                <f:facet name="header">Reajuste</f:facet>
+																													                <h:outputText value="#{actodetallefinal.reajuste}" />
+																													            </rich:column>
+																													            
+																													              <rich:column id="x47" width="10%">
+																													                <f:facet name="header">Interes</f:facet>
+																													                <h:outputText value="#{actodetallefinal.interesAnual}"/>
+																													            </rich:column> 
+																													            
+																													              <rich:column id="x48" width="10%">
+																													                <f:facet name="header">Total</f:facet>
+																													                <h:outputText value="#{actodetallefinal.deudaTotal}"/>
+																													            </rich:column> 
+																												   			</rich:extendedDataTable>
+		
+																												</td>
+																												</tr>
+																								</table>
+																									
+																							</rich:panel>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																	</td>
+																</tr>
+															</table>
+														</a4j:outputPanel>
+														<a4j:outputPanel id="id_panelgeneracionArchivoLoteOrdinario" rendered="#{programacionLoteCoactivoManaged.accion==5}" >
+															<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+															<tr><td>
+																	<table align="center" width="100%">
+																	
+																		<tr>
+																			<td>
+																				<table align="center" border="0" width="100%">
+																				    <tr>
+																				    	<td align="left">
+																					    	<rich:panel style="width:100%;  height: 300px;" id="id_panelgeneracionarchivo">
+																						    	<f:facet name="header">		
+																										<h:outputLabel value="Generacion de Archivo de lote de Cobranza Coactiva" /> 
+																								</f:facet>
+																								<table border="0" width="100%"   >
+																												<tr>
+																												<td align="left" width="130px" >
+																													 <rich:extendedDataTable 
+																																id="generacionArchivo" value="#{programacionLoteCoactivoManaged.archivos}" 
+																																var="archivo" width="30%" height="230px"
+																																 selectionMode="single"   noDataLabel="No Se Encontro Información para esta Busqueda"
+																																rowKeyVar="row" enableContextMenu="false"	>
+																																<rich:column id="x1111" width="8px">
+																																  <f:facet name="header" width="10%" >Ver</f:facet>
+																																	<h:commandLink  ajaxSingle="true" id="newlink33" action="#{programacionLoteCoactivoManaged.descargar}" >
+																												            		 <h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+																												                    <f:setPropertyActionListener value="#{archivo}" target="#{programacionLoteCoactivoManaged.archivoItem}" id="r4277"/>
+																												                </h:commandLink>
+																													                <rich:toolTip for="newlink1" value="Detalle de Acto" />
+																														        </rich:column>
+																														        <rich:column id="x1112" width="50px">
+																																 <f:facet name="header" width="10%" >Archivo</f:facet>
+																												
+																													                 <h:outputText value="#{archivo}"/>
+																													         		  </rich:column>
+																															 	
+																												   			</rich:extendedDataTable>
+		
+																												</td>
+																												</tr>
+																								</table>
+																									
+																							</rich:panel>
+																						</td>
+																					</tr>
+																				</table>
+																			</td>
+																		</tr>
+																	</table>
+																	</td>
+																</tr>
+															</table>
+														</a4j:outputPanel>
+											</td>
+										</tr>
+										</table>
+						</td>
+				</tr>
+		
+			</table>
+		
+	
+</a4j:outputPanel>
+</h:form>
+
+</ui:composition>

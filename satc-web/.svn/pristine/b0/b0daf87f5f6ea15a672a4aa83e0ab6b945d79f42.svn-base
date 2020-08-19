@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PR_subr1" language="groovy" pageWidth="555" pageHeight="400" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.8531167061100033"/>
+	<property name="ireport.x" value="17"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="dj_id" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="area_terreno" class="java.math.BigDecimal"/>
+	<parameter name="area_terreno_comun" class="java.math.BigDecimal"/>
+	<parameter name="arancel" class="java.lang.String">
+		<defaultValueExpression><![CDATA[5]]></defaultValueExpression>
+	</parameter>
+	<parameter name="valor_total_construccion" class="java.lang.String">
+		<defaultValueExpression><![CDATA[5]]></defaultValueExpression>
+	</parameter>
+	<parameter name="valor_otras_instalaciones" class="java.lang.String"/>
+	<parameter name="valor_total_terreno" class="java.lang.String"/>
+	<parameter name="valor_autovaluo" class="java.lang.String"/>
+	<parameter name="determinacion_id" class="java.lang.Integer"/>
+	<parameter name="deter_predio_id" class="java.lang.Integer"/>
+	<parameter name="anio" class="java.lang.Integer"/>
+	<parameter name="estado" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[with movimiento1 as (
+SELECT orden = 1,ROW_NUMBER() OVER(order by c.nro_nivel) Item, a.djarbitrio_id,tu.descripcion, case ud.mes_inicio when 1 then 'Enero'
+			  when 2 then 'Febrero' when 3 then 'Marzo' when 4 then 'Abril' when 5 then 'Mayo' when 6 then 'Junio' when 7 then 'Julio' when 8 then 'Agosto' when 9 then 'Septiembre' when 10 then 'Octubre' when 11 then 'Noviembre' when 12 then 'Diciembre'
+			 else case u.mes_inicio  when 1
+			 then 'Enero'
+			  when '02' then 'Febrero' when 3 then 'Marzo' when 4 then 'Abril' when 5 then 'Mayo' when 6 then 'Junio' when 7 then 'Julio' when 8 then 'Agosto' when 9 then 'Septiembre' when 10 then 'Octubre' when 11 then 'Noviembre' when 12 then 'Diciembre'
+			 end end mes_inicio
+    		  ,case ud.mes_fin when 1 then 'Enero'
+			  when '02' then 'Febrero' when 3 then 'Marzo' when 4 then 'Abril' when 5 then 'Mayo' when 6 then 'Junio' when 7 then 'Julio' when 8 then 'Agosto' when 9 then 'Septiembre' when 10 then 'Octubre' when 11 then 'Noviembre' when 12 then 'Diciembre'
+			  else case u.mes_fin  when '01'
+			 then 'Enero'
+			  when '02' then 'Febrero' when 3 then 'Marzo' when 4 then 'Abril' when 5 then 'Mayo' when 6 then 'Junio' when 7 then 'Julio' when 8 then 'Agosto' when 9 then 'Septiembre' when 10 then 'Octubre' when 11 then 'Noviembre' when 12 then 'Diciembre'
+			 end  end mes_fin
+			  ,u.anno_afectacion
+,case when u.area_uso IS null then ud.area_uso else u.area_uso end area_uso, c.nro_nivel
+--select u.mes_inicio,u.mes_fin,ud.mes_inicio,ud.mes_fin
+from rp_djarbitrios a
+inner join rp_djuso u on a.djarbitrio_id=u.djarbitrio_id  and u.estado=1
+inner join rp_tipo_uso tu on u.tipo_uso_id=tu.tipo_uso_id and tu.estado=1
+left join rj_mes mi on (mi.mes_id=u.mes_inicio)
+left join rj_mes mf on (mf.mes_id=u.mes_fin)
+left join rp_djuso_detalle ud on u.djuso_id=ud.djuso_id and ud.estado=1
+left join rp_djconstruccion c on ud.construccion_id=c.construccion_id and c.estado='1'
+where a.dj_id=$P{dj_id}
+),
+tabla as (select top (case when (select COUNT(*) from movimiento1)=0 then 1 else 0 end) orden =2,0 Item,0 djarbitrio_id,'' descripcion,
+ '' mes_inicio
+    		  ,'' mes_fin
+			  , 0 anno_afectacion
+,0 area_uso,0 nro_nivel
+)
+select sum(area_uso) area_uso ,descripcion,anno_afectacion,mes_inicio,mes_fin from movimiento1
+group by area_uso,descripcion,anno_afectacion,mes_inicio,mes_fin
+union all
+select area_uso, descripcion,anno_afectacion,mes_inicio,mes_fin from tabla
+group by area_uso,descripcion,anno_afectacion,mes_inicio,mes_fin]]>
+	</queryString>
+	<field name="area_uso" class="java.math.BigDecimal"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="anno_afectacion" class="java.lang.Integer"/>
+	<field name="mes_inicio" class="java.lang.String"/>
+	<field name="mes_fin" class="java.lang.String"/>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="10" splitType="Stretch">
+			<staticText>
+				<reportElement x="41" y="0" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Tipo Uso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="0" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Area Uso(Has)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="241" y="0" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Mes Inicio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="0" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Mes Fin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="441" y="0" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Año Periodo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="12" y="0" width="29" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Item]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField>
+				<reportElement x="41" y="0" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.000000">
+				<reportElement x="141" y="0" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{area_uso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="241" y="0" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mes_inicio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="0" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mes_fin}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="441" y="0" width="100" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{anno_afectacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="12" y="0" width="29" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="104" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="12" width="555" height="92"/>
+				<subreportParameter name="anio">
+					<subreportParameterExpression><![CDATA[$P{anio}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="area_terreno_comun">
+					<subreportParameterExpression><![CDATA[$P{area_terreno_comun}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="valor_otras_instalaciones">
+					<subreportParameterExpression><![CDATA[$P{valor_otras_instalaciones}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="valor_total_terreno">
+					<subreportParameterExpression><![CDATA[$P{valor_total_terreno}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="determinacion_id">
+					<subreportParameterExpression><![CDATA[$P{determinacion_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="deter_predio_id">
+					<subreportParameterExpression><![CDATA[$P{deter_predio_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="dj_id">
+					<subreportParameterExpression><![CDATA[$P{dj_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="valor_autovaluo">
+					<subreportParameterExpression><![CDATA[$P{valor_autovaluo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="arancel">
+					<subreportParameterExpression><![CDATA[$P{arancel}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="area_terreno">
+					<subreportParameterExpression><![CDATA[$P{area_terreno}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="valor_total_construccion">
+					<subreportParameterExpression><![CDATA[$P{valor_total_construccion}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="estado">
+					<subreportParameterExpression><![CDATA[$P{estado}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["PR_subr2.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="2" y="1" width="164" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[DETERMINACION DEL AUTOVALUO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="11" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

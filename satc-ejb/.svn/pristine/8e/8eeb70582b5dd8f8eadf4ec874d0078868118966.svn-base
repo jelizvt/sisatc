@@ -1,0 +1,59 @@
+package com.sat.sisat.descargo.business;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.ejb.Remote;
+
+import com.sat.sisat.caja.dto.DeudaDTO;
+import com.sat.sisat.caja.dto.ReciboPagoDetalleDTO;
+import com.sat.sisat.descargo.dto.ReciboPagoDescargo;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.papeleta.dto.FindPapeletas;
+import com.sat.sisat.persistence.entity.CdDescargo;
+import com.sat.sisat.persistence.entity.GnTipoDocumento;
+import com.sat.sisat.persistence.entity.PaDescargoDe;
+import com.sat.sisat.tramitedocumentario.dto.BusquedaExpedienteDTO;
+import com.sat.sisat.tramitedocumentario.dto.ItemBandejaEntradaDTO;
+
+@Remote
+public interface DescargoBoRemote {
+	
+	public abstract List<DeudaDTO> obtenerTodaDeuda(int personaId) throws SisatException;
+	
+	public abstract List<DeudaDTO> obtenerTodaDeudaConFecha(int personaId, Date fechaCompensacion) throws SisatException;
+	
+	public List<DeudaDTO> obtenerTodaDeudaPapeletas(Integer personaId,Integer papeletaId) throws SisatException;
+
+	public abstract void descargarDeudas(CdDescargo cdDescargo, List<DeudaDTO> deudasAEliminar) throws SisatException;
+	
+	public abstract void descargarDeudas(CdDescargo cdDescargo, List<DeudaDTO> deudasAEliminar,Date fechaCompensacion, Integer persona_transferencia_id, String expedientesIds, String recibosIds, List<ReciboPagoDescargo> recibos,int modulo) throws SisatException;
+	
+	public abstract void rectificarDeuda(CdDescargo cdDescargo, DeudaDTO deudaARectificar) throws SisatException;
+	
+	public abstract void descargarPapeletas(CdDescargo cdDescargo, List<DeudaDTO> deudasAEliminar,Integer papeletaId) throws SisatException;
+	
+	public abstract void descargarPapeletasDE(PaDescargoDe paDescargo,Integer papeletaId) throws SisatException;
+	
+	public abstract void modificarDeudas(int deudaId,BigDecimal insolutoCancelado, BigDecimal derechoEmisionCancelado, BigDecimal totalDeudaCancelada,  int usuarioId) throws SisatException;
+	
+	public abstract List<GnTipoDocumento> obtenerTipoDocumentos() throws SisatException;
+	public abstract List<GnTipoDocumento> obtenerTipoDocumentosDescargo() throws SisatException;
+	
+	public  List<FindPapeletas> buscarPapeletasCriteria(FindPapeletas findPapeleta) throws Exception;
+	
+	public  List<FindPapeletas> buscarPapeletasCriteriaDE(FindPapeletas findPapeleta) throws Exception;
+
+	public abstract List<DeudaDTO> obtenerTodaDeudaConFiltro(Integer personaId, Date fechaCompensacion,
+			Integer anioDeuda, Integer subConceptoId, Integer nroCuota) throws SisatException;
+	
+	// -=CRAMIREZ=-
+	public List<ItemBandejaEntradaDTO> obtenerExpedientesContibuyente(int persona_id, String tipos_tramite)throws SisatException;
+	public abstract ArrayList<ReciboPagoDescargo> obtenerRecibosPagoDescargo(int personaId)throws Exception;
+	public abstract ArrayList<ReciboPagoDetalleDTO> obtenerDeudasRecibo(int reciboId)throws Exception;
+	public abstract int validaNumeroDocumento(String nroDocumento)throws Exception;
+	// -=CRAMIREZ=-
+}
+

@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cc_esquela" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6ce58b7c-ffca-4e17-9ab4-d52dd70d27e3">
+	<property name="ireport.zoom" value="8.140274938684009"/>
+	<property name="ireport.x" value="1881"/>
+	<property name="ireport.y" value="742"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\report\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_expedicion" class="java.lang.String"/>
+	<parameter name="hora_expedicion" class="java.lang.String"/>
+	<parameter name="nombre_infractor" class="java.lang.String"/>
+	<parameter name="tipo_documento" class="java.lang.String"/>
+	<parameter name="numero_documento" class="java.lang.String"/>
+	<parameter name="numero_licencia" class="java.lang.String"/>
+	<parameter name="tipo_doc_identidad" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="persona_propietario_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="persona_infractor_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_numero_documento" class="java.lang.String"/>
+	<parameter name="p_numero_licencia" class="java.lang.String"/>
+	<parameter name="ruta_image" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[exec stp_pa_report_record_infractor $P{persona_infractor_id}]]>
+	</queryString>
+	<field name="papeleta_id" class="java.lang.Integer"/>
+	<field name="placa" class="java.lang.String"/>
+	<field name="nro_papeleta" class="java.lang.String"/>
+	<field name="fecha_infraccion" class="java.lang.String"/>
+	<field name="infraccion" class="java.lang.String"/>
+	<field name="nivel_gravedad" class="java.lang.String"/>
+	<field name="puntos_en_proc" class="java.lang.Integer"/>
+	<field name="puntos_firmes" class="java.lang.Integer"/>
+	<field name="monto_multa" class="java.math.BigDecimal"/>
+	<field name="reincidente" class="java.lang.Integer"/>
+	<field name="estado_papeleta" class="java.lang.String"/>
+	<field name="nombre_infractor" class="java.lang.String"/>
+	<field name="tipo_doc_identidad" class="java.lang.Integer"/>
+	<field name="nro_doc_identidad" class="java.lang.String"/>
+	<field name="num_licencia" class="java.lang.String"/>
+	<field name="numero_resolucion" class="java.lang.String"/>
+	<field name="estado_resolucion" class="java.lang.String"/>
+	<field name="placa_anterior" class="java.lang.String"/>
+	<field name="persona_infractor_id" class="java.lang.Integer"/>
+	<variable name="TOTAL_PUNTOS_EN_PROC" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{puntos_en_proc}]]></variableExpression>
+	</variable>
+	<variable name="sumimporte" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{estado_papeleta}.equals( "Pendiente" )?$F{monto_multa}:0.00]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="TOTAL_PUNTOS_FIRMES" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{puntos_firmes}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="108" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="84" height="47" uuid="f2e9a9dd-fffc-4d78-9c85-4224590706f2"/>
+				<imageExpression><![CDATA[$P{ruta_image}+"logo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="145" y="0" width="261" height="15" uuid="a1d4305a-50b0-4fa1-90aa-b12e95a2c8a1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[RECORD DE CONDUCTOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="178" y="64" width="54" height="13" uuid="03898cf3-7eb6-46d7-a5c1-9dc0c56c95b2"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre         :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="78" width="54" height="13" uuid="bf155a80-4e44-44cc-b7d1-d4a13ccdeeb7"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documento :]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="58" width="555" height="1" uuid="ec967ed7-8e4b-4fc6-a59b-fb88e5ed11c6"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="47" width="200" height="11" uuid="78657219-cd9b-4a68-9acc-36c2a5ae831b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Servicio de Administración Tributaria de Cajamarca]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="406" y="48" width="149" height="11" uuid="e6f94df2-0e17-4609-bb33-a16c1ea449aa"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Municipalidad Provincial de Cajamarca]]></text>
+			</staticText>
+			<image>
+				<reportElement x="456" y="1" width="42" height="47" uuid="2c13c807-38d2-40b5-be40-f5af5f707b0b"/>
+				<imageExpression><![CDATA[$P{ruta_image}+"escudo_caj.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="145" y="15" width="83" height="11" uuid="14aba3ae-0a36-4c8f-8711-ae8b2c2b8cf0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Fecha de expedición :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="298" y="15" width="27" height="11" uuid="7c702604-f533-4943-8fee-7db60d7e1f07"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Hora :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="228" y="15" width="59" height="11" uuid="54360aae-11ff-4dae-bfbc-035a860e95af"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fecha_expedicion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="325" y="15" width="49" height="11" uuid="2d99f4c1-7358-4d6a-94d0-dddee7e27d36"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{hora_expedicion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="178" y="78" width="54" height="13" uuid="bd921f39-3593-404b-a5e4-f5035b7605ce"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Licencia Nro:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="232" y="64" width="320" height="13" uuid="984b033f-4c7a-4f21-8267-867d7ad5b29f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombre_infractor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="59" y="78" width="26" height="13" uuid="87b3af96-abc6-45b9-ba2a-29f6be8c0b8a"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tipo_documento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="85" y="78" width="93" height="13" uuid="7f9b97fc-716e-4e3c-9b71-8723ed664638"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{numero_documento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="232" y="78" width="100" height="14" uuid="92b76219-5270-4467-934a-8c191f38071b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{numero_licencia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="22" y="95" width="41" height="11" uuid="14dc67d2-3c9e-4295-b9cd-29c74df8f898"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLACA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="115" y="95" width="50" height="11" uuid="6ac0bd8d-a59e-4c92-99c7-95a6116006bf"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAPELETA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="164" y="95" width="47" height="11" uuid="dd3d15e8-3ee3-4c37-a5bd-24f92e9341a5"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="212" y="95" width="40" height="11" uuid="c5b7827d-4c9f-43bf-8cbf-3642dea0ee10"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INFRACC.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="263" y="95" width="35" height="11" uuid="4ce49393-1c81-480d-8116-278dd2c64bce"/>
+				<textElement textAlignment="Center">
+					<font size="4" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[PUNTOS 
+EN PROCESO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="95" width="40" height="11" uuid="e022718f-b909-4d1c-8c35-e52692085d36"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IMPORTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="429" y="95" width="76" height="11" uuid="f27195a3-709c-4889-b9b0-4f321372edab"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESOLUCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="505" y="95" width="48" height="11" uuid="f0de8073-f91e-4bca-9624-e32dd8694310"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO RS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="106" width="555" height="1" uuid="d461636c-e2a4-460f-8965-34902c379ab9"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="376" y="95" width="51" height="11" uuid="60da48bd-fbe9-4d23-ba02-f57d3e2ff75c"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO PA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="62" y="95" width="54" height="11" uuid="3bdc8178-e7f9-441a-a249-f8c423050e62"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLACA ANT.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="64" width="54" height="13" uuid="03898cf3-7eb6-46d7-a5c1-9dc0c56c95b2"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código         :]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="59" y="64" width="100" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="d42ed2fd-e5cb-4daf-9842-0dfa6bcd1f12"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{persona_infractor_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="95" width="22" height="11" uuid="9da0068e-7e51-4505-829f-d200d655c905"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ITEM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="298" y="95" width="35" height="11" uuid="4ce49393-1c81-480d-8116-278dd2c64bce"/>
+				<textElement textAlignment="Center">
+					<font size="4" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PUNTOS
+FIRMES]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="22" y="1" width="41" height="12" uuid="21b0317d-c46e-4191-a5c3-d9dcb5fc14dd"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{placa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="1" width="50" height="12" uuid="70dd0dcf-5254-423e-a57e-0500ca6c1216"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_papeleta}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="164" y="1" width="47" height="13" uuid="7982ce54-84a0-448f-9b24-2a6310d05e92"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_infraccion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="212" y="1" width="40" height="13" uuid="062b3896-6ba6-46e7-9bb6-4dda27221dc6"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{infraccion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="507" y="0" width="48" height="14" uuid="bc0d2fe7-1532-4818-85cb-5e8b7213d90e"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado_resolucion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="376" y="1" width="51" height="13" uuid="43499665-a750-475b-9939-3700ce404c63"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado_papeleta}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="62" y="1" width="54" height="12" forecolor="#000000" backcolor="#FFFFFF" uuid="4284647c-fb4a-4b21-b11e-4a7040eada4e"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{placa_anterior}.equals( null )?"--":$F{placa_anterior}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="263" y="1" width="35" height="13" uuid="58757ece-c24b-41ee-a682-f54577ab565c"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{puntos_en_proc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="335" y="1" width="40" height="13" uuid="989501e3-80e5-4941-95ee-77575ce808e6"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monto_multa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="429" y="1" width="78" height="13" uuid="a463c2bf-ebdb-4579-8518-b8fe4c7de891"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numero_resolucion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="22" height="13" uuid="fa903f19-14a5-485a-97e9-d981bdbb412e"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="298" y="1" width="35" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="6ce91505-84b4-4615-b7e4-da6c5b012c2f"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{puntos_firmes}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch">
+			<line>
+				<reportElement x="0" y="-17" width="555" height="1" uuid="4a7a8302-17dd-4e71-b2b7-d5537d4bb472"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="1" y="-15" width="538" height="13" uuid="d4ecd9df-89fa-4da6-a5ee-3678015d217e"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Av. De los Incas S/N Complejo "Qhapac Ñan" Teléfonos: (076) 630671 - (076)630689 Página WEB: www.satcajamarca.gob.pe]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="48" splitType="Stretch">
+			<staticText>
+				<reportElement x="33" y="32" width="506" height="13" uuid="449c4d15-2244-42e4-a199-28ae9dac6eb5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[El presente Record de Conductor, únicamente registra las infracciones cometidas dentro de la Provincia de Cajamarca.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="32" width="28" height="13" uuid="3238aac9-3df8-46fc-a9f5-95eeca22c6c6"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Nota :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="149" y="11" width="41" height="13" uuid="e675c8a5-0134-47f2-bd70-4b371e5daef8"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_PUNTOS_EN_PROC}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="232" y="5" width="82" height="24" uuid="6901586e-a171-49f3-9051-38769ea5491b"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Puntos Firmes
+acumulados :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="366" y="13" width="65" height="11" uuid="6901586e-a171-49f3-9051-38769ea5491b"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Pendiente :]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="431" y="13" width="41" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="e403239d-14f3-4c40-8d39-b603ba03fbc5"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumimporte}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="63" y="5" width="82" height="24" uuid="6901586e-a171-49f3-9051-38769ea5491b"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Puntos en Proceso
+acumulados :]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="314" y="11" width="41" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="713870e9-f6b4-498c-b82c-5a6577fd490d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_PUNTOS_FIRMES}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

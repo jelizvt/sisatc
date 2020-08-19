@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">	
+	
+	
+	<h:form id="formConsultaGeneracionMasiva">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		
+			
+		<h:panelGrid columns="2" style="width:100%;" cellpadding="0" cellspacing="0">
+		
+		<rich:panel>
+				
+		 	<f:facet name="header">Consulta Generación Masiva</f:facet>
+		 	
+		 	<h:panelGrid columns="3">
+		 	
+		 		<h:outputText value="Fechas de Emisión:" />
+		 		
+		 		<h:selectOneMenu
+		 			styleClass=""		 		 
+		 			 id="cmbFrchaEmision" value="#{gestionExpedienteManaged.generacionMasivaId}" 
+					 style="width:400px;height:23px;" required="true" requiredMessage="Seleccione Fecha de Emisión" >
+					
+					<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					
+					<f:selectItems
+							value="#{gestionExpedienteManaged.listaGeneracionMasiva}"
+							var="item" 
+							itemLabel="#{item.textoMostrar}"
+							itemValue="#{item.generacionMasivaId}">
+					</f:selectItems>
+					
+				</h:selectOneMenu>
+				
+				<a4j:commandButton id="btnConsultar" value="Buscar"  
+					action="#{gestionExpedienteManaged.buscarMasiva()}" reRender="rpListaREC"
+					status="ajaxStatus" />
+		 	</h:panelGrid>		 	
+		 	
+		 	</rich:panel>
+		 	
+		 </h:panelGrid>
+		 	
+		 	<h:panelGrid columns="1" style="width:100%;" cellpadding="0" cellspacing="0">
+		 	<rich:panel id="rpListaREC" >
+		 	
+		 	<h:commandLink title="Descargar tolas las REC" id="clPdf0"
+			action="#{gestionExpedienteManaged.downloadMasivo()}"
+			immediate="true">									 
+			<h:graphicImage value="/images/modal/pdf.png" height="18px" width="16px"  style="border:0"/>									
+												
+			</h:commandLink>
+								
+				<rich:datascroller for="edtRecGeneradas" maxPages="5" />
+				
+		 		<rich:extendedDataTable  
+		 			id="edtRecGeneradas"
+					value="#{gestionExpedienteManaged.listaRec}" var="dtLista"
+					selectionMode="single" rows="50" width="100%" height="300px"
+					noDataLabel="No se encontró registros" enableContextMenu="false"
+					rowKeyVar="row">
+					
+		 			
+					<rich:column id="dd1" style="text-align:center" width="5%" >
+				                <f:facet name="header" >Item</f:facet>
+				                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+				    </rich:column>
+				    
+				    <rich:column id="dd2" style="text-align:center" width="5%" >
+								<f:facet name="header" >RecID</f:facet>
+								<h:outputText value="#{dtLista.recId}" />
+					</rich:column>
+					
+					<rich:column id="dd3" style="text-align:center" width="10%" >
+								<f:facet name="header" >Nº Expediente</f:facet>
+								<h:outputText value="#{dtLista.nroExpediente}" />
+					</rich:column>
+					
+					<rich:column id="dd4" style="text-align:center" width="5%" >
+								<f:facet name="header" >Nº REC</f:facet>
+								<h:outputText value="#{dtLista.nroRec}" />
+					</rich:column>
+					
+					<rich:column id="dd5" style="text-align:center" width="10%" >
+								<f:facet name="header" >Fecha Emisión</f:facet>
+								<h:outputText value="#{dtLista.fechaEmisionFormato}" />
+					</rich:column>					
+					
+					<rich:column id="dd6" style="text-align:center;" width="6%" >
+								<f:facet name="header" >PersonaID</f:facet>
+								<h:outputText value="#{dtLista.personaId}" />
+					</rich:column>					
+					
+					<rich:column id="dd7" style="text-align:left" width="40%" >
+								<f:facet name="header" >Persona</f:facet>
+								<h:outputText value="#{dtLista.apellidosNombresPersona}" />
+					</rich:column>					
+				
+					<rich:column id="dd8" style="text-align:right" width="8%" >
+								<f:facet name="header" >Total Deuda</f:facet>
+								<h:outputText value="#{dtLista.deudaTotal}" />
+					</rich:column>				
+					
+					<rich:column id="dd9" style="text-align:center" width="2%" >
+								<f:facet  name="header" >Pdf</f:facet>
+								
+								<h:commandLink title="Descargar REC" id="clPdf0"
+									action="#{gestionExpedienteManaged.downloadGeneradas}"
+								immediate="true">
+									 
+									<h:graphicImage value="/images/modal/pdf.png" height="18px" width="16px"  style="border:0"/>
+									
+									<f:setPropertyActionListener value="#{dtLista}" id="pal1" target="#{gestionExpedienteManaged.rec}" />									
+								</h:commandLink>
+								
+					</rich:column>
+		 		</rich:extendedDataTable >
+		 				 		
+		 		</rich:panel>
+		 	
+		 	</h:panelGrid>
+		 	
+
+
+	</h:form>
+	
+</ui:composition>

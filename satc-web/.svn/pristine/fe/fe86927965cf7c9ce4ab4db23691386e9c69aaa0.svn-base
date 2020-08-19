@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form id="formregistroLoteOrdinario">
+
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<style type="text/css">
+.extdt-empty-cell {
+	width: 0;
+}
+
+th.extdt-empty-cell {
+	width: 0;
+}
+/* Disables resizing */
+.extdt-hsep {
+	display: none;
+}
+</style>
+		<a4j:outputPanel id="id_panelprincipalregistroLoteOrdinario">
+			<table align="center" border="0" cellpadding="0" cellspacing="0"
+				width="100%">
+				<tr>
+					<td>
+						<table align="center" width="100%">
+							<tr>
+								<td>
+									<table align="center" border="0" width="100%">
+										<tr>
+											<td align="left" width="100%"><rich:panel
+													style="width:100%;  height: 130px;"
+													id="id_paneldatosloteordinario">
+													<f:facet name="header">
+														<h:outputLabel value="#{msg['cc.registrolotesordinario']}" />
+													</f:facet>
+													<table width="100%">
+														<tr>
+															<td align="left" width="130px"><h:outputText
+																	value="Nro Lote :" /></td>
+															<td align="left" width="150px"><h:outputText
+																	value="#{registroLoteOrdinarioContribManaged.lote_id}"
+																	style="font-weight:bold" /></td>
+															<td align="left" width="130px"><h:outputText
+																	rendered="#{registroLoteOrdinarioContribManaged.findCcLoteItem.flag_generacion==2}"
+																	value="Descarga de archivos :" /></td>
+															<td align="left" width="150px"><h:commandLink
+																	rendered="#{registroLoteOrdinarioContribManaged.findCcLoteItem.flag_generacion==2}"
+																	id="newlinkHL"
+																	action="#{registroLoteOrdinarioContribManaged.generacionArchivos}"
+																	immediate="true">
+																	<h:graphicImage value="/images/modal/pdf.png"
+																		style="border:0" />
+																</h:commandLink></td>
+															<td colspan="4"></td>
+														</tr>
+														<tr>
+															<td colspan="8">
+																<hr width="100%"></hr>
+															</td>
+														</tr>
+														<tr>
+															<td align="left" width="130px"><h:outputText
+																	value="Codigo :" /></td>
+															<td align="left" width="150px"><h:inputText
+																	id="id_CodigoId" maxlength="10" style="width:100%"
+																	value="#{registroLoteOrdinarioContribManaged.personaId}"
+																	onkeypress="validaEnteroPositivo(event);"
+																	readonly="#{registroLoteOrdinarioContribManaged.findCcLoteItem.flag_generacion==2}">
+																</h:inputText></td>
+															<td colspan="6"></td>
+														</tr>
+														<tr>
+															<td align="left" width="130px"><h:outputText
+																	value="Periodo :" /></td>
+															<td align="left" width="150px"><h:inputText
+																	id="id_periodoId" maxlength="4" size="4"
+																	style="width:100%"
+																	value="#{registroLoteOrdinarioContribManaged.periodo}"
+																	onkeypress="validaEnteroPositivo(event);"
+																	readonly="#{registroLoteOrdinarioContribManaged.findCcLoteItem.flag_generacion==2}">
+																</h:inputText></td>
+															<td colspan="6"></td>
+														</tr>
+													</table>
+												</rich:panel></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td align="center"><a4j:outputPanel id="botones">
+
+										<a4j:commandButton value="Guardar" style="width:100px;"
+											id="id_btnguardar"
+											action="#{registroLoteOrdinarioContribManaged.guardar}"
+											reRender="id_panelprincipalregistroLoteOrdinario,outputrespreliminar,formregistroLoteOrdinario"
+											disabled="#{registroLoteOrdinarioContribManaged.findCcLoteItem.flag_generacion==2}"
+											oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+											status="ajaxStatus">
+										</a4j:commandButton>
+										<a4j:commandButton value="Generacion Preliminar"
+											style="width:150px;" immediate="true"
+											action="#{registroLoteOrdinarioContribManaged.motrarLotePreliminar}"
+											disabled="#{registroLoteOrdinarioContribManaged.findCcLoteItem.flag_generacion==2}"
+											reRender="id_panelprincipalregistroLoteOrdinario,outputrespreliminar,formregistroLoteOrdinario"
+											status="ajaxStatus">
+										</a4j:commandButton>
+										<a4j:commandButton value="Generacion Valores"
+											style="width:150px;" immediate="true"
+											action="#{registroLoteOrdinarioContribManaged.generacionValores}"
+											disabled="#{registroLoteOrdinarioContribManaged.findCcLoteItem.flag_generacion==2}"
+											reRender="id_panelprincipalregistroLoteOrdinario,outputrespreliminar,formregistroLoteOrdinario"
+											status="ajaxStatus">
+										</a4j:commandButton>
+										<a4j:commandButton id="idBtnSalir" value="Salir"
+											style="width:100px;"
+											action="#{registroLoteOrdinarioContribManaged.salir}"
+											immediate="true" reRender="panelinclude">
+											<f:setPropertyActionListener
+												value="/sisat/controlycobranza/buscarloteordinariacontrib.xhtml"
+												target="#{sessionManaged.page}" />
+										</a4j:commandButton>
+									</a4j:outputPanel></td>
+							</tr>
+						</table>
+						<table align="center" width="100%">
+							<tr>
+								<td><a4j:outputPanel id="outputrespreliminar">
+
+										<rich:datascroller for="resultadofinal" maxPages="10"></rich:datascroller>
+										<rich:extendedDataTable id="resultadofinal"
+											value="#{registroLoteOrdinarioContribManaged.lstlotePreliminar}"
+											var="lotePreliminar" width="100%" height="310px" rows="10"
+											selectionMode="single"
+											noDataLabel="No Se Encontro Información para esta Busqueda"
+											rowKeyVar="row" enableContextMenu="false">
+											<rich:column id="x1" width="5%" style="text-align:center"
+												filterBy="#{lotePreliminar.personaId}">
+												<f:facet name="header">Cod. Per.</f:facet>
+												<h:outputText value="#{lotePreliminar.personaId}" />
+											</rich:column>
+											<rich:column id="x2" width="20%"
+												filterBy="#{lotePreliminar.descripcionPersona}">
+												<f:facet name="header">Apellidos Y Nombres/Razón Social</f:facet>
+												<h:outputText value="#{lotePreliminar.descripcionPersona}" />
+											</rich:column>
+											<rich:column id="x4" width="15%" style="text-align:center">
+												<f:facet name="header">Direccion</f:facet>
+												<h:outputText value="#{lotePreliminar.direccion}" />
+											</rich:column>
+											<rich:column id="x5" width="10%" style="text-align:center">
+												<f:facet name="header">Sector</f:facet>
+												<h:outputText value="#{lotePreliminar.sector}" />
+											</rich:column>
+											<rich:column id="x9" width="5%" style="text-align:center">
+												<f:facet name="header">Base Imp.</f:facet>
+												<h:outputText value="#{lotePreliminar.baseImponible}">
+													<f:convertNumber minFractionDigits="2"
+														maxFractionDigits="2"
+														locale="#{msg['param.localecurrency']}" />
+												</h:outputText>
+											</rich:column>
+											<rich:column id="x10" width="5%" style="text-align:center">
+												<f:facet name="header">Base Afecta</f:facet>
+												<h:outputText value="#{lotePreliminar.baseAfecta}">
+													<f:convertNumber minFractionDigits="2"
+														maxFractionDigits="2"
+														locale="#{msg['param.localecurrency']}" />
+												</h:outputText>
+											</rich:column>
+											<rich:column id="x11" width="5%" style="text-align:center">
+												<f:facet name="header">Impuesto</f:facet>
+												<h:outputText value="#{lotePreliminar.impuesto}">
+													<f:convertNumber minFractionDigits="2"
+														maxFractionDigits="2"
+														locale="#{msg['param.localecurrency']}" />
+												</h:outputText>
+											</rich:column>
+											<rich:column id="x6" width="5%" style="text-align:center">
+												<f:facet name="header">Base Imp. F</f:facet>
+												<h:outputText value="#{lotePreliminar.baseImponibleFisca}">
+													<f:convertNumber minFractionDigits="2"
+														maxFractionDigits="2"
+														locale="#{msg['param.localecurrency']}" />
+												</h:outputText>
+											</rich:column>
+											<rich:column id="x7" width="5%" style="text-align:center">
+												<f:facet name="header">Base Afec. F</f:facet>
+												<h:outputText value="#{lotePreliminar.baseAfectaFisca}">
+													<f:convertNumber minFractionDigits="2"
+														maxFractionDigits="2"
+														locale="#{msg['param.localecurrency']}" />
+												</h:outputText>
+											</rich:column>
+											<rich:column id="x8" width="5%" style="text-align:center">
+												<f:facet name="header">Impuesto F</f:facet>
+												<h:outputText value="#{lotePreliminar.impuestoFisca}">
+													<f:convertNumber minFractionDigits="2"
+														maxFractionDigits="2"
+														locale="#{msg['param.localecurrency']}" />
+												</h:outputText>
+											</rich:column>
+
+											<rich:column id="x13" width="10%" style="text-align:center">
+												<f:facet name="header">Nro Valor</f:facet>
+												<h:outputText value="#{lotePreliminar.nroActo}">
+												</h:outputText>
+											</rich:column>
+											<!-- 
+					            <rich:column style="text-align:center" id="x14" width="5%">
+					            	<f:facet name="header"  >Regenera</f:facet>
+					            	 <a4j:commandLink ajaxSingle="true" action="#{registroLoteOrdinarioContribManaged.regenera}" reRender="formregistroLoteOrdinario" status="ajaxStatus" id="cl069" 
+										oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\')' }">
+										 <h:graphicImage value="#{record.redetermina==0?'/images/calculo2.png':'/images/calculo2.png'}" style="border:0" />
+					                </a4j:commandLink>
+						        </rich:column>
+					             -->
+										</rich:extendedDataTable>
+									</a4j:outputPanel></td>
+							</tr>
+						</table>
+
+					</td>
+				</tr>
+			</table>
+		</a4j:outputPanel>
+
+
+
+	</h:form>
+
+</ui:composition>

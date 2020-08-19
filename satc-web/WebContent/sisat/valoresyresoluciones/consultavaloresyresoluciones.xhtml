@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formBusquedaActos">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+
+		<rich:panel id="a01">
+			<f:facet name="header">
+      ACTOS ADMINISTRATIVOS(VALORES)
+      </f:facet>
+
+			<table border="0" width="100%" align="center">
+
+				<tr>
+					<td width="8%"><h:outputText value="Tipo de Acto :" /></td>
+					<td width="45%"><h:selectOneRadio id="id_selTipoActo"
+							value="#{consultaValoresyResolucionesManaged.selectedTipoActo}"
+							layout="lineDirection"
+							valueChangeListener="#{consultaValoresyResolucionesManaged.loadTipoActo}">
+							<a4j:support event="onchange" ajaxSingle="true"
+								reRender="formBusquedaActos" />
+							<f:selectItem id="si1" itemLabel="Ordinario" itemValue="1" />
+							<f:selectItem id="si2" itemLabel="Coactivo(Rec)" itemValue="2" />
+							<f:selectItem id="si3"
+								itemLabel="Descargo/Prescripción/Compensación" itemValue="3" />
+						</h:selectOneRadio></td>
+
+					<td align="left" width="10%"><h:outputText
+							value="Nro. Acto/ REC :" /></td>
+					<td width="30%"><h:inputText id="id_nroActo"
+							value="#{consultaValoresyResolucionesManaged.nroActo}" /></td>
+					<td align="right" width="20%">
+						<a4j:commandButton
+							id="cmdBuscarValores"
+							actionListener="#{consultaValoresyResolucionesManaged.BuscarActos}"
+							reRender="formBusquedaActos" value="[B]uscar" style="width:100px">
+							<rich:toolTip value="Buscar" />
+						</a4j:commandButton>
+					</td>
+					<td align="right" width="20%">
+						<a4j:commandButton
+							id="cmdLimpiarValores"
+							actionListener="#{consultaValoresyResolucionesManaged.limpiar}"
+							reRender="formBusquedaActos,id_panelActosOrdinarios,id_panelActosCoactivos" value="Limpiar" style="width:100px">
+						</a4j:commandButton>
+					</td>
+				</tr>
+			</table>
+
+		</rich:panel>
+
+		<br />
+		<rich:panel id="id_panelActosOrdinarios"
+			rendered="#{consultaValoresyResolucionesManaged.actoOrdinario}">
+
+			<rich:extendedDataTable id="datosConstruccion"
+				value="#{consultaValoresyResolucionesManaged.listaActosOrdinarios}"
+				var="recordsOrdinarios" width="100%" height="330px"
+				sortMode="single" selectionMode="single" enableContextMenu="false"
+				rowKeyVar="row">
+
+				<rich:column id="x1" width="5%" style="text-align:center">
+
+					<a4j:commandLink ajaxSingle="true" id="linkOrd"
+						action="#{consultaValoresyResolucionesManaged.datosActo}"
+						reRender="panelinclude">
+						<f:setPropertyActionListener value="#{recordsOrdinarios}"
+							target="#{consultaValoresyResolucionesManaged.actoCurrentItem}"
+							id="r427" />
+						<f:setPropertyActionListener
+							value="/sisat/valoresyresoluciones/detalleacto.xhtml"
+							target="#{sessionManaged.page}" />
+						<h:graphicImage value="/images/modal/preview.png" style="border:0" />
+					</a4j:commandLink>
+					<rich:toolTip for="linkOrd" value="Ver Detalle Acto" />
+				</rich:column>
+
+				<rich:column id="x2" width="9%" style="text-align:left">
+					<f:facet name="header">Concepto</f:facet>
+					<h:outputText value="#{recordsOrdinarios.descConcepto}" />
+				</rich:column>
+				<rich:column id="x3" width="10%" style="text-align:left">
+					<f:facet name="header">Tipo Acto</f:facet>
+					<h:outputText value="#{recordsOrdinarios.descTipoActo}" />
+				</rich:column>
+				<rich:column id="x4" width="9%" style="text-align:center">
+					<f:facet name="header">Nro Acto</f:facet>
+					<h:outputText value="#{recordsOrdinarios.nroActo}">
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x5" width="9%" style="text-align:center">
+					<f:facet name="header">Fecha Emisión</f:facet>
+					<h:outputText value="#{recordsOrdinarios.fechaEmision}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x6" width="9%" style="text-align:left">
+					<f:facet name="header">Nro. Resolución</f:facet>
+					<h:outputText value="#{recordsOrdinarios.nroResolucion}" />
+				</rich:column>
+
+				<rich:column id="x7" width="10%" style="text-align:center">
+					<f:facet name="header">Fecha Notificación</f:facet>
+					<h:outputText value="#{recordsOrdinarios.fechaNotificacion}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column id="x8" width="10%" style="text-align:center">
+					<f:facet name="header">Total Acto(S/.)</f:facet>
+					<h:outputText value="#{recordsOrdinarios.total}" />
+				</rich:column>
+
+				<rich:column id="x9" width="10%" style="text-align:center">
+					<f:facet name="header">Total Actual(S/.)</f:facet>
+					<h:outputText value="#{recordsOrdinarios.totalActualizado}" />
+				</rich:column>
+
+				<rich:column id="x10" width="10%" style="text-align:center">
+					<f:facet name="header">Pagos(S/.)</f:facet>
+					<h:outputText value="#{recordsOrdinarios.pago}" />
+				</rich:column>
+
+				<rich:column id="x11" width="10%" style="text-align:center">
+					<f:facet name="header">Saldo(S/.)</f:facet>
+					<h:outputText value="#{recordsOrdinarios.saldo}" />
+				</rich:column>
+
+			</rich:extendedDataTable>
+
+		</rich:panel>
+
+		<rich:panel id="id_panelActosCoactivos"
+			rendered="#{consultaValoresyResolucionesManaged.actoCoactiva}">
+			<rich:extendedDataTable id="coacdatosConstruccion"
+				value="#{consultaValoresyResolucionesManaged.listaActosCoactivos}"
+				var="record" width="100%" height="330px" sortMode="single"
+				selectionMode="single" enableContextMenu="false" rowKeyVar="row">
+					<rich:column id="coac1" width="4%" style="text-align:center">
+						<a4j:commandLink ajaxSingle="true" id="linkCoac"
+							reRender="panelinclude">
+							<h:graphicImage value="/images/modal/preview.png" style="border:0" />
+						</a4j:commandLink>
+						<rich:toolTip for="linkCoac" value="Ver Declaración" />
+					</rich:column>
+					<rich:column id="coac2" width="12%" style="text-align:center">
+						<f:facet name="header">Tipo REC</f:facet>
+						<h:outputText value="#{record.tipoRec}" />
+					</rich:column>
+					<rich:column id="coac3" width="12%" style="text-align:center">
+						<f:facet name="header">Nro. REC</f:facet>
+						<h:outputText value="#{record.nroRec}" />
+					</rich:column>
+					<rich:column id="coac4" width="8%" style="text-align:center">
+						<f:facet name="header">Fec. Emisión REC</f:facet>
+						<h:outputText value="#{record.fechaRec}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+					<rich:column id="coac5" width="10%" style="text-align:center">
+						<f:facet name="header">Fec. Notificación REC</f:facet>
+						<h:outputText value="#{record.fechaNotificacionRec}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+					<rich:column id="coac6" width="7%" style="text-align:center">
+						<f:facet name="header">Total REC(S/.)</f:facet>
+						<h:outputText value="#{record.deudaTotal}" />
+					</rich:column>
+					<rich:column id="coac7" width="10%" style="text-align:center">
+						<f:facet name="header">Tipo</f:facet>
+						<h:outputText value="#{record.tipoActo}" />
+					</rich:column>
+					<rich:column id="coac8" width="5%" style="text-align:center">
+						<f:facet name="header">Año REC</f:facet>
+						<h:outputText value="#{record.anioRec}" />
+					</rich:column>
+					<rich:column id="coac9" width="9%" style="text-align:center">
+						<f:facet name="header">Fec. Emisión Costas</f:facet>
+						<h:outputText value="#{record.fechaCosta}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</rich:column>
+					<rich:column id="coac10" width="8%" style="text-align:center">
+						<f:facet name="header">Total Costas(S/.)</f:facet>
+						<h:outputText value="#{record.deudaCosta}" />
+					</rich:column>
+					<rich:column id="coac11" width="8%" style="text-align:center">
+						<f:facet name="header">Lote REC</f:facet>
+						<h:outputText value="#{record.loteRec}" />
+					</rich:column>
+					<rich:column id="coac12" width="8%" style="text-align:center">
+					<f:facet name="header">Lote Exigible</f:facet>
+					<h:outputText value="#{record.loteExigible}" />
+					</rich:column>
+
+			</rich:extendedDataTable>
+
+		</rich:panel>
+
+		<rich:panel id="id_panelDescargoDeuda"
+		 	rendered="#{consultaValoresyResolucionesManaged.condicionDeuda}">
+		 
+			<rich:extendedDataTable id="coacdatosConstruccion2"
+				value="#{consultaValoresyResolucionesManaged.listaDescargoDeuda}"
+				var="records" width="100%" height="330px" sortMode="single"
+				selectionMode="single" enableContextMenu="false" rowKeyVar="row">
+				<rich:column id="cd1" width="8%" style="text-align:center">
+					<h:outputText value="#{records.condicionDeuda}" />
+				</rich:column>
+				<rich:column id="cd2" width="10%" style="text-align:center">
+					<f:facet name="header">Concepto</f:facet>
+					<h:outputText value="#{records.concepto}" />
+				</rich:column>
+				<rich:column id="cd3" width="5%" style="text-align:center">
+					<f:facet name="header">Insoluto</f:facet>
+					<h:outputText value="#{records.insoluto}" />
+				</rich:column>
+				<rich:column id="cd4" width="4%" style="text-align:center">
+					<f:facet name="header">Interés</f:facet>
+					<h:outputText value="#{records.interes}" />
+				</rich:column>
+				<rich:column id="cd5" width="4%" style="text-align:center">
+					<f:facet name="header">Reajuste</f:facet>
+					<h:outputText value="#{records.reajuste}" />
+				</rich:column>
+				<rich:column id="cd6" width="9%" style="text-align:center">
+					<f:facet name="header">Total Descargo (S/.)</f:facet>
+					<h:outputText value="#{records.totalDeuda}" />
+				</rich:column>
+				<rich:column id="cd7" width="3%" style="text-align:center">
+					<f:facet name="header">Año</f:facet>
+					<h:outputText value="#{records.anio}" />
+				</rich:column>
+				<rich:column id="cd8" width="3%" style="text-align:center">
+					<f:facet name="header">Cuota</f:facet>
+					<h:outputText value="#{records.cuota}" />
+				</rich:column>
+				<rich:column id="cd9" width="10%" style="text-align:center">
+					<h:outputText value="#{records.documentoDeuda}" />
+				</rich:column>
+				<rich:column id="cd10" width="9%" style="text-align:center">
+					<f:facet name="header">Nro. Doc.</f:facet>
+					<h:outputText value="#{records.nroDocumento}" />
+				</rich:column>
+				<rich:column id="cd11" width="7.5%" style="text-align:center">
+					<f:facet name="header">Fec. Documento</f:facet>
+					<h:outputText value="#{records.fechaDocumento}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="cd12" width="16%" style="text-align:center">
+					<f:facet name="header">Obsv.</f:facet>
+					<h:outputText value="#{records.observacion}" />
+				</rich:column>
+				<rich:column id="cd13" width="6%" style="text-align:center">
+					<f:facet name="header">Fec. Registro</f:facet>
+					<h:outputText value="#{records.fechaRegistro}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="cd14" width="5%" style="text-align:center">
+					<f:facet name="header">Registra</f:facet>
+					<h:outputText value="#{records.usuario}" />
+				</rich:column>
+
+			</rich:extendedDataTable>
+
+		</rich:panel>
+
+	</h:form>
+
+
+
+
+
+</ui:composition>

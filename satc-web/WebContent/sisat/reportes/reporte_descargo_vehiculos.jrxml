@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_descargo_vehiculos" language="groovy" pageWidth="1130" pageHeight="840" orientation="Landscape" columnWidth="1130" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.4641000000000022"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p_fecha_inicio" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_fecha_fin" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT     djv.persona_id, mp_persona.apellidos_nombres, MAX(djv.djvehicular_nro) AS djvehicular_nro, ISNULL(CONVERT(char(10), djv.fecha_descargo, 103),'') AS fecha_descargo,
+djv.fecha_registro, djv.modelo_vehiculo_id, rv_vehiculo.placa, rv_marca.descripcion as marca, rv_modelo_vehiculo.descripcion AS modelo,u.nombre_usuario
+FROM         rv_djvehicular AS djv LEFT JOIN
+rv_modelo_vehiculo ON djv.modelo_vehiculo_id = rv_modelo_vehiculo.modelo_vehiculo_id LEFT JOIN
+rv_vehiculo ON djv.vehiculo_id = rv_vehiculo.vehiculo_id LEFT JOIN
+rv_marca ON djv.marca_vehiculo_id = rv_marca.marca_vehiculo_id LEFT JOIN
+mp_persona ON djv.persona_id = mp_persona.persona_id
+inner join sg_usuario  u on u.usuario_id=djv.usuario_id
+WHERE     (djv.rv_motivo_declaracion_id = 4) AND (djv.estado = '1') AND
+djv.fecha_registro between $P{p_fecha_inicio} and $P{p_fecha_fin}
+GROUP BY djv.persona_id, mp_persona.apellidos_nombres, djv.fecha_descargo, djv.fecha_registro, djv.modelo_vehiculo_id, rv_vehiculo.placa, rv_marca.descripcion,
+rv_modelo_vehiculo.descripcion, rv_modelo_vehiculo.modelo_vehiculo_id,u.nombre_usuario
+ORDER BY djv.persona_id]]>
+	</queryString>
+	<field name="persona_id" class="java.lang.Integer"/>
+	<field name="apellidos_nombres" class="java.lang.String"/>
+	<field name="djvehicular_nro" class="java.lang.String"/>
+	<field name="fecha_descargo" class="java.lang.String"/>
+	<field name="fecha_registro" class="java.sql.Timestamp"/>
+	<field name="modelo_vehiculo_id" class="java.lang.Integer"/>
+	<field name="placa" class="java.lang.String"/>
+	<field name="marca" class="java.lang.String"/>
+	<field name="modelo" class="java.lang.String"/>
+	<field name="nombre_usuario" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="12" splitType="Stretch">
+			<staticText>
+				<reportElement x="125" y="0" width="241" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apellidos_Nombres]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="125" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codigo_Contribuyente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="366" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. Placa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="537" y="0" width="104" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha_Descargo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="923" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha_Registro]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="726" y="0" width="197" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Modelo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="641" y="0" width="85" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Marca]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="466" y="0" width="71" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. DJ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1023" y="0" width="103" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField>
+				<reportElement x="125" y="0" width="241" height="12"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellidos_nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="125" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{persona_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="366" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{placa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="537" y="0" width="104" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_descargo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="923" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_registro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="726" y="0" width="197" height="12"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{modelo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="641" y="0" width="85" height="12"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{marca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="466" y="0" width="71" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{djvehicular_nro}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1023" y="0" width="103" height="12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_usuario}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

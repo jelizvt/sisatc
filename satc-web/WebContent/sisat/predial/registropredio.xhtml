@@ -1,0 +1,2152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formRegistroPredio">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+
+		<script type="text/javascript" language="JavaScript">
+		   var row;
+		   function autofocus(containerId) {
+		       var element = jQuery(":input:visible:enabled:first", '#'+containerId);
+		       if (element != null) {
+		         element.focus().select();
+		       }
+		   }
+		   
+		   function validaarea(total,usada,asiganda){
+			    var resultado=parseFloat(total)-parseFloat(usada)-parseFloat(asiganda)
+			    var asignar=parseFloat(total)-parseFloat(usada)
+			    if(resultado>=0){
+		
+				}else{
+					alert('Area asignada para este uso debe ser menor o igual a '+asignar);
+				}
+		   }
+		   
+		   function openWindow(url)
+		   {
+			    // get the height correction for IE and set the window height and width
+			    var height = screen.availHeight;
+			    var width = screen.availWidth;
+			    
+			    var fullscreen = (document.all) ? "no" : "yes";
+			    var resizable = "no";
+			    var toolbar = "no";
+			    var status = "no";
+			    var left = 0;
+			    var top = 0;
+			
+			    //set window properties
+			    props = "toolbar=no" +
+			    ",fullscreen=" + fullscreen +
+			    ",status=no" +
+			    ",resizable=no" +
+			    ",scrollbars=no" +
+			    ",menubar=no" +
+			    ",location=no" + ",";
+			
+			    dims = "width="+ width +
+			    ",height="+ height +
+			    ",left="+ left +
+			    ",top=" + top;
+			
+			    var win = window.open("", name, props + dims);
+			    win.resizeTo(width, height);
+			    win.location.href = url;
+			    win.focus();
+		   }
+		</script>
+		
+		
+		<style type="text/css">
+			.extdt-empty-cell {
+				width: 0;
+			}
+			
+			th.extdt-empty-cell {
+				width: 0;
+			}
+			
+			.extdt-hsep {
+				display: none;
+			}
+			</style>
+			
+			<a4j:outputPanel rendered="#{registroPredioManaged.fisca}">
+			<style>
+			.rich-panel-header{
+background-color: #900000;
+border-color: #900000;
+font-size: 11px;
+color: #FFF;
+font-weight: bold;
+font-family: Arial,Verdana,sans-serif;
+background-image: url(#{facesContext.externalContext.requestContextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.GradientA/DATB/eAGLiLjPwDCBCQAJ!AIi.jsf);
+/*background-image: url(/satc/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.GradientA/DATB/eAF7emTy1lIvJgASigOz.jsf);*/
+} 
+
+input[type="button"] {
+border-color: #C0C0C0;
+font-size: 11px;
+font-family: Arial,Verdana,sans-serif;
+color: #FFF;
+background-color: #900000;
+background-image: url(#{facesContext.externalContext.requestContextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.images.ButtonBackgroundImage/DATB/eAFjYGDgjoi4z8AwgQkAClgCLQ__.jsf);
+}
+ 
+ 
+.rich-table-header {
+background-color: #900000;
+background-image: url(#{facesContext.externalContext.requestContextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.GradientA/DATB/eAGLiLjPwDCBCQAJ!AIi.jsf);
+background-position: top left;
+background-repeat: repeat-x;
+}    
+
+
+.rich-mpnl-header {
+background-color: #900000;
+border-color: #900000;
+background-image: url(#{facesContext.externalContext.requestContextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.GradientA/DATB/eAGLiLjPwDCBCQAJ!AIi.jsf);
+}
+.rich-stglpanel-header {
+background-color: #900000;
+border-color: #900000;
+font-size: 11px;
+color: #FFF;
+font-weight: bold;
+font-family: Arial,Verdana,sans-serif;
+}
+.rich-stglpanel-header {
+background-image: url(#{facesContext.externalContext.requestContextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.GradientA/DATB/eAGLiLjPwDCBCQAJ!AIi.jsf);
+}
+</style>
+	</a4j:outputPanel>
+
+
+		
+			
+		<!-- <a4j:include viewId="/richfaces/include/examples/wstep1.xhtml"  rendered=""/>-->	
+		<a4j:outputPanel id="id_panelprincipalregistropredio">
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td>
+						<table align="center" width="100%">
+							<tr><td>
+								<table align="center" border="0" width="100%" cellpadding="2" cellspacing="2">
+								<tr>
+									<td>
+										<rich:panel style="width:100%; height: 210px;" id="id_paneldatosfiscalizacion" rendered="#{registroPredioManaged.fisca}">
+											
+											<f:facet name="header">
+														<h:outputText style="font-weight:bold"	value="DATOS PARA FISCALIZACION :: Codigo de Predio #{registroPredioManaged.rpDjpredial.predioId} Nro DJ #{registroPredioManaged.rpDjpredial.djId}" />
+											</f:facet>
+											<table><tr><td>Desea ingresar un Requerimmiento ?</td><td align="left">
+																<h:selectBooleanCheckbox
+																	valueChangeListener="#{registroPredioManaged.checkReq}"
+																	style="align:right;text-align:right;"
+																	value="#{registroPredioManaged.requerimiento}"																	
+																	immediate="true"																	
+																	>
+																	<a4j:support event="onchange" ajaxSingle="true" reRender="id_paneldatosfiscalizacion"/>
+																</h:selectBooleanCheckbox>
+															</td></tr></table>
+											<h:panelGroup rendered="#{registroPredioManaged.requerimiento}" id="id_reqFisca">
+											<a4j:region>
+													<table border="0" width="100%">
+														<tr>
+															<td align="left" width="20%"><h:outputText
+																	value="Numero de Requerimiento :" /><span style="color: red;">*</span></td>
+															<td align="left" width="40%"><h:inputText
+																	style="width:35%;" maxlength="100"
+																	id="id_nroReq"
+																	value="#{registroPredioManaged.inspeccionFisca.nroRequerimiento}">
+																</h:inputText></td>
+															<td align="left" width="20%"><h:outputText
+																	value="Fecha de Requerimiento :" /><span style="color: red;">*</span></td>
+															<td align="left" width="20%">
+																<rich:calendar locale="en/US"
+																	datePattern="dd/MM/yyyy" enableManualInput="true"
+																	inputClass="maskDate" 
+																	id="id_fechaReq"
+																	value="#{registroPredioManaged.fechaRequerimiento}"
+																	inputStyle="width:90px"
+																	>
+																</rich:calendar> <rich:jQuery id="maskedo41" selector=".maskDate"
+																	query="mask('99/99/9999')" timing="onload" />
+															</td>		
+														</tr>
+														<tr>
+															<td align="left"><h:outputText
+																	value="Inspector :" /><span style="color: red;">*</span></td>
+															<td align="left" colspan="3"><h:inputText
+																	style="width:400px;" maxlength="300"
+																	id="id_inspector"
+																	value="#{registroPredioManaged.inspeccionFisca.inspector}">
+																</h:inputText></td>
+														</tr>
+														<tr>
+															<td align="left"><h:outputText
+																	value="Tipo Documento :" /><span style="color: red;">*</span></td>
+															<td align="left">
+															<rich:comboBox id="comboBoxTipoInspeccion"
+																value="#{registroPredioManaged.valueComboBoxTipoInspeccion}"
+																valueChangeListener="#{registroPredioManaged.changeListenerComboBoxTipoInspeccion}"
+																width="120px"
+																enableManualInput="true" defaultLabel="Seleccione">
+																<f:selectItems
+																	value="#{registroPredioManaged.listTipoInspeccion}" />
+																<a4j:support event="onchange" ajaxSingle="true"
+																	oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+																	>
+																</a4j:support>
+															</rich:comboBox>
+															</td>
+															<td align="left">
+																<h:outputText value="AR :"/></td>
+															<td align="left">
+																<h:selectBooleanCheckbox
+																	valueChangeListener="#{registroPredioManaged.checkAR}"
+																	style="align:right;text-align:right;"
+																	value="#{registroPredioManaged.tipoAR}"
+																	immediate="true"
+																	>
+																	<a4j:support event="onchange" />
+																</h:selectBooleanCheckbox>
+															</td>
+														</tr>
+														<tr>
+															<td align="left"><h:outputText
+																	value="Numero de Documento :" /><span style="color: red;">*</span></td>
+															<td align="left"><h:inputText
+																	style="width:35%;" maxlength="100"
+																	id="id_nroInsp"
+																	value="#{registroPredioManaged.inspeccionFisca.nroInspeccion}">
+																</h:inputText></td>
+															<td align="left"><h:outputText
+																	value="Fecha de Documento :" /><span style="color: red;">*</span></td>
+															<td align="left">
+																<rich:calendar locale="en/US"
+																	datePattern="dd/MM/yyyy" enableManualInput="true"
+																	inputClass="maskDate"
+																	id="id_fechaInsp"
+																	value="#{registroPredioManaged.fechaInspeccion}"																	
+																	inputStyle="width:90px">
+																</rich:calendar> <rich:jQuery id="maskedo42" selector=".maskDate"
+																	query="mask('99/99/9999')" timing="onload" />
+															</td>		
+														</tr>
+														<tr>
+															<td align="left"><h:outputText
+																	value="Observaciones :" /></td>
+															<td align="left" colspan="3">
+																<h:inputTextarea style="width: 500px;" rows="2" id="id_glosa"
+																	value="#{registroPredioManaged.inspeccionFisca.glosa}" />
+																</td>
+														</tr>
+													</table>
+											</a4j:region>
+											</h:panelGroup>
+										</rich:panel>									
+									</td>
+								</tr>
+								</table>
+							</td></tr>						
+							<tr>
+								<td>
+									<table align="center" border="0" width="100%" cellpadding="2" cellspacing="2">
+	
+										<tr>
+											<td>
+												<rich:panel style="width:100%; height: 155px;" id="id_paneldatosconstruccion">
+	
+													<f:facet name="header">
+														<h:outputText style="font-weight:bold"	value="DATOS DE PREDIO :: Codigo de Predio #{registroPredioManaged.rpDjpredial.predioId} Nro DJ #{registroPredioManaged.rpDjpredial.djId} Año DJ #{registroPredioManaged.rpDjpredial.annoDj}"  />
+													</f:facet>
+	
+													<table border="0" width="100%" height="100%">
+														<tr>
+															<td align="left" width="100px"><h:outputText
+																	value="Tipo de predio :" /></td>
+															<td align="left" colspan="3">
+																<h:selectOneRadio
+																	id="Radio" border="0"
+																	value="#{registroPredioManaged.tipoPredio}"
+																	disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																	immediate="true"
+																	valueChangeListener="#{registroPredioManaged.selectRadioValue}"
+																	styleclass="radio">
+																	<a4j:support event="onchange"
+																		reRender="id_panelprincipalregistropredio" />
+	
+																	<f:selectItem id="purbano" itemValue="U"
+																		itemLabel="Predio Urbano" />
+																	<f:selectItem id="prustico" itemValue="R"
+																		itemLabel="Predio Rustico" />
+																		
+																</h:selectOneRadio>
+															</td>
+														</tr>
+														<tr>
+															<td align="left" width="100px"><h:outputLabel
+																	value="Condición propied:">
+																	<span style="color: red;">*</span>
+																</h:outputLabel></td>
+															<td align="left">
+																<rich:comboBox width="150px"
+																	defaultLabel="Seleccione" required="true"
+																	id="id_condicionpropiedad"
+																	value="#{registroPredioManaged.cmbValueCondicionPropiedad}"
+																	disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																	binding="#{registroPredioManaged.cmbRpCondicionPropiedad}"
+																	valueChangeListener="#{registroPredioManaged.selectCondiPropiedad}"
+																	selectFirstOnUpdate="true"
+																	directInputSuggestions="false" immediate="true"
+																	enableManualInput="true"
+																	requiredMessage="Seleccione la Condicion de propiedad"
+																	onkeypress="return showListCbo(this,event);"
+																	onblur="validaInputCbo(this)">
+																	
+																	<a4j:support event="onchange"
+																		reRender="#{rich:clientId('id_porcentaje')}"
+																		immediate="true" ajaxSingle="true" />
+																		
+																	<f:selectItems id="id_lstCondicionPropiedad"
+																		value="#{registroPredioManaged.lstCondicionPropiedad}" />
+																</rich:comboBox>
+															</td>
+															<td align="left" width="110px"><h:outputLabel
+																	value="Porc. propiedad (%):">
+																	<span style="color: red;">*</span>
+																</h:outputLabel></td>
+															<td align="left">
+																<h:inputText maxlength="15"
+																	style=" width:60px;" id="id_porcentaje"
+																	value="#{registroPredioManaged.porcentaje}"
+																	readonly="#{registroPredioManaged.is100porciento}"
+																	binding="#{registroPredioManaged.txtPorcentaje}"
+																	disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																	ajaxSingle="true" required="true"
+																	requiredMessage="Indique el porcentaje de propiedad"
+																	onkeypress="return numbersonly(this.value,event)"
+																	validatorMessage="Porcentaje de propiedad no es valido"	
+																	>
+																	<f:validateDoubleRange minimum="0" maximum="100">
+																	</f:validateDoubleRange>
+																</h:inputText>
+															</td>
+														</tr>
+	
+														<tr>
+															<td align="left" width="100px">
+																<h:outputLabel
+																	value="Tipo adquisición :">
+																	<span style="color: red;">*</span>
+																</h:outputLabel>
+															</td>
+															<td align="left">
+																<rich:comboBox width="150px"
+																	defaultLabel="Seleccione" required="true"
+																	id="id_tipoadquisicion" selectFirstOnUpdate="true"
+																	directInputSuggestions="false"
+																	binding="#{registroPredioManaged.cmbRpTipoAdquisicion}"
+																	value="#{registroPredioManaged.cmbValueTipoAdquisicion}"
+																	disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																	enableManualInput="true"
+																	requiredMessage="Seleccione el Tipo de adquisicion"
+																	onkeypress="return showListCbo(this,event);"
+																	onblur="validaInputCbo(this)">
+																	<f:selectItems id="id_lstTipoAdquisicion"
+																		value="#{registroPredioManaged.lstTipoAdquisicion}" />
+																</rich:comboBox>
+															</td>
+															<td align="left" width="100px">
+																<h:outputLabel
+																	value="Fecha adquisicion:">
+																	<span style="color: red;">*</span>
+																</h:outputLabel>
+															</td>
+															<td align="left">
+																<rich:calendar locale="en/US"
+																	datePattern="dd/MM/yyyy" enableManualInput="true"
+																	inputClass="maskDate" required="true"
+																	id="id_fechaadquisicion"
+																	value="#{registroPredioManaged.fechaAdquisicion}"
+																	disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																	requiredMessage="Indique la Fecha de adquisicion"
+																	inputStyle="width:60px"
+																	>
+																</rich:calendar> <rich:jQuery id="maskedo4" selector=".maskDate"
+																	query="mask('99/99/9999')" timing="onload" />
+															</td>
+														</tr>
+													</table>
+												</rich:panel>
+											</td>
+											
+											<td>
+												<a4j:outputPanel id="id_caracteristicaspredio">
+													<rich:panel style="width:100%; height: 155px;"
+														rendered="#{registroPredioManaged.esUrbano}">
+	
+														<f:facet name="header">		
+															CARACTERISTICAS DEL PREDIO URBANO 
+														</f:facet>
+														<table border="0" width="100%" height="100%">
+															<tr>
+																<td align="left" width="100px">
+																	<h:outputLabel
+																		value="Ubicación predio :">
+																		<span style="color: red;">*</span>
+																	</h:outputLabel>
+																</td>
+																<td colspan="2">
+																	<rich:comboBox width="200px"
+																		defaultLabel="Seleccione" required="true"
+																		selectFirstOnUpdate="true"
+																		directInputSuggestions="false" id="id_ubicacionpredio"
+																		binding="#{registroPredioManaged.cmbRpUbicacionPredio}"
+																		value="#{registroPredioManaged.cmbValueUbicacionPredio}"
+																		disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																		immediate="true" ajaxSingle="true"
+																		valueChangeListener="#{registroPredioManaged.selectDatosConstruccion}"
+																		enableManualInput="true"
+																		requiredMessage="Seleccione la Ubicación de predio"
+																		onkeypress="return showListCbo(this,event);"
+																		onblur="validaInputCbo(this)">
+																		<a4j:support id="id_supportUbicacionPredio"
+																			event="onchange"
+																			reRender="#{rich:clientId('id_tablapaneldatosconstruccion')},#{rich:clientId('id_tablapanelotrasinstalaciones')},#{rich:clientId('id_caracteristicaspredio')},#{rich:clientId('id_usosdelpredio')},#{rich:clientId('id_tablausosdelpredio')}"
+																			immediate="true" ajaxSingle="true" />
+																		<f:selectItems id="id_lstUbicacionPredio"
+																			value="#{registroPredioManaged.lstUbicacionPredio}" />
+																	</rich:comboBox>
+																</td>
+																<td>
+																</td>
+															</tr>
+															<tr>
+																<td align="left" width="100px">
+																	<h:outputLabel 
+																		value="Area terreno (m2):"
+																		rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaTerreno}">
+																		<span style="color: red;">*</span>
+																	</h:outputLabel>
+																</td>
+																<td><h:inputText style="width:60px;" maxlength="15"
+																		alt="signed-decimal" required="true"
+																		id="id_areaterreno"
+																		value="#{registroPredioManaged.areaTerreno}"
+																		disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																		binding="#{registroPredioManaged.txtAreaTerreno}"
+																		ajaxSingle="true"
+																		requiredMessage="Indique el Area de terreno (m2)"
+																		onkeypress="return numbersonly(this.value,event)"
+																		rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaTerreno}">
+																		<a4j:support id="id_mysupporttxtAreaTerreno"
+																			event="onkeyup"
+																			reRender="id_commandnuevaconstruccion,editlinksucursal" />
+																	</h:inputText></td>
+																<td align="left" width="150px">
+																	<h:outputLabel
+																		id="id_otid_areacomun"
+																		value="Area Terreno comun (m2) :"
+																		rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaComunTerreno}">
+																		<span style="color: red;">*</span>
+																	</h:outputLabel>
+																</td>
+																<td>
+																	<h:inputText style="width:60px;" maxlength="15"
+																		id="id_areacomun"
+																		value="#{registroPredioManaged.areaTerrenoComun}"
+																		rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaComunTerreno}"
+																		onkeypress="return numbersonly(this.value,event)">
+																	</h:inputText>
+																</td>
+															</tr>
+															<tr>
+																<td align="left" width="100px">
+																	<h:outputLabel value="Frente (mts) :">
+																		<span style="color: red;">*</span>
+																	</h:outputLabel>
+																</td>
+																<td>
+																	<h:inputText style="width:60px;" maxlength="15"
+																		required="true" id="id_frente"
+																		value="#{registroPredioManaged.frente}"
+																		disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																		requiredMessage="Indique el Frente (mts)"
+																		onkeypress="return numbersonly(this.value,event)">
+																	</h:inputText>																	
+																</td>
+																<td align="right"><h:outputText value="Ancho de la vía de acceso:" 
+																	rendered="#{(registroPredioManaged.ubicacionPredioId eq 4) or (registroPredioManaged.ubicacionPredioId eq 8) }"/></td>
+																<td>
+																	<h:inputText style="width:60px;" maxlength="15"
+																		required="true" id="id_frenteAreaComun"
+																		value="#{registroPredioManaged.frenteAreaComun}"
+																		disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																		requiredMessage="Indique el Frente del Area común (mts)"
+																		rendered="#{(registroPredioManaged.ubicacionPredioId eq 4) or (registroPredioManaged.ubicacionPredioId eq 8) }"
+																		>
+																	</h:inputText>																	
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<h:outputText value="Frente es ok :"/>
+																	<h:selectBooleanCheckbox
+																		valueChangeListener="#{registroPredioManaged.checkFrenteOk}"
+																		style="align:right;text-align:right;"
+																		value="#{registroPredioManaged.frenteOk}"
+																		immediate="true">
+																		<a4j:support event="onchange" />
+																	</h:selectBooleanCheckbox>
+																</td>
+																<td>
+																	<h:outputText value="Frente es a la vía pública :" rendered="#{(registroPredioManaged.ubicacionPredioId eq 4)}"/>
+																	<h:selectBooleanCheckbox
+																		valueChangeListener="#{registroPredioManaged.checkFrenteAViaPublica}"
+																		style="align:right;text-align:right;"
+																		value="#{registroPredioManaged.frenteVia}"
+																		immediate="true"
+																		rendered="#{(registroPredioManaged.ubicacionPredioId eq 4)}">
+																		<a4j:support event="onchange" />
+																	</h:selectBooleanCheckbox>
+																</td>
+																<td align="right">
+																	<h:outputText value="Distancia al predio :" rendered="#{(registroPredioManaged.ubicacionPredioId eq 4) or (registroPredioManaged.ubicacionPredioId eq 8) }"/></td>
+																<td>
+																	<h:inputText style="width:60px;" maxlength="15"
+																		required="true" id="id_distanciaAlPredio"
+																		value="#{registroPredioManaged.distanciaAPredio}"
+																		disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																		requiredMessage="Indique la distancia de la via publica hasta el predio (mts)"
+																		rendered="#{(registroPredioManaged.ubicacionPredioId eq 4) or (registroPredioManaged.ubicacionPredioId eq 8) }">
+																	</h:inputText>
+																</td>
+															</tr>
+															<tr>
+																<td>
+																</td>
+																<td>
+																</td>
+																<td align="right">
+																	<h:outputText value="% Participación:" rendered="#{(registroPredioManaged.ubicacionPredioId eq 4)}"/></td>
+																<td>
+																	<h:inputText style="width:60px;" maxlength="15"
+																		required="true" id="id_porcentajeParticipacion"
+																		value="#{registroPredioManaged.porcentajeParticipacion}"
+																		disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																		requiredMessage="Indique el porcentaje de participacion del predio"
+																		rendered="#{(registroPredioManaged.ubicacionPredioId eq 4)}">
+																	</h:inputText>
+																</td>
+															</tr>
+														</table>
+													</rich:panel>
+													
+													<rich:panel style="width:100%; height: 155px;" rendered="#{!registroPredioManaged.esUrbano}" id="pnlCaracPredioRustico" >
+														<f:facet name="header">		
+															CARACTERISTICAS DEL PREDIO RUSTICO
+														</f:facet>
+														<table border="0" width="100%" height="100%">
+															<tr>
+																<td align="left" width="100px">
+																	<h:outputLabel
+																		value="Area terreno (Has) :">
+																		<span style="color: red;">*</span>
+																	</h:outputLabel>
+																</td>
+																<td align="left">
+																	<h:inputText style="width:100px;"
+																		maxlength="15" required="true"
+																		id="id_areaterrenorustico"
+																		value="#{registroPredioManaged.areaTerrenoHas}"
+																		requiredMessage="Indique el Area de terreno (Has)"																		
+																		onkeypress="return numbersonly4dec(this.value,event)">																		
+																	</h:inputText>
+																</td>
+																<td align="left" width="150px">
+																	<h:outputLabel
+																		id="id_otid_areacomun_has"
+																		value="Area Terreno comun (Has) :"
+																		>
+																		<span style="color: red;">*</span>
+																	</h:outputLabel>
+																</td>
+																<td>
+																	<h:inputText style="width:60px;" maxlength="15"
+																		id="id_areacomun_has"
+																		value="#{registroPredioManaged.areaTerrenoComunHas}"
+																		onkeypress="return numbersonly4dec(this.value,event)"
+																		>
+																	</h:inputText>
+																</td>
+															</tr>
+															<tr>
+																<td align="left" width="110px">
+																	<h:outputLabel value="Tipo Tierra Rustico:">
+																		<span style="color: red;">*</span>
+																	</h:outputLabel>
+																</td>
+																<td>
+																	<rich:comboBox width="300px" 
+																		required="true"
+																		defaultLabel="Seleccione" 
+																		selectFirstOnUpdate="true"
+																		directInputSuggestions="false"
+																		value="#{registroPredioManaged.cmbValueTipoTierraRustico}"
+																		id="id_tipotierrarustico"
+																		binding="#{registroPredioManaged.cmbTipoTierraRustico}"
+																		enableManualInput="true"
+																		requiredMessage="Seleccione el Tipo Tierra Rustico"
+																		onkeypress="return showListCbo(this,event);"
+																		onblur="validaInputCbo(this)"
+																		valueChangeListener="#{registroPredioManaged.selectTipoTierraRustico}"
+																		immediate="true"
+																		>
+																		<f:selectItems id="id_lstTipoTierraRustico" value="#{registroPredioManaged.lstTipoTierraRustico}" />
+																		
+																		<a4j:support id="id_supportTipoTierra"
+																			event="onchange"
+																			reRender="outpanelcaracteristicasrustico"
+																			immediate="true" ajaxSingle="true" />
+																	</rich:comboBox>
+																</td>
+																<td colspan="2">
+																</td>
+															</tr>
+															<tr>
+																<td colspan="2">
+																	<a4j:outputPanel id="outpanelcaracteristicasrustico">
+																		<table border="0" width="100%" height="100%">
+																			<tr>
+																				<td align="left"  width="107px">
+																						<h:outputLabel value="Rango de Altitud :" rendered="#{registroPredioManaged.lstAltitudCmb.size()>0}" >
+																							<span style="color: red;">*</span>		
+																						</h:outputLabel>
+																				</td>
+																				<td>
+																					<rich:comboBox width="150px"
+																						defaultLabel="Seleccione" selectFirstOnUpdate="true"
+																						directInputSuggestions="false" id="id_rangoaltitud"
+																						binding="#{registroPredioManaged.cmbAltitud}"
+																						value="#{registroPredioManaged.cmbValueAltitud}"
+																						enableManualInput="true"
+																						required="#{registroPredioManaged.lstAltitudCmb.size()>0}" 
+																						requiredMessage="Seleccione el Rango de Altitud"
+																						onkeypress="return showListCbo(this,event);"
+																						onblur="validaInputCbo(this)"
+																						rendered="#{registroPredioManaged.lstAltitudCmb.size()>0}"
+																						>
+																						<f:selectItems id="id_lstAltitud" value="#{registroPredioManaged.lstAltitudCmb}" />
+																					</rich:comboBox>
+																				</td>
+																				<td align="right"><h:outputText value="Secano :"  rendered="#{registroPredioManaged.lstAltitudCmb.size()>0}"/></td>
+																				<td>
+																					<h:selectBooleanCheckbox
+																						valueChangeListener="#{registroPredioManaged.checkSecano}"
+																						style="align:right;text-align:right;"
+																						value="#{registroPredioManaged.secano}"
+																						immediate="true"
+																						rendered="#{registroPredioManaged.lstAltitudCmb.size()>0}">
+																						<a4j:support event="onchange" />
+																					</h:selectBooleanCheckbox>
+																				</td>
+																			</tr>
+																			
+																			<tr>
+																				<td align="left" width="107px">
+																					<h:outputLabel value="Categoria :" rendered="#{registroPredioManaged.lstCategoriaRusticoCmb.size()>0}" >
+																						<span style="color: red;">*</span>
+																					</h:outputLabel>	
+																				</td>
+																				<td>
+																					<rich:comboBox width="150px" 
+																						required="#{registroPredioManaged.lstCategoriaRusticoCmb.size()>0}"
+																						defaultLabel="Seleccione" selectFirstOnUpdate="true"
+																						directInputSuggestions="false" id="id_categoriarustico"
+																						binding="#{registroPredioManaged.cmbCategoriaRustico}"
+																						value="#{registroPredioManaged.cmbValueCategoriaRustico}"
+																						enableManualInput="true"
+																						requiredMessage="Seleccione la Categoria"
+																						onkeypress="return showListCbo(this,event);"
+																						onblur="validaInputCbo(this)"
+																						rendered="#{registroPredioManaged.lstCategoriaRusticoCmb.size()>0}"
+																						>
+																						<f:selectItems id="id_lstCategoriaRustico" value="#{registroPredioManaged.lstCategoriaRusticoCmb}" />
+																					</rich:comboBox>
+																				</td>
+																				<td colspan="2"></td>
+																			</tr>
+																		</table>
+																	</a4j:outputPanel>
+																</td>
+																<td colspan="2">
+																</td>
+															</tr>
+															<tr>
+																<td>
+																	<h:outputLabel value="Uso predio Rústico:">
+																		<span style="color: red;">*</span>
+																	</h:outputLabel>
+																</td>
+																<td>
+																	<rich:comboBox width="150px"
+																		required="true" 
+																		defaultLabel="Seleccione" selectFirstOnUpdate="true"
+																		directInputSuggestions="false" id="id_tipousorustico"
+																		binding="#{registroPredioManaged.cmbTipoUsoRustico}"
+																		value="#{registroPredioManaged.cmbValueTipoUsoRustico}"
+																		enableManualInput="true"
+																		requiredMessage="Seleccione el Uso de predio Rústico"
+																		onkeypress="return showListCbo(this,event);"
+																		onblur="validaInputCbo(this)"
+																		>
+																		<f:selectItems id="id_lstTipoUsoRustico" value="#{registroPredioManaged.lstTipoUsoRustico}" />
+																	</rich:comboBox>
+																</td>
+																<td colspan="2">
+																</td>
+															</tr>
+														</table>
+													</rich:panel>
+													
+												</a4j:outputPanel></td>
+										</tr>
+										<tr>
+											<td>
+												<rich:panel id="id_paneldireccionpredio"
+													style="width:100%; height: 80px;">
+													<f:facet name="header">		
+														<h:outputText style="font-weight:bold"	value="DIRECCION DEL PREDIO [ ID de Ubicacion #{registroPredioManaged.rpDjdireccion.ubicacionId} ]" />
+													</f:facet>
+													<table border="0" width="100%">
+														<tr>
+															<td width="10px">
+																<h:outputLabel value="">
+																	<span style="color: red;">* </span>
+																</h:outputLabel>
+															</td>
+															<td align="left">
+																<h:inputText readonly="true"
+																	id="id_direccionpredio" style="width:100%"
+																	value="#{registroPredioManaged.rpDjpredial.descDomicilio}"
+																	styleClass="textUpperCase" 
+																	required="true"
+																	requiredMessage="Indique la Dirección del predio"
+																>
+																	<f:converter converterId="uppeCaseConverter"/>
+																</h:inputText>
+																<h:inputHidden
+																	id="id_direccionpredio_id" required="true"
+																	value="#{registroPredioManaged.rpDjdireccion.direccionId}"
+																	requiredMessage="Indique la Dirección del predio" />
+															</td>
+															<td align="left" width="100px">
+																<a4j:commandButton
+																	action="#{registroPredioManaged.muestraUbicacion}"
+																	disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																	immediate="true"
+																	oncomplete="if(#{registroPredioManaged.esUrbano==true}) 
+															 		{#{rich:component('panelUbicacionPredioUrbano')}.show();#{rich:component('panelUbicacionPredioRustico')}.hide();}
+															 		else
+															 		{#{rich:component('panelUbicacionPredioUrbano')}.hide();#{rich:component('panelUbicacionPredioRustico')}.show();}"
+																	style="width:100px;" value="Edi[t]ar"
+																	reRender="panelUbicacionPredioRustico,panelUbicacionPredioUrbano"
+																	ajaxSingle="true" accesskey="t" />
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3"><h:outputText value="" /></td>
+														</tr>
+														<tr>
+															<td colspan="3"><h:outputText value="" /></td>
+														</tr>
+														<tr>
+															<td colspan="3"><h:outputText value="" /></td>
+														</tr>
+	
+													</table>
+												</rich:panel>
+											</td>
+	
+	
+											<td><rich:panel style="width:100%; height: 80px;"
+													id="id_filecondicionespecial">
+													<f:facet name="header">
+														<h:outputText
+															value="#{registroPredioManaged.outputtextTituloCondicionEspecial}" />
+													</f:facet>
+													<table border="0" width="100%">
+														<tr>
+															<td align="left" width="150px"><h:outputText
+																	value="Condición especial :" /></td>
+															<td>
+																<rich:comboBox width="150px"
+																	defaultLabel="Seleccione" required="true"
+																	value="#{registroPredioManaged.cmbValueCondiEspePredio}"
+																	disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																	id="id_condicionespecial"
+																	binding="#{registroPredioManaged.cmbMpCondiEspePredio}"
+																	immediate="true"
+																	reRender="id_filecondicionespecial"
+																	selectFirstOnUpdate="true"
+																	directInputSuggestions="false" enableManualInput="true"
+																	requiredMessage="Indique la Condición especial"
+																	onkeypress="return showListCbo(this,event);"
+																	onblur="validaInputCbo(this)">
+																	<a4j:support id="id_supportlstCondiEspePredio"
+																		event="onchange" reRender="id_filecondicionespecial" />
+																	<f:selectItems id="id_lstCondiEspePredio"
+																		value="#{registroPredioManaged.lstCondiEspePredio}" />
+																</rich:comboBox>
+															</td>
+															
+															<td align="left">
+																<h:inputText readonly="true" style="width:100%" value="" rendered="false" />
+															</td>
+															
+															<td>
+															</td>
+														</tr>
+														<tr>
+															<td align="left" width="150px"><h:outputText
+																	value="Es habitable? :"
+																	/></td>
+															<td><h:selectOneRadio id="id_habitableno" border="0"
+																	value="#{registroPredioManaged.predioHabitable}"
+																	disabled="#{registroPredioManaged.flagFiscaPrevio}"
+																	immediate="true"
+																	reRender="id_filecondicionespecial"
+																	>
+																	<a4j:support event="onchange"
+																		reRender="id_filecondicionespecial" />
+																	<f:selectItem id="habit" itemValue="A"
+																		itemLabel="Habitable" />
+																	<f:selectItem id="nohabit" itemValue="N"
+																		itemLabel="No habitable" />
+																</h:selectOneRadio>
+															</td>
+															<td align="left">
+																<h:inputText readonly="true" style="width:100%" value="" rendered="false" />
+															</td>
+															<td align="left" width="100px">
+															</td>
+														</tr>
+													</table>
+												</rich:panel></td>
+										</tr>
+										<tr>
+											<td colspan="2"><a4j:outputPanel
+													id="id_tablapaneldatosconstruccion">
+													<rich:panel style="width:100%;" rendered="#{!registroPredioManaged.esConstruccion}">
+														<f:facet name="header">
+															SIN DATOS DE CONSTRUCCION
+														</f:facet>
+													</rich:panel>
+													
+													<rich:panel style="width:100%;"
+														rendered="#{registroPredioManaged.esConstruccion}">
+														<f:facet name="header">		
+															DATOS DE CONSTRUCCION
+														</f:facet>
+														<h:panelGrid cellpadding="0" cellspacing="0" columns="1"
+															align="center" width="100%" 
+															>
+	
+															<a4j:commandButton id="id_commandnuevaconstruccion"
+																action="#{registroPredioManaged.nuevaConstruccion}"
+																immediate="true" 
+																oncomplete="#{rich:component('panelConstruccion')}.show();"
+																style="width:100px;" value="Nueva [C]onstruc"
+																ajaxSingle="true" reRender="panelConstruccion,id_thispanelconstruccion"
+																accesskey="c"
+																disabled="#{(registroPredioManaged.rpDjdireccion == null or registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0' or registroPredioManaged.flagFiscaPrevio)}">
+																	<f:param name="myareaTerreno" value="#{rich:findComponent('id_areaterreno').value}" />
+																	<f:param name="myareaTerrenorustico" value="#{rich:findComponent('id_areaterrenorustico').value}" />
+																	<f:param name="poseeAreaComunConstruida" value="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaComunConstruida?'1':'0'}" />
+															</a4j:commandButton>
+															<rich:extendedDataTable id="id_tabladatosconstruccion" value="#{registroPredioManaged.records}" var="record" rowKeyVar="row" height="150px" selectionMode="single" enableContextMenu="false" style="text-align:center;">
+																<rich:column width="3%">
+																	<f:facet name="header">Item</f:facet> 
+																	<h:outputText value="#{record.item}" />
+																</rich:column>
+																<rich:column width="8%">
+																	<f:facet name="header">Tipo Nivel</f:facet>
+																	<h:outputText value="#{record.dentiponivel}" />
+																</rich:column>
+																<rich:column width="4%">
+																	<f:facet name="header">Nivel</f:facet>
+																	<h:outputText value="#{record.nroNivel}" />
+																</rich:column>
+																<rich:column width="3%">
+																	<f:facet name="header">Sec</f:facet>
+																	<h:outputText value="#{record.seccion}" />
+																</rich:column>
+																<rich:column width="5%">
+																	<f:facet name="header">Año Cons.</f:facet>
+																	<h:outputText value="#{record.annoConstruccion}" />
+																</rich:column>
+																<rich:column width="5%">
+																	<f:facet name="header">Año Act.</f:facet>
+																	<h:outputText value="#{record.annoActualizacion}" />
+																</rich:column>
+																<rich:column width="14%">
+																	<f:facet name="header">Area Construccion</f:facet>
+																	<h:outputText value="#{record.areaConstruccion}" />
+																</rich:column>
+																<rich:column width="5%">
+																	<f:facet name="header">Material</f:facet>
+																	<h:outputText value="#{record.denmatpredominante}" />
+																</rich:column>
+																<rich:column width="120">
+																	<f:facet name="header">Estado Conserv.</f:facet>
+																	<h:outputText value="#{record.denestadoconservacion}" />
+																</rich:column>
+																<rich:column width="140">
+																	<f:facet name="header">Depreciación</f:facet>
+																	<h:outputText value="#{record.dentipodepreciacion}" />
+																</rich:column>
+																<rich:column width="38">
+																	<f:facet name="header">MC</f:facet>
+																	<h:outputText value="#{record.denmuros}" />
+																</rich:column>
+																<rich:column width="37">
+																	<f:facet name="header">T</f:facet>
+																	<h:outputText value="#{record.dentecho}" />
+																</rich:column>
+																<rich:column width="37">
+																	<f:facet name="header">P</f:facet>
+																	<h:outputText value="#{record.denpisos}" />
+																</rich:column>
+																<rich:column width="37">
+																	<f:facet name="header">PV</f:facet>
+																	<h:outputText value="#{record.denpuertas}" />
+																</rich:column>
+																<rich:column width="37">
+																	<f:facet name="header">R</f:facet>
+																	<h:outputText value="#{record.denrevestimiento}" />
+																</rich:column>
+																<rich:column width="37">
+																	<f:facet name="header">B</f:facet>
+																	<h:outputText value="#{record.denbannos}" />
+																</rich:column>
+																<rich:column width="37">
+																	<f:facet name="header">I</f:facet>
+																	<h:outputText value="#{record.denelectrico}" />
+																</rich:column>
+																
+															
+																
+																<rich:column width="37" rendered="#{!registroPredioManaged.flagFiscaPrevio}">
+																	<a4j:commandLink reRender="panelConstruccion,id_thispanelconstruccion"
+																		ajaxSingle="true" id="editlinksucursal"
+																		action="#{registroPredioManaged.editarConstruccion}"
+																		oncomplete="#{rich:component('panelConstruccion')}.show()">
+																		<h:graphicImage value="/images/modal/edit.gif"
+																			style="border:0" />
+																		<f:setPropertyActionListener value="#{record}"
+																			target="#{registroPredioManaged.currentItem}" id="r42" />
+																		<f:param name="myareaTerreno" value="#{rich:findComponent('id_areaterreno').value}" />
+																		<f:param name="myareaTerrenorustico" value="#{rich:findComponent('id_areaterrenorustico').value}" />
+																		<f:param name="poseeAreaComunConstruida" value="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaComunConstruida?'1':'0'}" />	
+																	</a4j:commandLink>
+																</rich:column>
+																<rich:column width="37" rendered="#{!registroPredioManaged.flagFiscaPrevio}">
+																	<a4j:commandLink ajaxSingle="true" id="dellinkconstruc"
+																		oncomplete="#{rich:component('deletePanelConstruccion')}.show()"
+																		disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0' or registroPredioManaged.flagFiscaPrevio)}">
+																		<h:graphicImage value="/images/modal/delete.gif" style="border:0" />
+																		<f:setPropertyActionListener value="#{record}" target="#{construccionManaged.rpDjconstruccion}" id="r48deletem" />
+																	</a4j:commandLink>
+																</rich:column>
+															</rich:extendedDataTable>
+	
+														</h:panelGrid>
+													</rich:panel>
+
+
+													<rich:simpleTogglePanel id="togglePanelAllConstruccion"
+														switchType="client"
+														label="Lista de todos los Datos de Construccion para la DDJJ #{registroPredioManaged.rpDjpredial.djId}"
+														height="auto" styleClass="uniqueClassName"
+														rendered="#{registroPredioManaged.esConstruccion}"
+														opened="false">
+														
+
+															<h:panelGrid cellpadding="0" cellspacing="0" columns="1"
+																align="center" width="100%" rendered="#{registroPredioManaged.esConstruccion}">
+																<rich:extendedDataTable
+																	id="id_tabladatosconstruccionAll"
+																	value="#{registroPredioManaged.recordsAllConstruccion}"
+																	var="record" rowKeyVar="row" height="150px"
+																	selectionMode="single" enableContextMenu="false"
+																	style="text-align:center;">
+																	<rich:column width="3%">
+																		<f:facet name="header">Item</f:facet>
+																		<h:outputText value="#{record.item}" />
+																	</rich:column>
+																	<rich:column width="8%">
+																		<f:facet name="header">Tipo Nivel</f:facet>
+																		<h:outputText value="#{record.dentiponivel}" />
+																	</rich:column>
+																	<rich:column width="4%">
+																		<f:facet name="header">Nivel</f:facet>
+																		<h:outputText value="#{record.nroNivel}" />
+																	</rich:column>
+																	<rich:column width="3%">
+																		<f:facet name="header">Sec</f:facet>
+																		<h:outputText value="#{record.seccion}" />
+																	</rich:column>
+																	<rich:column width="5%">
+																		<f:facet name="header">Año Cons.</f:facet>
+																		<h:outputText value="#{record.annoConstruccion}" />
+																	</rich:column>
+																	<rich:column width="5%">
+																		<f:facet name="header">Año Act.</f:facet>
+																		<h:outputText value="#{record.annoActualizacion}" />
+																	</rich:column>
+																	<rich:column width="14%">
+																		<f:facet name="header">Area Construccion</f:facet>
+																		<h:outputText value="#{record.areaConstruccion}" />
+																	</rich:column>
+																	<rich:column width="5%">
+																		<f:facet name="header">Material</f:facet>
+																		<h:outputText value="#{record.denmatpredominante}" />
+																	</rich:column>
+																	<rich:column width="120">
+																		<f:facet name="header">Estado Conserv.</f:facet>
+																		<h:outputText value="#{record.denestadoconservacion}" />
+																	</rich:column>
+																	<rich:column width="140">
+																		<f:facet name="header">Depreciación</f:facet>
+																		<h:outputText value="#{record.dentipodepreciacion}" />
+																	</rich:column>
+																	<rich:column width="38">
+																		<f:facet name="header">MC</f:facet>
+																		<h:outputText value="#{record.denmuros}" />
+																	</rich:column>
+																	<rich:column width="37">
+																		<f:facet name="header">T</f:facet>
+																		<h:outputText value="#{record.dentecho}" />
+																	</rich:column>
+																	<rich:column width="37">
+																		<f:facet name="header">P</f:facet>
+																		<h:outputText value="#{record.denpisos}" />
+																	</rich:column>
+																	<rich:column width="37">
+																		<f:facet name="header">PV</f:facet>
+																		<h:outputText value="#{record.denpuertas}" />
+																	</rich:column>
+																	<rich:column width="37">
+																		<f:facet name="header">R</f:facet>
+																		<h:outputText value="#{record.denrevestimiento}" />
+																	</rich:column>
+																	<rich:column width="37">
+																		<f:facet name="header">B</f:facet>
+																		<h:outputText value="#{record.denbannos}" />
+																	</rich:column>
+																	<rich:column width="37">
+																		<f:facet name="header">I</f:facet>
+																		<h:outputText value="#{record.denelectrico}" />
+																	</rich:column>
+
+
+																	<rich:column width="37"
+																		rendered="#{!registroPredioManaged.flagFiscaPrevio}">
+																		<a4j:commandLink
+																			reRender="panelConstruccion,id_thispanelconstruccion"
+																			ajaxSingle="true" id="editlinksucursal"
+																			action="#{registroPredioManaged.editarConstruccion}"
+																			oncomplete="#{rich:component('panelConstruccion')}.show()">
+																			<h:graphicImage value="/images/modal/edit.gif"
+																				style="border:0" />
+																			<f:setPropertyActionListener value="#{record}"
+																				target="#{registroPredioManaged.currentItem}"
+																				id="r42" />
+																			<f:param name="myareaTerreno"
+																				value="#{rich:findComponent('id_areaterreno').value}" />
+																			<f:param name="myareaTerrenorustico"
+																				value="#{rich:findComponent('id_areaterrenorustico').value}" />
+																			<f:param name="poseeAreaComunConstruida"
+																				value="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaComunConstruida?'1':'0'}" />
+																		</a4j:commandLink>
+																	</rich:column>
+																</rich:extendedDataTable>
+
+															</h:panelGrid>
+													
+													</rich:simpleTogglePanel>
+
+												</a4j:outputPanel></td>
+										</tr>
+										<tr>
+											<td>
+												<a4j:outputPanel id="id_tablapanelotrasinstalaciones">
+													<rich:panel id="id_otrasinstalaciones"
+															style="width:100%; height: 170px;" >
+															<f:facet name="header">
+																OTRAS INSTALACIONES
+															</f:facet>
+															<h:panelGrid cellpadding="0" cellspacing="0" columns="1"
+																align="center" width="100%">
+																
+																<a4j:commandButton id="id_commandotrasinstalaciones"
+																	action="#{registroPredioManaged.nuevoOtrasInstalaciones}"
+																	immediate="true"
+																	oncomplete="#{rich:component('id_panelOtrasInstalaciones')}.show();"
+																	style="width:100px;" value="Nueva [I]nsta."
+																	ajaxSingle="true" reRender="id_principalotrasinstalaciones,id_panelOtrasInstalaciones"
+																	accesskey="i"
+																	disabled="#{( registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0' or registroPredioManaged.flagFiscaPrevio)}">
+																</a4j:commandButton>
+																
+																<rich:extendedDataTable id="id_tablaotrasinstalaciones"
+																	value="#{registroPredioManaged.recordsOtrasInsta}"
+																	var="record" rowKeyVar="row" width="100%" height="100px"
+																	selectionMode="single" enableContextMenu="false">
+																	<rich:column style="text-align:center" width="10%">
+																		<f:facet name="header">Item</f:facet>
+																		<h:outputText value="#{record.item}" />
+																	</rich:column>
+																	<rich:column width="20%">
+																		<f:facet name="header">Tipo Obra</f:facet>
+																		<h:outputText value="#{record.tipoInstalacion}" />
+																	</rich:column>
+																	<rich:column style="text-align:center" width="10%">
+																		<f:facet name="header">Año</f:facet>
+																		<h:outputText value="#{record.annoInstalacion}" />
+																	</rich:column>
+																	<rich:column width="10%">
+																		<f:facet name="header">Mes</f:facet>
+																		<h:outputText value="#{record.mes}" />
+																	</rich:column>
+																	<rich:column style="text-align:right" width="20%">
+																		<f:facet name="header">Valor Obra</f:facet>
+																		<h:outputText value="#{record.valorInstalacion}" />
+																	</rich:column>
+																	<rich:column style="text-align:right" width="10%">
+																		<f:facet name="header">Nro nivel</f:facet>
+																		<h:outputText value="#{record.nroNivel}" />
+																	</rich:column>
+																	<rich:column style="text-align:right" width="10%">
+																		<f:facet name="header">Area</f:facet>
+																		<h:outputText value="#{record.areaTerreno}" />
+																	</rich:column>
+																	<rich:column width="5%" rendered="#{!registroPredioManaged.flagFiscaPrevio}">
+																		<a4j:commandLink ajaxSingle="true"
+																			id="id_linkeditotrasinsta"
+																			action="#{registroPredioManaged.editarOtrasInstalaciones}"
+																			oncomplete="#{rich:component('id_panelOtrasInstalaciones')}.show()"
+																			reRender="id_panelOtrasInstalaciones">
+																			<h:graphicImage value="/images/modal/edit.gif"
+																				style="border:0" />
+																			<f:setPropertyActionListener value="#{record}"
+																				target="#{registroPredioManaged.currentItemOtrasInsta}"
+																				id="r47" />
+																		</a4j:commandLink>
+																	</rich:column>
+		
+																	<rich:column width="5%" rendered="#{!registroPredioManaged.flagFiscaPrevio}">
+																		<a4j:commandLink ajaxSingle="true"
+																			id="id_linkdelotrasinsta"
+																			oncomplete="#{rich:component('deletePanelOtrasInsta')}.show()"
+																			disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0' or registroPredioManaged.flagFiscaPrevio)}">
+																			<h:graphicImage value="/images/modal/delete.gif"
+																				style="border:0" />
+																			<f:setPropertyActionListener value="#{record}"
+																				target="#{otrasInstalacionesManaged.instalacion}"
+																				id="r44" />
+																		</a4j:commandLink>
+																	</rich:column>
+																</rich:extendedDataTable>
+		
+															</h:panelGrid>
+														</rich:panel>
+												</a4j:outputPanel>
+											</td>
+											<td><rich:panel id="id_otrosfrentes"
+													style="width:100%; height: 170px;">
+													<f:facet name="header">
+												OTROS FRENTES
+											</f:facet>
+													<h:panelGrid cellpadding="0" cellspacing="0" columns="1"
+														align="center" width="100%">
+	
+														<a4j:commandButton id="id_commandotrosfrentes"
+															action="#{registroPredioManaged.nuevoOtrosFrentes}"
+															immediate="true"
+															oncomplete="#{rich:component('id_panelOtrosFrentes')}.show();"
+															style="width:100px;" value="Nuevo F[r]entes"
+															ajaxSingle="true" reRender="id_otrosfrentes" accesskey="r"
+															disabled="#{( registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0' or registroPredioManaged.flagFiscaPrevio)}">
+														</a4j:commandButton>
+	
+														<rich:extendedDataTable id="id_tablaotrosfrentes"
+															value="#{registroPredioManaged.recordsOtrosFrentes}"
+															var="record" rowKeyVar="row" width="100%" height="100px"
+															selectionMode="single" enableContextMenu="false">
+	
+															<rich:column style="text-align:center" width="10%">
+																<f:facet name="header">Item</f:facet>
+																<h:outputText value="#{record.item}" />
+															</rich:column>
+															<rich:column width="30%">
+																<f:facet name="header">Tipo Via</f:facet>
+																<h:outputText value="#{record.tipoVia}" />
+															</rich:column>
+															<rich:column width="35%">
+																<f:facet name="header">Nombre Via</f:facet>
+																<h:outputText value="#{record.nombreVia}" />
+															</rich:column>
+															<rich:column width="10%">
+																<f:facet name="header">Numero 1</f:facet>
+																<h:outputText value="#{record.numero1}" />
+															</rich:column>
+															
+															<rich:column width="10%">
+																<f:facet name="header">Frente</f:facet>
+																<h:outputText value="#{record.frente}" />
+															</rich:column>
+															<rich:column width="5%" rendered="#{!registroPredioManaged.flagFiscaPrevio}">
+																<a4j:commandLink ajaxSingle="true"
+																	id="id_linkdelotrosfrentes"
+																	oncomplete="#{rich:component('deletePanelOtrosFrentes')}.show()"
+																	disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0' or registroPredioManaged.flagFiscaPrevio)}">
+																	<h:graphicImage value="/images/modal/delete.gif"
+																		style="border:0" />
+																	<f:setPropertyActionListener value="#{record}"
+																		target="#{otrosFrentesManaged.rpOtrosFrente}" id="r46" />
+																</a4j:commandLink>
+															</rich:column>
+	
+														</rich:extendedDataTable>
+	
+													</h:panelGrid>
+												</rich:panel></td>
+										</tr>
+										<tr>
+											<td>
+												
+												<rich:panel id="id_usosdelpredio"
+													style="width:100%; height: 170px;">
+													<f:facet name="header">		
+														USOS DEL PREDIO
+													</f:facet>
+													<h:panelGrid cellpadding="0" cellspacing="0" columns="1"
+														align="center" width="100%">
+														<a4j:commandButton id="id_commandusosdelpredio"
+															action="#{registroPredioManaged.nuevoUsosDelPredio}"
+															immediate="true"
+															oncomplete="if(#{registroPredioManaged.esConstruccion==true}){#{rich:component('id_paneusosdelpredioxnivel')}.show();}else{#{rich:component('id_paneusosdelpredio')}.show();}"
+															style="width:100px;" value="Nuevo [U]so" ajaxSingle="true"
+															reRender="id_paneusosdelpredio,id_paneusosdelpredioxnivel"
+															accesskey="u"
+															disabled="#{( registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0' or registroPredioManaged.flagFiscaPrevio)}">
+														</a4j:commandButton>
+														<rich:extendedDataTable id="id_tablausosdelpredio"
+															value="#{registroPredioManaged.recordsUsosDelPredio}"
+															var="record" rowKeyVar="row" width="100%" height="100px"
+															selectionMode="single" enableContextMenu="false">
+															<rich:column style="text-align:center" width="10%">
+																<f:facet name="header">Item</f:facet>
+																<h:outputText value="#{record.item}" />
+															</rich:column>
+															<rich:column width="40%">
+																<f:facet name="header">Uso Predio</f:facet>
+																<h:outputText value="#{record.tipoUsoDescripcion}" />
+															</rich:column>
+															<rich:column width="10%" style="text-align:right">
+																<f:facet name="header">Area Usada</f:facet>
+																<h:outputText value="#{record.areaUso}" />
+															</rich:column>
+															<rich:column width="10%"
+																rendered="#{!registroPredioManaged.esConstruccion}">
+																<f:facet name="header">Mes Inicio</f:facet>
+																<h:outputText value="#{record.mesInicio}" />
+															</rich:column>
+															<rich:column width="10%"
+																rendered="#{!registroPredioManaged.esConstruccion}">
+																<f:facet name="header">Mes Fin</f:facet>
+																<h:outputText value="#{record.mesFin}" />
+															</rich:column>
+	
+															<rich:column width="10%" style="text-align:center">
+																<f:facet name="header">Periodo</f:facet>
+																<h:outputText value="#{record.annoAfectacion}" />
+															</rich:column>
+	
+															<rich:column width="5%" rendered="#{!registroPredioManaged.flagFiscaPrevio}">
+																<a4j:commandLink ajaxSingle="true"
+																	id="id_linkeditusosdelpredio"
+																	action="#{registroPredioManaged.editarUsosDelPredio}"
+																	oncomplete="if(#{registroPredioManaged.esConstruccion==true}){#{rich:component('id_paneusosdelpredioxnivel')}.show()}else{#{rich:component('id_paneusosdelpredio')}.show()}"
+																	reRender="id_paneusosdelpredio,id_paneusosdelpredioxnivel">
+																	<h:graphicImage value="/images/modal/edit.gif"
+																		style="border:0" />
+																	<f:setPropertyActionListener value="#{record}"
+																		target="#{registroPredioManaged.currentItemUsosDelPredio}"
+																		id="r47" />
+																</a4j:commandLink>
+															</rich:column>
+															<rich:column width="5%" rendered="#{!registroPredioManaged.flagFiscaPrevio}">
+																<a4j:commandLink ajaxSingle="true"
+																	id="id_linkdeldocanexos"
+																	oncomplete="#{rich:component('deletePanelUsosPredio')}.show()"
+																	disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0' or registroPredioManaged.flagFiscaPrevio)}">
+																	
+																	<h:graphicImage value="/images/modal/delete.gif"
+																		style="border:0" />
+																	<f:setPropertyActionListener value="#{record}"
+																		target="#{usosPredioManaged.rpDjuso}" id="r48" />
+																</a4j:commandLink>
+															</rich:column>
+	
+														</rich:extendedDataTable>
+	
+													</h:panelGrid>
+												</rich:panel>
+											</td>
+	
+											<td>
+												<rich:panel style="width:100%; height: 170px;"
+													id="id_documentosanexos">
+													<f:facet name="header">		
+														DOCUMENTOS ANEXOS
+													</f:facet>
+													<h:panelGrid cellpadding="0" cellspacing="0" columns="1"
+														align="center" width="100%">
+														<a4j:commandButton id="id_commanddocumentosanexos"
+															action="#{registroPredioManaged.nuevoDocumentoAnexo}"
+															immediate="true"
+															oncomplete="#{rich:component('id_paneldocanexos')}.show();"
+															style="width:100px;" value="Nuevo A[n]exo"
+															ajaxSingle="true" reRender="id_paneldocanexos"
+															accesskey="n"
+															disabled="#{( registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0' or registroPredioManaged.flagFiscaPrevio)}">
+														</a4j:commandButton>
+	
+														<rich:extendedDataTable id="id_tabladocanexos"
+															value="#{registroPredioManaged.recordsDocAnexos}"
+															var="record" rowKeyVar="row" width="100%" height="100px"
+															selectionMode="single" enableContextMenu="false">
+															<rich:column style="text-align:center" width="10%">
+																<f:facet name="header">Item</f:facet>
+																<h:outputText value="#{record.item}" />
+															</rich:column>
+															<rich:column width="35%">
+																<f:facet name="header">Tipo documento</f:facet>
+																<h:outputText value="#{record.tipoDocumento}" />
+															</rich:column>
+															<rich:column width="20%">
+																<f:facet name="header">Numero documento</f:facet>
+																<h:outputText value="#{record.numeroDocumento}" />
+															</rich:column>
+	
+															<rich:column width="30%">
+																<f:facet name="header">Referencia</f:facet>
+																<h:commandLink id="newlink3" action="#{documentoAnexoManaged.download}" immediate="true">
+																	<h:outputText  value="#{record.referencia}" />
+																	<f:setPropertyActionListener  value="#{record}" target="#{documentoAnexoManaged.rjDocuAnexo}" id="id_docAnexo"/>
+																</h:commandLink>
+															</rich:column>
+	
+															<rich:column width="5%" rendered="#{!registroPredioManaged.flagFiscaPrevio}">
+																<a4j:commandLink ajaxSingle="true"
+																	id="id_linkdeldocanexos"
+																	oncomplete="#{rich:component('deletePanelDocAnexo')}.show()"
+																	disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0' or registroPredioManaged.flagFiscaPrevio)}">
+																	
+																	<h:graphicImage value="/images/modal/delete.gif"
+																		style="border:0" />
+																		
+																	<f:setPropertyActionListener value="#{record}"
+																		target="#{documentoAnexoManaged.rjDocuAnexo}" id="r48" />
+																</a4j:commandLink>
+															</rich:column>
+														</rich:extendedDataTable>
+													</h:panelGrid>
+												</rich:panel>
+											</td>
+										</tr>
+										
+										<tr>
+											<td>
+												<rich:panel id="id_paneltransferencia"	style="width:100%; height: 110px;">
+													<f:facet name="header">DATOS DE TRANSFERENCIA</f:facet>
+													<table border="0" width="100%">
+														<tr>
+															<td align="left" width="100px">
+																<h:outputLabel	value="Notaria:">
+																</h:outputLabel>
+															</td>
+															
+															<td>
+																<rich:comboBox
+																	value="#{registroPredioManaged.selectedNotaria}"
+																	defaultLabel="#{msg['param.defaultlabelcombo']}" width="300"
+																	onkeypress="return showListCbo(this,event)"
+																	onblur="validaInputCbo(this)"
+																	requiredMessage="Indique la notaria de transferencia"
+																	>
+																	<f:selectItems value="#{registroPredioManaged.lstNotarias}"></f:selectItems>
+																</rich:comboBox>
+															</td>
+														</tr>
+														<tr>	
+															<td align="left" width="100px" >
+																<h:outputLabel value="Transferente:">
+																</h:outputLabel>
+															</td>
+															<td>
+																<a4j:outputPanel id="id_panelTransferente"  >
+																	<table border="0" width="100%">
+																		<tr>
+																			
+																			<td align="left">
+																				<h:inputText readonly="true"
+																					id="txtApeNomTransferente"
+																					style="width:100%"
+																					rendered="#{registroPredioManaged.transferente.personaId>0}"
+																					value="Código: #{registroPredioManaged.transferente.personaId} #{registroPredioManaged.transferente.tipoDocIdentidad}:#{registroPredioManaged.transferente.nroDocuIdentidad} - #{registroPredioManaged.transferente.tipoPersonaId==2?registroPredioManaged.transferente.razonSocial:registroPredioManaged.transferente.apellidosNombres}"
+																					 />
+																				<h:inputText readonly="true"
+																					id="txtApeNomTransferente0"
+																					style="width:100%"
+																					value=""
+																					rendered="#{registroPredioManaged.transferente==null or registroPredioManaged.transferente.personaId==0}"
+																					 />
+																			</td>
+																			
+																			<td align="left" width="50px">
+																				<a4j:commandButton id="cmdLimpiarTransferente" value="Limpiar" immediate="true" action="#{registroPredioManaged.limpiarTransferente}"
+																					style="width:50px;"
+																					reRender="id_panelTransferente"
+																					>
+																					<f:param name="destinoRefresh" value="id_panelTransferente" />
+																				</a4j:commandButton>
+																			</td>
+																			
+																			<td align="left" width="50px">
+																				<a4j:commandButton id="cmdBuscarTransferente" value="Buscar" immediate="true" action="#{registroPredioManaged.setTransferente}"
+																					style="width:50px;"
+																					oncomplete="#{rich:component('id_panelBuscarPersona')}.show()"
+																					>
+																					<f:param name="destinoRefresh" value="id_panelTransferente" />
+																				</a4j:commandButton>
+																			</td>
+																			
+																			<td align="left" width="50px">
+																				<a4j:commandButton
+																					id="cmdNuevoTransferente"
+																					action="#{registroPredioManaged.muestraTransferente}"
+																					immediate="true"
+																					reRender="id_panelprincipalregistropersona"
+																					oncomplete="#{rich:component('modalRegistroPersonaBasico')}.show();"
+																					style="width:50px;" value="Nuevo"
+																					ajaxSingle="true">
+																					<f:param name="destinoRefresh" value="id_panelTransferente" />
+																				</a4j:commandButton>	
+																			</td>
+																		</tr>
+																	</table>
+																</a4j:outputPanel>
+															</td>
+														</tr>
+													</table>
+												</rich:panel>
+											</td>
+											<td>
+												 
+												<rich:panel id="id_panelobservaciones"	style="width:100%; height: 110px;" >
+													<f:facet name="header">OBSERVACIONES DE LA DECLARACION JURADA</f:facet>
+													<table border="0" width="100%" align="center" >
+														<tr>
+															<td align="center">
+																<h:inputTextarea style="width: 400px;" rows="4"
+																	value="#{registroPredioManaged.glosa}" />
+															</td>
+														</tr>
+													</table>
+												</rich:panel>
+												
+											</td>
+											
+										</tr>
+										
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td align="center"><a4j:outputPanel id="id_panelcommand">
+											<table cellpadding="4" cellspacing="4">
+												<tr>
+													<td>
+														<a4j:commandButton value="Guardar"
+															style="width:100px;"
+															action="#{registroPredioManaged.guardar}"
+															reRender="panelconfirma,id_panelcommand"
+															oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+															disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0')}"
+															id="id_guardarcommand" />
+													</td>
+													
+													<td><a4j:commandButton value="Salir"
+															style="width:100px;"
+															action="#{registroPredioManaged.salir}" immediate="true"
+															reRender="panelinclude">
+															<f:setPropertyActionListener
+																value="/sisat/predial/buscarpredio.xhtml"
+																target="#{sessionManaged.page}" />
+													</a4j:commandButton></td>
+													<td>
+													<a4j:commandButton value="Asociar Req." rendered="#{registroPredioManaged.tieneInspeccion==false}"
+															style="width:100px;"
+															action="#{registroPredioManaged.guardarDjInspeccion}" 
+															reRender="panelconfirma,id_panelcommand"
+															disabled="#{registroPredioManaged.tieneInspeccion==true}" 
+															oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'panelregreqinspeccion\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'panelregreqinspeccion\');' };"
+															immediate="true">
+													</a4j:commandButton>
+													
+													<!--  SE INACTIVA EL BOTON PRELIMINAR POR ACUERDO E INFORME DEL AREA DE SERVICIOS -->
+													<!-- 
+														<a4j:commandButton value="Presentacion preliminar"
+															style="width:150px;"
+															action="#{registroPredioManaged.vistaPrevia}"
+															oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');window.open(\'/satc/sisat/predial/impresionDjPredialUrbano.jsf\');return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+															rendered="#{registroPredioManaged.rpDjpredial.estado=='2'}">
+														</a4j:commandButton>
+													 -->
+													</td>
+												</tr>
+												
+												<tr>
+													<td colspan="3" align="center">
+	
+														<table width="100%" border="0" cellpadding="5">
+															<tr>
+																<td align="center">
+																	<h:selectBooleanCheckbox
+																		valueChangeListener="#{registroPredioManaged.setdatoscorrectos}"
+																		rendered="#{registroPredioManaged.rpDjpredial.estado=='2'}">
+																¿ Los Datos son los correctos ? se creara la Declaracion Jurada
+																<a4j:support event="onchange" reRender="id_panelcommand" />
+																	</h:selectBooleanCheckbox></td>
+															</tr>
+															<tr>
+																<td align="center">
+																	<h:panelGroup rendered="#{(registroPredioManaged.rpDjpredial.estado=='2') and (registroPredioManaged.datoscorrectos) and (sessionManaged.moduloFisca)}">
+																		<rich:comboBox value="#{registroPredioManaged.fiscaAceptado}" width="400">
+																			<f:selectItem itemValue="NO ACEPTADO POR CONTRIBUYENTE" />
+																			<f:selectItem itemValue="ACEPTADO POR CONTRIBUYENTE" />
+																			<f:selectItem itemValue="NO ACEPTADO POR CONTRIBUYENTE Y CERRAR FISCALIZACION" />
+																		</rich:comboBox>
+																	</h:panelGroup>
+																</td>
+															</tr>
+															<tr>
+																<td align="center">
+																	<a4j:commandButton
+																		value="Generar DJ" style="width:100px;"
+																		id="id_commandcreardj"
+																		action="#{registroPredioManaged.creardj}"
+																		rendered="#{(registroPredioManaged.rpDjpredial.estado=='2') and (registroPredioManaged.datoscorrectos)}"
+																		oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmageneradj\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+																		reRender="id_panelprincipalregistropredio" >
+																	</a4j:commandButton>
+																</td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+												
+											</table>
+									</a4j:outputPanel></td>
+							</tr>
+						</table>
+	
+					</td>
+				</tr>
+	
+			</table>
+		</a4j:outputPanel>	
+	</h:form>
+
+	<rich:modalPanel onshow="autofocus('formConstruccion')"
+		id="panelConstruccion" moveable="true" resizeable="false"
+		minWidth="650" minHeight="420">
+		<f:facet name="header">DATOS DE LA CONSTRUCCION</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink6s01"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelConstruccion"
+					attachTo="hidelink6s01" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formConstruccion">
+			<h:panelGrid>
+				<a4j:include viewId="/sisat/predial/construccion.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<!-- DELETE INI -->
+	<rich:modalPanel id="deletePanelConstruccion" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imgcloseddelconst" styleClass="hidelink" />
+				<rich:componentControl for="deletePanelConstruccion"
+					attachTo="id_imgcloseddelconst" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea eliminar registro actual ?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{construccionManaged.delete}"
+						reRender="id_tabladatosconstruccion,id_tablausosdelpredio,id_tabladatosconstruccionAll "
+						immediate="true"
+						oncomplete="#{rich:component('deletePanelConstruccion')}.hide();" />
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('deletePanelConstruccion')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel onshow="focusInputupu();" id="panelUbicacionPredioUrbano" moveable="true" resizeable="false"
+		minWidth="700" minHeight="450">
+		<f:facet name="header">UBICACION DE PREDIO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink3s01"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelUbicacionPredioUrbano"
+					attachTo="hidelink3s01" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formUbicacionPredioUrbano">
+			<h:panelGrid width="100%">
+				<a4j:include viewId="/sisat/predial/ubicacionprediourbano.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+
+	<rich:modalPanel onshow="autofocus('formUbicacionPredioRustico')"
+		id="panelUbicacionPredioRustico" moveable="true" resizeable="false" minWidth="700" minHeight="370">
+		<f:facet name="header">UBICACION DE PREDIO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink3rst"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelUbicacionPredioRustico"
+					attachTo="hidelink3rst" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formUbicacionPredioRustico">
+			<h:panelGrid width="100%">
+				<a4j:include viewId="/sisat/predial/ubicacionprediorustico.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelconfirmageneradj" autosized="true"
+		width="300">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfigdj"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmageneradj"
+					attachTo="hlpconfigdj" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2">
+						<h:outputText id="succgdj" style="font-weight:bold;color:blue"
+							value="Se registro la Declaracion Jurada Nro #{registroPredioManaged.rpDjpredial.djId} satisfactoriamente" />
+	
+					</h:panelGrid>
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+					<a4j:commandButton value=" Aceptar " style="width:100px;"
+							action="#{sessionManaged.sendRedirectPrincipal}"
+							reRender="id_commandimprimir" immediate="true" >
+							<f:setPropertyActionListener
+									value="/sisat/predial/buscarpredio.xhtml"
+									target="#{sessionManaged.page}" />
+					</a4j:commandButton>	
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel onshow="autofocus('formFileUpload')"
+		id="panelfileupload" moveable="true" resizeable="false" minWidth="450"
+		minHeight="120">
+
+		<f:facet name="header">ADJUNTAR ARCHIVO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imagefileupload" styleClass="hidelink" />
+				<rich:componentControl for="panelfileupload"
+					attachTo="id_imagefileupload" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:form id="formFileUpload">
+			<h:panelGrid>
+				<a4j:include viewId="/sisat/predial/fileupload.xhtml" />
+			</h:panelGrid>
+		</h:form>
+		
+	</rich:modalPanel>
+	
+	<!-- INICIO OTRAS INSTALACIONES-->
+	<rich:modalPanel onshow="autofocus('id_formOtrasInstalaciones')"
+		id="id_panelOtrasInstalaciones" moveable="true" resizeable="false"	minWidth="720" minHeight="280">
+		<f:facet name="header">OBRAS COMPLEMENTARIAS E INSTALACIONES FIJAS Y PERMANENTES</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imagecloseotrasinsta" styleClass="hidelink" />
+				<rich:componentControl for="id_panelOtrasInstalaciones"
+					attachTo="id_imagecloseotrasinsta" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="id_formOtrasInstalaciones">
+			<h:panelGrid width="100%">
+				<a4j:include viewId="/sisat/predial/otrasinstalaciones.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel onshow="focusInputbvof();" id="id_panelOtrosFrentes"
+		moveable="true" resizeable="false" minWidth="600" minHeight="100">
+		<f:facet name="header">OTROS FRENTES</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imagecloseotrosfrentes" styleClass="hidelink" />
+				<rich:componentControl for="id_panelOtrosFrentes"
+					attachTo="id_imagecloseotrosfrentes" operation="hide"
+					event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:form id="id_formOtrosFrentes">
+			<h:panelGrid width="100%">
+				<a4j:include viewId="/sisat/predial/otrosfrentes.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel onshow="autofocus('id_formusosdelpredio')"
+		id="id_paneusosdelpredio" moveable="true" resizeable="false"
+		minWidth="680" minHeight="100">
+		<f:facet name="header">USOS DEL PREDIO</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imageusosdelpredio" styleClass="hidelink" />
+				<rich:componentControl for="id_paneusosdelpredio"
+					attachTo="id_imageusosdelpredio" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:form id="id_formusosdelpredio">
+			<h:panelGrid width="100%">
+				<a4j:include viewId="/sisat/predial/usospredio.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel onshow="autofocus('id_formusosdelpredioxnivel')"
+		id="id_paneusosdelpredioxnivel" moveable="true" resizeable="false"
+		minWidth="1200" minHeight="470">
+		<f:facet name="header">USOS DEL PREDIO POR NIVEL</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imageusosdelpredioxnivel" styleClass="hidelink" />
+				<rich:componentControl for="id_paneusosdelpredioxnivel"
+					attachTo="id_imageusosdelpredioxnivel" operation="hide"
+					event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="id_formusosdelpredioxnivel">
+			<h:panelGrid width="100%">
+				<a4j:include viewId="/sisat/predial/usospredioxnivel.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel onshow="autofocus('id_formdocanexos')"
+		id="id_paneldocanexos" moveable="true" resizeable="false"
+		minWidth="600" minHeight="100">
+		<f:facet name="header">DOCUMENTOS ANEXOS</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imagedocanexos" styleClass="hidelink" />
+				<rich:componentControl for="id_paneldocanexos"
+					attachTo="id_imagedocanexos" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:form id="id_formdocanexos">
+			<h:panelGrid width="100%">
+				<a4j:include viewId="/sisat/predial/documentoanexo.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	<!-- FIN -->
+
+	<!-- DELETE FIN -->
+
+
+
+	<rich:modalPanel id="deletePanelDocAnexo" autosized="true" width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imgclosedocanexo" styleClass="hidelink" />
+				<rich:componentControl for="deletePanelDocAnexo"
+					attachTo="id_imgclosedocanexo" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea eliminar registro actual ?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{documentoAnexoManaged.delete}"
+						reRender="id_documentosanexos" immediate="true"
+						oncomplete="#{rich:component('deletePanelDocAnexo')}.hide();" />
+
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('deletePanelDocAnexo')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="deletePanelUsosPredio" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imagecloseusospredio" styleClass="hidelink" />
+				<rich:componentControl for="deletePanelUsosPredio"
+					attachTo="id_imagecloseusospredio" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea eliminar registro actual ?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{usosPredioManaged.delete}" reRender="id_usosdelpredio"
+						immediate="true"
+						oncomplete="#{rich:component('deletePanelUsosPredio')}.hide();" />
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('deletePanelUsosPredio')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="deletePanelOtrosFrentes" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imgcloseotrosfrentes" styleClass="hidelink" />
+				<rich:componentControl for="deletePanelOtrosFrentes"
+					attachTo="id_imgcloseotrosfrentes" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea eliminar registro actual ?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{otrosFrentesManaged.delete}" reRender="id_otrosfrentes"
+						immediate="true"
+						oncomplete="#{rich:component('deletePanelOtrosFrentes')}.hide();" />
+
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('deletePanelOtrosFrentes')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="deletePanelOtrasInsta" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink13"
+					styleClass="hidelink" />
+				<rich:componentControl for="deletePanelOtrasInsta"
+					attachTo="hidelink13" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea eliminar registro actual ?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{otrasInstalacionesManaged.delete}"
+						reRender="id_otrasinstalaciones" immediate="true"
+						oncomplete="#{rich:component('deletePanelOtrasInsta')}.hide();" />
+
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('deletePanelOtrasInsta')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+
+	<rich:modalPanel onshow="autofocus('formBuscarViaPred')" id="panelBuscarViaPred" moveable="true" resizeable="false"
+		minWidth="740" minHeight="400">
+		<f:facet name="header">BUSCAR VIA</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink4s02"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelBuscarViaPred"
+					attachTo="hidelink4s02" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formBuscarViaPred">
+			<h:panelGrid>
+				<a4j:include viewId="/sisat/predial/buscarvia.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="id_panelBuscarPersona" autosized="true"
+		width="800" height="350">
+		<f:facet name="header">#{msg['pa.buscarpersonas']}</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideIconAddPerson"
+					styleClass="hidelink" />
+				<rich:componentControl for="id_panelBuscarPersona"
+					attachTo="hideIconAddPerson" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/vehicular/buscarpersona.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="modalRegistroPersonaBasico" autosized="true"
+		width="800" height="460">
+		<f:facet name="header">Agregar Persona</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidePersona"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalRegistroPersonaBasico"
+					attachTo="hidePersona" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/persona/registropersonabasico.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+	
+<rich:modalPanel id="panelreqinspeccion" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Confirmar edición" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfiggenera"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelreqinspeccion"
+					attachTo="hlpconfiggenera" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2">
+						<h:outputText id="otextgenerar"
+							style="font-weight:bold;color:blue" value="¿Desea editar la DJ?" />
+					</h:panelGrid>
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar" style="width:80px;"
+						action="#{listaDJPredioManaged.redireccionaRequerimiento}"
+						immediate="true" reRender="panelinclude">
+						<f:setPropertyActionListener
+							value="/sisat/fiscalizacion/actualizarrquerimiento.xhtml"
+							target="#{sessionManaged.page}" />
+						<f:setPropertyActionListener value="#{record}"
+							target="#{listaDJPredioManaged.currentItem}" id="r428" />
+						<h:graphicImage value="/images/editardocumento2.png"
+							style="border:0; " />
+					</a4j:commandButton>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+</rich:modalPanel>
+
+<rich:modalPanel id="panelregreqinspeccion" autosized="true" width="250">
+		<f:facet name="header">
+			<h:outputText value="Asociar Requerimiento" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfiggenerarreg"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelregreqinspeccion"
+					attachTo="hlpconfiggenerarreg" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2" id="panelRefenciaReqs">
+						<h:outputText id="otextgenerar"
+							style="font-weight:bold;color:blue" value="Requerimiento:" />
+
+						<h:inputText id="inputcodigo"
+							value="#{registroPredioManaged.reqNroElegida}" size="18"
+							onclick="#{rich:component('paneldocumentoreferencia')}.show();return false" />
+
+						<!-- 	<rich:comboBox defaultLabel="Seleccione" enableManualInput="false" -->
+<!-- 							width="200" onblur="validaInputCbo(this)" -->
+<!-- 							value="#{registroPredioManaged.cmbReq}" -->
+<!-- 							required="true" id="id_inspector" -->
+<!-- 							binding="#{registroPredioManaged.cmbxReq}" -->
+<!-- 							valueChangeListener="#{registroPredioManaged.loadReq}"> -->
+<!-- 							<f:selectItems -->
+<!-- 								value="#{registroPredioManaged.listaReqs}" /> -->
+<!-- 						</rich:comboBox> -->
+						
+						<a4j:commandButton value="Guardar" style="width:80px;"
+							action="#{registroPredioManaged.guardarDjInspeccionElegida}"
+							reRender="panelregreqinspeccion"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							immediate="true">
+						</a4j:commandButton>
+
+						<a4j:commandButton value="Nuevo Req." style="width:80px;"
+							action="#{registroPredioManaged.actualizacion}"
+							immediate="true">
+							<f:setPropertyActionListener
+								value="#{registroPredioManaged.rpDjpredial}"
+								target="#{registroPredioManaged.rpDjpredial}"
+								id="ractual" />
+							<f:setPropertyActionListener
+								value="/sisat/fiscalizacion/buscarrequerimiento.xhtml"
+								target="#{sessionManaged.page}" />
+						</a4j:commandButton>
+
+							<h:inputHidden id="inputidinspeccion"
+							value="#{registroPredioManaged.reqIdElegida}" />
+					</h:panelGrid>
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+					
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+</rich:modalPanel>
+
+<rich:modalPanel id="paneldocumentoreferencia" width="300" height="180">
+			<f:facet name="header">
+				<h:outputText value="Listado de Requerimientos" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink3" />
+					<rich:componentControl for="paneldocumentoreferencia" attachTo="hidelink3"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form>
+				
+			<div align="center">
+				<rich:extendedDataTable id="datosReqs"
+					noDataLabel="No se encontró registros de Reqs./Cartas"
+					value="#{registroPredioManaged.listarequer}" var="recordReqs"
+					width="270px" height="120px" sortMode="single" rows="2"
+					selectionMode="single" enableContextMenu="false" rowKeyVar="row">
+					<rich:column id="x14" width="30px">
+						<a4j:commandLink ajaxSingle="true"
+							oncomplete="#{rich:component('paneldocumentoreferencia')}.hide();"
+							reRender="panelRefenciaReqs">
+							<h:graphicImage value="/images/ver2.png" style="border: 0px;" />
+							<f:setPropertyActionListener
+								target="#{registroPredioManaged.reqNroElegida}"
+								value="#{recordReqs.nroreqInspeccion}" />
+							<f:setPropertyActionListener
+								target="#{registroPredioManaged.reqIdElegida}"
+								value="#{recordReqs.reqInspeccion}" />
+						</a4j:commandLink>
+					</rich:column>
+					<rich:column id="ptipo" width="120px"
+						filterBy="#{recordReqs.descripcionTipoPredio}"
+						sortBy="#{recordReqs.descripcionTipoPredio}">
+						<f:facet name="header">Tipo Doc.</f:facet>
+						<h:outputText value="#{recordReqs.descripcionTipoPredio}" />
+					</rich:column>
+					<rich:column id="pnro" width="120px"
+						filterBy="#{recordReqs.nroreqInspeccion}"
+						sortBy="#{recordReqs.nroreqInspeccion}">
+						<f:facet name="header">Nro.Req/Carta</f:facet>
+						<h:outputText value="#{recordReqs.nroreqInspeccion}" />
+					</rich:column>
+				</rich:extendedDataTable>
+				<rich:datascroller for="datosReqs"></rich:datascroller>
+			</div>
+	</h:form>
+		</rich:modalPanel>
+	
+</ui:composition>

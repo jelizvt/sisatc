@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+<style>
+.row2 {
+background-color: #F2F2F2;
+color: #000000;
+}
+.row1 {
+background-color: #FFFFFFF;
+color: #000000;
+}
+.col1_datos_contrib{
+	padding-left: 50px;
+}
+.col2_datos_contrib{
+}
+
+
+.col1_data_permanecer{
+	width: 135px;
+	}
+.col2_data_permanecer{
+	text-align: left;
+}
+.col3_data_permanecer{
+	text-align: right;
+}
+
+</style>
+	<script type="text/javascript">
+		function cobrarEnter(e) {
+		  tecla = (document.all) ? e.keyCode : e.which;
+		  if (tecla==Event.KEY_RETURN) $('frmResumenCobrar:btnCobrarDeudaTupa').focus();
+		}
+	</script>
+	<rich:panel id="panelTasasTupa"  >
+		<f:facet name="header">TUPA</f:facet>
+		<h:form id="frmTupa">
+			<table border="0" cellspacing="2" cellpadding="2" width="1024">				
+				<tr>
+					<td width="60"><h:outputText value="Tipo Tasa:" /><span class="requiredField">*</span></td>
+					<td width="615">
+					<script type="">
+						 function printObjectsSelected(output, sgcomponent){
+               				 output.innerHTML=sgcomponent.getSelectedItems().pluck('state');
+            			}
+					</script>
+					<h:panelGrid columns="2">			            
+			            <h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0">
+			                <h:inputText style="margin:0px;" id="statesinput" value="#{cajaTupaManaged.descripcionTupaSeleccionado}" size="113"
+			                onkeypress="if (event.keyCode == 13) { return false; }" tabindex="1" required="true" requiredMessage="Seleccione una tasa TUPA"/>
+			                <h:graphicImage value="/images/icons/arrow.png"
+			                    onclick="#{rich:component('suggestion')}.callSuggestion(true)"
+			                    alt="" />
+			            </h:panelGrid>			            
+			            <h:outputText id="objects" style="font-weight:bold" />
+			        </h:panelGrid>
+			        
+			        <rich:suggestionbox height="200" width="608"
+			            usingSuggestObjects="true"
+			            onobjectchange="printObjectsSelected(#{rich:element('objects')}, #{rich:component('suggestion')});"
+			            suggestionAction="#{cajaTupaManaged.buscarTupa}" var="hint" 
+			            for="statesinput" id="suggestion" tokens="," nothingLabel="No se encontro un tupa relacionado">			            
+			            <h:column>
+			                <h:outputText value="#{hint.descripcion}" />
+			            </h:column>
+			            <a4j:support event="onselect" ajaxSingle="true" reRender="frmTupa,idPanelResumenMontos"  focus="idButtonAgregarTasa2">
+			            	<f:setPropertyActionListener target="#{cajaTupaManaged.tupaSeleccionado}" value="#{hint}" />
+			            	<f:setPropertyActionListener target="#{cajaTupaManaged.descripcionTupaSeleccionado}" value="#{hint.descripcion}" />
+			            </a4j:support>
+			        </rich:suggestionbox>
+					</td>
+					<td align="left"><a4j:commandButton id="idButtonAgregarTasa2" value="Agregar Tasa"
+							action="#{cajaTupaManaged.agregarFilaTupa2}" style="width:160px;" status="ajaxStatus"
+							reRender="frmTupa,idPanelResumenMontos,id_principal_tasa,pnlDeudas,listaConstancia,pnlPagosTupa" 
+							focus="statesinput" oncomplete="#{facesContext.maximumSeverity == null ? '':'Richfaces.showModalPanel(\'mpError\')'}"/>
+
+							<h:outputLabel value=" Permanecer" for="checkBoxIdPermanecerTupa" /> 
+							<h:selectBooleanCheckbox id="checkBoxIdPermanecerTupa" value="#{cajaTupaManaged.permanecerTupa}" >
+								<a4j:support event="onchange" ajaxSingle="true"></a4j:support>
+							</h:selectBooleanCheckbox>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a4j:commandLink ajaxSingle="true" id="BtnGenerarConstancia"
+							action="#{cajaTupaManaged.edit()}"
+							
+							oncomplete="window.open('../sisat/estadocuenta/registrarconstancianoadeudo.jsf',null, 'height=500,width=500,status=yes,toolbar=no,menubar=no,location=no')">
+							<h:graphicImage value="/images/editable.jpg" style="border:0" />
+							<rich:toolTip for="BtnGenerarConstancia" value="Generar Constancia de No Adeudo"></rich:toolTip>
+							
+						</a4j:commandLink> 
+					</td>
+				</tr>
+			</table>
+					
+			<rich:dataTable id="id_principal_tasa"
+				value="#{cajaTupaManaged.lstTupaDetalle}" var="item" width="100" height="auto" 			
+				rowkeyVar="row" rowClasses="row1,row2" >
+				<h:column id="c21" style="text-align: center">
+					<f:facet name="header"><div style="width: 40px;">Quitar</div></f:facet>
+					<div align="center" style="width: 40px;">
+
+					<a4j:commandButton action="#{cajaTupaManaged.eliminarRegistroTupa}"
+						title="Eliminar" image="/images/remove.png"
+						reRender="id_principal_tasa,idPanelResumenMontos,listaConstancia,pnlbotones" ajaxSingle="true"
+						style="width: 16px; height: 16px;">
+						<f:setPropertyActionListener target="#{cajaTupaManaged.tupaSeleccionadoListaTupa}" value="#{item}" />
+					</a4j:commandButton>					
+					</div>
+				</h:column>
+				<h:column >
+					<f:facet name="header"><div style="text-align: left; width: 580px;">Concepto</div></f:facet>
+					<div style="text-align: left; width: 600px;">
+						<h:outputText value="#{item.descripcion}" />
+					</div>
+				</h:column>
+				<h:column style="text-align: center;">
+					<f:facet name="header"><div style="width: 65px">Cant.</div></f:facet>
+					<div style="text-align: right;width: 65px">						
+						  <rich:inputNumberSpinner value="#{item.cant}" step="1" minValue="1" maxValue="1000" inputSize="1"   >
+						  	<a4j:support event="onchange" action="#{cajaTupaManaged.agregarCantidades}" ajaxSingle="true" 
+						  	reRender="id_principal_tasa,idPanelResumenMontos"></a4j:support>
+						  </rich:inputNumberSpinner>
+					</div>
+				</h:column>
+				<h:column style="text-align: center;">
+					<f:facet name="header"><div style="width: 100px">Tasa</div></f:facet>
+					<div style="width: 100px">
+					  <h:outputText value="#{item.tasa}">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+					</h:outputText> 
+						<!--<rich:inputNumberSpinner value="#{item.tasa}" step="1" minValue="1" maxValue="1000000" inputSize="1"   >
+						  	<a4j:support event="onchange" action="#{cajaTupaManaged.cambiarTasa(item.tupaId, item.tasa)}" 
+						  	ajaxSingle="true" reRender="id_principal_tasa,idPanelResumenMontos"></a4j:support>
+						  </rich:inputNumberSpinner>
+						  -->
+					</div>
+				</h:column>
+				<h:column style="text-align: center;">
+					<f:facet name="header"><div style="width: 100px;">Descuento</div></f:facet>
+					<div style="100px;">					
+						<h:outputText value="#{item.descuento}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+						</h:outputText>
+					</div>						
+				</h:column>					
+				<h:column style="text-align: center;">
+					<f:facet name="header"><div style="width: 100px;">Sub Total</div></f:facet>
+					<div style="100px;">					
+						<h:outputText value="#{item.subTotal}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+						</h:outputText>
+					</div>						
+				</h:column>
+			
+			</rich:dataTable>
+		</h:form>
+	</rich:panel>
+	<rich:panel id="pnlPagosTupa" styleClass="sisatPanel" style="width:920px;  position: absolute; ">
+		<f:facet name="header">Pagos</f:facet>
+		<h:form id="frmFormasPago">
+			<table width="100%" cellpadding="0" cellspacing="0">
+				<tr>
+					<td
+						style="background-color: #cccccc; border-bottom: 1px solid silver;"><h:selectOneRadio
+							value="#{cajaTupaManaged.selectedFormasPago}"
+							valueChangeListener="#{cajaTupaManaged.changeFormasPago}"
+							style="border-spacing: 5px; border-collapse: separate; font-weight: bold; font-size: 12px;">
+							<f:selectItem itemValue="EF" itemLabel="Efectivo" />
+							<f:selectItem itemValue="VF" itemLabel="Varias formas de pago" />
+							<a4j:support event="onchange"
+								reRender="frmFormasPago,frmSelectedFP,idPanelResumenMontos"
+								ajaxSingle="true"></a4j:support>
+						</h:selectOneRadio></td>
+				</tr>
+			</table>
+			<div style="padding: 5px; margin-top: 5px;width: 500px">
+				<table cellpadding="5">
+					<h:panelGroup
+						rendered="#{cajaTupaManaged.selectedFormasPago == 'VF'}">
+						<tr>
+							<td>Forma de pago:<span style="color: red;"> *</span></td>
+							<td colspan="7"><rich:comboBox
+									value="#{cajaTupaManaged.selectedFormaPago}"
+									valueChangeListener="#{cajaTupaManaged.changeFormaPago}"
+									enableManualInput="false"
+									onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+									>
+									<f:selectItems value="#{cajaTupaManaged.lstFormaPago}" />
+									<a4j:support event="onchange" reRender="frmFormasPago"
+										ajaxSingle="true"></a4j:support>
+								</rich:comboBox></td>
+						</tr>
+					</h:panelGroup>
+					<tr>
+						<td width="90px">Tipo de moneda:<span style="color: red;">
+								*</span></td>
+						<td><rich:comboBox
+								value="#{cajaTupaManaged.selectedTipoMoneda}"
+								valueChangeListener="#{cajaTupaManaged.changeTipoMoneda}"
+								enableManualInput="false"
+								onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+								>
+								<f:selectItems value="#{cajaTupaManaged.lstTipoMoneda}" />
+								<a4j:support event="onchange" ajaxSingle="true"
+									reRender="frmFormasPago,idPanelResumenMontos"
+									oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrorTipoCambio\')' : ''}"></a4j:support>
+							</rich:comboBox></td>
+						<h:panelGroup
+							rendered="#{cajaTupaManaged.selectedTipoMoneda != 'Soles'}">
+							<td style="font-weight: bold; font-size: 12px;">Monto:<span
+								style="color: red;"> *</span></td>
+							<td><h:inputText id="txtMonto"
+									value="#{cajaTupaManaged.monto}" styleClass="inputMoney"
+									style="font-size: 16px;">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="en" />
+									<a4j:support event="onkeyup" oncomplete="numberCurrency(this)"
+										reRender="txtMontoSoles,idPanelResumenMontos" ajaxSingle="true"></a4j:support>
+								</h:inputText></td>
+							<td>Tipo de cambio:<span style="color: red;"> *</span></td>
+							<td><h:inputText disabled="true"
+									value="#{cajaTupaManaged.tipoCambio.valorVenta}"
+									style="width: 60px;" /></td>
+						</h:panelGroup>
+						<td style="font-weight: bold; font-size: 12px;">Monto
+							(Soles):<span style="color: red;"> *</span>
+						</td>
+						<td><h:inputText id="txtMontoSoles"
+								value="#{cajaTupaManaged.montoSoles}"
+								onkeypress="cobrarEnter(event)"
+								disabled="#{(cajaTupaManaged.selectedTipoMoneda != 'Soles') or (cajaTupaManaged.selectedFormaPagoId==5)}"
+								styleClass="inputMoney" style="font-size: 16px;" tabindex="3">
+								<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+									locale="en" />
+								<a4j:support event="onkeyup" oncomplete="numberCurrency(this)"
+									reRender="idPanelResumenMontos" ajaxSingle="true"></a4j:support>
+							</h:inputText></td>
+					</tr>
+					<h:panelGroup
+						rendered="#{(cajaTupaManaged.selectedFormasPago == 'VF') and (cajaTupaManaged.selectedFormaPagoId != 1) and (cajaTupaManaged.selectedFormaPagoId != 5)}">
+						<tr>
+							<h:panelGroup
+								rendered="#{cajaTupaManaged.selectedFormaPagoId != 4}">
+								<td>Tipo de tarjeta:<span style="color: red;"> *</span></td>
+								<td><rich:comboBox
+										value="#{cajaTupaManaged.selectedTipoTarjeta}"
+										defaultLabel="Seleccione"
+										onkeypress="return showListCbo(this,event)"
+										onblur="validaInputCbo(this)">
+										<f:selectItems value="#{cajaTupaManaged.lstTipoTarjeta}" />
+									</rich:comboBox></td>
+							</h:panelGroup>
+							<td>Banco:<span style="color: red;"> *</span></td>
+							<td><rich:comboBox value="#{cajaTupaManaged.selectedBanco}"
+									defaultLabel="Seleccione"
+									onkeypress="return showListCbo(this,event)"
+									onblur="validaInputCbo(this)">
+									<f:selectItems value="#{cajaTupaManaged.lstBanco}" />
+								</rich:comboBox></td>
+							<td>Número #{cajaTupaManaged.labelTarjetaCheque}:<span
+								style="color: red;"> *</span></td>
+							<td><h:inputText value="#{cajaTupaManaged.numTarCheq}"
+									maxlength="#{cajaTupaManaged.labelTarjetaCheque=='cheque' ? 30 : 4}"
+									onkeypress="#{cajaTupaManaged.labelTarjetaCheque=='cheque' ?  '' : 'return validaEnteroPositivo(event)'}" /></td>
+						</tr>
+					</h:panelGroup>
+					<tr>
+						<td><h:panelGroup
+								rendered="#{cajaTupaManaged.selectedFormasPago=='VF'}">Observación:</h:panelGroup></td>
+						<td colspan="7"><h:panelGroup
+								rendered="#{cajaTupaManaged.selectedFormasPago=='VF'}">
+								<h:inputText value="#{cajaTupaManaged.observacion}"
+									style="width: 100%;" />
+							</h:panelGroup></td>
+					</tr>
+				</table>
+			</div>
+			<h:panelGroup
+				rendered="#{cajaTupaManaged.selectedFormasPago == 'VF'}"
+				style="padding: 10px;">
+				<a4j:commandButton value="Agregar" status="ajaxStatus" 
+					action="#{cajaTupaManaged.agregarPago}"
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}"
+					reRender="frmSelectedFP,idPanelResumenMontos" style="width: 80px;" ></a4j:commandButton>
+			</h:panelGroup>
+		</h:form>
+		<h:form id="frmSelectedFP">
+			<h:panelGroup
+				rendered="#{cajaTupaManaged.selectedFormasPago == 'VF'}">
+				<div style="padding: 10px;">
+					<rich:extendedDataTable value="#{cajaTupaManaged.lstPagodetalle}"
+						var="item" enableContextMenu="false" height="90px">
+						<rich:column width="150px">
+							<f:facet name="header">Forma de pago</f:facet>
+							<h:outputText value="#{item.formaPago}" />
+						</rich:column>
+						<rich:column width="120px">
+							<f:facet name="header">Tipo de moneda</f:facet>
+							<h:outputText value="#{item.tipoMoneda}" />
+						</rich:column>
+						<rich:column width="100px">
+							<f:facet name="header">Monto otra mon.</f:facet>
+							<h:outputText value="#{item.monto}" ><f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="en" /></h:outputText>
+						</rich:column>
+						<rich:column width="100px">
+							<f:facet name="header">Tipo de cambio</f:facet>
+							<h:outputText value="#{item.tipoCambio}" />
+						</rich:column>
+						<rich:column width="100px">
+							<f:facet name="header">Monto (Soles)</f:facet>
+							<h:outputText value="#{item.montoTotalSoles}" ><f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+										locale="en" /></h:outputText>
+						</rich:column>
+						<rich:column width="150px">
+							<f:facet name="header">Banco</f:facet>
+							<h:outputText value="#{item.banco}" />
+						</rich:column>
+						<rich:column width="150px">
+							<f:facet name="header">Tipo de tarjeta</f:facet>
+							<h:outputText value="#{item.tipoTarjeta}" />
+						</rich:column>
+						<rich:column width="120px">
+							<f:facet name="header">Nro Tarjeta/Cheque</f:facet>
+							<h:outputText value="#{item.nroCheque}" />
+						</rich:column>
+						<rich:column width="226px;">
+							<f:facet name="header">Observación</f:facet>
+							<h:outputText value="#{item.observacion}" />
+						</rich:column>
+						<rich:column width="60px" style="text-align: center">
+							<a4j:commandButton title="#{msg['gn.eliminar']}" status="ajaxStatus" 
+								actionListener="#{cajaTupaManaged.removeRowDetallePago}"
+								immediate="true" reRender="frmSelectedFP,idPanelResumenMontos"
+								image="/images/remove.png" style="width: 16px; height: 16px;"></a4j:commandButton>
+						</rich:column>
+					</rich:extendedDataTable>
+				</div>
+			</h:panelGroup>
+		</h:form>
+		<h:form id="frmResumenCobrar">
+			<div style="padding: 2px; margin-bottom: 15px;">
+				<table>
+					<tbody>
+						<tr>
+							
+							<td>
+								<a4j:outputPanel id="idPanelResumenMontos">
+								<table>
+									<tr>
+									<td width="95px">Sub-Total:</td>
+										<td><h:inputText value="#{cajaTupaManaged.total}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 16px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText></td>
+									</tr>
+									<tr>
+										<td width="95px">Descuento:</td>
+										<td><h:inputText value="#{cajaTupaManaged.totalDescuento}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 16px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText></td>
+									</tr>																	
+									<tr>
+										<td width="95px">Total:</td>
+										<td><h:inputText value="#{cajaTupaManaged.montoTupa}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 16px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText></td>
+									</tr>
+									<tr>
+										<td>Ingresado:</td>
+										<td><h:inputText
+												value="#{cajaTupaManaged.montoIngresado}" disabled="true"
+												styleClass="inputMoney"
+												style="font-size: 16px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText></td>
+									</tr>
+									<tr>
+										<td>#{cajaTupaManaged.montoVuelto == null ? 'Resta' :
+											'Vuelto'}:</td>
+										<td><h:inputText value="#{cajaTupaManaged.montoResta}"
+												rendered="#{cajaTupaManaged.montoVuelto == null}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 16px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText> <h:inputText value="#{cajaTupaManaged.montoVuelto}"
+												rendered="#{cajaTupaManaged.montoVuelto != null}"
+												disabled="true" styleClass="inputMoney"
+												style="font-size: 16px; text-align: right;">
+												<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+													locale="en" />
+											</h:inputText></td>
+									</tr>
+								</table>
+								</a4j:outputPanel>
+							</td>				
+							<td>							
+
+
+							<a4j:outputPanel id="idPanelDataContribuyente" style="border:1px">
+									<h:panelGroup  >
+										<h:panelGrid columns="2" columnClasses="col1_datos_contrib,col2_datos_contrib" >
+											<!-- <h:outputLabel value=" " />
+											<a4j:status id="textoStatus"  startText="Buscando Persona Contribuyente..." stopText="" /> -->											
+											<h:outputLabel value="Codigo:" />
+											<h:panelGrid columns="3" cellpadding="0" cellspacing="0" 
+												columnClasses="col1_data_permanecer, col2_data_permanecer1, col3_data_permanecer1" width="100%">
+
+												<h:inputText value="#{cajaTupaManaged.referencia.personaId}" disabled="true" styleClass="textUpperCase"
+													converter="uppeCaseConverter" onkeypress="return validaEnteroPositivo(event)">
+													<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+												</h:inputText>												
+												
+												<a4j:commandLink ajaxSingle="true" id="newlink1"
+													onclick="Richfaces.showModalPanel('modalPanelBuscarContribuyente');" >
+													<h:graphicImage value="/images/ver2.png" style="border: 0px;" />
+													<rich:toolTip> Buscar Contribuyente</rich:toolTip>
+												</a4j:commandLink>
+												
+												<a4j:commandLink ajaxSingle="true" id="deletelink1"
+													 action="#{cajaTupaManaged.limpiarContribuyente()}"
+													 reRender="idPanelDataContribuyente">
+													<h:graphicImage value="/images/extorno_icon.jpg" style="border: 0px;   " />
+													<rich:toolTip> Limpiar contribuyente</rich:toolTip>
+												</a4j:commandLink>
+												
+												<h:panelGroup>
+													<h:outputLabel value=" Permanecer" for="checkBoxIdPermanecerReferencia" />
+													<h:selectBooleanCheckbox id="checkBoxIdPermanecerReferencia" value="#{cajaTupaManaged.permanecerReferencia}">
+														<a4j:support event="onchange" ajaxSingle="true"></a4j:support>
+													</h:selectBooleanCheckbox>
+												</h:panelGroup>
+											</h:panelGrid>
+
+											<h:outputLabel value="DNI/RUC:">												
+											</h:outputLabel>
+											<h:inputText value="#{cajaTupaManaged.referencia.dniRuc}" styleClass="textUpperCase"
+												converter="uppeCaseConverter" requiredMessage="Ingrese una referencia DNI/RUC">
+												<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+											</h:inputText>
+											<h:outputLabel>Apellidos y Nombres/<span class="requiredField">*</span>
+												<br></br>Razon Social:</h:outputLabel>
+											<!-- <h:inputTextarea rows="1" cols="100" value="#{cajaTupaManaged.referencia.nombresApellidos}"
+												styleClass="textUpperCase" converter="uppeCaseConverter" required="true"
+												requiredMessage="Ingrese una referencia Nombres y Apellidos/Razon Social">
+												<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+											</h:inputTextarea> -->
+											<h:panelGroup >
+												<h:inputText id="idNombre" value="#{cajaTupaManaged.referencia.apellidosNombres}" required="true" size="100"
+													styleClass="textUpperCase" converter="uppeCaseConverter" tabindex="5">
+													<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+													</h:inputText>
+												<rich:suggestionbox id="suggestionboxContrib" width="522" for="idNombre" minChars="3"
+													suggestionAction="#{cajaTupaManaged.buscarPersonaContribuyente}" var="hint"
+													ignoreDupResponses="true" timeout="7000" tokens=","
+													fetchValue="#{hint.apellidosNombres}">
+													<h:column>
+
+														<h:outputText value="#{hint.apellidosNombres}" />
+													</h:column>
+													<h:column>
+														<h:outputText value="#{hint.fuente=='2'?'PERSONA':'CONTRIBUYENTE'}" />
+													</h:column>
+													<a4j:support event="onselect" reRender="idPanelDataContribuyente" focus="inputPlaca">
+														<f:setPropertyActionListener target="#{cajaTupaManaged.referencia}" value="#{hint}" />
+													</a4j:support>
+												</rich:suggestionbox>
+
+											</h:panelGroup>
+											
+											<h:outputLabel value="Placa:" />
+											<h:inputText id="inputPlaca" value="#{cajaTupaManaged.referencia.placa}" styleClass="textUpperCase"
+												converter="uppeCaseConverter" tabindex="6">
+												<a4j:support event="onblur" ajaxSingle="true" ></a4j:support>
+											</h:inputText>
+											<h:outputLabel value="Obs:" />
+											<h:inputTextarea rows="2" cols="100" value="#{cajaTupaManaged.referencia.obs}" styleClass="textUpperCase"
+												converter="uppeCaseConverter" tabindex="7">
+												<a4j:support event="onblur" ajaxSingle="true"></a4j:support>
+											</h:inputTextarea>
+										</h:panelGrid>
+									</h:panelGroup>
+								</a4j:outputPanel>
+							</td>							
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<h:panelGroup id="listaConstancia" rendered="#{cajaTupaManaged.isConstancia}">
+				<ui:include src="/sisat/estadocuenta/registrarconstancianoadeudo.xhtml" id="consNoAdeudo" >
+					<ui:param name="componentModalId" value="modalPanelBuscarContribuyente"></ui:param>
+					<ui:param name="componentModalId" value="pnlDeudas"></ui:param>
+								
+				</ui:include>
+			</h:panelGroup>
+			
+			<!-- HR PU -->
+			 <h:panelGroup id="panelHR" rendered="#{cajaTupaManaged.isRecord}"> 
+			<!--  <h:panelGroup id="panelHR" rendered="false"> -->
+				<h:panelGrid id="idPanelconcepto" columns="4"  bgcolor="#cccccc" colspan="7" valign="top"
+									style="border-color: #E7E9EF; border-style: solid; border-width: 1px; width:100%;">
+				
+						<h:selectOneRadio  value="#{cajaTupaManaged.tipoRecord}" title="Select">
+							
+							<f:selectItem itemValue="1" itemLabel="Record" />
+							<f:selectItem itemValue="2" itemLabel="HR" />
+							<f:selectItem itemValue="3" itemLabel="PU/PR" />
+				
+							<a4j:support
+								reRender="#{rich:clientId('panelHR')}"
+								event="onchange" BypassUpdates="false" ajaxSingle="true" />
+								
+						</h:selectOneRadio>	
+				</h:panelGrid>
+				<!-- INICIO SUB AÑO -->
+						  <rich:dataTable id="id_aniodeuda"
+							value="#{cajaTupaManaged.listAnioHR}" var="item" width="100" style="   margin: 20px 90px;" height="auto" 			
+							rowkeyVar="row" rowClasses="row1,row2" rendered="#{cajaTupaManaged.tipoRecord != 1}">
+							
+							<h:column id="c21" style="text-align: center">
+								<f:facet name="header"><div style="width: 20px;"></div></f:facet>
+								<div style="text-align: center; width: 20px;">
+									<!--  <h:selectBooleanCheckbox value="#{item.seleted}" > </h:selectBooleanCheckbox>-->
+									<h:selectBooleanCheckbox  
+										id="checkBoxAllDeuda" 
+										value="#{item.seleted}"
+										valueChangeListener="#{cajaTupaManaged.changeSelectAnio(item.id)}" 
+										immediate="true" 
+										reRender="panelHR">
+										
+										 <!--  <a4j:support event="onclick" reRender="id_aniodeuda" execute="@this" />-->
+										 
+										 <a4j:support id="clc_select" event="onclick" reRender="panelHR" />
+									</h:selectBooleanCheckbox>
+								</div>
+							</h:column>					
+							
+							<h:column style="text-align: center;">
+								<f:facet name="header"><div style="width: 75px">Año de Deuda</div></f:facet>
+								<div style="text-align: center; width: 75px;">
+									<h:outputText value="#{item.descripcion}" />
+								</div>
+							</h:column>						
+						
+						</rich:dataTable>
+							
+					<!-- FIN SUB AÑO -->
+			</h:panelGroup>
+			<!-- HR PU -->
+			
+				<h:panelGroup id="btn_cobrar" rendered="#{!cajaTupaManaged.isConstancia}">
+				
+						<script type="text/javascript">												
+							function openImprimirTupa(){					
+								 window.open('../sisat/caja/imprimirReciboTupa.jsf','Recibo de Pago', 'height=420,width=500,status=yes,toolbar=no,menubar=no,location=no');					
+							}        
+						</script>
+						
+						<a4j:commandButton id="btnCobrarDeudaTupa" value="Cobrar deuda"
+							action="#{cajaTupaManaged.cobrarDeudaTupaPrev}"
+							reRender="mpResCobrarDeu,frmTupa,frmFormasPago,frmSelectedFP,idPanelResumenMontos,idPanelDataContribuyente,id_principal_tasa,consNoAdeudo,listaConstancia,pnlPagosTupa" 
+							status="ajaxStatus" 
+							oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')':'openImprimirTupa();Richfaces.hideModalPanel(\'mpResCobrarDeu\');'}"
+							style="width: 150px;" tabindex="8"></a4j:commandButton>
+						<a4j:commandButton id="btnCancelar" value="Cancelar"
+							action="#{cajaTupaManaged.initContent}"
+							reRender="mpResCobrarDeu,frmTupa,frmFormasPago,frmSelectedFP,idPanelResumenMontos,idPanelDataContribuyente,consNoAdeudo,listaConstancia,pnlPagosTupa" status="ajaxStatus" 					
+							style="width: 150px;" ajaxSingle="true" tabindex="9"></a4j:commandButton>				
+				
+				</h:panelGroup>
+				
+				
+				<h:panelGroup id="btn_cobrar_cons" >
+	
+						<a4j:commandButton id="btnCobrarDeudaTupaCons" value="Cobrar deuda"
+						rendered="#{cajaTupaManaged.isConstancia}"
+							action="#{cajaTupaManaged.cobrarDeudaTupaPrev}"
+							reRender="mpResCobrarDeu,frmTupa,frmFormasPago,frmSelectedFP,idPanelResumenMontos,idPanelDataContribuyente,id_principal_tasa,consNoAdeudo,listaConstancia,pnlPagosTupa" 
+							status="ajaxStatus" 
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirmaConst\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');'}"
+							style="width: 150px;" tabindex="8">
+						</a4j:commandButton> 
+							
+						<!--  <h:commandLink id="idcampo7" 
+							action="#{cajaTupaManaged.cobrarDeudaTupaPrev}" immediate="true">
+							<h:graphicImage id="imgImp" value="/images/imprimi2.png" style="border:0" />
+							
+							<rich:toolTip for="idcampo7" direction="top-left"> Descargar Constancia</rich:toolTip>
+						</h:commandLink> -->
+							
+							
+						<a4j:commandButton id="btnCancelarCons" value="Cancelar"
+						rendered="#{cajaTupaManaged.isConstancia}"
+							action="#{cajaTupaManaged.initContent}"
+							reRender="mpResCobrarDeu,frmTupa,frmFormasPago,frmSelectedFP,idPanelResumenMontos,idPanelDataContribuyente,consNoAdeudo,listaConstancia,pnlPagosTupa" 
+							status="ajaxStatus" 					
+							 ajaxSingle="true" 
+							 style="width: 150px;"  tabindex="9"></a4j:commandButton>		
+					
+				</h:panelGroup>
+			
+		</h:form>
+	</rich:panel>
+	
+	
+	
+	<rich:panel id="pnlDeudas" styleClass="sisatPanel" style="width:391px; position: relative; left: 925px; top: -3px;" >
+		<f:facet name="header" > Deudas </f:facet>
+		
+		<rich:dataTable id="id_principal_tasa"
+				value="#{cajaTupaManaged.lstECRes}" var="item" width="100" style="    margin-left: 5px;" height="auto" 			
+				rowkeyVar="row" rowClasses="row1,row2" >
+				<h:column id="c21" style="text-align: center">
+					<f:facet name="header"><div style="width: 45px;">Año</div></f:facet>
+					<div style="text-align: center; width: 45px;">
+						<h:outputText value="#{item.annoDeuda}" />
+					</div>
+				</h:column>
+				
+				<!-- <h:column >
+					<f:facet name="header"><div style="text-align: left; width: 110px;">Concepto</div></f:facet>
+					<div style="text-align: left; width: 110px;">
+						<h:outputText value="#{item.conceptoDescripcion}" />
+					</div>
+				</h:column>-->
+				
+				<h:column style="text-align: center;">
+					<f:facet name="header"><div style="width: 230px">Subconcepto</div></f:facet>
+					<div style="text-align: left; width: 230px;">
+						<h:outputText value="#{item.conceptoDescripcion}" />
+					</div>
+				</h:column>
+				
+				<h:column style="text-align: center;">
+					<f:facet name="header"><div style="width: 75px">Cuotas</div></f:facet>
+					<div style="text-align: center; width: 75px;">
+						<h:outputText value="#{item.cuotas}" />
+					</div>
+				</h:column>
+				
+			
+			</rich:dataTable>
+		
+	</rich:panel>
+	
+	
+
+	<rich:modalPanel id="mpErrorTipoCambio" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Advertencia" />
+		</f:facet>
+		<h:form id="frmErrorTipoCambio">
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton value="#{msg['gn.aceptar']}" immediate="true" status="ajaxStatus" 
+					oncomplete="Richfaces.hideModalPanel('mpErrorTipoCambio')"
+					style="width: 80px;" ajaxSingle="true" reRender="frmFormasPago">
+					<f:setPropertyActionListener value="Soles"
+						target="#{cajaTupaManaged.selectedTipoMoneda}" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mpResCobrarDeu" width="250" height="120">
+		<f:facet name="header">
+			<h:outputText value="Resultado" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideMpResCobDeu"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpResCobrarDeu"
+					attachTo="hideMpResCobDeu" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton value="Aceptar" status="ajaxStatus" 
+					action="#{cajaTupaManaged.initContent}"
+					rendered="#{cajaTupaManaged.correct}"
+					reRender="frmTupa,frmFormasPago,frmSelectedFP,idPanelResumenMontos"
+					onclick="Richfaces.hideModalPanel('mpResCobrarDeu');"
+					oncomplete="window.open('../sisat/caja/imprimirReciboTupa.jsf',null, 'height=420,width=500,status=yes,toolbar=no,menubar=no,location=no')"></a4j:commandButton>
+				<a4j:commandButton value="Aceptar" status="ajaxStatus" 
+					rendered="#{!cajaTupaManaged.correct}"
+					onclick="Richfaces.hideModalPanel('mpResCobrarDeu')"></a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="modalPanelBuscarContribuyente" moveable="true" resizeable="true" minHeight="400" width="1000">
+		<f:facet name="header"> BUSCAR CONTRIBUYENTE</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelinkBuscarContribuyente" styleClass="hidelink" />
+				<rich:componentControl for="modalPanelBuscarContribuyente" attachTo="hidelinkBuscarContribuyente" operation="hide"
+					event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+			<ui:include src="/sisat/caja/popup/buscarcontribuyente.xhtml">
+				<ui:param name="componentModalId" value="modalPanelBuscarContribuyente"></ui:param>
+				<ui:param name="componentModalId" value="pnlDeudas"></ui:param>
+				<ui:param name="reRederIdComponent" value="consNoAdeudo"></ui:param>
+				
+				
+				<ui:param name="reRederIdComponent" value="idPanelDataContribuyente"></ui:param>
+				<ui:param name="reRederIdComponent1" value="idPanelResumenMontos"></ui:param>	
+				<ui:param name="reRederIdComponent1" value="id_principal_tasa"></ui:param>
+							
+			</ui:include>
+		
+	</rich:modalPanel>
+
+<!-- <rich:modalPanel id="panelconfirmaConst" autosized="true" width="300"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="confi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaConst" attachTo="confi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Se Genero satisfactoriamente la constancia, desea Imprimirla?" />
+				<h:panelGrid columns="2">
+					<h:commandLink value="SI" style = "    background: #dbe9fb;padding: 2px 10px;color: #000; border: solid 1px; text-decoration: none;"
+						action="#{registrarConstanciaNoAdeudo.impresion()}"
+						
+						immediate="true"
+						oncomplete="#{rich:component('panelconfirmaConst')}.hide();" >
+						<a4j:support event="onclick" oncomplete="#{rich:component('panelconfirmaConst')}.hide();" />
+					</h:commandLink>
+						
+					<a4j:commandButton value="No"
+						onclick="#{rich:component('panelconfirmaConst')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel> -->
+	
+	<rich:modalPanel id="panelconfirmaConst" autosized="true"
+		width="450" onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmar" />
+		</f:facet>
+		
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink33ss"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpErrorsNroDeclaracion"
+					attachTo="hidelink33ss" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="    width: 100%;text-align: center; color: blue; ">
+				<h:outputText value="Se Genero satisfactoriamente la Constancia " />
+			</h:panelGrid>
+			<div style="width: 100%;  margin-top: 15px;
+    text-align: center;">
+					<h:commandLink value="Aceptar" style = "    background: #dbe9fb;padding: 2px 15px;color: #000; border: solid 1px; text-decoration: none;     border: solid 1px #7e8da4;"
+						action="#{registrarConstanciaNoAdeudo.impresion()}"
+						
+						immediate="true"
+						oncomplete="#{rich:component('panelconfirmaConst')}.hide();" >
+						<a4j:support event="onclick" oncomplete="#{rich:component('panelconfirmaConst')}.hide();" />
+					</h:commandLink>
+						
+					<!--  <h:commandLink value="No" style = "    background: #dbe9fb;padding: 2px 10px;color: #000; border: solid 1px; text-decoration: none;     border: solid 1px #7e8da4;"
+						>
+						<a4j:support event="onclick" oncomplete="#{rich:component('panelconfirmaConst')}.hide();return false;" />
+					</h:commandLink>-->
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	
+	
+	
+</ui:composition>

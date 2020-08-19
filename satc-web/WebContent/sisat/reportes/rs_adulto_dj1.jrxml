@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rs_adulto_dj1" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="dj_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\Liz Vigo\\REPO-OFICIAL\\satc-web\\WebContent\\sisat\\reportes\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[{call stp_td_Dj_data_resolucion_adulto_pens ($P{dj_id}) }]]>
+	</queryString>
+	<field name="dj_id" class="java.lang.Integer"/>
+	<field name="contribuyente_id" class="java.lang.Integer"/>
+	<field name="nro_doc_identidad" class="java.lang.String"/>
+	<field name="apellidos_nombres" class="java.lang.String"/>
+	<field name="nombre_conyuge" class="java.lang.String"/>
+	<field name="dni_conyuge" class="java.lang.String"/>
+	<field name="telefono" class="java.lang.String"/>
+	<field name="nro_expediente" class="java.lang.String"/>
+	<field name="nro_resolucion" class="java.lang.String"/>
+	<field name="fecha_emision_completa" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="543" splitType="Stretch">
+			<staticText>
+				<reportElement x="37" y="30" width="518" height="181"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[Para efectos de aplicar la deducción de las 50 UIT de la base imponible del Impuesto Predial en el caso de las personas adultas mayores no pensionistas, debe cumplirse lo siguiente:
+a)La edad de la persona adulta mayor es la que se desprende del Documento Nacional de Identidad, Carné de Extranjería o Pasaporte, según corresponda. Los sesenta (60) años deben encontrarse cumplidos al 01 de Enero del ejercicio gravable al cual corresponde la deducción.
+b)El requisito de la única propiedad se cumple cuando además de la vivienda, la persona adulta mayor no pensionista posea otra unidad inmobiliaria constituida por la cochera.
+c)….El predio debe estar destinado a vivienda del beneficiario. El uso parcial del inmueble con fines productivos, comerciales y/o profesionales, con aprobación de la municipalidad respectiva, no afecta la deducción.
+d)Los ingresos brutos de la persona adulta mayor no pensionista, o de la sociedad conyugal, no deben exceder de 1 UIT mensual. A tal efecto, las personas adultas mayores no pensionistas suscribirán una declaración jurada, de acuerdo a lo establecido en el literal c) del Artículo 2º del presente Decreto Supremo.
+e)Las personas adultas mayores no pensionistas presentarán la documentación que acredite o respalde las afirmaciones contenidas en la declaración jurada, según corresponda.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="0" width="518" height="30"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Artículo 3º.- Disposiciones para la deducción de las 50 UIT de la base imponible del Impuesto Predial en el caso de personas adultas mayores no pensionistas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="211" width="555" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Artículo 4º.- Facultad de Fiscalización.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="231" width="518" height="42"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[La presentación de la declaración jurada mencionada en el numeral anterior, no restringe la facultad de fiscalización de la Administración Tributaria, prevista en el Artículo 62º del Código Tributario, cuya Texto Único Ordenado fue aprobado con el Decreto Supremo Nº 133-2013-EF.
+
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="37" y="313" width="100" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SE RESUELVE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="273" width="555" height="40"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[	De la Declaración Jurada presentada por el contribuyente, se ha verificado, la misma cumple con los requisitos establecidos en la norma. Finalmente, se deja a salvo el derecho de la Administración Tributaria de realizar inspecciones discrecionales al inmueble materia de la presente solicitud, a fin de determinar la pérdida o continuidad del beneficio otorgado.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="333" width="555" height="34"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA["Primero. - DECLARAR FUNDADA la solicitud presentada por el señor(a) " +$F{apellidos_nombres}+", en mérito a los fundamentos expuestos en la parte considerativa."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="367" width="555" height="57"/>
+				<textElement textAlignment="Justified"/>
+				<textFieldExpression><![CDATA["Segundo.- OTÓRGUESE el Beneficio Tributario de Deducción de 50 UIT de la Base Imponible para el cálculo del Impuesto Predial a partir del primer trimestre del ejercicio fiscal 2020, DE MANERA PERMANENTE, del predio declarado bajo el código de contribuyente N° " + $F{contribuyente_id} +", el beneficio no exime la obligación del pago por Derechos de Emisión del Impuesto Predial, ni los Arbitrios Municipales."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="424" width="269" height="16"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGÍSTRESE, COMUNÍQUESE Y ARCHÍVESE.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="500" width="100" height="43"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[C.c.
+Interesado
+DCD y CC
+Archivo
+JKQB
+]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core">
+<head>
+<title>SATC - Vista Preliminar de la Declaración</title>
+<meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR" />
+<meta content="Visual Basic .NET 7.1" name="CODE_LANGUAGE" />
+<meta content="JavaScript" name="vs_defaultClientScript" />
+<meta content="http://schemas.microsoft.com/intellisense/ie5"
+	name="vs_targetSchema" />
+
+<script language="javascript">
+
+		function Printer(){
+			//text=document.getElementById("DivDatosContri");
+			window.print();
+			}
+		
+		function Impresion(){
+			document.getElementById("divCabecera").style.display="none";
+			Printer();
+			document.getElementById("divCabecera").style.display="";			
+		}
+		
+		function HabilitarGrabar(){
+			if(document.getElementById("chkOk").checked==true){
+				document.getElementById("btnGrabar").style.display="";
+				}
+			else{
+				document.getElementById("btnGrabar").style.display="none";			
+			}
+		}
+		
+		function Refrescar(){
+			window.location.reload(true);
+		}
+		
+		function Contador() {
+			TimerId = setTimeout("Refrescar()",60000);
+	    }
+	    
+</script>
+</head>
+<body>
+	<a4j:loadStyle src="/css/vehicular/resumen.css"></a4j:loadStyle>
+	<h:form>
+		<div id="divCabecera">
+			<table width="100%">
+				<tbody align="center">
+					<tr>
+						<td><h:commandButton value="#{msg['gn.imprimir']}"
+								onclick="Impresion()" /></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="divResumen">
+			<div class="tituloResumen">
+				<span>#{msg['gn.satc']}</span>
+			</div>
+			<div class="subTituloResumen">
+				<span>#{msg['rv.djv']} #{preliminarManaged.anioDecla}</span>
+			</div>
+			<div class="tituloSeccion">#{msg['rv.datoscontribuyente']}</div>
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="2">----------------------------------------------------------------------------------------------------------------------------------</td>
+					</tr>
+					<tr>
+						<td width="200">#{msg['rv.nombrerazonsocial']}:</td>
+						<td>#{sessionManaged.contribuyente.apellidosNombres}</td>
+					</tr>
+					<tr>
+						<td>#{msg['gn.documento']}:</td>
+						<td>#{sessionManaged.contribuyente.nroDocuIdentidad}</td>
+					</tr>
+					<tr>
+						<td>#{msg['rv.codigoPersona']}:</td>
+						<td>#{sessionManaged.contribuyente.personaId}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="tituloSeccion">#{msg['rv.datosdeclaracion']}</div>
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="6">----------------------------------------------------------------------------------------------------------------------------------</td>
+					</tr>
+					<tr>
+						<td width="60">#{msg['gn.numero']}:</td>
+						<td width="150">#{preliminarManaged.prelim.numeroDecla}</td>
+						<td width="60">#{msg['gn.motivo']}:</td>
+						<td width="150">#{preliminarManaged.prelim.motivoDecla}</td>
+						<td width="60">Fecha Declaración: </td>
+						<td width="150"><h:outputText
+								value="#{preliminarManaged.prelim.fechaDecla}">
+								<f:convertDateTime locale="#{msg['param.localedate']}"
+									pattern="#{msg['param.datepattern']}" 
+									timeZone="#{aplicationManaged.timeZone}"/>
+							</h:outputText></td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="tituloSeccion">#{msg['rv.datosvehiculo']}</div>
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="4">----------------------------------------------------------------------------------------------------------------------------------</td>
+					</tr>
+					<tr>
+						<td width="150">#{msg['rv.placa']}:</td>
+						<td width="200">#{preliminarManaged.prelim.placaVehic}</td>
+						<td width="150">#{msg['rv.categoria']}:</td>
+						<td width="200">#{preliminarManaged.prelim.categoriaVehic}</td>
+					</tr>
+					<tr>
+						<td>#{msg['rv.nromotor']}:</td>
+						<td>#{preliminarManaged.prelim.nroMotorVehic}</td>
+						<td>#{msg['rv.marca']}:</td>
+						<td>#{preliminarManaged.prelim.marcaVehic}</td>
+					</tr>
+					<tr>
+						<td>#{msg['rv.fechaprimerainsreg']}:</td>
+						<td><h:outputText
+								value="#{preliminarManaged.prelim.fechaPrimeraInsReg}">
+								<f:convertDateTime locale="#{msg['param.localedate']}"
+									pattern="#{msg['param.datepattern']}"
+									timeZone="#{aplicationManaged.timeZone}"/>
+							</h:outputText></td>
+						<td>#{msg['rv.modelo']}:</td>
+						<td>#{preliminarManaged.prelim.modeloVehic}</td>
+					</tr>
+					<tr>
+						<td>#{msg['rv.aniofabricacion']}:</td>
+						<td>#{preliminarManaged.prelim.anioFabric}</td>
+						<td>#{msg['rv.clase']}:</td>
+						<td>#{preliminarManaged.prelim.claseVehic}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="tituloSeccion">#{msg['rv.datosadquisicion']}</div>
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="4">----------------------------------------------------------------------------------------------------------------------------------</td>
+					</tr>
+					<tr>
+						<td width="150">#{msg['rv.fechaadquisicion']}:</td>
+						<td width="200"><h:outputText
+								value="#{preliminarManaged.prelim.fechaAdqui}">
+								<f:convertDateTime locale="#{msg['param.localedate']}"
+									pattern="#{msg['param.datepattern']}" 
+									timeZone="#{aplicationManaged.timeZone}"/>
+							</h:outputText></td>
+						<td width="150">#{msg['rv.porcentajepropiedad']}:</td>
+						<td width="200">#{preliminarManaged.prelim.porcentaje}
+							#{msg['gn.sporcentaje']}</td>
+					</tr>
+					<tr>
+						<td>#{msg['rv.tipoadquisicion']}:</td>
+						<td>#{preliminarManaged.prelim.tipoAdqui}</td>
+						<td>#{msg['gn.tipomoneda']}:</td>
+						<td>#{preliminarManaged.prelim.tipoMoneda}</td>
+					</tr>
+					<tr>
+						<td>#{msg['rv.tarjetapropiedad']}:</td>
+						<td>#{preliminarManaged.prelim.tarjetaProp}</td>
+						<td>#{msg['rv.valoradquisicion']}:</td>
+						<td>#{preliminarManaged.prelim.valorAdqui}</td>
+					</tr>
+					<tr>
+						<td>#{msg['rv.condicionpropiedad']}:</td>
+						<td>#{preliminarManaged.prelim.condicionProp}</td>
+					</tr>
+				</tbody>
+			</table>
+			<h:panelGroup
+				rendered="#{not empty preliminarManaged.lstTransferentes}">
+				<div class="tituloSeccion">#{msg['rv.datostransferentes']}</div>
+				<table>
+					<tbody>
+						<tr>
+							<td colspan="2">----------------------------------------------------------------------------------------------------------------------------------</td>
+						</tr>
+					</tbody>
+				</table>
+				<table>
+					<thead align="left">
+						<tr>
+							<th width="50">#{msg['gn.id']}</th>
+							<th width="150">#{msg['gn.tipodoc']}</th>
+							<th width="150">#{msg['gn.nrodoc']}</th>
+							<th width="350">#{msg['gn.apenomorazonsocial']}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<ui:repeat var="record"
+							value="#{preliminarManaged.lstTransferentes}">
+							<tr>
+								<td>#{record.personaId}</td>
+								<td>#{record.tipoDocIdentidad}</td>
+								<td>#{record.nroDocuIdentidad}</td>
+								<td>#{record.apellidosNombres} #{record.apellidosNombres !=
+									null ? record.razonSocial != null ? ' - ': '' : ''}
+									#{record.razonSocial}</td>
+							</tr>
+						</ui:repeat>
+					</tbody>
+				</table>
+			</h:panelGroup>
+			<div class="tituloSeccion">#{msg['rv.documentosadjuntos']}</div>
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="2">----------------------------------------------------------------------------------------------------------------------------------</td>
+					</tr>
+				</tbody>
+			</table>
+			<table>
+				<thead align="left">
+					<tr>
+						<th width="300">#{msg['gn.descripciondoc']}</th>
+						<th width="150">#{msg['rv.glosa']}</th>
+						<th width="150">#{msg['gn.docadjunto']}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<ui:repeat var="record" value="#{preliminarManaged.lstAnexos}">
+						<tr>
+							<td>#{record.descripcionDoc}</td>
+							<td>#{record.glosaDoc}</td>
+							<td>#{record.nomDocAdjunto}</td>
+						</tr>
+					</ui:repeat>
+				</tbody>
+			</table>
+			<br /> <br />
+			<table align="center" width="100%">
+				<tbody>
+					<tr>
+						<td align="center">--------------------------------------------------------------------</td>
+					</tr>
+					<tr>
+						<td align="center">#{sessionManaged.contribuyente.apellidosNombres}</td>
+					</tr>
+				</tbody>
+			</table>
+			<br /> <br />
+			<table align="center" width="100%">
+				<tbody>
+					<tr>
+						<td colspan="5" width="50%" align="left">
+							<span id="Label27" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Emitido por : </strong></span>
+							<span id="emisor" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText value="#{preliminarManaged.prelim.usuario}" /></span>
+							<br/>
+							<span id="Label28" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Fecha de Emision : </strong></span>
+							<span id="fechaActualid" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText value="#{preliminarManaged.fechaActual}" >
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+							</h:outputText></span>
+						</td>
+						<td colspan="5" width="50%" align="right">
+							<span id="Label27" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Registrado por : </strong></span>
+							<span id="emisor" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText value="#{preliminarManaged.prelim.usuario}" /></span>
+							<br/>
+							<span id="Label28" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Fecha de Registro : </strong></span>
+							<span id="fechaActualid" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText value="#{preliminarManaged.fechaActual}" >
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+							</h:outputText></span>
+						</td>						
+					</tr>						
+				</tbody>
+			</table>
+		</div>
+	</h:form>
+</body>
+
+</html>

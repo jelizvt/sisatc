@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<rich:panel>
+		<f:facet name="header">APERTURA Y CIERRE  DE  AGENCIA</f:facet>
+		<h:form id="frmAperturaCierreAgencia">
+			<table cellpadding="5" cellspacing="5">
+				<tbody>
+					<tr>
+						<td>Agencia :</td>
+						<td><rich:comboBox width="300"
+								value="#{inicioOperacionManaged.selectedAgencia}"
+								onkeypress="return showListCbo(this,event)"
+								onblur="validaInputCbo(this)">
+								<f:selectItems value="#{inicioOperacionManaged.listAgencias}" />
+								<a4j:support event="onchange"
+									actionListener="#{inicioOperacionManaged.changeAgencia}"
+									reRender="frmAperturaCierreAgencia"
+									oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}"></a4j:support>
+							</rich:comboBox></td>
+					</tr>
+					<tr>
+						<td>Fecha(dd/mm/aaaa) :</td>
+						<td><h:inputText
+								value="#{inicioOperacionManaged.agenciaEstado.fechaApertura}"
+								readonly="true" style="width: 200px; border: none;" /></td>
+					</tr>
+					<tr>
+						<td>Estado de Agencia :</td>
+						<td><h:inputText
+								value="#{inicioOperacionManaged.agenciaEstado.estadoDes}"
+								readonly="true" style="width: 200px; border: none;" /></td>
+					</tr>
+					<tr>
+						<td>Fecha última de cierre :</td>
+						<td><h:inputText
+								value="#{inicioOperacionManaged.agenciaEstado.fechaCierre}"
+								readonly="true" style="width: 200px; border: none;" /></td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="margin-top: 20px;">
+				<a4j:commandButton value="Aperturar agencia" status="ajaxStatus" 
+					disabled="#{inicioOperacionManaged.agenciaAperturada}"
+					action="#{inicioOperacionManaged.aperturarAgencia}"
+					reRender="frmAperturaCierreAgencia,pnlMenuCaja"
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}"
+					style="width: 150px;">
+				</a4j:commandButton>
+				<a4j:commandButton value="Cerrar agencia" status="ajaxStatus" 
+					disabled="#{!inicioOperacionManaged.agenciaAperturada}"
+					action="#{inicioOperacionManaged.cerrarAgencia}"
+					reRender="frmAperturaCierreAgencia,pnlMenuCaja"
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}"
+					style="width: 150px; margin-left: 6px;">
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:panel>
+</ui:composition>

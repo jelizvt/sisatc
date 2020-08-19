@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<h:form id="id_formBuscarLote">
+		<rich:panel rendered="#{busquedaRsNoPecuniariaManaged.permisoBuscar}" id="p01">
+			<f:facet name="header">
+				<h:outputLabel value="#{msg['cc.lotesrsnp']}" />
+			</f:facet>
+			<table border="0" width="100%">
+				<tr>
+					<td align="left" width="150px"><h:outputText
+							value="Nro de Lote :" /></td>
+					<td><h:inputText maxlength="50" style="width:80px;"
+							title="INGRESE N° DE LOTE A BUSCAR"
+							value="#{busquedaRsNoPecuniariaManaged.nroLote}" /></td>
+				</tr>
+			</table>
+		</rich:panel>
+		<h:panelGrid rendered="#{busquedaRsNoPecuniariaManaged.permisoBuscar}" columns="3" align="center">
+			<a4j:commandButton value="Buscar" style="width:100px;"
+				action="#{busquedaRsNoPecuniariaManaged.buscar}" status="ajaxStatus"
+				reRender="id_panelresultados" />
+			<a4j:commandButton value="Limpiar" style="width:100px;"
+				action="#{busquedaRsNoPecuniariaManaged.limpiar}"
+				reRender="p01,id_panelresultados" status="ajaxStatus">
+			</a4j:commandButton>
+		</h:panelGrid>
+		<rich:panel id="id_panelresultados">
+
+			<h:panelGrid rendered="#{busquedaRsNoPecuniariaManaged.permisoAgregarRegistrar}" columns="3" align="center">
+				<a4j:commandLink ajaxSingle="true" id="newlink1"
+					action="#{sessionManaged.sendRedirectPrincipal}">
+					<h:graphicImage value="/images/modal/new.gif" style="border:0" />
+					<f:setPropertyActionListener
+						value="/sisat/controlycobranza/registrolotersnopecuniaria.xhtml"
+						target="#{sessionManaged.page}" />
+				</a4j:commandLink>
+				<rich:toolTip id="x2" for="newlink1"
+					value="Nuevo Lote de Resoluciones de Sanción No Pecuniarias" />
+			</h:panelGrid>
+
+			<rich:datascroller for="datoslotesrs" maxPages="10"></rich:datascroller>
+			<rich:extendedDataTable rows="10" id="datoslotesrs"
+				value="#{busquedaRsNoPecuniariaManaged.lstFindLote}" var="loters"
+				width="100%" height="310px" selectionMode="single"
+				noDataLabel="No Se Encontro Información de lotes de RS"
+				rowKeyVar="row" enableContextMenu="false">
+
+				<rich:column rendered="#{busquedaRsNoPecuniariaManaged.permisoModificarActualizar}" style="text-align:center" id="x2" width="4%">
+					<f:facet name="header">Edit</f:facet>
+					<a4j:commandLink ajaxSingle="true" id="newlink3"
+						action="#{busquedaRsNoPecuniariaManaged.edit}" status="ajaxStatus"
+						reRender="panelinclude">
+						<h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+						<f:setPropertyActionListener value="#{loters}"
+							target="#{busquedaRsNoPecuniariaManaged.findCcLoteItem}"
+							id="r4253" />
+						<f:setPropertyActionListener
+							value="/sisat/controlycobranza/registrolotersnopecuniaria.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandLink>
+					<rich:toolTip for="newlink3" value="Actualizacion" />
+				</rich:column>
+				<rich:column style="text-align:center"
+					filterBy="#{loters.loteId}-#{loters.annoLote}" id="x3" width="10%">
+					<f:facet name="header" width="10%">Nro Lote</f:facet>
+					<h:outputText value="#{loters.loteId} - #{loters.annoLote}" />
+				</rich:column>
+				<rich:column style="text-align:center" filterBy="#{loters.tipoLote}"
+					id="x4" width="10%">
+					<f:facet name="header">Tipo Lote</f:facet>
+					<h:outputText value="#{loters.tipoLote}" />
+				</rich:column>
+				<rich:column style="text-align:center" filterBy="#{loters.tipoActo}"
+					id="x444" width="20%">
+					<f:facet name="header">Tipo Acto</f:facet>
+					<h:outputText id="tipo_acto" value="#{loters.tipoActo}" />
+					<rich:toolTip for="tipo_acto" value="#{loters.tipoActo}" />
+				</rich:column>
+				<rich:column style="text-align:center" filterBy="#{loters.concepto}"
+					id="x4444" width="15%">
+					<f:facet name="header">Concepto</f:facet>
+					<h:outputText id="concepto" value="#{loters.concepto}" />
+					<rich:toolTip for="concepto" value="#{loters.concepto}" />
+				</rich:column>
+				<rich:column style="text-align:center" id="x5" width="8%">
+					<f:facet name="header">Fec. Reg.</f:facet>
+					<h:outputText value="#{loters.fechaRegistro}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column style="text-align:center" id="x6" width="5%">
+					<f:facet name="header">Hora Reg.</f:facet>
+					<h:outputText value="#{loters.horaRegistro}">
+					</h:outputText>
+				</rich:column>
+				<rich:column style="text-align:center" id="x10" width="7%">
+					<f:facet name="header">Est. Program.</f:facet>
+					<h:outputText value="#{loters.estadoGeneracion}" />
+				</rich:column>
+				<rich:column style="text-align:center" id="x11" width="7%">
+					<f:facet name="header">Nro. registros</f:facet>
+					<h:outputText value="#{loters.nroDocumentos}" />
+				</rich:column>
+				<rich:column style="text-align:right" id="x13" width="9%">
+					<f:facet name="header">Monto Total</f:facet>
+					<h:outputText value="#{loters.totalDeuda}">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+							locale="#{msg['param.localecurrency']}" />
+					</h:outputText>
+				</rich:column>
+				<rich:column style="text-align:center" id="x14" width="6%">
+					<f:facet name="header">Ubicacion</f:facet>
+					<h:outputText value="#{loters.flagUbicables}">
+					</h:outputText>
+				</rich:column>
+			</rich:extendedDataTable>
+
+
+		</rich:panel>
+	</h:form>
+
+</ui:composition>

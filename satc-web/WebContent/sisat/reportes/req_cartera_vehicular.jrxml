@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rm_resolucion_multa_fiscalizacion" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5000000000000024"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="ruta_imagen" class="java.lang.String"/>
+	<parameter name="p_lote_id" class="java.lang.Integer"/>
+	<parameter name="p_sector_id" class="java.lang.Integer"/>
+	<parameter name="p_nro_requerimiento" class="java.lang.String"/>
+	<parameter name="p_distrito_id" class="java.lang.Integer"/>
+	<parameter name="p_placa" class="java.lang.String"/>
+	<parameter name="persona_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[EXEC [dbo].[usp_list_cartera_vehicular] $P{p_lote_id},$P{p_sector_id}, $P{persona_id}, $P{p_nro_requerimiento}, $P{p_distrito_id}, $P{p_placa}]]>
+	</queryString>
+	<field name="vehicular_omisos_id" class="java.lang.Integer"/>
+	<field name="sector_id" class="java.lang.Integer"/>
+	<field name="persona_id" class="java.lang.Integer"/>
+	<field name="requerimiento_id" class="java.lang.Integer"/>
+	<field name="tipo_documento_id" class="java.lang.Integer"/>
+	<field name="placa" class="java.lang.String"/>
+	<field name="nro_requerimiento" class="java.lang.String"/>
+	<field name="anio_inspeccion" class="java.lang.String"/>
+	<field name="fecha_emision" class="java.lang.String"/>
+	<field name="distrito_id" class="java.lang.Integer"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="propietario" class="java.lang.String"/>
+	<field name="direccion_completa" class="java.lang.String"/>
+	<field name="programa_id" class="java.lang.Integer"/>
+	<field name="nombre_programa" class="java.lang.String"/>
+	<field name="fecha_inscripcion" class="java.lang.String"/>
+	<field name="fecha_propiedad" class="java.lang.String"/>
+	<field name="nro_partida" class="java.lang.String"/>
+	<field name="sector" class="java.lang.String"/>
+	<variable name="v_gradualidad1" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[0.95]]></initialValueExpression>
+	</variable>
+	<variable name="v_gradualidad2" class="java.math.BigDecimal"/>
+	<variable name="v_descargo_vehiculo" class="java.lang.String">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="v_descargo_predio" class="java.lang.String">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="v_direccion_predio" class="java.lang.String">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="v_fecha_declaracion_descargo" class="java.sql.Timestamp">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<group name="rm_valor tributario" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$V{PAGE_NUMBER}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<textField pattern="" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="274" y="26" width="110" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+						<font fontName="SansSerif" size="8" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement mode="Transparent" x="213" y="26" width="61" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+						<font fontName="SansSerif" size="7" isBold="false" isItalic="true" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+						<paragraph lineSpacing="Single"/>
+					</textElement>
+					<text><![CDATA[Fecha de Emisión:]]></text>
+				</staticText>
+				<componentElement>
+					<reportElement mode="Transparent" x="450" y="10" width="100" height="40"/>
+					<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0" barHeight="65">
+						<jr:codeExpression><![CDATA[$F{nro_requerimiento}]]></jr:codeExpression>
+					</jr:barbecue>
+				</componentElement>
+				<image>
+					<reportElement x="5" y="0" width="80" height="40"/>
+					<imageExpression><![CDATA[$P{ruta_imagen}+"logosatcaj.jpg"]]></imageExpression>
+				</image>
+				<textField isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="85" y="7" width="370" height="18"/>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true" isUnderline="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["REQUERIMIENTO N° "+$F{nro_requerimiento}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="2" y="45" width="550" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.25" lineColor="#666666"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="700">
+			<rectangle radius="10">
+				<reportElement stretchType="RelativeToBandHeight" x="3" y="530" width="553" height="163"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="131" y="28" width="401" height="23"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion_completa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="131" y="54" width="261" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_programa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="17" y="6" width="115" height="12">
+					<printWhenExpression><![CDATA[$F{persona_id}.intValue()!=1? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="132" y="16" width="400" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{propietario}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="17" y="28" width="115" height="12"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Domicilio Fiscal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="391" y="54" width="39" height="12">
+					<printWhenExpression><![CDATA[$F{sector}.toString()!=""? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sector:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="17" y="16" width="115" height="12"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contribuyente]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="131" y="6" width="188" height="12">
+					<printWhenExpression><![CDATA[$F{persona_id}.intValue()!=1? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{persona_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="53" width="102" height="12">
+					<printWhenExpression><![CDATA[$F{sector}.toString()!=""? Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sector}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="17" y="54" width="115" height="12"/>
+				<textElement>
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Referencia  ]]></text>
+			</staticText>
+			<image>
+				<reportElement x="182" y="260" width="173" height="64"/>
+				<imageExpression><![CDATA[$P{ruta_imagen}+"firma_hugo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="157" y="309" width="189" height="50"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Hugo Cubas Cubas
+Jefe (e) Dpto. de Fiscalización
+SERVICIO DE ADMINISTACIÓN TRIBUTARIA CAJAMARCA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="27" y="84" width="500" height="38"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font fontName="Arial" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5" firstLineIndent="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Dentro de la <style isBold='true'>Facultad de Fiscalización y Verificación de las Obligaciones Tributarias</style>, regulada en los artículos 61º y 62º del TUO del Código Tributario, Decreto Supremo Nº 133-2013-EF, se le requiere, que presente la siguiente documentación respecto al vehículo identificado con placa de rodaje N° "+$F{placa} +" ,adquirido con fecha "+$F{fecha_propiedad}+" e inscrito en la partida electrónica N° "+$F{nro_partida}+" de la Superintendencia Nacional de los Registros Públicos - SUNARP"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="27" y="124" width="498" height="10"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font fontName="Arial" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5" firstLineIndent="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1. Declaración Jurada del Impuesto al Patrimonio Vehicular del ejercicio fiscal "+$F{anio_inspeccion}+"."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="27" y="133" width="500" height="20"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5" firstLineIndent="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA["2.     Copia del documento de identidad (D.N.I., R.U.C. o Carné de Extranjería).<br/> 3.       Copia de Vigencia de Poder con una antigüedad máxima de un (01) mes (En caso de ser Persona Jurídica)."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="27" y="222" width="500" height="30"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font fontName="Arial" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5" firstLineIndent="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA["En  caso  de incumplimiento  serán  de  aplicación  las  sanciones contempladas en los Artículos 82º, 172º, 176°, 177°,178º y 180º del TUO del Código Tributario y  modificatorias, según sea el caso."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="27" y="186" width="500" height="30"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font fontName="Arial" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5" firstLineIndent="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA["La exhibición y entrega de la documentación requerida dentro del proceso de fiscalización y verificación deberá ser presentada en el plazo de CINCO (05) DÍAS HÁBILES contadas a partir del día siguiente de notificado el presente documento en las oficinas del Departamento de Fiscalización y Censo Predial del SAT Cajamarca, ubicado en Av. Alameda de los Incas S/N - Complejo Qhapac Ñan.:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="27" y="151" width="500" height="35"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font fontName="Arial" size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5" firstLineIndent="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA["4.     Copia el documento que acredite la propiedad del vehículo (Tarjeta de Propiedad).<br/>5.        Copia del comprobante de pago de adquisición del vehículo (Factura, Boleta, Declaración para Importar y/o Contrato de Compra Venta según corresponda)."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="27" y="72" width="492" height="10"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Señor(a) contribuyente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="610" width="85" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Domicilio Cerrado]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="398" y="549" width="4" height="4"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="7" y="660" width="60" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Notificado por:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="398" y="663" width="56" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Observaciones:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="235" y="615" width="157" height="11" forecolor="#666666"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[FIRMA DE QUIEN RECEPCIONA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="565" width="54" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Recibido por:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="652" width="56" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Suministro N°  :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="619" width="138" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Relación con el Contribuyente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="576" width="114" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Se negó a identificarse.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="7" y="589" width="202" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="36" y="608" width="173" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="67" y="686" width="142" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="0" y="497" width="555" height="33"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5" firstLineIndent="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isItalic='true'>-	El presente requerimiento no constituye acto administrativo reclamable.<br/>-	Si Usted ha presentado su Declaración Jurada con posterioridad a la fecha de emisión de este documento, haga caso omiso.<br/>-	Si Usted ha transferido el vehículo sírvase presentar los documentos que acreditan la transferencia.</style>"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="122" y="629" width="87" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="7" y="677" width="32" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DNI N°:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="101" y="550" width="83" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Hora:  __:__ __.__]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="39" y="550" width="62" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[___/___/___]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="394" y="533" width="164" height="11"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Certificación de NEGATIVA de recepción:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="453" y="672" width="93" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="7" y="550" width="32" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="453" y="659" width="93" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="398" y="648" width="148" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="405" y="565" width="152" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Se negó a firmar el cargo de notificación.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="398" y="625" width="98" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Descripción del Predio:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="600" width="101" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[No hay Persona Capaz.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="59" y="574" width="150" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<rectangle>
+				<reportElement x="398" y="569" width="4" height="4"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="394" y="588" width="65" height="11"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CEDULÓN N°: ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="67" y="670" width="142" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="158" y="534" width="120" height="11"/>
+				<textElement markup="none">
+					<font size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CARGO DE NOTIFICACIÓN]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="398" y="603" width="4" height="4"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="7" y="598" width="32" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[DNI N°:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="398" y="581" width="4" height="4"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="398" y="614" width="4" height="4"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="250" y="681" width="110" height="11" forecolor="#666666"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[FIRMA DEL NOTIFICADOR]]></text>
+			</staticText>
+			<line>
+				<reportElement x="398" y="685" width="148" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="2" y="486" width="555" height="11"/>
+				<textElement textAlignment="Justified" markup="styled">
+					<font size="8"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.5" firstLineIndent="30"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<style isBold='true'><style isItalic='true'>Nota:</style></style><style isItalic='true'></style>"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="392" y="530" width="2" height="163"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="405" y="545" width="140" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Se negó a recibir el documento.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="238" y="679" width="148" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="239" y="614" width="148" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="450" y="596" width="96" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="398" y="556" width="152" height="11"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Recibió el documento pero:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="489" y="633" width="56" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="22" width="147" height="14" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[         www.satcajamarca.gob.pe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="159" y="18" width="176" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Av. Alameda de los Incas S/N – complejo Qhapac Ñan ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="27" width="81" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[C.C. El Quinde – 2° piso ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="159" y="9" width="201" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Horarios y Centros de Atención:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="146" y="9" width="1" height="35" forecolor="#000000"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="228" y="27" width="282" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[de lunes a viernes de 01:00 p.m.  a 08:00 p.m. – sábados de 09:00 a.m. a 12:00 m.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="18" width="187" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[de lunes a viernes de 8:00 a.m.  a 5 p.m.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="3" y="5" width="550" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineColor="#666666"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

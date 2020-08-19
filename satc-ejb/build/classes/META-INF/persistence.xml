@@ -1,0 +1,16 @@
+<!--
+Author: Claudio Chaucca
+Version:1.0
+Fecha : 11/12/2011
+Obtiene la coneccion a base de datos desde el Data Source manejado por el Servidor de aplicaciones
+en este framework se obtiene desde mssql-ds.xml ubicado en la carperta C:\jboss-5.1.0.GA\server\default\deploy 
+-->
+<persistence version="1.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd">
+  <persistence-unit name="satcconn" transaction-type="JTA">
+    <jta-data-source>java:/SATCDS</jta-data-source>
+    <properties>   
+	    <property name="hibernate.show_sql" value="false"/>
+	    <property name="hibernate.dialect" value="org.hibernate.dialect.SQLServer2008Dialect"/>
+    </properties>
+  </persistence-unit>
+</persistence>

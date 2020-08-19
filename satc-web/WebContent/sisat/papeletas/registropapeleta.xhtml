@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+
+	<style>
+#botonRojo input[type=button] {
+	border-color: #C0C0C0;
+	font-size: 11px;
+	font-family: Arial, Verdana, sans-serif;
+	color: #FFF;
+	background-color: #900000;
+	background-image:
+		url(#{facesContext.externalContext.requestContextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.images.ButtonBackgroundImage/DATB/eAFjYGDgjoi4z8AwgQkAClgCLQ__.jsf);
+}
+</style>
+
+	<h:form id="formRegistroPapeleta">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+		<script type="text/javascript">
+		  function autofocus(containerId) {
+		       var element = jQuery(":input:visible:enabled:first", '#'+containerId);
+		       if (element != null) {
+		         	element.focus().select();
+		       }
+		  }
+		</script>
+		<table align="center" border="0" cellpadding="1" cellspacing="1"
+			width="100%">
+			<tr>
+				<td width="50%"><a4j:region immediate="true">
+						<rich:panel style="width:100%; height:185;" id="panelPapeletaId">
+							<f:facet name="header">
+								<h:outputText style="font-weight:bold"
+									value="SOBRE LA INFRACCION" />
+							</f:facet>
+							<table width="100%" border="0">
+								<tr>
+									<td colspan="3"><a4j:region>
+											<table width="100%" border="0">
+												<tr>
+													<td align="left" width="120px"><h:outputLabel
+															value="#{msg['pa.nropapeleta']} :" /> <span
+														style="color: red;">*</span></td>
+													<td width="100px"><h:inputHidden
+															value="#{registroPapeletasManaged.papeletaId}" /> 
+															<h:inputText
+																id="idNroPapeleta"
+																value="#{registroPapeletasManaged.nroPapeleta}" size="10"
+																title="No olvide colocar el CERO ADELANTE si es papeleta"
+																maxlength="9"
+																style="width:100%; text-transform:uppercase;"
+																required="true"
+																requiredMessage="Ingrese el número de la papeleta"
+																styleClass="papeleta" converter="#{upperCaseConverter}">															
+																<a4j:support ajaxSingle="true" event="onblur"
+																oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+																reRender="panelImagePapeleta"
+																action="#{registroPapeletasManaged.validarUltimosDigitosPapeletas}" />
+
+														</h:inputText> 
+														<rich:jQuery id="mask12" selector=".papeleta"
+															query="mask('*99999-99')" timing="onload" />
+														</td>
+
+													<td align="right"><h:outputLabel
+															value="#{registroPapeletasManaged.estadoPapeletaDesc}"
+															style="font-size:14px; font-family:arial;font-weight: bold;" />
+													</td>
+												</tr>
+											</table>
+										</a4j:region></td>
+									<td><h:outputLabel value="(Numero Papeleta Original) :" /><br />
+										<h:outputLabel value="#{registroPapeletasManaged.nroPapeleta}"
+											style="font-weight: bold;color:#FF2A00;" /></td>
+								</tr>
+								<tr>
+									<td align="left" width="120px"><h:outputLabel
+											value="#{msg['gn.fecha']} :" /> <span style="color: red;">*</span>
+									</td>
+									<td align="left" width="120px"><rich:calendar
+											valueChangeListener="#{registroPapeletasManaged.cargaInfracciones}"
+											locale="en/US" datePattern="dd/MM/yyyy"
+											enableManualInput="true" inputClass="maskDate"
+											id="id_fechainfraccion" required="true"
+											requiredMessage="Indique la fecha de infracción"
+											inputStyle="width:60px"
+											value="#{registroPapeletasManaged.fechaInfraccion}"
+											immediate="true">
+											<a4j:support reRender="idInfInfracSel" event="onchanged"
+												immediate="true" ajaxSingle="true"></a4j:support>
+										</rich:calendar> <rich:jQuery id="maskedo4" selector=".maskDate"
+											query="mask('99/99/9999')" timing="onload" /></td>
+									<td align="left" width="80px"></td>
+									<td align="left" width="80px"></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td align="left" width="120px"><h:outputLabel
+											value="#{msg['pa.infraccion']} :" /> <span
+										style="color: red;">*</span></td>
+
+									<td width="170px"><rich:comboBox width="150px"
+											id="idInfInfracSel" defaultLabel="Seleccione"
+											enableManualInput="true" required="true"
+											requiredMessage="Seleccione infraccion"
+											onkeypress="return showListCbo(this,event);"
+											onblur="validaInputCbo(this)"
+											value="#{registroPapeletasManaged.infraccion}"
+											immediate="true">
+											<f:selectItems id="idlstInfraccion"
+												value="#{registroPapeletasManaged.lstInfraccion}" />
+										</rich:comboBox> <!-- 
+									<a4j:support id="idInfraccionMonto" action="#{registroPapeletasManaged.selectInfraccion}" event="onchange" reRender = "idMontoSancion" immediate="true" />
+									 --></td>
+									<td align="left" width="120px">
+										<!-- 
+										<h:outputLabel value="Monto Infracción :" />
+									 -->
+									</td>
+									<td>
+										<!-- 
+										<h:inputText id="idMontoSancion" value="#{registroPapeletasManaged.montoSancion}" style="width:150px" disabled="true" >
+											<f:convertNumber  pattern="#0.00" />
+										</h:inputText>
+									 -->
+									</td>
+								</tr>
+
+								<tr>
+
+									<td align="left" width="100px"><h:outputLabel
+											value="#{msg['pa.nroplaca']} :" /> <span style="color: red;">*</span>
+									</td>
+									<td width="81px"><h:inputText
+											value="#{registroPapeletasManaged.nroPlaca}"
+											partialSubmit="true" id="txtNroPlaca" size="10" maxlength="8"
+											style="width:81px; text-transform:uppercase;" required="true"
+											requiredMessage="Ingrese el Nro Placa"
+											onkeyup="validaPlacaMotor(this)" styleClass="placa"
+											converter="#{upperCaseConverter}" /> <rich:jQuery
+											id="maskPlaca" selector=".placa"
+											query="mask('*****?***',{placeholder:' '})" timing="onload" /></td>
+									<td align="left" width="100px"><h:outputLabel
+											value="Nro de Placa Anterior :" /></td>
+									<td width="81px"><h:inputText
+											value="#{registroPapeletasManaged.placaAnterior}"
+											partialSubmit="true" id="txtNroPlacaAntigua" size="10"
+											maxlength="9" style="width:81px"
+											onkeyup="validaPlacaMotor(this)"
+											converter="#{uppeCaseConverter}" /></td>
+								</tr>
+								<tr>
+									<td align="left" width="100px"><h:outputLabel
+											value="#{msg['rv.tarjetapropiedad']} :" /></td>
+									<td><h:inputText id="txtTarjetaPropiedad"
+											style="width:150px;text-transform:uppercase;"
+											value="#{registroPapeletasManaged.numeroTarjetaPropiedad}"
+											size="10" maxlength="10" styleClass="tarjeta"
+											converter="#{uppeCaseConverter}" /> <rich:jQuery
+											id="maskTarj" selector=".tarjeta"
+											query="mask('********?*',{placeholder:' '})" timing="onload" /></td>
+								</tr>
+
+								<tr>
+									<td align="left"><h:outputLabel value="Tipo de servicio :" />
+										<span style="color: red;">*</span></td>
+									<td><rich:comboBox width="120px"
+											defaultLabel="Selecccione..." enableManualInput="false"
+											selectFirstOnUpdate="true" directInputSuggestions="true"
+											required="true"
+											requiredMessage="#{msg['mp.errortiposervicio']}"
+											binding="#{registroPapeletasManaged.cmbHtmlTipoServicio}"
+											onblur="validaInputCbo(this)" id="id_tiposervicio"
+											immediate="true" value="#{registroPapeletasManaged.flag_pp}"
+											valueChangeListener="#{registroPapeletasManaged.loadSeleccion}">
+											<f:selectItem id="id1" itemValue="Publico" />
+											<f:selectItem id="id2" itemValue="Privado" />
+											<a4j:support id="idEventRs" event="onchange"
+												BypassUpdates="false" ajaxSingle="true" />
+										</rich:comboBox></td>
+								</tr>
+
+
+
+								<tr>
+									<td colspan="4">
+										<table width="100%" border="0">
+											<tr>
+												<td colspan="6"><rich:separator height="1px"></rich:separator>
+												</td>
+											</tr>
+											<tr>
+												<td><h:outputLabel value="Incidencia :" /></td>
+												<td><h:inputText id="idtxtReincidencia"
+														value="#{registroPapeletasManaged.incidencia.reincidente}"
+														style="width:100%" disabled="true">
+													</h:inputText></td>
+												<td><h:outputLabel value="Puntos :" /></td>
+
+												<td><h:inputText id="idTxtPuntos"
+														value="#{registroPapeletasManaged.incidencia.puntos}"
+														style="width:100%" disabled="true">
+														<f:convertNumber pattern="#0.00" />
+													</h:inputText></td>
+												<td><h:outputLabel value="#{msg['pa.montosancion']} :" />
+												</td>
+												<td><h:inputText id="idTxtMontoMulta"
+														value="#{registroPapeletasManaged.incidencia.montoMulta}"
+														style="width:100%" disabled="true">
+														<f:convertNumber pattern="#0.00" />
+													</h:inputText></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</rich:panel>
+					</a4j:region></td>
+				<td width="50%" rowspan="5">
+					<table width="100%" border="0" cellpadding="1" cellspacing="1">
+						<tr>
+							<td><a4j:outputPanel id="panelImagePapeleta">
+									
+									<h:graphicImage										
+										value="#{registroPapeletasManaged.imagePapeleta}"
+										height="740px" width="680px" style="border:0" />
+								</a4j:outputPanel></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td width="50%"><rich:panel style="width:100%; height: 150px;"
+						id="id_panelDatosInfractor">
+						<f:facet name="header">
+							<h:outputText style="font-weight:bold"
+								value="DATOS DEL INFRACTOR (*)" />
+						</f:facet>
+						<table width="100%" border="0">
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['gn.codigoPersona']} :" /></td>
+								<td><h:inputText id="txtInfractorId"
+										value="#{registroPapeletasManaged.datosInfractor.personaId}"
+										style="width:100%" disabled="true" /></td>
+								<td colspan="2" align="right"><a4j:commandButton
+										id="cmdBuscarInfractor" value="Buscar"
+										immediate="true"
+										action="#{registroPapeletasManaged.setPersonaPapeleta}"
+										oncomplete="#{rich:component('id_panelBuscarPersonaPapeletas')}.show()">
+										<f:param name="destinoRefresh" value="id_panelDatosInfractor" />
+										<f:param name="personaPapeleta" value="I" />
+									</a4j:commandButton> <a4j:commandButton id="cmdActualizarInfractor"
+										value="Actualizar" immediate="true"
+										action="#{registroPapeletasManaged.actualizarPersona}"
+										oncomplete="#{rich:component('modalActualizaPersona')}.show()"
+										reRender="modalActualizaPersona"
+										disabled="#{!(registroPapeletasManaged.datosInfractor.personaId>0) or registroPapeletasManaged.datosInfractor.personaId==137619 or registroPapeletasManaged.datosInfractor.personaId==1823}">
+										<f:param name="actualizaPersona" value="S" />
+										<f:param name="personaPapeleta" value="I" />
+									</a4j:commandButton> <a4j:commandButton id="cmdNuevoInfractor" value="Nuevo"
+										immediate="true"
+										action="#{registroPapeletasManaged.registrarPersona}"
+										oncomplete="#{rich:component('modalActualizaPersona')}.show()"
+										reRender="modalActualizaPersona">
+										<f:param name="actualizaPersona" value="N" />
+										<f:param name="personaPapeleta" value="I" />
+									</a4j:commandButton></td>
+							</tr>
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['mp.apellidosnombres']} :" /></td>
+								<td colspan="3"><h:inputText
+										id="txtApellidosNombresInfractor"
+										value="#{registroPapeletasManaged.datosInfractor.apellidosNombres}"
+										style="width:100%" disabled="true" required="true"
+										requiredMessage="Ingrese los apellidos y nombres del infractor" />
+								</td>
+								
+
+							</tr>
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['gn.tipodoc']} :" /></td>
+								<td><h:inputText id="txtTipoDocIdentidadInfractor"
+										value="#{registroPapeletasManaged.datosInfractor.tipoDocIdentidad}"
+										style="width:100%" disabled="true" /></td>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['gn.nrodoc']} :" /></td>
+								<td><h:inputText id="txtNroDocuIdentidadInfractor"
+										value="#{registroPapeletasManaged.datosInfractor.nroDocuIdentidad}"
+										style="width:100%" disabled="true" /></td>
+							</tr>
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['rp.direccion']} :" /></td>
+								<td colspan="3"><h:inputText id="txtDireccionInfractor"
+										value="#{registroPapeletasManaged.datosInfractor.direccionCompleta}"
+										style="width:100%" disabled="true" required="true"
+										requiredMessage="Ingrese la direccion del infractor" /></td>
+							</tr>
+							<tr>
+								<td align="left" width="100px"></td>
+								<td colspan="2"><h:selectBooleanCheckbox
+										style="align:right;"
+										value="#{registroPapeletasManaged.esPropietario}"
+										immediate="true"
+										valueChangeListener="#{registroPapeletasManaged.checkEsPropietario}"
+										reRender="id_panelDatosPropietario">
+										<a4j:support event="onchange"
+											reRender="id_panelDatosPropietario" />
+									</h:selectBooleanCheckbox> <h:outputLabel value="#{msg['pa.espropietario']} :" /></td>
+								<td></td>
+							</tr>
+						</table>
+					</rich:panel></td>
+			</tr>
+			<tr>
+				<td><rich:panel style="width:100%; height: 160px;"
+						id="id_panelDatosPropietario">
+						<f:facet name="header">
+							<h:outputText style="font-weight:bold"
+								value="DATOS DEL PROPIETARIO" />
+						</f:facet>
+						<table width="100%" border="0">
+							<tr>
+								<td align="left" width="120px"><a4j:commandButton
+										id="cmdLimpiarPropietario" value="Limpiar" immediate="true"
+										action="#{registroPapeletasManaged.limpiarPropietario}"
+										reRender="id_panelDatosPropietario"
+										rendered="#{!registroPapeletasManaged.esPropietario}">
+									</a4j:commandButton></td>
+								<td colspan="3"></td>
+							</tr>
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['gn.codigoPersona']} :" /></td>
+								<td><h:inputText id="txtPropietarioId"
+										value="#{registroPapeletasManaged.datosPropietario.personaId}"
+										style="width:100%" disabled="true" /></td>
+								<td colspan="2" align="right"><a4j:commandButton
+										id="cmdBuscarPropietario" value="#{msg['gn.buscar']}"
+										immediate="true"
+										action="#{registroPapeletasManaged.setPersonaPapeleta}"
+										oncomplete="#{rich:component('id_panelBuscarPersonaPapeletas')}.show()"
+										reRender="id_panelDatosPropietario"
+										rendered="#{!registroPapeletasManaged.esPropietario}">
+										<f:param name="destinoRefresh"
+											value="id_panelDatosPropietario" />
+										<f:param name="personaPapeleta" value="P" />
+									</a4j:commandButton> <a4j:commandButton id="cmdActualizarPropietario"
+										value="Actualizar" immediate="true"
+										action="#{registroPapeletasManaged.actualizarPersona}"
+										oncomplete="#{rich:component('modalActualizaPersona')}.show()"
+										reRender="modalActualizaPersona"
+										rendered="#{!registroPapeletasManaged.esPropietario}"
+										disabled="#{ !(registroPapeletasManaged.datosPropietario.personaId>0) or registroPapeletasManaged.datosPropietario.personaId==137619 or registroPapeletasManaged.datosPropietario.personaId==1823}">
+										<f:param name="actualizaPersona" value="S" />
+										<f:param name="personaPapeleta" value="P" />
+									</a4j:commandButton> <a4j:commandButton id="cmdNuevoPropietario" value="Nuevo"
+										immediate="true"
+										action="#{registroPapeletasManaged.registrarPersona}"
+										oncomplete="#{rich:component('modalActualizaPersona')}.show()"
+										reRender="modalActualizaPersona"
+										rendered="#{!registroPapeletasManaged.esPropietario}">
+										<f:param name="actualizaPersona" value="N" />
+										<f:param name="personaPapeleta" value="P" />
+									</a4j:commandButton></td>
+							</tr>
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										id="labelApeNonProp"
+										rendered="#{registroPapeletasManaged.datosPropietario.tipodocumentoIdentidadId!=2}"
+										value="#{msg['mp.apellidosnombres']} :" /> <h:outputLabel
+										id="labelRazSocProp"
+										rendered="#{registroPapeletasManaged.datosPropietario.tipodocumentoIdentidadId==2}"
+										value="Razon Social :" /></td>
+								<td colspan="3"><h:inputHidden id="txtPersonaIdPropietario"
+										value="#{registroPapeletasManaged.datosPropietario.personaId}"
+										style="width:100%" disabled="true" /> <h:inputText
+										id="txtApellidosNombresPropietario"
+										rendered="#{registroPapeletasManaged.datosPropietario.tipodocumentoIdentidadId!=2}"
+										value="#{registroPapeletasManaged.datosPropietario.apellidosNombres}"
+										style="width:100%" disabled="true" /> <h:inputText
+										id="txtRazonSocialPropietario"
+										rendered="#{registroPapeletasManaged.datosPropietario.tipodocumentoIdentidadId==2}"
+										value="#{registroPapeletasManaged.datosPropietario.razonSocial}"
+										style="width:100%" disabled="true" /></td>
+							</tr>
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['gn.tipodoc']} :" /></td>
+								<td><h:inputText id="txtTipoDocIdentidadPropietario"
+										value="#{registroPapeletasManaged.datosPropietario.tipoDocIdentidad}"
+										style="width:100%" disabled="true" /></td>
+
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['gn.nrodoc']} :" /></td>
+								<td><h:inputText id="txtNroDocuIdentidadPropietario"
+										value="#{registroPapeletasManaged.datosPropietario.nroDocuIdentidad}"
+										style="width:100%" disabled="true" /></td>
+							</tr>
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['rp.direccion']} :" /></td>
+								<td colspan="3"><h:inputText id="txtDireccionPropietario"
+										value="#{registroPapeletasManaged.datosPropietario.direccionCompleta}"
+										style="width:100%" disabled="true" /></td>
+							</tr>
+						</table>
+					</rich:panel></td>
+			</tr>
+			<tr>
+				<td width="50%"><a4j:outputPanel id="pnldatoslicencia">
+						<rich:panel style="width:100%; height: 150px;">
+							<f:facet name="header">
+								<h:outputText style="font-weight:bold" value="OBSERVACIONES:" />
+							</f:facet>
+							<table width="100%" border="0">
+
+								<tr>
+									<td align="left" width="20%"><h:outputLabel
+											value="Observacion :" style="width:160px;">
+										</h:outputLabel></td>
+									<td width="100%"><h:inputTextarea id="txtObservacion"
+											value="#{registroPapeletasManaged.glosa}" size="10"
+											styleClass="textUpperCase" converter="uppeCaseConverter"
+											style="width:100%" /></td>
+								</tr>
+								<tr>
+									<td align="left" width="20%"><h:outputLabel
+											value="¿Paga con Dj?:" /></td>
+									<td width="20%"><h:selectBooleanCheckbox
+											style="align:right;"
+											value="#{registroPapeletasManaged.conDj}" immediate="true"
+											valueChangeListener="#{registroPapeletasManaged.checkConDj}"
+											reRender="id_dj">
+											<a4j:support event="onchange" reRender="id_dj" />
+										</h:selectBooleanCheckbox></td>
+								</tr>
+								<tr>
+									<td align="left" width="20%"><h:outputLabel
+											value="Condición del declarante: " /></td>
+									<td width="100%"><h:selectBooleanCheckbox
+											style="align:right;"
+											value="#{registroPapeletasManaged.declarante}"
+											immediate="true"
+											valueChangeListener="#{registroPapeletasManaged.checkDeclarante}">
+											<a4j:support event="onchange" />
+										</h:selectBooleanCheckbox> <h:outputLabel
+											value="(Check: Propietario/ No Check: Conductor)" /></td>
+								</tr>
+								<!--  
+								<tr>
+									<td align="left" width="120px"><h:outputLabel
+											value="#{msg['pa.nrolicencia']} :">
+											<span style="color: red;">*</span>
+										</h:outputLabel></td>
+
+
+									<td width="170px"><h:inputText id="txtNroLicencia"
+											size="10" maxlength="10" styleClass="textUpperCase" converter="uppeCaseConverter"
+											binding="#{registroPapeletasManaged.txtNumeroLicencia}"
+											style="width:150px"
+											requiredMessage="Ingrese el número de licencia del infractor"
+											disabled="#{registroPapeletasManaged.sinLicencia}"
+											immediate="true" /></td>
+
+									<td colspan="2"><h:selectBooleanCheckbox
+											style="align:right;text-align:right;"
+											value="#{registroPapeletasManaged.sinLicencia}"
+											immediate="true"
+											valueChangeListener="#{registroPapeletasManaged.changeOptionSinLicencia}"
+											reRender="pnldatoslicencia">
+											<a4j:support event="onchange" reRender="pnldatoslicencia"></a4j:support>
+										</h:selectBooleanCheckbox> <h:outputLabel value="#{msg['pa.noposeelicencia']}" /></td>
+								</tr>
+								<tr>
+									<td align="left" width="120px"><h:outputLabel
+											value="#{msg['pa.clasecategoria']} :">
+										</h:outputLabel></td>
+									<td><rich:comboBox width="150px" defaultLabel="Seleccione"
+											id="cmbclasevehicular" selectFirstOnUpdate="true"
+											enableManualInput="true"
+											onkeypress="return showListCbo(this,event);"
+											onblur="validaInputCbo(this)"
+											binding="#{registroPapeletasManaged.cmbClase}"
+											disabled="#{registroPapeletasManaged.sinLicencia}"
+											immediate="true">
+											<f:selectItems id="idInflstClaseLicencia"
+												value="#{registroPapeletasManaged.lstClaseLicencia}" />
+										</rich:comboBox></td>
+
+									<td colspan="2"></td>
+								</tr>
+						-->
+
+							</table>
+						</rich:panel>
+					</a4j:outputPanel></td>
+			</tr>
+
+			<tr>
+				<td width="50%" align="center"><a4j:outputPanel id="pnlbotones">
+
+						<rich:panel id="pnlTabBtns"
+							style="width:100%; height: 180px; background-color: transparent;border:0">
+							<table width="10%" border="0" cellpadding="0" cellspacing="2"
+								align="center">
+								<tr id="fila">
+									<!-- 									<a4j:outputPanel -->
+									<!-- 										rendered="#{sessionManaged.permisoModulo['3']!=null}"> -->
+									<!-- 										<td id="botonRojo"><a4j:commandButton id="bt" -->
+									<!-- 												value="Cargar Costas/Gastos" style="width:120px;" -->
+									<!-- 												action="#{registroPapeletasManaged.redirectCargaCostas}" -->
+									<!-- 												oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };" -->
+									<!-- 												status="ajaxStatus" reRender="panelinclude" -->
+									<!-- 												styleClass="botonRojo"> -->
+									<!-- 											</a4j:commandButton></td> -->
+									<!-- 									</a4j:outputPanel> -->
+									<td><a4j:commandButton value="Guardar"
+											style="width:100px;"
+											action="#{registroPapeletasManaged.guardar}"
+											disabled="#{registroPapeletasManaged.disableVehiculoRematado}"
+											oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+											id="id_guardarcommand"
+											reRender="panelPapeletaId,txtInfractorId,txtPropietarioId,cmdActualizarInfractor,cmdActualizarPropietario,pnlGuardar"
+											status="ajaxStatus" /></td>
+									<td><h:panelGrid id="pnlGuardar" columns="1">
+											<a4j:commandButton value="Generar DJ" style="width:100px;"
+												id="id_dj" action="#{registroPapeletasManaged.previewDJ}"
+												oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS5\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+												rendered="#{registroPapeletasManaged.conDj == true}">
+											</a4j:commandButton>
+										</h:panelGrid></td>
+
+									<td><a4j:commandButton value="Salir" style="width:100px;"
+											action="#{registroPapeletasManaged.salir}" immediate="true"
+											reRender="panelinclude">
+										</a4j:commandButton></td>
+
+								</tr>
+							</table>
+						</rich:panel>
+					</a4j:outputPanel></td>
+			</tr>
+		</table>
+		<h:commandLink id="linkIdInsolutoxls" styleClass="pruebaSOATXLS5"
+			value="sasas" style="display: none;"
+			action="#{registroPapeletasManaged.exportarDj}" />
+	</h:form>
+
+	<rich:modalPanel id="id_panelBuscarPersonaPapeletas" autosized="true"
+		onshow="autofocus('frmBuscarPersonaPapeletas');focusInputCodigoPersona()"
+		width="800" height="500">
+		<f:facet name="header">#{msg['pa.buscarpersonas']}</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddPerson" styleClass="hidelink" />
+				<rich:componentControl for="id_panelBuscarPersonaPapeletas"
+					attachTo="hideIconAddPerson" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/papeletas/buscarpersonapapeletas.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel onshow="autofocus('idformregistropersona')"
+		id="modalActualizaPersona" autosized="true" width="600" height="250">
+		<f:facet name="header">#{msg['rv.registrarpersona']}</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideIconRP"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalActualizaPersona"
+					attachTo="hideIconRP" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<a4j:include viewId="/sisat/papeletas/actualizapersona.xhtml" />
+	</rich:modalPanel>
+
+</ui:composition>

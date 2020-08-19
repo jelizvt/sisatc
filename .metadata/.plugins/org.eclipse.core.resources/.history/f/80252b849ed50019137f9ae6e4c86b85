@@ -1,0 +1,1238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+
+
+
+	<h:form id="formRegistroPersona">
+
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<style type="text/css">
+.extdt-empty-cell {
+	width: 0;
+}
+
+th.extdt-empty-cell {
+	width: 0;
+}
+/* Disables resizing */
+.extdt-hsep {
+	display: none;
+}
+</style>
+
+		<script type="text/javascript">
+	 function validaNroDocumento(nroDocumento){
+		 if(jQuery.trim(nroDocumento).length==8){
+				 return true;
+		 }
+		 return false;
+	 }
+	</script>
+
+
+		<table align="center" border="0" width="100%">
+			<tr>
+				<rich:panel style="width:100%;">
+
+
+					<h:outputText value="Nuevo registro de persona : " />
+					<h:outputText value="#{registroPersonaManaged.mpPersona.personaId}" />
+
+					<h:inputHidden
+						value="#{registroPersonaManaged.mpPersona.personaId}" />
+
+
+					<h:outputText value="..........." style="color:white" />
+
+
+					<h:outputText value="Apellidos y Nombres : " />
+					<h:outputText
+						value="#{registroPersonaManaged.mpPersona.apellidosNombres}" />
+
+
+				</rich:panel>
+
+			</tr>
+		</table>
+
+
+
+
+		<a4j:outputPanel id="id_panelprincipalregistropersona">
+			<table align="center" border="0" cellpadding="0" cellspacing="0"
+				width="100%">
+				<tr>
+					<td>
+						<table align="center" width="100%">
+
+							<tr>
+								<td>
+									<table align="center" border="0" width="100%">
+										<tr>
+											<td valign="top" align="left"><rich:panel
+													style="width:100%;  height: 60px;"
+													id="id_paneldatoscontribuyente">
+													<f:facet name="header">Datos del Contribuyente</f:facet>
+
+													<table border="0" width="100%">
+														<tr>
+
+															<td align="left" width="130px"><h:outputText
+																	value="Tipo de Contrib." /> <span style="color: red;">*</span>
+															</td>
+
+															<td align="left" width="150px"><rich:comboBox
+																	width="150px" required="true"
+																	requiredMessage="#{msg['mp.errortipocontribuyente']}"
+																	defaultLabel="Seleccione" onblur="validaInputCbo(this)"
+																	onkeypress="return showListCbo(this,event)"
+																	value="#{registroPersonaManaged.cmbValuetipopersona}"
+																	disabled="#{registroPersonaManaged.tipoAccion==4}"
+																	id="id_tipopersona"
+																	binding="#{registroPersonaManaged.cmbtipopersona}"
+																	valueChangeListener="#{registroPersonaManaged.loadTipoPersonaById}">
+																	<f:selectItems id="id_lsttipopersona"
+																		value="#{registroPersonaManaged.lsttipopersona}" />
+																	<a4j:support id="id_supportlsttipoper"
+																		reRender="id_paneldatoscontribuyente,id_datos_situacionEmpresarial,id_situacionEmpresarial,id_datoscontribuyente,id_subtippersona,id_apepaternotxt,id_busquedareniec,id_apellidopaterno,id_datos_condicion_contribuyente,id_condicion_contribuyente,id_registrorelacionado"
+																		event="onchange" BypassUpdates="false"
+																		ajaxSingle="true" />
+																</rich:comboBox></td>
+															<td align="left" width="130px"><h:panelGroup
+																	rendered="#{registroPersonaManaged.isSubtipoPersona}">
+																	<h:outputText value="Sub.Tipo de Contrib." />
+																	<span style="color: red;">*</span>
+																</h:panelGroup></td>
+
+															<td align="left" width="150px"><h:panelGroup
+																	rendered="#{registroPersonaManaged.isSubtipoPersona}">
+																	<rich:comboBox width="150px" defaultLabel="Seleccione"
+																		onkeypress="return showListCbo(this,event);"
+																		onblur="validaInputCbo(this)" required="true"
+																		requiredMessage="#{msg['mp.errorsubtipocontribuyente']}"
+																		value="#{registroPersonaManaged.cmbValuesubtipopersona}"
+																		rendered="#{registroPersonaManaged.isSubtipoPersona}"
+																		disabled="#{registroPersonaManaged.tipoAccion==4}"
+																		id="id_subtippersona"
+																		binding="#{registroPersonaManaged.cmbsubtipopersona}"
+																		valueChangeListener="#{registroPersonaManaged.loadSubtipoPersonaById}">
+																		<f:selectItems id="id_lstsubtipopersona"
+																			value="#{registroPersonaManaged.lstsubtipopersona}" />
+																		<a4j:support id="id_supportlstsubtipopersona"
+																			reRender="id_tipodocumento,id_datos_condicion_contribuyente,id_condicion_contribuyente,id_datos_situacionEmpresarial,id_datoscontribuyente,id_registrorelacionado"
+																			event="onchange" BypassUpdates="false"
+																			ajaxSingle="true" />
+																	</rich:comboBox>
+																</h:panelGroup></td>
+
+														</tr>
+													</table>
+												</rich:panel> <rich:panel style="width:100%;  height: 260px;"
+													id="id_datoscontribuyente">
+													<f:facet name="header">
+													</f:facet>
+													<table border="0" width="100%">
+
+														<tr>
+															<td align="left" width="130px"><h:panelGroup
+																	rendered="#{registroPersonaManaged.isTipoDocumentoIdentidad}">
+																	<h:outputText value="Tipo de Doc. Iden." />
+																	<span style="color: red;">*</span>
+																</h:panelGroup></td>
+
+															<td><rich:comboBox width="150px"
+																	defaultLabel="Selecccione"
+																	onkeypress="return showListCbo(this,event);"
+																	onblur="validaInputCbo(this)" required="true"
+																	requiredMessage="#{msg['mp.errortipodocumento']}"
+																	value="#{registroPersonaManaged.cmbValuetipodocumentoidentidad}"
+																	rendered="#{registroPersonaManaged.isTipoDocumentoIdentidad}"
+																	
+																	
+																	id="id_tipodocumento"
+																	binding="#{registroPersonaManaged.cmbtipodocumentoidentidad}"
+																	valueChangeListener="#{registroPersonaManaged.loadTipoTipoDocumentoIdentidadById}"
+																	disabled="#{registroPersonaManaged.tipoAccion==4}">
+																	<f:selectItems id="id_lsttipodocumento"
+																		value="#{registroPersonaManaged.lsttipodocumentoidentidad}" />
+																	<a4j:support id="id_supportlsttipodocumento"
+																		reRender="id_busquedareniec,#{rich:clientId('id_documento')},#{rich:clientId('id_subtipdocideadi')},#{rich:clientId('inputnrodocideadi')},#{rich:clientId('textnrodocideadi')}"
+																		event="onchange" BypassUpdates="false"
+																		ajaxSingle="true" />
+																</rich:comboBox></td>
+															<td align="left" width="130px"><h:panelGroup
+																	rendered="#{registroPersonaManaged.isTipoDocumentoIdentidad}">
+																	<h:outputText value="Nro Doc. Ident. :" />
+																	<span style="color: red;">*</span>
+																</h:panelGroup></td>
+															<td align="left" width="150px"><h:inputText
+																	id="id_documento" maxlength="12" required="true"
+																	requiredMessage="#{msg['mp.errornrodocumento']}"
+																	value="#{registroPersonaManaged.mpPersona.nroDocuIdentidad}"
+																	disabled="#{registroPersonaManaged.tipoAccion==4}">
+																</h:inputText></td>
+															<td width="40" valign="top"><a4j:commandLink
+																	id="id_busquedareniec" 
+																	status="ajaxStatus"
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}"
+																	action="#{registroPersonaManaged.consultaReniec()}"
+																	reRender="segundoNombre,primerNombre,apellidoMaterno,id_apellidopaterno,id_consulta_reniec"
+																	oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');return false;return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+
+																	<h:graphicImage width="40" height="30" value="/images/modal/reniec.jpg"
+																		style="border:0" />
+																		
+																	<rich:toolTip for="id_busquedareniec" value="CONSULTA RENIEC EN LÍNEA" />
+
+
+																</a4j:commandLink></td>
+
+
+
+														</tr>
+
+
+
+														<tr>
+															<td align="left" width="130px"><h:outputText
+																	value="Fecha de Const. o Nac." /></td>
+															<td align="left" width="150px"><rich:calendar
+																	locale="en/US"
+																	converterMessage="Ingrese Fecha de Constitución o Nacimiento. Valido  "
+																	datePattern="dd/MM/yyyy" enableManualInput="true"
+																	inputClass="maskDate" inputStyle="width:80px"
+																	id="id_fechadeclaracion"
+																	value="#{registroPersonaManaged.fechaNacoConst}">
+																</rich:calendar> <rich:jQuery id="maskedo3" selector=".maskDate"
+																	query="mask('99/99/9999')" timing="onload" /></td>
+														</tr>
+
+														<tr>
+															<td align="left" width="130px"><h:panelGroup
+																	id="id_apepaternotxt"
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}">
+																	<h:outputText value="Apellido Paterno" />
+																	<span style="color: red;">*</span>
+																</h:panelGroup></td>
+															<td align="left" width="150px"><h:inputText
+																	id="id_apellidopaterno"
+																	binding="#{registroPersonaManaged.txtApePaterno}"
+																	maxlength="50"
+																	requiredMessage="#{msg['mp.apellidopaternosiningresar']}"
+																	value="#{registroPersonaManaged.mpPersona.apePaterno}"
+																	styleClass="textUpperCase"
+																	onkeypress="return validarCarateres(event)"
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}"
+																	disabled="#{registroPersonaManaged.tipoAccion==4}">
+																	<f:converter converterId="uppeCaseConverter" />
+																</h:inputText></td>
+															<td align="left" width="130px"><h:panelGroup
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}">
+																	<h:outputText value="Apellido Materno:" />
+																	<span style="color: red;">*</span>
+																</h:panelGroup></td>
+															<td align="left" width="150px"><h:inputText
+																	id="apellidoMaterno" maxlength="50"
+																	binding="#{registroPersonaManaged.txtApeMaterno}"
+																	requiredMessage="#{msg['mp.apellidomaternosiningresar']}"
+																	value="#{registroPersonaManaged.mpPersona.apeMaterno}"
+																	styleClass="textUpperCase"
+																	onkeypress="return validarCarateres(event)"
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}"
+																	disabled="#{registroPersonaManaged.tipoAccion==4}">
+																	<f:converter converterId="uppeCaseConverter" />
+																</h:inputText></td>
+
+														</tr>
+														<tr>
+															<td align="left" width="130px"><h:panelGroup
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}">
+																	<h:outputText value="Primer Nombre" />
+																	<span style="color: red;">*</span>
+																</h:panelGroup></td>
+															<td align="left" width="150px"><h:inputText
+																	id="primerNombre"
+																	binding="#{registroPersonaManaged.txtPrimerNombre}"
+																	maxlength="50"
+																	requiredMessage="#{msg['mp.primernombresiningresar']}"
+																	value="#{registroPersonaManaged.mpPersona.primerNombre}"
+																	styleClass="textUpperCase"
+																	onkeypress="return validarCarateres(event)"
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}"
+																	disabled="#{registroPersonaManaged.tipoAccion==4}">
+																	<f:converter converterId="uppeCaseConverter" />
+																</h:inputText></td>
+															<td align="left" width="130px"><h:outputText
+																	value="Segundo Nombre  :"
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}" />
+															</td>
+															<td align="left" width="150px"><h:inputText
+																	value="#{registroPersonaManaged.mpPersona.segundoNombre}"
+																	binding="#{registroPersonaManaged.txtSegundoNombre}"
+																	maxlength="50" id="segundoNombre"
+																	styleClass="textUpperCase"
+																	onkeypress="return validarCarateres(event)"
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}"
+																	disabled="#{registroPersonaManaged.tipoAccion==4}">
+																	<f:converter converterId="uppeCaseConverter" />
+																</h:inputText></td>
+
+														</tr>
+														<tr>
+
+															<td align="left" width="130px"><h:outputText
+																	value="Teléfono :" /> <span style="color: red;">*</span>
+															</td>
+															<td align="left" width="150px"><h:inputText
+																	id="id_telefono"
+																	value="#{registroPersonaManaged.mpPersona.telefono}"
+																	maxlength="12"
+																	requiredMessage="#{msg['mp.telefonoiningresar']}"
+																	onkeypress="return validaEnteroPositivo(event)" /></td>
+															<td align="left" width="130px"><h:outputText
+																	value="Fax :" /></td>
+															<td align="left" width="150px"><h:inputText id="fax"
+																	maxlength="20"
+																	value="#{registroPersonaManaged.mpPersona.fax}"
+																	onkeypress="return validaEnteroPositivo(event)" /></td>
+														</tr>
+														<tr>
+															<td align="left" width="130px"><h:panelGroup
+																	rendered="#{registroPersonaManaged.issucesionindivisa}">
+																	<h:outputText id="textpartdefu"
+																		value="Partida de Defunción  :"
+																		rendered="#{registroPersonaManaged.issucesionindivisa}"
+																		disabled="#{registroPersonaManaged.tipoAccion==4}" />
+																	<span style="color: red;">*</span>
+																</h:panelGroup></td>
+															<td align="left" width="150px"><h:inputText
+																	id="inputpartdefu" maxlength="20" required="true"
+																	requiredMessage="#{msg['mp.errornropartida']}"
+																	value="#{registroPersonaManaged.mpPersona.nroPartidaDefuncion}"
+																	rendered="#{registroPersonaManaged.issucesionindivisa}"
+																	disabled="#{registroPersonaManaged.tipoAccion==4}" /></td>
+															<td align="left" width="100px"><h:panelGroup
+																	rendered="#{registroPersonaManaged.issucesionindivisa}">
+																	<h:outputText value="Fecha de Defunción :"
+																		rendered="#{registroPersonaManaged.issucesionindivisa}"
+																		disabled="#{registroPersonaManaged.tipoAccion==4}" />
+																	<span style="color: red;">*</span>
+																</h:panelGroup></td>
+															<td align="left" width="100px"><rich:calendar
+																	rendered="#{registroPersonaManaged.issucesionindivisa}"
+																	locale="en/US" required="true"
+																	requiredMessage="#{msg['mp.errorfechaDefuncion']}"
+																	datePattern="dd/MM/yyyy"
+																	converterMessage="Ingrese Fecha de Defunción Valido  "
+																	enableManualInput="true" inputClass="maskDate"
+																	id="id_fechadefuncion"
+																	value="#{registroPersonaManaged.fechaDefuncion}"
+																	inputStyle="width:80px">
+																</rich:calendar> <rich:jQuery id="maskedo6" selector=".maskDate"
+																	query="mask('99/99/9999')" timing="onload" /></td>
+
+														</tr>
+
+														<tr>
+															<td align="left" width="130px"><h:panelGroup
+																	rendered="#{registroPersonaManaged.israzonsocial}">
+																	<h:outputText value="Razón Social:" />
+																	<span style="color: red;">*</span>
+																</h:panelGroup></td>
+															<td align="left" colspan="2"><h:inputText
+																	maxlength="200" style="width:95%" required="true"
+																	requiredMessage="#{msg['mp.razonsocialiningresar']}"
+																	styleClass="textUpperCase"
+																	onkeypress="return validarCarateres(event)"
+																	value="#{registroPersonaManaged.mpPersona.razonSocial}"
+																	rendered="#{registroPersonaManaged.israzonsocial}"
+																	disabled="#{registroPersonaManaged.tipoAccion==4}">
+																	<f:converter converterId="uppeCaseConverter" />
+																</h:inputText></td>
+															<td align="left"><h:panelGroup
+																	rendered="#{registroPersonaManaged.israzonsocial}">
+																	<!--  									
+																<h:selectBooleanCheckbox
+																	id="flagEstatal"																	
+																	immediate="true"
+																	value="#{registroPersonaManaged.flagEstatal}"> 
+																 </h:selectBooleanCheckbox>
+																 <h:outputLabel value="Estatal " for="flagEstatal"/>
+																 -->
+																	<!-- jajaja -->
+																Tipo de Empresa: <span style="color: red;">*</span>
+																	<rich:comboBox width="120px"
+																		defaultLabel="Selecccione..."
+																		enableManualInput="false" selectFirstOnUpdate="true"
+																		directInputSuggestions="true" required="true"
+																		requiredMessage="#{msg['mp.errortipoempresa']}"
+																		binding="#{registroPersonaManaged.cmbHtmlTipoEmpresa}"
+																		onblur="validaInputCbo(this)" id="id_tipoempresa"
+																		immediate="true"
+																		value="#{registroPersonaManaged.seleccionTipoEmpresa}"
+																		valueChangeListener="#{registroPersonaManaged.loadSeleccion}"
+																		disabled="#{registroPersonaManaged.tipoAccion==4}">
+																		<f:selectItem id="id1" itemValue="Estatal" />
+																		<f:selectItem id="id2" itemValue="No Estatal" />
+																		<a4j:support id="idEventRs" event="onchange"
+																			BypassUpdates="false" ajaxSingle="true" />
+																	</rich:comboBox>
+
+																</h:panelGroup></td>
+														</tr>
+														<tr>
+
+															<td align="left" width="130px"><h:outputText
+																	value="email  :" /></td>
+															<td align="left"><h:inputText id="id_email"
+																	maxlength="100" style="width:100%"
+																	value="#{registroPersonaManaged.mpPersona.email}"
+																	validatorMessage="email invalido">
+																	<rich:jQuery selector="#id_email" query="mask('em')"
+																		timing="onload" />
+																</h:inputText></td>
+															<td align="left"><h:selectBooleanCheckbox
+																	id="notificaEmail"
+																	value="#{registroPersonaManaged.mpPersona.notificaEmail}">
+
+																</h:selectBooleanCheckbox> <h:outputLabel value="¿Notificar a su Email?"
+																	for="notificaEmail" /></td>
+
+														</tr>
+														<tr>
+															<td align="left" width="130px"><h:outputText
+																	value="Twitter  :" /></td>
+															<td align="left"><h:inputText maxlength="50"
+																	style="width:100%"
+																	value="#{registroPersonaManaged.mpPersona.twitter}" />
+															</td>
+
+														</tr>
+														<tr>
+															<td align="left" width="130px"><h:outputText
+																	value="Facebook  :" /></td>
+															<td align="left"><h:inputText maxlength="100"
+																	style="width:100%"
+																	value="#{registroPersonaManaged.mpPersona.facebook}" />
+															</td>
+															<td align="left" width="130px"><h:outputText
+																	value="Fecha Inscripción" /> <span style="color: red;">*</span>
+															</td>
+															<td><rich:calendar
+																	value="#{registroPersonaManaged.fechaInscripcion}"
+																	locale="en/US" required="true"
+																	requiredMessage="#{msg['mp.errorfechaDeInscripcion']}"
+																	datePattern="dd/MM/yyyy"
+																	converterMessage="Ingrese Fecha de Inscripción  "
+																	enableManualInput="true" inputClass="maskDate"
+																	inputStyle="width:80px"
+																	readonly="#{registroPersonaManaged.mpPersona.fechaInscripcion != null}"></rich:calendar>
+															</td>
+														</tr>
+														<tr>
+															<td align="left" width="130px"><h:outputText
+																	value="Observación  :" /></td>
+															<td align="left" colspan="3"><h:inputTextarea
+																	style="width:100%;" rows="2" id="id_glosa"
+																	value="#{registroPersonaManaged.mpPersona.glosa}" /></td>
+
+														</tr>
+
+														<tr>
+
+
+
+														</tr>
+
+
+
+
+													</table>
+
+
+
+												</rich:panel>
+
+
+
+												<table border="0" width="100%">
+													<tr>
+														<td align="left"><rich:panel
+																id="panelRegistroDireccion2"
+																style="width:100%; height: 150px;">
+																<f:facet name="header">		
+												Dirección(es) de Persona 
+											</f:facet>
+																<table border="0" width="100%">
+																	<tr>
+																		<td align="left" width="100px"><a4j:commandButton
+																				id="nuevo_direccion"
+																				action="#{registroDireccionPersonaManaged.nuevo}"
+																				oncomplete="#{rich:component('panelRegistroDireccion')}.hide();#{rich:component('panelRegistroDireccion')}.show();"
+																				style="width:130px;" value="Nuevos"
+																				disabled="#{registroPersonaManaged.isDomiciliosIngresados || registroPersonaManaged.tipoAccion != 1}"
+																				reRender="id_lsttipoedificio1,si00,panelRegistroDireccion,formRegistroDireccion,ubicaciondireccion,id_tipoedificio"
+																				ajaxSingle="true">
+																				<f:param name="destinoRefresh"
+																					value="id_principal_direccion" />
+																				<f:param name="pantallaUso" value="1" />
+																			</a4j:commandButton></td>
+																			
+																			<td>
+																			
+																			 <h:outputLabel style="color: red;font-size: 16px; font-weight: bold; padding-right: 20px; padding-left: 50px;"
+																			 value="UBICABLE (#{registroPersonaManaged.mpPersona.ubicableControl? 'SI':'NO'})"
+																			 
+																				for="notificaEmail" />
+																			
+																			<h:selectBooleanCheckbox  value="#{registroPersonaManaged.mpPersona.ubicableControl}">													
+																				<a4j:support event="onchange" ajaxSingle="true"
+																				oncomplete="#{rich:component('panelconfirmaUbicacion')}.hide();#{rich:component('panelconfirmaUbicacion')}.show();"
+																				reRender="panelRegistroDireccion2" />
+																			</h:selectBooleanCheckbox>
+																			
+																			<!-- <h:selectBooleanCheckbox
+																				id="notificaUbicable"
+																				value="#{registroPersonaManaged.mpPersona.ubicableControl}"
+																				disabled="#{registroPersonaManaged.tipoAccion ==4}"
+																				oncomplete="#{rich:component('panelRegistroDireccion')}.hide();#{rich:component('panelRegistroDireccion')}.show();">
+																				
+																			</h:selectBooleanCheckbox> -->
+																			
+																			
+																			</td>
+																	</tr>
+																	
+																</table>
+
+																<rich:extendedDataTable id="id_principal_direccion"
+																	value="#{registroPersonaManaged.recordsDireccion}"
+																	var="direccion" width="100%" height="100px"
+																	selectionMode="single" rowKeyVar="row"
+																	enableContextMenu="false">
+																	
+																	<rich:column id="x111" width="5%">
+																		<f:facet name="header" width="10%">Edit</f:facet>
+																		<a4j:commandLink ajaxSingle="true" id="newlink111"
+																			action="#{registroDireccionPersonaManaged.editMpDireccionPersona}"
+																			disabled="#{registroPersonaManaged.tipoAccion ==4}"
+																			oncomplete="#{rich:component('panelRegistroDireccion')}.hide();#{rich:component('panelRegistroDireccion')}.show();"
+																			style="width:80px;"
+																			reRender="formRegistroDireccion,ubicaciondireccion">
+																			<h:graphicImage value="/images/modal/edit.gif"
+																				style="border:0" />
+																			<f:setPropertyActionListener value="#{direccion}"
+																				target="#{registroDireccionPersonaManaged.findMpDireccionItem}"
+																				id="r428" />
+
+																			<f:param name="destinoRefresh"
+																				value="id_principal_direccion" />
+																			<f:param name="pantallaUso" value="1" />
+
+																		</a4j:commandLink>
+																		<rich:toolTip for="newlink111"
+																			value="Actualizar la Dirección" />
+																	</rich:column>
+																	
+																	<rich:column id="x444" width="15%">
+																		<f:facet name="header">Tipo Domicilio</f:facet>
+																		<h:outputText value="#{direccion.tipoDomicilio}" />
+																		<rich:toolTip value="#{direccion.domicilioCompleto}"
+																			layout="block" followMouse="true" direction="auto"></rich:toolTip>
+																	</rich:column>
+																	<rich:column id="x3" width="80%">
+																		<f:facet name="header">Dirección</f:facet>
+																		<h:outputText value="#{direccion.domicilioCompleto}" />
+																		<rich:toolTip value="#{direccion.domicilioCompleto}"
+																			layout="block" followMouse="true" direction="auto"></rich:toolTip>
+																	</rich:column>
+																</rich:extendedDataTable>
+															</rich:panel> <rich:panel style="width:100%; height: 250px;"
+																align="left" id="panelregistroderelacionados">
+																<f:facet name="header">		
+												Relacionados
+											</f:facet>
+																<table border="0" width="100%">
+																	<tr>
+																		<td align="left" width="100px"><a4j:commandButton
+																				value="Nuevo" style="width:130px;"
+																				reRender="id_tiporelacion,formRegistrorelacionado,id_registrorelacionado"
+																				disabled="#{registroPersonaManaged.tipoAccion == 4}"
+																				oncomplete="#{rich:component('panelregistroderelacionados')}.hide();#{rich:component('panelregistroderelacionados')}.show();"
+																				action="#{registroRelacionadoPersonaManaged.nuevoMpRelacionadoPersona}"
+																				status="ajaxStatus" /></td>
+																	</tr>
+																</table>
+																<rich:extendedDataTable id="id_principal_relacionado"
+																	value="#{registroPersonaManaged.recordsRelacionado}"
+																	var="record" width="100%" height="180px"
+																	selectionMode="single" rowKeyVar="row"
+																	enableContextMenu="false">
+																	<rich:column id="x8" width="5%">
+																		<f:facet name="header">Edit</f:facet>
+																		<a4j:commandLink ajaxSingle="true" id="newlink3"
+																			oncomplete="#{rich:component('panelregistroderelacionados')}.hide();#{rich:component('panelregistroderelacionados')}.show();"
+																			action="#{registroRelacionadoPersonaManaged.editMpRelacionadoPersona}"
+																			status="ajaxStatus"
+																			disabled="#{registroPersonaManaged.tipoAccion == 4}"
+																			reRender="id_registrorelacionado">
+																			<h:graphicImage value="/images/modal/edit.gif"
+																				style="border:0" />
+																			<f:setPropertyActionListener value="#{record}"
+																				target="#{registroRelacionadoPersonaManaged.mpRelacionado}"
+																				id="r428" />
+																		</a4j:commandLink>
+																		<rich:toolTip for="newlink3" value="Actualizacion" />
+																	</rich:column>
+																	<rich:column id="x3" width="15%">
+																		<f:facet name="header">Tipo Relación</f:facet>
+																		<h:outputText
+																			value="#{registroPersonaManaged.mapMpTipoRelacion[record.tipoRelacionId]}" />
+																	</rich:column>
+																	<rich:column id="x4" width="35%">
+																		<f:facet name="header">Apellidos y Nombres</f:facet>
+																		<h:outputText value="#{record.apellidosNombres}" />
+																	</rich:column>
+																	<rich:column id="x5" width="10%">
+																		<f:facet name="header">% Partic.</f:facet>
+																		<h:outputText value="#{record.porcParticipacion}" />
+																	</rich:column>
+																	<rich:column width="5%">
+																		<a4j:commandLink ajaxSingle="true"
+																			id="id_linkdeldocanexos"
+																			oncomplete="#{rich:component('deletePanelDocAnexo')}.show()">
+																			<h:graphicImage value="/images/modal/delete.gif"
+																				style="border:0" />
+																			<f:setPropertyActionListener value="#{record}"
+																				target="#{registroPersonaManaged.relacionado}"
+																				id="r48" />
+																		</a4j:commandLink>
+																	</rich:column>
+
+																</rich:extendedDataTable>
+															</rich:panel></td>
+
+
+													</tr>
+												</table></td>
+
+											<td valign="top" align="right"><a4j:outputPanel>
+
+													<rich:panel id="id_consulta_reniec"
+														style="width:100%; height: 180px;" align="left">
+														<f:facet name="header">
+												Resultados Consulta RENIEC
+											</f:facet>
+														<table width="100%" border="1" bordercolor="#E7E9EE"
+								style="border-collapse: collapse;">
+															<tbody>
+																<tr>
+																	<td height="150px" width="90px" rowspan="4"><h:graphicImage
+																			width="100" height="150"
+																			value="#{registroPersonaManaged.rutaFotoReniec}"
+																			alt="Sin Foto">
+																		</h:graphicImage></td>
+																	<td width="20px"><h:outputText value="Dirección: " />
+																	</td>
+																	<td width="92"><h:outputText style="color:#060B52"
+																			value="#{registroPersonaManaged.resultadoConsultaReniec.datosPersona.direccion}" />
+																	</td>
+																</tr>
+																<tr>
+																	<td width="20px"><h:outputText value="Ubigeo: " />
+																	</td>
+																	<td width="92"><h:outputText style="color:#060B52"
+																			value="#{registroPersonaManaged.resultadoConsultaReniec.datosPersona.ubigeo}" />
+																	</td>
+																</tr>
+																<tr>
+																	<td width="20px"><h:outputText
+																			value="Estado Civil: " /></td>
+																	<td width="92"><h:outputText style="color:#060B52"
+																			value="#{registroPersonaManaged.resultadoConsultaReniec.datosPersona.estadoCivil}" />
+																	</td>
+																</tr>
+																<tr>
+																	<td width="20px"><h:outputText
+																			value="Observaciones: " /></td>
+																	<td width="92"><h:outputText style="color:#060B52"
+																			value="#{registroPersonaManaged.resultadoConsultaReniec.datosPersona.restriccion}" />
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+
+
+
+													</rich:panel>
+
+
+													<rich:panel id="id_condicion_contribuyente"
+														style="width:100%; height: 60px;" align="left">
+														<f:facet name="header">		
+												Condición del Contribuyente
+											</f:facet>
+														<table border="0" width="100%">
+
+
+															<tr>
+																<td align="left" width="100px"><h:outputText
+																		value="Condición Especial" /> <span
+																	style="color: red;">*</span></td>
+																<td align="left" width="200px"><rich:comboBox
+																		width="350px" defaultLabel="Seleccione"
+																		onkeypress="return showListCbo(this,event);"
+																		onblur="validaInputCbo(this)"
+																		value="#{registroPersonaManaged.cmbValuetipocondicionespecial}"
+																		disabled="#{registroPersonaManaged.tipoAccion == 4}"
+																		style="width:100%;border: none"
+																		id="id_subtipocondicionespecial"
+																		binding="#{registroPersonaManaged.cmbtipocondicionespecial}"
+																		valueChangeListener="#{registroPersonaManaged.loadTipoTipoCondicionEspecialById}">
+																		<f:selectItems id="id_lstsubtipocondespe"
+																			value="#{registroPersonaManaged.lsttipocondicionespecial}" />
+																		<a4j:support id="id_supportlsttipocondicionespecial"
+																			reRender="id_datos_condicion_contribuyente"
+																			event="onchange" BypassUpdates="false"
+																			ajaxSingle="true" />
+																	</rich:comboBox></td>
+															</tr>
+														</table>
+													</rich:panel>
+													<rich:panel id="id_datos_condicion_contribuyente"
+														style="width:100%; height: 100px;" align="left">
+														<f:facet name="header">
+
+														</f:facet>
+														<table border="0" width="100%">
+															<tr>
+																<td align="left" width="130px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}">
+																		<h:outputText value="Tipo de Documento" />
+																		<span style="color: red;">*</span>
+																	</h:panelGroup></td>
+																<td align="left" width="200px"><rich:comboBox
+																		width="200px" defaultLabel="Seleccione"
+																		onkeypress="return showListCbo(this,event);"
+																		onblur="validaInputCbo(this)"
+																		value="#{registroPersonaManaged.cmbValuetipodocumentoCondicionEspecial}"
+																		style="width:100%;border: none"
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}"
+																		id="id_subtipodocumento"
+																		binding="#{registroPersonaManaged.cmbtipodocumentoCondicionEspecial}"
+																		valueChangeListener="#{registroPersonaManaged.loadMpTipoDocumentoCondicionEspecialById}">
+																		<f:selectItems id="id_lsttipodocumento1"
+																			value="#{registroPersonaManaged.lsttipodocumentoCondicionEspecial}" />
+																		<a4j:support id="id_supportlsttipodocumento1"
+																			event="onchange" BypassUpdates="false"
+																			ajaxSingle="true" />
+																	</rich:comboBox></td>
+																<td align="left" width="65px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}">
+																		<h:outputText value="Porcentaje" />
+																	</h:panelGroup></td>
+																<td align="left" width="40px"><h:inputText
+																		value="#{registroPersonaManaged.gnCondicionEspecial.porcentaje}"
+																		maxlength="6" size="6"
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}">
+																		<f:convertNumber maxFractionDigits="2"
+																			maxIntegerDigits="3" pattern="###.00"
+																			locale="#{msg['param.localecurrency']}" />
+																	</h:inputText> <h:outputText value="%"
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}" />
+																</td>
+
+															</tr>
+															<tr>
+																<td align="left" width="130px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}">
+																		<h:outputText value="Nro. de Documento" />
+																		<span style="color: red;">*</span>
+																	</h:panelGroup></td>
+																<td align="left" width="200px"><h:inputText
+																		value="#{registroPersonaManaged.gnCondicionEspecial.nroDocumento}"
+																		styleClass="textUpperCase"
+																		converter="uppeCaseConverter" maxlength="20"
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}" />
+																</td>
+																<td align="left" width="100px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}">
+																		<h:outputText value="Fecha de Documento" />
+																		<span style="color: red;">*</span>
+																	</h:panelGroup></td>
+																<td align="left" width="100px"><rich:calendar
+																		locale="en/US" direction="bottom-left"
+																		converterMessage="Condición del Contribuyente Ingrese Fecha de Documento Valido"
+																		datePattern="dd/MM/yyyy"
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}"
+																		enableManualInput="true" inputClass="maskDate"
+																		inputStyle="width:80px" id="id_fechadedocumento"
+																		value="#{registroPersonaManaged.fechaDocumento}">
+																	</rich:calendar> <rich:jQuery id="maskedo7" selector=".maskDate"
+																		query="mask('99/99/9999')" timing="onload" /></td>
+															</tr>
+															<tr>
+																<td align="left" width="130px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}">
+																		<h:outputText value="Fecha Inicio Cond." />
+																		<span style="color: red;">*</span>
+																	</h:panelGroup></td>
+																<td align="left" width="100px"><rich:calendar
+																		locale="en/US"
+																		converterMessage="Condición del Contribuyente Ingrese Fecha de Inicio Valido"
+																		datePattern="dd/MM/yyyy"
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}"
+																		enableManualInput="true" inputClass="maskDate"
+																		inputStyle="width:80px" id="id_fechainiciocondicion"
+																		value="#{registroPersonaManaged.fechaInicioCond}">
+																	</rich:calendar> <rich:jQuery id="maskedo13" selector=".maskDate"
+																		query="mask('99/99/9999')" timing="onload" /></td>
+																<td align="left" width="150px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}">
+																		<h:outputText value="Fecha Fin Cond." />
+																		<span style="color: red;">*</span>
+																	</h:panelGroup></td>
+																<td align="left" width="100px"><rich:calendar
+																		value="#{registroPersonaManaged.fechaFinCond}"
+																		inputStyle="width:80px" locale="en/US"
+																		direction="bottom-left"
+																		rendered="#{registroPersonaManaged.istipocondicionespecial}"
+																		enableManualInput="true"
+																		converterMessage="Condición del Contribuyente Ingrese Fecha Fin Valido  "
+																		inputClass="maskDate" datePattern="dd/MM/yyyy"
+																		id="id_fechafincondicion">
+																	</rich:calendar> <rich:jQuery id="maskedo14" selector=".maskDate"
+																		query="mask('99/99/9999')" timing="onload" /></td>
+															</tr>
+														</table>
+													</rich:panel>
+													<rich:panel id="id_situacionEmpresarial"
+														style="width:100%; height: 60px;" align="left">
+														<f:facet name="header">		
+																Situación Empresarial
+														</f:facet>
+														<table border="0" width="100%">
+															<tr>
+																<td align="left" width="150px"><h:outputText
+																		value="Tipo Situación Especial" /></td>
+																<td><rich:comboBox width="150px"
+																		defaultLabel="Seleccione"
+																		onkeypress="return showListCbo(this,event);"
+																		onblur="validaInputCbo(this)"
+																		value="#{registroPersonaManaged.cmbValueMpSituacionEmpresarial}"
+																		disabled="#{registroPersonaManaged.tipoAccion == 4}"
+																		id="id_subtipositespe"
+																		binding="#{registroPersonaManaged.cmbMpSituacionEmpresarial}"
+																		valueChangeListener="#{registroPersonaManaged.loadMpSituacionEmpresarialById}">
+																		<f:selectItems id="id_lsttipositespe"
+																			value="#{registroPersonaManaged.lstMpSituacionEmpresarial}" />
+																		<a4j:support id="id_supportlsttipositespe"
+																			reRender="id_datos_situacionEmpresarial"
+																			event="onchange" BypassUpdates="false"
+																			ajaxSingle="true" />
+																	</rich:comboBox></td>
+															</tr>
+														</table>
+													</rich:panel>
+													<rich:panel id="id_datos_situacionEmpresarial"
+														style="width:100%; height: 100px;" align="left">
+														<f:facet name="header">
+														</f:facet>
+														<table border="0" width="100%">
+
+															<tr>
+																<td align="left" width="100px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.issituacionempresarial}">
+																		<h:outputText value="Fecha Inicio Sit."
+																			rendered="#{registroPersonaManaged.issituacionempresarial}" />
+																		<span style="color: red;">*</span>
+																	</h:panelGroup></td>
+																<td align="left" width="100px"><rich:calendar
+																		rendered="#{registroPersonaManaged.issituacionempresarial}"
+																		locale="en/US"
+																		converterMessage="Situación Empresarial Ingrese Fecha Inicio Valido  "
+																		datePattern="dd/MM/yyyy" enableManualInput="true"
+																		inputClass="maskDate" inputStyle="width:80px"
+																		id="id_fechainiciosit"
+																		value="#{registroPersonaManaged.fechaIniSituacionE}"></rich:calendar>
+																	<rich:jQuery id="maskedo9" selector=".maskDate"
+																		query="mask('99/99/9999')" timing="onload" /></td>
+																<td align="left" width="100px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.issituacionempresarial}">
+																		<h:outputText value="Fecha Fin Sit."
+																			rendered="#{registroPersonaManaged.issituacionempresarial}" />
+																		<span style="color: red;">*</span>
+																	</h:panelGroup></td>
+																<td align="left" width="100px"><rich:calendar
+																		rendered="#{registroPersonaManaged.issituacionempresarial}"
+																		locale="en/US"
+																		converterMessage="Situación Empresarial Ingrese Fecha Fin Valido  "
+																		datePattern="dd/MM/yyyy" direction="bottom-left"
+																		enableManualInput="true" inputClass="maskDate"
+																		inputStyle="width:80px" id="id_fechafinsit"
+																		value="#{registroPersonaManaged.fechaFinSituacionE}">
+																	</rich:calendar> <rich:jQuery id="maskedo10" selector=".maskDate"
+																		query="mask('99/99/9999')" timing="onload" /></td>
+															</tr>
+															<tr>
+																<td align="left" width="130px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.issituacionempresarial}">
+																		<h:outputText value="Tipo Doc. Sustent."
+																			rendered="#{registroPersonaManaged.issituacionempresarial}" />
+																		<span style="color: red;">*</span>
+																	</h:panelGroup></td>
+																<td align="left" width="150px"><h:inputText
+																		value="#{registroPersonaManaged.mpPersona.tipoDocSustSituacionEmpresarial}"
+																		styleClass="textUpperCase"
+																		converter="uppeCaseConverter"
+																		rendered="#{registroPersonaManaged.issituacionempresarial}" />
+																</td>
+																<td align="left" width="130px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.issituacionempresarial}">
+																		<h:outputText value="Nro Doc. Sustent."
+																			rendered="#{registroPersonaManaged.issituacionempresarial}" />
+																		<span style="color: red;">*</span>
+																	</h:panelGroup></td>
+																<td align="left" width="150px"><h:inputText
+																		value="#{registroPersonaManaged.mpPersona.nroDocSustSituacionEmpresarial}"
+																		styleClass="textUpperCase"
+																		converter="uppeCaseConverter"
+																		rendered="#{registroPersonaManaged.issituacionempresarial}" />
+																</td>
+															</tr>
+															<tr>
+																<td align="left" width="100px"><h:panelGroup
+																		rendered="#{registroPersonaManaged.issituacionempresarial}">
+																		<h:outputText value="Fecha Emisión Doc." />
+																		<span style="color: red;">*</span>
+																	</h:panelGroup></td>
+																<td align="left" width="100px"><rich:calendar
+																		rendered="#{registroPersonaManaged.issituacionempresarial}"
+																		locale="en/US"
+																		converterMessage="Situación Empresarial Ingrese Fecha Emisión Valido  "
+																		datePattern="dd/MM/yyyy" enableManualInput="true"
+																		inputClass="maskDate" inputStyle="width:80px"
+																		id="id_fechaemisiondoc"
+																		value="#{registroPersonaManaged.fechaEmisionDoc}">
+																	</rich:calendar> <rich:jQuery id="maskedo12" selector=".maskDate"
+																		query="mask('99/99/9999')" timing="onload" /></td>
+															</tr>
+														</table>
+													</rich:panel>
+												</a4j:outputPanel></td>
+										</tr>
+
+
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td align="center"><a4j:commandButton
+										value="Generar Declaración Jurada" style="width:170px;"
+										id="id_btnguardar" action="#{registroPersonaManaged.guardar}"
+										disabled="#{registroPersonaManaged.isAccionRealizada}"
+										reRender="panelinclude" status="ajaxStatus"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmaDJ\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+									</a4j:commandButton> <a4j:commandButton value="Salir" style="width:100px;"
+										immediate="true" reRender="panelinclude"
+										action="#{registroPersonaManaged.salirRP}"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrorsNroDeclaracion\');' : 'Richfaces.showModalPanel(\'mpErrorsNroDeclaracion\');' };">
+										<f:setPropertyActionListener
+											value="/sisat/persona/buscarpersona.xhtml"
+											target="#{sessionManaged.page}" />
+									</a4j:commandButton> <a4j:commandButton id="vista_previa"
+										value="Presentación Preliminar" style="width:150px;"
+										reRender="panelinclude" status="ajaxStatus"
+										action="#{registroPersonaManaged.vistaPrevia}"
+										disabled="#{registroPersonaManaged.tipoAccion==4}"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');window.open(\'/satc/sisat/persona/imprimir.jsf\');return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+									</a4j:commandButton></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</a4j:outputPanel>
+	</h:form>
+
+
+
+	<rich:modalPanel id="mpErrorsNroDeclaracion" autosized="true"
+		width="450" onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+
+		<f:facet name="header">
+			<h:outputText value="#{msg['gn.mensajes']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink33ss"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpErrorsNroDeclaracion"
+					attachTo="hidelink33ss" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton value="NO" style="width:100px;"
+					onclick="#{rich:component('mpErrorsNroDeclaracion')}.hide();return false;" />
+				<a4j:commandButton value="SI" style="width:100px;"
+					action="#{registroPersonaManaged.salirSendRedirectPrincipal}"
+					immediate="true" reRender="panelinclude">
+					<f:setPropertyActionListener
+						value="/sisat/persona/buscarpersona.xhtml"
+						target="#{sessionManaged.page}" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelconfirmaRP" autosized="true" width="300"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaRP" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2">
+						<h:outputText id="succgdj" style="font-weight:bold;color:blue"
+							value="El registro se realizó satisfactoriamente" />
+					</h:panelGrid>
+				</a4j:outputPanel>
+				<h:panelGrid columns="1">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						action="#{registroPersonaManaged.sendRedirectPrincipal}"
+						immediate="true" reRender="panelinclude">
+						<f:setPropertyActionListener
+							value="/sisat/persona/buscarpersona.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandButton>
+
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelconfirmaDJ" autosized="true" width="300"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="confi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaDJ" attachTo="confi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2">
+						<h:outputText id="succgdj" style="font-weight:bold;color:blue"
+							value="Se Genero satisfactoriamente la Declaración Jurada N° #{registroPersonaManaged.mpPersona.nroDj}" />
+					</h:panelGrid>
+				</a4j:outputPanel>
+				<h:panelGrid columns="1">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						action="#{registroPersonaManaged.sendRedirectPrincipal}"
+						immediate="true" reRender="panelinclude">
+						<f:setPropertyActionListener
+							value="/sisat/persona/buscarpersona.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandButton>
+
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<!-- panelRegistroDireccion -->
+
+	<rich:modalPanel id="panelRegistroDireccion" moveable="true"
+		resizeable="false" minWidth="700" minHeight="330"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+		<f:facet name="header">
+			<h:outputText value="Registro Domicilio(s)" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink3s"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelRegistroDireccion"
+					attachTo="hidelink3s" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid>
+			<a4j:include viewId="/sisat/persona/registrodireccion.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+
+
+	<rich:modalPanel id="panelregistroderelacionados" moveable="true"
+		resizeable="false" minWidth="1100" minHeight="318"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+		<f:facet name="header">Registro de Relacionados</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink3rst1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelregistroderelacionados"
+					attachTo="hidelink3rst1" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid>
+			<a4j:include viewId="/sisat/persona/registrorelacionadopersona.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelBuscarVia" moveable="true" resizeable="false"
+		minWidth="740" minHeight="400" onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+		<f:facet name="header">BUSCAR VIA</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink4s"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelBuscarVia" attachTo="hidelink4s"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formBuscarVia">
+			<h:panelGrid>
+				<a4j:include viewId="/sisat/persona/buscarvia.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="deletePanelDocAnexo" autosized="true" width="200"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imgclosedocanexo" styleClass="hidelink" />
+				<rich:componentControl for="deletePanelDocAnexo"
+					attachTo="id_imgclosedocanexo" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea eliminar registro actual ?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{registroPersonaManaged.deleteRelacionado}"
+						reRender="panelregistroderelacionados,id_principal_relacionado"
+						immediate="true"
+						oncomplete="#{rich:component('deletePanelDocAnexo')}.hide();" />
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('deletePanelDocAnexo')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+	
+	
+	<!-- ============================================== -->
+	
+	<rich:modalPanel id="panelconfirmaUbicacion" autosized="true" width="300"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<!-- <h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconUbi"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaUbicacion" attachTo="hlpconUbi"
+					operation="hide" event="onclick" />
+			</h:panelGroup>  -->
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="1">
+						
+					<h:outputText rendered="#{registroPersonaManaged.mpPersona.ubicableControl}" 
+							id="succgdj" style="font-weight:bold;color:red"
+							value="Esta seguro de pasar la direccion a UBICABLE." />
+					
+					
+					<h:outputText rendered="#{!registroPersonaManaged.mpPersona.ubicableControl}" 
+							id="succgdj11" style="font-weight:bold;color:red"
+							value="Esta seguro de pasar la direccion a INUBICABLE. " />
+							
+					<h:outputText rendered="#{!registroPersonaManaged.mpPersona.ubicableControl}" 
+							id="succgdj112" style="font-weight:bold;color:red; margin-top: 20px;"
+							value="Nota. Estos cambios se reflejaran cuando el supervisor valide el cambio." />
+							
+							
+					</h:panelGrid>
+					
+					
+				</a4j:outputPanel>
+				
+				<h:panelGrid columns="2" style="padding-top: 20px; text-align: center; width: 100%;">
+					<a4j:commandButton value="Aceptar"
+						action="#{registroPersonaManaged.aceptarUbicacion}"
+						reRender="panelRegistroDireccion2"
+						immediate="true"
+						oncomplete="#{rich:component('panelconfirmaUbicacion')}.hide();" />
+						
+						
+					<a4j:commandButton value="Cancelar"
+						action="#{registroPersonaManaged.cancelUbicacion}"
+						reRender="panelRegistroDireccion2"
+						immediate="true"
+						oncomplete="#{rich:component('panelconfirmaUbicacion')}.hide();" />
+				</h:panelGrid>
+				
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+
+
+</ui:composition>
+
+
+

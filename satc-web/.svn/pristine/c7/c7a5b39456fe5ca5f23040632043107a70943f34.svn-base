@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<rich:jQuery query="focus().select()" selector="#btnGuardar"
+		name="focusGuardarPersona" />
+	<a4j:loadScript src="/js/sisat.js"></a4j:loadScript>
+	<script type="text/javascript">
+	 function validaNroDocumento(nroDocumento){
+		 if(jQuery.trim(nroDocumento).length==8){
+				 return true;
+		 }
+		 return false;
+	 }
+	</script>
+	<h:form id="idformregistropersona">
+		<rich:jQuery query="focus().select()" selector="#txtApePaterno"
+			name="focusInputApePaterno" />
+		<rich:jQuery query="focus().select()"
+			selector="#idformregistropersona :input:visible:enabled:first"
+			name="focusPerTipoDocumento" />
+
+		<h:panelGroup id="id_registropersona">
+			<table border="0" width="100%" cellpadding="2" cellspacing="2">
+				<tr>
+					<td><h:panelGroup id="id_datospersona">
+							<table border="0" width="100%" cellpadding="2" cellspacing="2">
+								<tr>
+									<td width="100px"><h:outputLabel
+											value="#{msg['gn.tipodoc']}: " /></td>
+
+									<td><rich:comboBox width="125px" defaultLabel="Seleccione"
+											id="idPerTipoDocumento"
+											value="#{actualizaPersonasPapeletasManaged.tipoDocumento}"
+											valueChangeListener="#{actualizaPersonasPapeletasManaged.selectTipoDocumento}"
+											selectFirstOnUpdate="true" directInputSuggestions="false"
+											immediate="true" enableManualInput="true"
+											onkeypress="return showListCbo(this,event);"
+											ajaxSingle="true"
+											disabled="#{registroPapeletasManaged.esContribuyente==true ? true : false}"
+											reRender="id_registropersona,id_datospersona,idnrodoc"
+											binding="#{actualizaPersonasPapeletasManaged.cmbTipoDocumento}"
+											required="true" requiredMessage="Ingrese Tipo de Documento"
+											tabindex="1">
+
+											<a4j:support id="idInfSupportTipDoc" event="onchange"
+												reRender="id_registropersona,id_datospersona,idnrodoc"
+												immediate="true" ajaxSingle="true">
+											</a4j:support>
+											<f:selectItems id="idlstInfTipoDocumento2"
+												value="#{actualizaPersonasPapeletasManaged.lstTipoDocumento}" />
+										</rich:comboBox></td>
+									<td width="100px"><h:outputLabel
+											value="Nro de documento : " /></td>
+									<td><h:inputText
+											value="#{actualizaPersonasPapeletasManaged.numDocumentPersona}"
+											required="true"
+											disabled="#{registroPapeletasManaged.esContribuyente==true ? true : false}"
+											requiredMessage="Ingrese Numero de Documento" id="idnrodoc"
+											styleClass="textUpperCase" converter="uppeCaseConverter"
+											onkeypress="return validaEnteroPositivo(event)"
+											binding="#{actualizaPersonasPapeletasManaged.txtNumDocumento}"
+											style="width:95%;"
+											maxlength="#{actualizaPersonasPapeletasManaged.maxlengthNroDocumento}"
+											tabindex="2">
+
+											<!-- 											<a4j:support event="onblur" onsubmit="true" -->
+											<!-- 												id="idOnblurNumDoc" ajaxSingle="true" immediate="true" -->
+											<!-- 												status="ajaxStatus" -->
+											<!-- 												action="#{actualizaPersonasPapeletasManaged.buscarPersonaDNI}" -->
+											<!-- 												reRender="id_datospersona_natural" -->
+											<!-- 												oncomplete="#{facesContext.maximumSeverity == null ? 'focusInputApePaterno();' : 'Richfaces.showModalPanel(\'mpErrors\');' };"> -->
+											<!-- 											</a4j:support> -->
+
+
+
+										</h:inputText> 
+										
+										</td>
+										
+										<td>
+										<a4j:commandLink id="id_busquedareniec" status="ajaxStatus"
+											action="#{actualizaPersonasPapeletasManaged.consultaReniec()}"
+											reRender="id_datospersona_natural"
+											oncomplete="#{facesContext.maximumSeverity == null ? 'focusInputApePaterno();' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+
+											<h:graphicImage width="40" height="30"
+												value="/images/modal/reniec.jpg" style="border:0" />
+
+											<rich:toolTip for="id_busquedareniec"
+												value="CONSULTA RENIEC EN LÍNEA" />
+
+
+										</a4j:commandLink>
+
+									</td>
+
+
+								</tr>
+							</table>
+						</h:panelGroup></td>
+				</tr>
+				<tr>
+					<td><h:panelGroup id="id_datospersona_natural"
+							rendered="#{actualizaPersonasPapeletasManaged.isPersonaNatural}">
+							<table border="0" width="100%" cellpadding="2" cellspacing="2">
+								<tr>
+									<td width="100px"><h:outputLabel
+											value="#{msg['mp.apellidopaterno']}: " id="idLabelApePat" /></td>
+									<td><h:inputText
+											value="#{actualizaPersonasPapeletasManaged.apellidoPaterno}"
+											binding="#{actualizaPersonasPapeletasManaged.txtApePaterno}"
+											disabled="#{registroPapeletasManaged.esContribuyente==true ? true : false}"
+											style="width:100%;" styleClass="textUpperCase"
+											converter="uppeCaseConverter" required="true"
+											requiredMessage="Ingrese Apellido Paterno" id="txtApePaterno"
+											tabindex="3" /></td>
+									<td width="100px"><h:outputLabel
+											value="#{msg['mp.apellidomaterno']}: " /></td>
+									<td><h:inputText
+											value="#{actualizaPersonasPapeletasManaged.apellidoMaterno}"
+											onkeypress="return soloLetras(event);" style="width:100%;"
+											disabled="#{registroPapeletasManaged.esContribuyente==true ? true : false}"
+											styleClass="textUpperCase" converter="uppeCaseConverter"
+											binding="#{actualizaPersonasPapeletasManaged.txtApeMaterno}"
+											required="true" requiredMessage="Ingrese Apellido Materno"
+											tabindex="4" /></td>
+								</tr>
+								<tr>
+									<td width="100px"><h:outputLabel value="Primer Nombre:" /></td>
+									<td><h:inputText
+											value="#{actualizaPersonasPapeletasManaged.primerNombre}"
+											required="true" style="width:100%;"
+											requiredMessage="Ingrese Primer Nombre"
+											onkeypress="return soloLetras(event);"
+											disabled="#{registroPapeletasManaged.esContribuyente==true ? true : false}"
+											styleClass="textUpperCase" converter="uppeCaseConverter"
+											binding="#{actualizaPersonasPapeletasManaged.txtPrimerNombre}"
+											tabindex="5" maxlength="15" /></td>
+									<td width="100px"><h:outputLabel value="Segundo Nombre:" /></td>
+									<td><h:inputText
+											value="#{actualizaPersonasPapeletasManaged.segundoNombre}"
+											disabled="#{registroPapeletasManaged.esContribuyente==true ? true : false}"
+											onkeypress="return soloLetras(event);" style="width:100%;"
+											binding="#{actualizaPersonasPapeletasManaged.txtSegundoNombre}"
+											styleClass="textUpperCase" converter="uppeCaseConverter"
+											tabindex="6" maxlength="15" /></td>
+								</tr>
+							</table>
+						</h:panelGroup> <h:panelGroup id="id_datospersona_juridica"
+							rendered="#{!actualizaPersonasPapeletasManaged.isPersonaNatural}">
+							<table border="0" width="100%" cellpadding="2" cellspacing="2">
+								<tr>
+									<td width="100px"><h:outputLabel
+											value="#{msg['mp.razonsocial']}: " /></td>
+									<td colspan="3"><h:inputText
+											value="#{actualizaPersonasPapeletasManaged.razonSocial}"
+											disabled="#{registroPapeletasManaged.esContribuyente==true ? true : false}"
+											onkeypress="return soloLetras(event);" style="width:100%;"
+											binding="#{actualizaPersonasPapeletasManaged.txtRazonSocial}"
+											styleClass="textUpperCase" converter="uppeCaseConverter"
+											maxlength="100" required="true"
+											requiredMessage="Ingrese Direccion Completa" /></td>
+								</tr>
+								<tr>
+									<td colspan="4"><br /></td>
+								</tr>
+							</table>
+						</h:panelGroup></td>
+				</tr>
+				<tr>
+					<td><a4j:outputPanel id="pnlDireccionPersona"
+							ajaxRendered="true">
+							<fieldset style="width: 96%">
+								<legend>Dirección</legend>
+								<table border="0" width="100%" cellpadding="0" cellspacing="0">
+									<tr>
+										<td rowspan="2"><h:selectOneRadio immediate="true"
+												value="#{actualizaPersonasPapeletasManaged.selectedOptBusc}"
+												layout="pageDirection"
+												valueChangeListener="#{actualizaPersonasPapeletasManaged.changeOpcionBusc}"
+												oncomplete="jQuery('#id_numero1').focus()">
+												<f:selectItem itemLabel="" itemValue="1" />
+												<f:selectItem itemLabel="" itemValue="2" />
+												<a4j:support event="onchange" reRender="pnlDireccionPersona"></a4j:support>
+											</h:selectOneRadio></td>
+										<td>
+											<table border="0" width="100%" cellpadding="0"
+												cellspacing="0">
+												<tr>
+													<td><h:outputText value="Tipo via :" /></td>
+													<td><h:outputText value="Via :" /></td>
+													<td><h:outputLabel value="Sin Numero:" /></td>
+													<td><h:outputText value="Numero :" /></td>
+												</tr>
+												<tr>
+													<td><rich:comboBox width="150px"
+															defaultLabel="Selecccione" selectFirstOnUpdate="true"
+															directInputSuggestions="false" id="id_tipoviabvpred"
+															binding="#{actualizaPersonasPapeletasManaged.cmbtipovia}"
+															valueChangeListener="#{actualizaPersonasPapeletasManaged.selectTipoVia}"
+															reRender="id_viabvpred"
+															disabled="#{actualizaPersonasPapeletasManaged.selectedOptBusc==1 ? 'false' : 'true'}"
+															immediate="true" tabindex="7">
+															<f:selectItems id="id_lsttipoviabvpred"
+																value="#{actualizaPersonasPapeletasManaged.lsttipovia}" />
+															<a4j:support id="idSupCmbTipoVia" event="onchange"
+																reRender="id_viabvpred" immediate="true"
+																ajaxSingle="true">
+															</a4j:support>
+														</rich:comboBox></td>
+													<td><rich:comboBox width="150px"
+															defaultLabel="Selecccione" selectFirstOnUpdate="true"
+															directInputSuggestions="false" id="id_viabvpred"
+															binding="#{actualizaPersonasPapeletasManaged.cmbvia}"
+															reRender="id_lugarbvpred"
+															disabled="#{actualizaPersonasPapeletasManaged.selectedOptBusc==1 ? 'false' : 'true'}"
+															immediate="true" tabindex="8">
+															<f:selectItems id="id_lstsectorbv205"
+																value="#{actualizaPersonasPapeletasManaged.lstvia}" />
+														</rich:comboBox></td>
+													<td><h:selectBooleanCheckbox id="idSn"
+															style="align:right;"
+															value="#{actualizaPersonasPapeletasManaged.esSinNumero}"
+															immediate="true"
+															disabled="#{actualizaPersonasPapeletasManaged.selectedOptBusc==1 ? 'false' : 'true'}"
+															valueChangeListener="#{actualizaPersonasPapeletasManaged.checkEsSinNumero}"
+															reRender="id_numero1">
+															<a4j:support event="onblur" reRender="id_numero1" />
+														</h:selectBooleanCheckbox></td>
+													<td><h:inputText id="id_numero1"
+															styleClass="textUpperCase" converter="uppeCaseConverter"
+															maxlength="10" style="width:62px"
+															value="#{actualizaPersonasPapeletasManaged.numero}"
+															disabled="#{actualizaPersonasPapeletasManaged.esSinNumero==true ? 'true' : 'false'}"
+															binding="#{actualizaPersonasPapeletasManaged.txtNumero}"
+															immediate="true" tabindex="9">
+														</h:inputText></td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td>
+											<table border="0" width="100%" cellpadding="0"
+												cellspacing="0">
+												<tr>
+													<td><h:inputText
+															value="#{actualizaPersonasPapeletasManaged.direccionCompleta}"
+															style="width:100%;"
+															binding="#{actualizaPersonasPapeletasManaged.txtDireccionCompleta}"
+															styleClass="textUpperCase" converter="uppeCaseConverter"
+															maxlength="100"
+															disabled="#{actualizaPersonasPapeletasManaged.selectedOptBusc==2 ? 'false' : 'true'}"
+															immediate="true" tabindex="10" /></td>
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</table>
+							</fieldset>
+
+						</a4j:outputPanel></td>
+				</tr>
+				<tr>
+					<td>
+						<div style="width: 100%; text-align: center; margin-top: 10px;">
+
+							<a4j:commandButton value="Guardar"
+								action="#{actualizaPersonasPapeletasManaged.registrarPersona}"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'modalActualizaPersona\')': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+								id="btnGuardar"
+								reRender="id_panelDatosInfractor,id_panelDatosPropietario"
+								style="width:100px;" tabindex="11" status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton value="#{msg['gn.salir']}"
+								action="#{actualizaPersonasPapeletasManaged.limpiar}"
+								onclick="Richfaces.hideModalPanel('modalActualizaPersona');"
+								reRender="id_registropersona" ajaxSingle="true"
+								style="width:100px;" tabindex="12"
+								onblur="focusPerTipoDocumento();"></a4j:commandButton>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</h:panelGroup>
+	</h:form>
+</ui:composition>

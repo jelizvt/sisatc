@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<style type="text/css">
+.extdt-hsep {
+	display: none;
+}
+
+.panel-busqueda-col1{
+	width: 90px;
+}
+.panel-busqueda-col2{
+	width: 120px;
+}
+
+.panel2-busqueda-col1{
+	width: 92px;
+}
+.panel2-busqueda-col2{
+	width: 92px;
+}
+.panel2-busqueda-col1{
+	width: 92px;
+}
+.panel2-busqueda-col2{
+	width: 92px;
+}
+
+
+.panel1-col1{
+	width: 80px;
+}
+.panel1-col2{
+	width: 110px;
+}
+.panel1-col3{
+	width: 95px;
+}
+.panel1-col4{
+	width: 80px;
+}
+.panel1-col5{
+	width: 85px;
+}
+.panel1-col6{
+	width: 75px;
+}
+.panel1-col7{
+	width: 60px;
+}
+.panel1-col8{
+	width: 50px;
+}
+.body-panel-papeleta{
+	font-size: 14pt !important;
+}
+
+.panel2-col1{
+	width: 50px;
+}
+.panel2-col2{
+	width: 80px;
+}
+.panel2-col3{
+	width: 50px;
+}
+.panel2-col4{
+	width: 450px;
+}
+
+
+.panel3-col1{
+	width: 40px;
+}
+.panel3-col2{
+	width: 80px;
+}
+.panel3-col3{
+	width: 65px;
+}
+.panel3-col4{
+	width: 80px;
+}
+.panel3-col5{
+	width: 80px;
+}
+.panel3-col6{
+	width: 80px;
+}
+.panel3-col7{
+	width: 65px;
+}
+.panel3-col8{
+	width: 110px;
+}
+.panel3-col9{
+	width: 65px;
+}
+.panel3-col10{
+	width: 70px;
+}
+
+</style>
+	<h:form id="myform">
+	<rich:hotKey key="return" handler="#{rich:element('idButtonBuscar')}.click()" selector="#myform"/>
+		<rich:panel id="idPanelBusquedaPapeleta">
+			<f:facet name="header">BUSCADOR DE PAPELETAS</f:facet>
+			<h:panelGrid columns="2" columnClasses="panel-busqueda-col1, panel-busqueda-col2" cellpadding="0" cellspacing="0">
+				<h:outputLabel value="Nro. de Papeleta: " />
+				<h:inputText value="#{consultaPapeletasManaged.nroPapeleta}" size="15" maxlength="12" />
+			</h:panelGrid>
+			<h:panelGrid columns="4" columnClasses="panel2-busqueda-col1, panel2-busqueda-col2, panel2-busqueda-col1, panel2-busqueda-col2" cellpadding="0" cellspacing="0">
+				<h:outputLabel value="Fecha Inicio Pago: " />
+				<rich:calendar enableManualInput="true" datePattern="#{msg['param.datepattern']}" value="#{consultaPapeletasManaged.fechaInicio}" inputStyle="width:60px;text-align:center;" inputClass="maskDate"></rich:calendar>				
+				<h:outputLabel value="Fecha Fin Pago: " />
+				<rich:calendar id="idFechaFin" enableManualInput="true" datePattern="#{msg['param.datepattern']}" value="#{consultaPapeletasManaged.fechaFin}" inputStyle="width:60px;text-align:center;" inputClass="maskDate">					
+				</rich:calendar>				
+				<rich:jQuery id="maskedo001" selector=".maskDate" query="mask('99/99/9999')" timing="onload" />				
+			</h:panelGrid>
+			<a4j:commandButton id="idButtonBuscar" value="Buscar" action="#{consultaPapeletasManaged.buscar}" reRender="idPanelPapeletasResultado"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'focusInputApePaterno();' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+				status="ajaxStatus"></a4j:commandButton>
+			<a4j:commandButton id="idButtonLimpiar" value="Limpiar" action="#{consultaPapeletasManaged.limpiar}" reRender="idPanelBusquedaPapeleta"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'focusInputApePaterno();' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+				status="ajaxStatus"></a4j:commandButton>	
+		</rich:panel>
+		<rich:panel id="idPanelPapeletasResultado">
+			<rich:extendedDataTable id="tablaPapeletasResultado" value="#{consultaPapeletasManaged.consultaPapeletaDTOs}"
+				var="item" rows="5" height="140px" enableContextMenu="false" width="1185px" reRender="idPanelPapeletasResultado,tablaPapeletasResultadoDescarga"  >
+				<rich:column width="80px">
+					<f:facet name="header">
+						<h:outputText value="Nro. Papeleta" />
+					</f:facet>
+					<div align="center">
+						<h:outputText value="#{item.nroPapeleta}" />
+					</div>
+				</rich:column>
+				<rich:column width="95px">
+					<f:facet name="header">
+						<h:outputText value="Fecha Infracción" />
+					</f:facet>
+					<div align="center">
+						<h:outputText value="#{item.fechaInfraccion}">
+							<f:convertDateTime pattern="#{msg['param.datepattern']}" />
+						</h:outputText>
+					</div>
+				</rich:column>
+				<rich:column width="60px" style="text-align:center">
+					<f:facet name="header">
+						<h:outputText value="Código" />
+					</f:facet>
+					<div align="center">
+						<h:outputText value="#{item.codigo}" />
+					</div>
+				</rich:column>
+				<rich:column width="300px">
+					<f:facet name="header">
+						<h:outputText value="Infractor" />
+					</f:facet>
+					<h:outputText value="#{item.infractor}" />
+				</rich:column>
+				<rich:column width="65">
+					<f:facet name="header">
+						<h:outputText value="Tipo Doc." />
+					</f:facet>
+					<div align="center">
+						<h:outputText value="#{item.tipoDoc}" />
+					</div>
+				</rich:column>
+				<rich:column width="80px" style="text-align:center">
+					<f:facet name="header">
+						<h:outputText value="Nro. Doc." />
+					</f:facet>
+					<div align="center">
+						<h:outputText value="#{item.nroDoc}" />
+					</div>
+				</rich:column>
+				<rich:column width="80px">
+					<f:facet name="header">
+						<h:outputText value="Placa" />
+					</f:facet>
+					<div align="center">
+						<h:outputText value="#{item.placa}" />
+					</div>
+				</rich:column>
+				<rich:column width="60px">
+					<f:facet name="header">
+						<h:outputText value="Infracción" />
+					</f:facet>
+					<div align="center">
+						<h:outputText value="#{item.infraccion}" />
+					</div>
+				</rich:column>
+				<rich:column width="85px">
+					<f:facet name="header">
+						<h:outputText value="Estado" />
+					</f:facet>
+					<div align="center">
+					<h:outputText value="#{item.estado}" />
+					</div>
+				</rich:column>				
+				<rich:column width="80px">
+					<f:facet name="header">
+						<h:outputText value="Monto Multa" />
+					</f:facet>
+					<div align="right">
+					<h:outputText value="#{item.montoMulta}" />
+					</div>
+				</rich:column>
+				<rich:column width="80px">
+					<f:facet name="header">
+						<h:outputText value="Monto Pago" />
+					</f:facet>
+					<div align="right">
+					<h:outputText value="#{item.montoPago}" />
+					</div>
+				</rich:column>
+				<rich:column width="120px">
+					<f:facet name="header">
+						<h:outputText value="Fecha Pago" />
+					</f:facet>
+					<div align="center">
+					<h:outputText value="#{item.fechaPago}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+					</h:outputText>
+					</div>
+				</rich:column>				
+			<a4j:support reRender="panelDetallePapeleta,tablaPapeletasResultadoDescarga" id="extended_table_bean_take_selection"
+                  	action="#{consultaPapeletasManaged.consulta(item.nroPapeleta,consultaPapeletasManaged.fechaInicio,consultaPapeletasManaged.fechaFin)}"
+                    event="onRowClick" >
+                    <f:setPropertyActionListener target="#{consultaPapeletasManaged.selectItem}" value="#{item}" />
+            </a4j:support>
+			<!--Antigua línea de código, en "action" -->
+			<!--action="#{consultaPapeletasManaged.seleccionar}" -->
+			</rich:extendedDataTable>
+			<rich:datascroller id="tableDataScroller" align="center" for="tablaPapeletasResultado" renderIfSinglePage="false"
+				status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+				<f:facet name="pages">
+					<h:outputText value="#{pageIndex} / #{pages}" />
+				</f:facet>
+			</rich:datascroller>
+			<div style="width: 1187px">
+			<a4j:outputPanel id="panelDetallePapeleta">
+				<rich:panel rendered="#{not empty consultaPapeletasManaged.consultaPapeletaDTOs}"  bodyClass="body-panel-papeleta">
+					<f:facet name="header">Detalle Papeleta</f:facet>
+					<rich:panel>
+					<h:panelGrid columns="10" columnClasses="panel1-col1,panel1-col2,panel1-col3,panel1-col4,panel1-col5,panel1-col6,panel1-col7,panel1-col8,panel1-col7,panel1-col8">
+						<h:outputLabel value="Nro. Papeleta: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.nroPapeleta}" style="font-weight:bold;"/>
+						<h:outputLabel value="Placa: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.placa}" style="font-weight:bold;"/>
+						
+						<h:outputLabel value="Fecha Infracción: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.fechaInfraccion}" >
+							<f:convertDateTime pattern="#{msg['param.datepattern']}" />
+						</h:outputText>
+						
+						<h:outputLabel value="Infracción: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.infraccion}" style="font-weight:bold;"/>
+						<h:outputLabel value="Lote Id: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.loteId}" />
+						<h:outputLabel value="Nro Resolución: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.nroResolucion}" />
+						<h:outputLabel value="Estado Resolución: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.estadoResolucion}" />
+						<h:outputLabel value="Fecha Notificación: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.fechaNotificacion}" >
+							<f:convertDateTime pattern="#{msg['param.datepattern']}" />
+						</h:outputText>
+					</h:panelGrid>
+					</rich:panel>
+					<rich:panel>
+					<h:panelGrid columns="4" columnClasses="panel2-col1,panel2-col2,panel2-col3,panel2-col4">
+						<h:outputLabel value="Codigo: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.codigo}" />
+						<h:outputLabel value="Infractor: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.infractor}" style="font-weight:bold;"/>
+						<h:outputLabel value="Tipo Doc.: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.tipoDoc}" />
+						<h:outputLabel value="Nro Doc.: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.nroDoc}" />
+					</h:panelGrid>
+					</rich:panel>
+					<rich:panel>
+					<h:panelGrid columns="10" columnClasses="panel3-col1,panel3-col2,panel3-col3,panel3-col4,panel3-col5,panel3-col6,panel3-col7,panel3-col8,panel3-col9,panel3-col10">
+						<h:outputLabel value="Estado: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.estado}" style="font-weight:bold;" />
+						<h:outputLabel value="Monto Multa: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.montoMulta}" />
+						<h:outputLabel value="Monto Pagado: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.montoPago}" />
+						<h:outputLabel value="Fecha Pago: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.fechaPago}" rendered="#{consultaPapeletasManaged.selectItem.fechaPago != null}" style="font-weight:bold;">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+						</h:outputText>
+						<h:outputText rendered="#{consultaPapeletasManaged.selectItem.fechaPago == null}" value="-" >							
+						</h:outputText>
+						<h:outputLabel value="Nro Recibo: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.nroRecibo}" style="font-weight:bold;" />
+					</h:panelGrid>
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Responsable: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.responsable}" rendered="#{consultaPapeletasManaged.selectItem.responsable != null}" style="font-weight:bold;" />
+						<h:outputText rendered="#{consultaPapeletasManaged.selectItem.responsable == null}" value="-"/>						
+						<h:outputLabel value="Fecha Última Modificacción: " />
+						<h:outputText value="#{consultaPapeletasManaged.selectItem.fechaActualizacion}" rendered="#{consultaPapeletasManaged.selectItem.fechaActualizacion != null}" style="font-weight:bold;" >
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+						</h:outputText>		
+						<h:outputText rendered="#{consultaPapeletasManaged.selectItem.fechaActualizacion == null}" value="-" />			
+					</h:panelGrid>
+					</rich:panel>
+				</rich:panel>
+			</a4j:outputPanel>
+			</div>
+<!-- 			<div style="float: left; width: 1187px"> -->
+			<div style="width: 1187px">
+				<rich:extendedDataTable id="tablaPapeletasResultadoDescarga"
+						value="#{consultaPapeletasManaged.consultaPapeletaDescargo}"
+						var="items" rows="5" height="160px" enableContextMenu="false"
+						width="1185px" noDataLabel="No existe Descargo/Prescripción">
+					<f:facet name="header">
+						<h:outputText value="Detalle Descargo/Prescripción" />
+					</f:facet>
+						<rich:column width="180px">
+							<f:facet name="header">
+								<h:outputText value="" />
+							</f:facet>
+							<div align="center">
+								<h:outputText value="#{items.tipoDoc}" />
+							</div>
+						</rich:column>
+						
+						<rich:column width="100px">
+							<f:facet name="header">
+								<h:outputText value="Nro. Doc." />
+							</f:facet>
+							<div align="center">
+								<h:outputText value="#{items.nroDoc}" />
+							</div>
+						</rich:column>
+						
+						<rich:column width="90px">
+							<f:facet name="header">
+								<h:outputText value="Fecha Doc." />
+							</f:facet>
+						<div align="center">
+							<h:outputText value="#{items.fechaDocumentoDescargo}">
+								<f:convertDateTime pattern="dd/MM/yyyy"
+									timeZone="#{msg['param.timezone']}" />
+							</h:outputText>
+						</div>
+					</rich:column>
+						
+						<rich:column width="500px">
+							<f:facet name="header">
+								<h:outputText value="Motivo" />
+							</f:facet>
+							<div align="left">
+								<h:outputText value="#{items.descripcionDescargo}" />
+							</div>
+						</rich:column>
+						
+						<rich:column width="70px">
+							<f:facet name="header">
+								<h:outputText value="Monto" />
+							</f:facet>
+							<div align="center">
+								<h:outputText value="#{items.montoMulta}" />
+							</div>
+						</rich:column>
+
+					<rich:column width="100px">
+						<f:facet name="header">
+							<h:outputText value="Fecha Registro" />
+						</f:facet>
+						<div align="center">
+							<h:outputText value="#{items.fechaActualizacion}">
+								<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{msg['param.timezone']}" />
+							</h:outputText>
+						</div>
+					</rich:column>
+
+					<rich:column width="70px">
+						<f:facet name="header">
+							<h:outputText value="Registra" />
+						</f:facet>
+						<div align="center">
+							<h:outputText value="#{items.responsable}" />
+						</div>
+					</rich:column>
+
+					<rich:column width="80px">
+						<f:facet name="header">
+							<h:outputText value="" />
+						</f:facet>
+						<div align="center">
+							<h:outputText value="#{items.tipoDescargo}" />
+						</div>
+					</rich:column>
+				</rich:extendedDataTable>
+				<rich:datascroller id="tableDataScroller2" align="center"
+					for="tablaPapeletasResultadoDescarga" renderIfSinglePage="false"
+					status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+					<f:facet name="pages">
+						<h:outputText value="#{pageIndex} / #{pages}" />
+					</f:facet>
+				</rich:datascroller>
+			</div>
+			<div style="float: right;margin-top:-140px; width:110px;" >
+				<h:commandLink id="btnListaPapeletasExcel"
+					action="#{consultaPapeletasManaged.exportarTablaExcel}">
+					<h:graphicImage value="/images/modal/excel.png"
+						style="border:0;width:25px;height:25px;" />
+					<rich:toolTip for="btnListaPapeletasExcel">Descargar Lista en Excel.</rich:toolTip>
+				</h:commandLink>
+			</div>
+		</rich:panel>
+	</h:form>
+</ui:composition>

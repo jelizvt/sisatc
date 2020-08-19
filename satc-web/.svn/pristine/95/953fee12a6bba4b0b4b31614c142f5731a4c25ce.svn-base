@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<script type="text/javascript">
+		function cobrarEnter(e) {
+		  tecla = (document.all) ? e.keyCode : e.which;
+		  if (tecla==Event.KEY_RETURN) $('incCajaCobPap:frmResumenCobrar:btnCobrarDeuda').focus();
+		}
+	</script>
+<style type="">
+
+.rich-panel-header{
+background-color: #900000;
+border-color: #900000;
+font-size: 11px;
+color: #FFF;
+font-weight: bold;
+font-family: Arial,Verdana,sans-serif;
+background-image: url(#{facesContext.externalContext.requestContextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.GradientA/DATB/eAGLiLjPwDCBCQAJ!AIi.jsf);
+/*background-image: url(#{facesContext.externalContext.requestContextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.GradientA/DATB/eAF7emTy1lIvJgASigOz.jsf);*/
+} 
+
+input[type="button"] {
+border-color: #C0C0C0;
+font-size: 11px;
+font-family: Arial,Verdana,sans-serif;
+color: #FFF;
+background-color: #900000;
+background-image: url(#{facesContext.externalContext.requestContextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.images.ButtonBackgroundImage/DATB/eAFjYGDgjoi4z8AwgQkAClgCLQ__.jsf);
+}
+ 
+ 
+.rich-table-header {
+background-color: #900000;
+background-image: url(#{facesContext.externalContext.requestContextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.GradientA/DATB/eAGLiLjPwDCBCQAJ!AIi.jsf);
+background-position: top left;
+background-repeat: repeat-x;
+}      
+</style>
+	<div style="max-height:430px; overflow:auto;">
+	<h:form id="formCajaCobranzaPapeleta">
+		<a4j:outputPanel id="panelMensajePapeleta"
+				rendered="#{not empty cajaCobranzaPapeletaSimuladorManaged.lstResumenDeudasCobranzaCoactivaDTOs}">
+				<div style="background-color: #FFFFAA;color:#FF5555;padding-left: 10px;">
+					La(s) papeleta(s) seleccionada(s) se encuentran en cobranza coactiva.
+					<br/>
+					<a style="font-size: 10pt;font-weight: bold;color:#FF5555;">
+					<ui:repeat var="iterPal" value="#{cajaCobranzaPapeletaSimuladorManaged.lstResumenDeudasCobranzaCoactivaDTOs}">
+						<h:outputText value="#{iterPal.anho} - #{iterPal.conceptoDescripcion} - #{iterPal.nroPapeleta}" />
+						<br/>
+					</ui:repeat>
+					</a>
+				</div>
+		</a4j:outputPanel>
+		<a4j:outputPanel id="panelMensajeAtencionPapeleta"
+				rendered="#{not empty cajaCobranzaPapeletaSimuladorManaged.listUsuariosAtencion}">
+				<div style="background-color: #FF5555;color: #FFFFAA;padding-left: 10px;">
+					La(s) papeleta(s) seleccionada(s) estan siendo atendidas por el(los) usuario(s):.
+					<br/>
+					<a style="font-size: 10pt;font-weight: bold;color: #FFFFAA;">
+					<ui:repeat var="iterUsu" value="#{cajaCobranzaPapeletaSimuladorManaged.listUsuariosAtencion}">
+						<h:outputText value=" - #{iterUsu}" />
+						<br/>
+					</ui:repeat>
+					</a>
+				</div>				
+			</a4j:outputPanel>
+		
+		<div style="padding: 5px; margin-top: 5px;">
+			<rich:dataTable id="id_papeletas" var="record"
+				value="#{cajaCobranzaPapeletaSimuladorManaged.listPapeletas}" width="100%">
+				<rich:column id="l2" width="95px" style="text-align: center;">
+					<f:facet name="header">Fecha Infraccion</f:facet>
+					<h:outputText value="#{record.fechaInfraccion}">
+						<f:convertDateTime locale="#{msg['param.localedate']}"
+							timeZone="#{aplicationManaged.timeZone}"
+							pattern="#{msg['param.datepattern']}" />
+					</h:outputText>
+				</rich:column>
+				<rich:column width="40px">
+					<f:facet name="header">Infraccion</f:facet>
+					<div align="center"><h:outputText value="#{record.descInfraccion}" /></div>
+				</rich:column>
+				<rich:column width="40px">
+					<f:facet name="header">Monto</f:facet>
+					<div align="right"><h:outputText value="#{record.montoSinDescuento}" /></div>
+				</rich:column>
+				<rich:column width="40px">
+					<f:facet name="header">Monto A Pagar</f:facet>
+					<div align="right"><h:outputText value="#{record.montoConDescuento}" /></div>
+				</rich:column>
+				<rich:column id="l3" width="110px">
+					<f:facet name="header">Nro Papeleta</f:facet>
+					<div align="center"><h:outputText value="#{record.nroPapeleta}" /></div>
+				</rich:column>
+				<rich:column id="l4" width="90px">
+					<f:facet name="header">Placa </f:facet>
+					<div align="center"><h:outputText value="#{record.placa}" /></div>
+				</rich:column>
+				<rich:column width="150px">
+					<f:facet name="header">Nro Res.</f:facet>
+					<div align="center"><h:outputText value="#{record.nroResolucion}" /></div>
+				</rich:column>
+				<rich:column width="75px">
+					<f:facet name="header">Fecha Notifi.</f:facet>
+					<div align="center">
+						<h:outputText value="#{record.fechaNotificacion}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="#{msg['param.timezone']}" />
+					</h:outputText></div>
+				</rich:column>
+				<rich:column id="l5" width="380px">
+					<f:facet name="header">Nombre Infractor</f:facet>
+					<h:outputText value="#{record.infractor}" />
+				</rich:column>
+			</rich:dataTable>
+		</div>
+		
+		<a4j:outputPanel
+				rendered="#{not empty cajaCobranzaPapeletaSimuladorManaged.listResumenObligacionDTOs}">
+				<div style="padding-left: 5px;">
+					<rich:dataTable
+						value="#{cajaCobranzaPapeletaSimuladorManaged.listResumenObligacionDTOs}"
+						var="itemResumen">
+						<rich:column>
+							<f:facet name="header"> Concepto</f:facet>
+							<h:panelGroup layout="block" style="text-align: center;">
+								<h:outputText value="#{itemResumen.conceptoAsString}" />
+							</h:panelGroup>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"> Monto</f:facet>
+							<h:panelGroup layout="block"
+								style="width:70px;text-align: right;">
+								<h:outputText value="#{itemResumen.monto}" />
+							</h:panelGroup>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"> Fecha liquidación</f:facet>
+							<h:panelGroup layout="block" style="text-align: center;">
+								<h:outputText value="#{itemResumen.fechaLiquidacion}">
+									<f:convertDateTime locale="#{msg['param.localedate']}"
+										timeZone="#{aplicationManaged.timeZone}"
+										pattern="#{msg['param.datepattern']}" />
+								</h:outputText>
+							</h:panelGroup>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"> Nro Papeleta</f:facet>
+							<h:panelGroup layout="block" style="text-align: center;">
+								<h:outputText value="#{itemResumen.nroPapeleta}" />
+							</h:panelGroup>
+						</rich:column>
+						<rich:column>
+							<f:facet name="header"> Nro Expediente</f:facet>
+							<h:panelGroup layout="block" style="text-align: center;">
+								<h:outputText value="#{itemResumen.nroValor}" />
+							</h:panelGroup>
+						</rich:column>
+					</rich:dataTable>
+				</div>
+			</a4j:outputPanel>
+	</h:form>	
+	<h:form id="frmResumenCobrar">
+		<div style="padding: 10px;">
+			<table>
+				<tbody>
+					<tr>
+						<td>
+							<table>
+								<tr>
+									<td width="95px" style="font-size: 9px">Deuda Sin Descuento:</td>
+									<td align="right"><h:outputLabel 
+											value="#{cajaCobranzaPapeletaSimuladorManaged.montoSinDescuento}"
+											disabled="true" styleClass="inputMoney"
+											style="font-size: 12px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:outputLabel></td>
+								</tr>
+								<tr>
+									<td style="font-size: 10px">Descuento:</td>
+									<td><h:inputText
+											value="#{cajaCobranzaPapeletaSimuladorManaged.montoDescuento}" disabled="true"
+											styleClass="inputMoney"
+											style="font-size: 13px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:inputText></td>
+								</tr>
+								<tr>
+									<td width="95px">Deuda:</td>
+									<td><h:inputText
+											value="#{cajaCobranzaPapeletaSimuladorManaged.montoACobrar}"
+											disabled="true" styleClass="inputMoney"
+											style="font-size: 16px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:inputText></td>
+								</tr>
+								<tr>
+									<td>Ingresado:</td>
+									<td><h:inputText
+											value="#{cajaCobranzaPapeletaSimuladorManaged.montoIngresado}"
+											disabled="true" styleClass="inputMoney"
+											style="font-size: 16px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:inputText></td>
+								</tr>
+								<tr>
+									<td>#{cajaCobranzaPapeletaSimuladorManaged.montoVuelto == null ?
+										'Resta' : 'Vuelto'}:</td>
+									<td><h:inputText
+											value="#{cajaCobranzaPapeletaSimuladorManaged.montoResta}"
+											rendered="#{cajaCobranzaPapeletaSimuladorManaged.montoVuelto == null}"
+											disabled="true" styleClass="inputMoney"
+											style="font-size: 16px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:inputText> <h:inputText
+											value="#{cajaCobranzaPapeletaSimuladorManaged.montoVuelto}"
+											rendered="#{cajaCobranzaPapeletaSimuladorManaged.montoVuelto != null}"
+											disabled="true" styleClass="inputMoney"
+											style="font-size: 16px; text-align: right;">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="en" />
+										</h:inputText></td>
+								</tr>
+							</table>
+						</td>
+						
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div style="padding: 10px; margin-bottom: 10px;">
+			
+			<a4j:commandButton value="Cancelar" action="#{cajaCobranzaPapeletaSimuladorManaged.liberarContribuyente}"
+				oncomplete="Richfaces.hideModalPanel('modalCobrando')"
+				style="width: 150px; margin-left: 4px;"></a4j:commandButton>
+		</div>
+	</h:form>
+	</div>	
+</ui:composition>

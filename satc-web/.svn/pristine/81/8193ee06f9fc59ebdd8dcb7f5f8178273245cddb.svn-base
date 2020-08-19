@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:form id="formReporteDJVehicular">
+	<style>
+.col1 {
+	vertical-align: top;
+	width: 480px;
+}
+
+.col2 {
+	vertical-align: top;
+	width: 260px;
+}
+
+.col3 {
+	vertical-align: top;
+	width: 260px;
+}
+.col1recaudacion{
+	width: 160px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+	height: 25px;
+}
+.col2recaudacion{
+	width: 88px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+}
+</style>
+	<rich:panel id="idPanelReportePredial">
+		<f:facet name="header">REPORTE DE TRANSACCIONES</f:facet>
+		
+		<h:panelGrid columns="9">
+		<h:panelGrid columns="4">
+			<h:outputLabel value="Fecha inicio de registro:">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{reportesTransacciones.fechaInicio}" datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Fecha inicio de registro:" enableManualInput="true" >
+			</rich:calendar>
+			<h:outputLabel value="Fecha fin de registro:">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{reportesTransacciones.fechaFin}" datePattern="dd/MM/yyyy" inputSize="8" required="true" 
+				requiredMessage="Fecha fin de registro:" enableManualInput="true">
+			</rich:calendar>
+			
+		</h:panelGrid>	
+		<h:panelGrid columns="1">
+		
+				<a4j:commandButton id="id_buttonPartidaSOATXLS" action="#{reportesTransacciones.previewDJ}"
+					value="Predios    "
+					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			    </a4j:commandButton>
+			    <a4j:commandButton id="id_buttonVehiculo" action="#{reportesTransacciones.previewDJ}"
+					value="Vehículos "
+					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+				</a4j:commandButton>
+		
+	    </h:panelGrid>	
+	    
+<!-- 	    <h:panelGrid columns="1"> -->
+		
+<!--    			    <a4j:commandButton id="id_buttondp" action="#{reportesTransacciones.previewDJ}" -->
+<!-- 					value="Predios descargados" -->
+<!-- 					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.dpXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };"> -->
+<!-- 				</a4j:commandButton> -->
+<!-- 				<a4j:commandButton id="id_buttondv" action="#{reportesTransacciones.previewDJ}" -->
+<!-- 					value="Vehiculos descargados" -->
+<!-- 					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.dvXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };"> -->
+<!--   				</a4j:commandButton> -->
+			
+<!-- 	    </h:panelGrid>	 -->
+	    
+	    <h:panelGrid columns="1">
+	    	
+	    	  <a4j:commandButton id="id_buttona" action="#{reportesTransacciones.previewDJ}"
+					value="Liquidacion de alcabala"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.LAXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+				</a4j:commandButton>
+				<a4j:commandButton id="id_buttonRecords"
+					action="#{reportesTransacciones.previewDJ}"
+					value="Records Emitidos "
+					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.RECORDXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+				</a4j:commandButton>
+
+			</h:panelGrid>	
+						
+<!-- 		<h:panelGrid columns="1"> -->
+<!-- 					<a4j:commandButton id="id_buttonRC" action="#{reportesTransacciones.previewDJ}" -->
+<!-- 					value="Emision de documentos por TUPA" -->
+<!-- 					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.rcXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };"> -->
+<!-- 		    		</a4j:commandButton> -->
+				
+<!-- 			    	<a4j:commandButton id="id_buttonRA" action="#{reportesTransacciones.previewDJ}" -->
+<!-- 			 		value="Emision de autovaluo        " -->
+<!-- 					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.RAXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };"> -->
+<!-- 				  </a4j:commandButton> -->
+<!-- 		</h:panelGrid> -->
+			
+			<h:commandLink id="linkIdSOATXLS"  styleClass="pruebaSOATXLS" value="sasas" style="display: none;" action="#{reportesTransacciones.generarReportePrediosXLS}" />
+			<h:commandLink id="linkIdVehiculoXLS" styleClass="pruebaXLS" value="sas" style="display: none;" action="#{reportesTransacciones.generarReporteVehiculosXLS}" />
+			<h:commandLink id="linkIdDPXLS" styleClass="dpXLS" value="s1" style="display: none;" action="#{reportesTransacciones.generarDescargoPredialXLS}" />
+			<h:commandLink id="linkIdDVXLS" styleClass="dvXLS" value="s1" style="display: none;" action="#{reportesTransacciones.generarDescargoVehicularXLS}" />
+				
+			
+			<h:commandLink id="linkIdAXLS" styleClass="LAXLS" value="s1" style="display: none;" action="#{reportesTransacciones.generarLiquidacionAlcabalaXLS}" />
+			<h:commandLink id="linkIdRecordXLS" styleClass="RECORDXLS" value="s1" style="display: none;" action="#{reportesTransacciones.generarRecordsXLS}" />
+<!-- 			<h:commandLink id="linkrcAXLS" styleClass="rcXLS" value="s1" style="display: none;" action="#{reportesTransacciones.generarReporteCertificacionesXLS}" /> -->
+<!-- 			<h:commandLink id="linkRAXLS" styleClass="RAXLS" value="s1" style="display: none;" action="#{reportesTransacciones.generarReporteAutovaluoXLS}" /> -->
+
+			
+		</h:panelGrid>	
+		</rich:panel>
+	
+
+</h:form>
+</html>

@@ -1,0 +1,2341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+<style type="">
+
+.classTblDeuda tr:nth-child(odd) {
+background-color: #F2F2F2;
+color: #000000;
+}
+
+.col1 {
+	text-align: right;
+	width: 80px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.col2 {
+	text-align: right;
+	width: 78px;
+	border-right: solid 1px silver;
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.col3 {
+	text-align: right;
+	width: 43px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.col4 {
+	text-align: right;
+	width: 48px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.col5 {
+	text-align: right;
+	width: 72px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.col6 {
+	text-align: right;
+	width: 98px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.col7 {
+	text-align: right;
+	width: 88px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.col8 {
+	text-align: right;
+	width: 98px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.col9 {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: right;
+	width: 80px;		
+	padding: 4px 4px 4px 4px;
+	font-size: 12px;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter1 {
+	text-align: right;
+	width: 80px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.colFooter2 {
+	text-align: right;
+	width: 61px;
+	border-right: solid 1px silver;
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.colFooter3 {
+	text-align: right;
+	width: 36px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.colFooter4 {
+	text-align: right;
+	width: 41px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter5 {
+	text-align: right;
+	width: 51px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter6 {
+	text-align: right;
+	width: 81px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter7 {
+	text-align: right;
+	width: 71px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter8 {
+	text-align: right;
+	width: 81px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 14px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter9 {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: right;
+	width: 82px;		
+	padding: 4px 4px 4px 4px;
+	font-size: 12px;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+
+.footerDeudas {
+	text-align: right;
+	margin-left: 100px;
+}
+
+.col1tblDeuda{
+	border-right: solid 1px silver;
+	border-bottom: solid 1px silver;
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.classTblDeuda{
+	border-spacing: 0px;
+	border-left: solid 1px silver;
+
+}
+.headerTblDeudas{
+border-right: solid 1px silver;
+border-bottom: solid 1px silver;
+padding: 4px 4px 4px 4px;
+text-align: center;
+font-size: 11px;
+color: black;
+font-family: Arial,Verdana,sans-serif;
+white-space: nowrap;
+background-color: #EAF0F8;
+}
+
+.richPanelBodyOnlyZoneRefresh{
+	padding: 0px;
+}
+.richPanelOnlyZoneRefresh{
+	border-width: 0px;
+	border-style: solid;
+	padding: 0px;
+	background-color: white;
+	border-color: silver;
+}
+</style>	
+
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+
+	<rich:panel id="panelDeudas">
+		<h:form id="frmDescargoDeudas" >		
+			<table  cellpadding="0" cellspacing="0" border="1" align="center" >
+				<tbody>
+					<tr><td>
+					<table>
+					<tr><td>
+						<h:outputText rendered="#{descargoDeudasManaged.permisoCalcularDeuda}" value="Fecha de Compensacion: " /></td>
+						<td  id="fechaCompensacion">
+							<rich:calendar rendered="#{descargoDeudasManaged.permisoCalcularDeuda}"
+								locale="en/US" direction="bottom-right"						
+								datePattern="dd/MM/yyyy"						
+								enableManualInput="true" inputClass="maskDate"
+								inputStyle="width:100px" id="id_fechacompensacion"
+								value="#{descargoDeudasManaged.fechaCompensacion}"								
+								>
+							</rich:calendar> 
+							<rich:jQuery id="maskedo1" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" />	
+						</td>
+						<td>
+							<a4j:commandButton rendered="#{descargoDeudasManaged.permisoCalcularDeuda}" value="Calcular Deuda" style="width:100px;"
+								id="btnCalcularDeuda" action="#{descargoDeudasManaged.calcularDeuda}"
+								status="ajaxStatus" reRender="panelDeudas"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };" />
+						</td>					
+					</tr>					
+					</table>
+					</td></tr>
+					<tr><td>
+					<a4j:region>
+						<h:panelGrid rendered="#{descargoDeudasManaged.permisoFiltrar and descargoDeudasManaged.showListDeuda}" id="id_panelDatosBusqueda" columns="4"	columnClasses="colform colform colform colform" style="width:100%">
+							Periodo :
+							<rich:comboBox id="comboBoxAnioDeuda"
+								valueChangeListener="#{descargoDeudasManaged.changeListenerComboBoxAnioDeuda}" value="#{descargoDeudasManaged.cmbAnioDeuda}"
+								defaultLabel="Seleccione" enableManualInput="true"
+								tabindex="1">
+								<f:selectItems value="#{descargoDeudasManaged.listAnioDeuda}" />
+								<a4j:support event="onselect"
+									reRender="col1tblDeuda, comboBoxAnioDeuda, panelDeudas"
+									bypassUpdates="false" ajaxSingle="true"
+									oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+									></a4j:support>
+							</rich:comboBox>
+							<h:outputLabel value="Descripción : "/>
+							<rich:comboBox id="comboBoxDescripcion"
+								valueChangeListener="#{descargoDeudasManaged.changeListenerComboBoxDescripcion}" value="#{descargoDeudasManaged.descripcion}"
+								defaultLabel="Seleccione" enableManualInput="true"
+								tabindex="1">
+								<f:selectItems value="#{descargoDeudasManaged.listDescripcion}" />
+								<a4j:support event="onselect"
+									reRender="col1tblDeuda, comboBoxDescripcion, panelDeudas"
+									bypassUpdates="false" ajaxSingle="true"
+									oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+									></a4j:support>
+							</rich:comboBox>
+							<h:outputLabel value="Concepto : "/>
+							<rich:comboBox id="comboBoxSubConcepto"
+								valueChangeListener="#{descargoDeudasManaged.changeListenerComboBoxSubConcepto}"  value="#{descargoDeudasManaged.subconcepto}"
+								defaultLabel="Seleccione" enableManualInput="true"
+								tabindex="1">
+								<f:selectItems value="#{descargoDeudasManaged.listSubConcepto}" />
+								<a4j:support event="onselect"
+									reRender="col1tblDeuda, comboBoxSubConcepto, panelDeudas"
+									bypassUpdates="false" ajaxSingle="true"
+									oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+									></a4j:support>
+							</rich:comboBox>
+							<h:outputLabel value="Cuota : "/>
+							<rich:comboBox id="comboBoxNroCuota"
+								valueChangeListener="#{descargoDeudasManaged.changeListenerComboBoxNroCuota}" value="#{descargoDeudasManaged.cmbNroCuota}"
+								defaultLabel="Seleccione" enableManualInput="true"
+								tabindex="1">
+								<f:selectItems value="#{descargoDeudasManaged.listNroCuota}" />
+								<a4j:support event="onselect"
+									reRender="col1tblDeuda, comboBoxNroCuota, panelDeudas"
+									bypassUpdates="false" ajaxSingle="true"
+									oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+									></a4j:support>
+							</rich:comboBox>
+						</h:panelGrid>
+						<rich:separator height="1px"></rich:separator>
+						<div style="width: 770px">
+						<h:panelGrid rendered="#{descargoDeudasManaged.permisoFiltrar and descargoDeudasManaged.showListDeuda}"  columns="2" columnClasses="columnButtonM columnButtonM"
+							width="100%">								
+							<a4j:commandButton id="btnFiltrar" value="Filtrar"
+								style="width:100px;"
+								action="#{descargoDeudasManaged.filtrar}"
+								reRender="col1tblDeuda" status="ajaxStatus"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								tabindex="5" />
+							<a4j:commandButton id="btnLimpiar" value="Limpiar"
+								style="width:100px;"
+								action="#{descargoDeudasManaged.limpiarFiltros}"
+								reRender="col1tblDeuda, id_panelDatosBusqueda" status="ajaxStatus"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								tabindex="5" />	
+						</h:panelGrid>
+					</div>					
+					</a4j:region>
+					</td></tr>					
+					<tr>
+					<td class="headerTblDeudas" align="center" style="font-size: 18px; position: relative;">LISTA DE DEUDA DEL CONTRIBUYENTE
+						
+						<a4j:commandButton  style="position: absolute; right: 10px; width:150px;"  
+								rendered="#{descargoDeudasManaged.showListDeuda and !descargoDeudasManaged.showListDeudaSelecionada}" 
+								value="Deuda seleccionada"
+								id="btnSele" action="#{descargoDeudasManaged.verDeudasSelecionadas}"
+								status="ajaxStatus" reRender="panelDeudas"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };" />
+								
+						<a4j:commandButton  style="position: absolute; right: 10px;"  
+								rendered="#{descargoDeudasManaged.showListDeuda and descargoDeudasManaged.showListDeudaSelecionada}" 
+								value="Todas las deudas"
+								id="btnDeu" action="#{descargoDeudasManaged.cancelDeudasSelecionadas}"
+								status="ajaxStatus" reRender="panelDeudas"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };" />
+						<!--  <a4j:commandLink id="viewSelect" style="position: absolute; right: 0;" 
+									rendered="#{descargoDeudasManaged.showListDeuda 
+									and !descargoDeudasManaged.showListDeudaSelecionada}">
+								<h:graphicImage value="/images/font-icon/eye-open.png" style="border: 0px; padding-right: 15px;"
+										alt="deudas seleccionadas" width="20" height="20" />
+										
+								<a4j:support ajaxSingle="true" event="onclick"
+										action="#{descargoDeudasManaged.verDeudasSelecionadas}"
+										reRender="panelDeudas" status="ajaxStatus">
+									</a4j:support>	
+								<rich:toolTip for="editSelecExp">Ver deudas seleccionadas</rich:toolTip>					
+						</a4j:commandLink>
+						
+						<a4j:commandLink id="viewSelectVs" style="position: absolute; right: 0;" 
+									rendered="#{descargoDeudasManaged.showListDeuda 
+									and descargoDeudasManaged.showListDeudaSelecionada}">
+								<h:graphicImage value="/images/font-icon/eye-invisibility.png" style="border: 0px; padding-right: 15px;"
+										alt="Ver deudas" width="20" height="20" />
+										
+								<a4j:support ajaxSingle="true" event="onclick"
+										action="#{descargoDeudasManaged.cancelDeudasSelecionadas}"
+										reRender="panelDeudas" status="ajaxStatus">
+									</a4j:support>	
+								<rich:toolTip for="editSelecExp">Ver deudas</rich:toolTip>					
+						</a4j:commandLink> -->
+					</td>
+					
+					</tr>
+					<tr>
+						<td>
+						<!-- Definiendo una rich:panel con estilos limpios debido a q solo sera usado como zona de refreso de ajax -->
+						<rich:panel id="col1tblDeuda" style="bgcolor:white" bodyClass="richPanelBodyOnlyZoneRefresh" 
+							styleClass="richPanelOnlyZoneRefresh">	
+						<!-- HEADER TABLE  h:datatable que contiene solo las cabecera de la tabla de deudas en cada elemento del header de esta se inserto un div que contiene la dimension de la columna acorde a las columnas
+						de la tabla de datos de deuda-->
+								<h:dataTable var="itemTemp" rendered="#{descargoDeudasManaged.showListDeuda}"
+									columnClasses="col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda"
+									styleClass="classTblDeuda" headerClass="headerTblDeudas" cellpadding="0" cellspacing="0">
+									<h:column>
+										<f:facet name="header">
+											<div style="width: 40px; text-align: center;">Item</div>
+										</f:facet>
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<div style="width: 40px; text-align: center;">Año</div>
+										</f:facet>
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<div style="width: 140px; text-align: center;">Predio / Placa</div>
+										</f:facet>
+									</h:column>
+									
+									<h:column>
+										<f:facet name="header">
+											<div style="width: 110px; text-align: center;">Concepto</div>
+										</f:facet>
+									</h:column>
+									<h:column style="padding-left: 10px;">
+										<f:facet name="header">
+											<div style="width: 50px; text-align: center;">Cuota</div>
+										</f:facet>
+									</h:column>	
+									<h:column>
+										<f:facet name="header">
+											<div style="width: 80px; text-align: center;">Fecha Registro</div>
+										</f:facet>
+									</h:column>
+									<h:column>									
+										<f:facet name="header">
+											<div style="width: 100px; text-align: center;">Insoluto</div>
+										</f:facet>
+									</h:column>									
+									<h:column>
+										<f:facet name="header">
+											<div style="width: 100px; text-align: center;">Der. Emision</div>
+										</f:facet>
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<div style="width: 100px; text-align: center;">Reajuste</div>
+										</f:facet>
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<div style="width: 100px; text-align: center;">Interes</div>
+										</f:facet>
+									</h:column>
+									<h:column>
+										<f:facet name="header">
+											<div style="width: 100px; text-align: center;">Total Deuda</div>
+										</f:facet>
+									</h:column>	
+									<h:column>
+										<!-- <f:facet name="header">
+											<div style="width: 100px; text-align: center;">Seleccionar</div>											
+										</f:facet> -->
+										<f:facet name="header">
+										
+										<h:selectBooleanCheckbox  id="checkBoxAllDeuda" value="#{descargoDeudasManaged.selectedAllDeu}"
+											valueChangeListener="#{descargoDeudasManaged.changeSelectAllDeu}" immediate="true" style="width:100px">
+											<a4j:support event="onchange" reRender="panelDeudas" immediate="true"></a4j:support>
+										</h:selectBooleanCheckbox>
+										
+										</f:facet>
+									</h:column>								
+								</h:dataTable>
+								<div style="max-height: 550px; overflow: overlay">
+									<h:dataTable id="tblDeudasPer" value="#{descargoDeudasManaged.listCtaCte}" 
+											var="item" 
+											 
+											height="250"
+										sortMode="single" rowKeyVar="index" headerClass="headerTblDeudas" footerClass="footerDeudas"
+										columnClasses="col1tblDeuda, col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda"
+										styleClass="classTblDeuda" cellpadding="0" cellspacing="0" binding="#{table}">
+										<h:column>
+											<div style="width: 40px; text-align: center;">
+												<h:outputText value="#{table.rowIndex + 1}" />
+											</div>
+										</h:column>
+										
+										<!-- <rich:column id="x1" width="150px" style="text-align:center"
+											filterBy="#{record.concepto}"
+											filterStyle="width:100%;" 
+											sortBy="#{record.concepto}">
+											<f:facet name="header">Concepto</f:facet>
+											<h:outputText value="#{record.concepto}" />
+										</rich:column> -->
+						
+										<h:column
+											filterBy="#{item.anioDeuda}"
+											filterStyle="width:100%;" 
+											sortBy="#{item.anioDeuda}"
+											>
+											<div style="width: 40px; text-align: center;">
+												<h:outputText value="#{item.anioDeuda}" />
+											</div>
+										</h:column>
+										<h:column>
+											<div style="width: 140px; text-align: center;">
+												<h:outputText value="#{item.descripcion }" />
+											</div>
+										</h:column>									
+										<h:column>
+											<div style="width: 110px" align="center">
+												<h:outputText value="#{item.subconcepto}" />
+											</div>
+										</h:column>
+										<h:column style="padding-left: 10px;">
+											<div style="width: 50px; text-align: center;">
+												<h:outputText value="#{item.numCuota}" />
+											</div>
+										</h:column>		
+										<h:column>
+											<div style="width: 80px; text-align: center;">
+												<h:outputText value="#{item.fechaRegistro}">
+													<f:convertDateTime locale="#{msg['param.localedate']}" timeZone="#{aplicationManaged.timeZone}"
+														pattern="#{msg['param.datepattern']}" />
+												</h:outputText>
+											</div>
+										</h:column>	
+										<h:column>
+											<div style="width: 100px; text-align: right;">
+												<h:outputText value="#{item.insoluto}" />
+											</div>
+										</h:column>
+										<h:column>
+											<div style="width: 100px; text-align: right;">
+												<h:outputText value="#{item.derechoEmi}" />
+											</div>
+										</h:column>
+										<h:column>
+											<div style="width: 100px; text-align: right;">
+												<h:outputText value="#{item.reajuste}" />
+											</div>
+										</h:column>
+										<h:column>
+											<div style="width: 100px; text-align: right;">
+												<h:outputText value="#{item.interes}" />
+											</div>
+										</h:column>
+										<h:column>
+											<div style="width: 100px; text-align: right;">
+												<h:outputText value="#{item.totalDeuda}" />
+											</div>
+										</h:column>
+										<h:column>
+											<div style="width: 100px; text-align: center;">
+												
+												<h:selectBooleanCheckbox value="#{item.selected}" >													
+													<a4j:support event="onchange" ajaxSingle="true"/>
+												</h:selectBooleanCheckbox>
+											</div>
+										</h:column>
+									</h:dataTable>
+								</div>
+								<!-- FOOTER TABLE  div, este me permitira alinear la tabla de totales a la derecha, esta tabla esta compuesta por columnas que no dependen 
+								del tipo de concepto a pagar, para mostar la tabla de totales se esta usando un panelgrid, en los cuales los estilos de las columnas dependen 
+								del ancho de las columnas de la tabla de datos de deuda BODY TABLE
+								 -->
+								<div align="right" style="background-color: #CCCCCC;">
+									<h:panelGrid columns="9" styleClass="buttons"
+										columnClasses="col9">
+										
+										<a4j:commandLink rendered="#{descargoDeudasManaged.permisoDescargo}" value="Descargo" action="#{descargoDeudasManaged.inicioDescargo}" 
+											oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'paneldescargo\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+											reRender="panelDeudas,paneldescargo" styleClass="buttonRed"
+											status="ajaxStatus"  >
+										</a4j:commandLink>
+										
+										 <!--  <a4j:commandLink rendered="#{descargoDeudasManaged.permisoRectificacion}" value="Rectificacion" action="#{descargoDeudasManaged.inicioRectificacion}" 
+											oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelrectificacion\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+											reRender="panelDeudas,panelrectificacion" styleClass="buttonRed"
+											status="ajaxStatus"  >
+										</a4j:commandLink> -->
+										
+										<a4j:commandLink rendered="#{descargoDeudasManaged.permisoPrescripciones}" 
+											value="Prescripciones" action="#{descargoDeudasManaged.inicioPrescricion}" 
+											oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelprescripcion\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+											reRender="panelDeudas,panelprescripcion" styleClass="buttonRed"
+											status="ajaxStatus" >
+										</a4j:commandLink>
+											
+										<a4j:commandLink rendered="#{descargoDeudasManaged.permisoCompensaciones}" 
+											value="Compensaciones" 
+											action="#{descargoDeudasManaged.inicioCompensacion}" 
+											oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelcompensacion\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+											reRender="panelDeudas,panelcompensacion" styleClass="buttonRed"
+											status="ajaxStatus" >
+										</a4j:commandLink>
+										
+										<a4j:commandLink rendered="#{descargoDeudasManaged.permisoTransferencia}" 
+											value="Transferencia" action="#{descargoDeudasManaged.inicioTransferencia}" 
+											oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'paneltransferencia\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+											reRender="panelDeudas,paneltransferencia" styleClass="buttonRed"
+											status="ajaxStatus"  >
+										</a4j:commandLink>
+											 
+									</h:panelGrid>
+								</div>
+							</rich:panel>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</h:form>
+	</rich:panel>			
+	
+	<!-- PANEL DE DESCARGOS -->
+	<rich:modalPanel id="paneldescargo" autosized="true" moveable="true" resizeable="false" minWidth="450" minHeight="250">
+		<f:facet name="header">DESCARGO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepaneldescargo"
+					styleClass="hidelink" />
+				<rich:componentControl for="paneldescargo" attachTo="iconclosepaneldescargo" 
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmDescargo">	
+			<rich:panel style="width:100%;"	id="id_descargoDescargo"> 
+				<table border="0" width="100%">
+					<tr>
+						<td align="left" width="130px">							
+							<h:outputText value="Tipo de Documento "/><span style="color: red">*</span>
+						</td>
+						
+						<td width="320px" colspan="3">
+							<rich:comboBox 
+							width="530px" defaultLabel="Seleccione"			
+							value="#{descargoDeudasManaged.tipoDocumento}"
+							style="width:530px; border: none"
+							id="cmbTipoDocumento" valueChangeListener="#{descargoDeudasManaged.changeListenerCmbTipoDocumento}"
+							immediate="true"
+							required="true" requiredMessage="Seleccione el Tipo de Documento"
+							>
+							<f:selectItems id="id_lsttipodocumento" value="#{descargoDeudasManaged.lstTipoDocumento}"/>
+							<a4j:support id="id_supportlsttipodocumento1" event="onchange" ajaxSingle="true" />						
+							</rich:comboBox>
+						</td>
+						
+					</tr>
+					
+					<tr>
+						<td align="left" width="130px">							
+							<h:outputText value="Nro de Documento" /><span style="color: red">*</span>
+						</td>
+						<td align="left" width="320px" colspan="3">
+							<h:inputText styleClass="nro_doc"  
+								size="100" value="#{descargoDeudasManaged.nroDocumento}" maxlength="100"
+								required="true" requiredMessage="Indique el Numero de Documento">
+								<a4j:support ajaxSingle="true" event="onblur"
+									oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+									
+									action="#{descargoDeudasManaged.validarUltimosDigitos}" />
+									
+							</h:inputText>
+							<rich:jQuery id="mask12" selector=".nro_doc" query="mask('999-999-99999999-9999')" timing="onload" />
+						</td>
+					</tr>
+					<tr>
+						<td align="left" width="130px">
+							<h:outputText value="Fecha de Documento" /><span style="color: red">*</span>
+						</td>
+						<td width="320px" >
+							<rich:calendar
+								locale="en/US" direction="bottom-right"						
+								datePattern="dd/MM/yyyy"						
+								enableManualInput="true" inputClass="maskDate"
+								inputStyle="width:100px" id="id_fechadedocumento"
+								value="#{descargoDeudasManaged.fechaDocumento}"
+								required="true" requiredMessage="Indique la Fecha de Documento"
+								>
+							</rich:calendar> 
+							<rich:jQuery id="maskedo1" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" />
+						</td>
+						<td>
+							<h:outputText value="Total a Descargar" style="font-weight:bold"/>	
+						</td>
+						
+						<td>
+							<h:outputText value="#{descargoDeudasManaged.totalDescargo}" style="color: red; font-weight:bold; font-size:14px;" />
+						</td>
+					</tr>
+					<tr>
+						<td align="left" width="130px">							
+							<h:outputText value="Observacion (max 300)" /><span style="color: red">*</span>
+						</td>
+						<td align="left" width="320px" colspan="3">
+							<h:inputTextarea value="#{descargoDeudasManaged.observacion}" cols="100" rows="5" maxlength="500" size="500"
+							required="true" requiredMessage="Indique la Observacion"
+							>
+							</h:inputTextarea>
+						</td>
+					</tr>			
+			
+				</table>
+			</rich:panel>			
+			
+			<br />
+				<h:outputText id="succ2" style="font-weight:bold;color:green" value="#{msg['des.messageMPConfirmDescargo']}" />
+			<br />
+				
+			<h:panelGrid id="buttons2" columns="2" columnClasses="coldialogbutton1, coldialogbutton2" width="100%">
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelSi']}" style="width:100px;"
+						action="#{descargoDeudasManaged.descargo}"
+						reRender="panelDeudas"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'paneldescargo\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};     " >						
+				</a4j:commandButton>
+				
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelNo']}" style="width:100px;"
+						onclick="#{rich:component('paneldescargo')}.hide();return false;" />
+			</h:panelGrid>
+		</h:form>	
+	</rich:modalPanel>
+	
+	
+	
+	<!-- PANEL DE PRESCRIPCIONES -->
+	<rich:modalPanel id="panelprescripcion" autosized="true" moveable="true" resizeable="false" minWidth="450" minHeight="250">
+		<f:facet name="header">PRESCRIPCIONES</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepanelprescripcion"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelprescripcion" attachTo="iconclosepanelprescripcion" 
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmPrescripcion">	
+			<rich:panel style="width:100%;"	id="id_descargoPrescripcion"> 
+				
+				<!-- ======================== -->
+				
+				<rich:simpleTogglePanel id="togglePanelResultados"
+					rendered="#{descargoDeudasManaged.showListaExpPrescipcion}"
+					style="margin-bottom: 20px;"
+					switchType="client"
+					label="Seleccione un expediente, se encontraron #{descargoDeudasManaged.listItemsExpedientes.size()} resultados."
+					height="auto" styleClass="uniqueClassName" opened="true">
+					<rich:dataTable id="dataTableExpedientes"
+						value="#{descargoDeudasManaged.listItemsExpedientes}"
+						var="item" rowKeyVar="rowIndex" rows="5"
+						rendered="#{not empty descargoDeudasManaged.listItemsExpedientes}">
+						<h:column >
+							<div align="center" >
+								<h:outputText value="#{rowIndex + 1}" />
+							</div>
+						</h:column>
+						
+											
+						<h:column>
+							<f:facet name="header">Expediente</f:facet>
+							<div style=" width: 200px;" align="center">
+								<h:outputText value="#{item.nroExpedienteGenerico}"
+									id="expedienteIdAr"  />
+																
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="Cod. Interno: #{item.codExpediente}" />
+										<h:outputText
+											value="Cod. Anterior: #{item.nroExpedienteAnterior}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Tramite</f:facet>
+							<div style="width: 300px;" align="left">
+								<h:outputText value="#{item.tipoTramite}" />
+							</div>
+						</h:column>	
+						
+						<h:column>
+							<f:facet name="header">Fecha Recepción</f:facet>
+							<div align="center">
+								<h:outputText value="#{item.fechaRecepcion}" id="fechaRecepcionId">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="#{msg['param.timezone']}" />	
+								</h:outputText>
+								<rich:toolTip for="fechaRecepcionId">
+									<h:panelGrid>
+										<h:outputText value="Registrado por: #{item.usuarioRegistrador}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>
+						<!--  <h:column>
+							<f:facet name="header">Estado/Situación</f:facet>
+							<div align="center">
+								<h:outputText value="#{item.estadoExpedienteAsString} #{item.situacionExpedienteAsString}" />
+							</div>
+						</h:column>	-->
+						
+						
+						<h:column >
+							<div align="center">
+							
+								<!-- <h:selectBooleanCheckbox value="#{item.select}">
+									
+								</h:selectBooleanCheckbox>-->
+								<h:selectBooleanCheckbox rendered="#{item.flagDescargo != 1}" value="#{item.select}" >													
+									<a4j:support event="onchange" ajaxSingle="true"
+									/>
+								</h:selectBooleanCheckbox>
+								
+								<rich:toolTip rendered="#{item.flagDescargo == 1}">
+									<h:panelGrid>
+										<h:outputText value="El expediente ya fue usado" />
+										
+									</h:panelGrid>
+								</rich:toolTip>
+												
+							
+								<!--  <a4j:commandLink  id="seg_exp">
+									<h:graphicImage value="/images/font-icon/correct-symbol.png" style="border: 0px"
+										alt="Seguimiento" width="20" height="20" />
+									<a4j:support ajaxSingle="true" event="onclick"
+										action="#{descargoDeudasManaged.changeExpPrescripcion(item)}"
+										reRender="frmPrescripcion" status="ajaxStatus">
+									</a4j:support>									
+								</a4j:commandLink>	 
+								<rich:toolTip for="seg_exp" value="Seleccionar Expediente" />	-->
+							</div>
+						</h:column>	
+						
+																
+					</rich:dataTable>
+					<rich:datascroller id="tableDataScroller" align="center"
+						for="dataTableExpedientes" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+					
+					
+						<div style="width: 100%; text-align: right; margin-top: 10px;" >
+							<a4j:commandLink id="seg_exp" >
+								<h:graphicImage value="/images/font-icon/correct-symbol.png" style="border: 0px; padding-right: 15px;"
+											alt="Seleccionar" width="20" height="20" />
+								<a4j:support ajaxSingle="true" event="onclick"
+											action="#{descargoDeudasManaged.changeExpPrescripcion()}"
+											oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};     " 
+											reRender="frmPrescripcion" status="ajaxStatus">
+								</a4j:support>								
+								<rich:toolTip for="seg_exp">Seleccionar Expedientes.</rich:toolTip>
+							</a4j:commandLink>
+						</div>						
+				</rich:simpleTogglePanel>
+				
+				<!-- ======================== -->
+				<rich:panel style="width:100%; margin-bottom: 20px;"	id="id_selectExpe" 
+					rendered="#{!descargoDeudasManaged.showListaExpPrescipcion}">
+					
+					
+					<ui:repeat var="exp" value="#{descargoDeudasManaged.listItemsExpedientes}" varStatus="status">
+						<rich:panel style="width:100%; margin-bottom: 0px;"	id="selectExpe" 
+						rendered="#{exp.select}">
+							<table border="0" width="100%" style="margin-bottom: 10px; color: green;">
+								<tr> 
+										<td align="left" width="80px" style="padding-bottom: 10px;">							
+											<b><h:outputText value="Expediente "/></b>
+										</td>
+										
+										<td align="left" width="120px" style="color: #000; padding-bottom: 10px;">							
+											<h:outputText value=": #{exp.nroExpedienteGenerico}"/>
+										</td>
+										
+										<td align="left" width="80px" style="padding-bottom: 10px;">							
+											<b><h:outputText value="Tramite "/></b>
+										</td>
+										
+										<td align="left" width="120px" style="color: #000; padding-bottom: 10px;">							
+											<h:outputText value=": #{exp.tipoTramite}"/>
+										</td>
+										
+										
+										<td align="left" width="80px">							
+											<b><h:outputText value="Fecha Recepción "/></b>
+										</td>
+										
+										<td align="left" width="120px" style="color: #000;">	
+											: <h:outputText value="#{exp.fechaRecepcion}" >
+													<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+														timeZone="#{msg['param.timezone']}" />
+											</h:outputText>
+										</td>
+								</tr>
+							</table>
+						</rich:panel>
+					</ui:repeat>
+					<div style="width: 100%; text-align: right; margin-top: 10px;" >
+						<a4j:commandLink rendered="#{descargoDeudasManaged.canSolicitudesPrescripcion > 1}" id="editSelecExp">
+								<h:graphicImage value="/images/font-icon/pencil.png" style="border: 0px; padding-right: 15px;"
+										alt="Cambiar Expediente" width="20" height="20" />
+										
+								<a4j:support ajaxSingle="true" event="onclick"
+										action="#{descargoDeudasManaged.cancelExpediente}"
+										reRender="frmPrescripcion" status="ajaxStatus">
+									</a4j:support>	
+								<rich:toolTip for="editSelecExp">Cambiar selección</rich:toolTip>					
+						</a4j:commandLink>
+					</div>	
+				</rich:panel>
+				<!-- ======================== -->
+			
+			
+				<rich:panel style="width:100%; margin-bottom: 20px;"	id="id_presc" 
+					rendered="#{!descargoDeudasManaged.showListaExpPrescipcion}">
+					
+					<table border="0" width="100%">
+						<tr>
+							<td align="left" width="130px">							
+								<h:outputText value="Tipo de Documento "/><span style="color: red">*</span>
+							</td>
+							
+							<td width="320px" colspan="3">
+								<rich:comboBox 
+								width="530px" defaultLabel="Seleccione"			
+								value="#{descargoDeudasManaged.tipoDocumento}"
+								style="width:530px; border: none"
+								id="cmbTipoDocumento" 
+								valueChangeListener="#{descargoDeudasManaged.changeListenerCmbTipoDocumento}"
+								immediate="true"
+								required="true" requiredMessage="Seleccione el Tipo de Documento"
+								>
+								<f:selectItems id="id_lsttipodocumento" value="#{descargoDeudasManaged.lstTipoDocumento}"/>
+								<a4j:support id="id_supportlsttipodocumento1" event="onchange" ajaxSingle="true" />						
+								</rich:comboBox>
+							</td>
+							
+						</tr>
+						
+						<tr>
+							<td align="left" width="130px">							
+								<h:outputText value="Nro de Documento" /><span style="color: red">*</span>
+							</td>
+							<td align="left" width="320px" colspan="3">
+								<h:inputText styleClass="nro_doc"  
+									size="100" value="#{descargoDeudasManaged.nroDocumento}" maxlength="100"
+									required="true" requiredMessage="Indique el Numero de Documento">
+									<a4j:support ajaxSingle="true" event="onblur"
+										oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+										
+										action="#{descargoDeudasManaged.validarUltimosDigitos}" />
+										
+								</h:inputText>
+								<rich:jQuery id="mask12" selector=".nro_doc" query="mask('999-999-99999999-9999')" timing="onload" />
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="130px">
+								<h:outputText value="Fecha de Documento" /><span style="color: red">*</span>
+							</td>
+							<td width="320px" >
+								<rich:calendar
+									locale="en/US" direction="bottom-right"						
+									datePattern="dd/MM/yyyy"						
+									enableManualInput="true" inputClass="maskDate"
+									inputStyle="width:100px" id="id_fechadedocumento"
+									value="#{descargoDeudasManaged.fechaDocumento}" 
+									required="true" requiredMessage="Indique la Fecha de Documento"
+									>
+								</rich:calendar> 
+								<rich:jQuery id="maskedo1" selector=".maskDate"
+									query="mask('99/99/9999')" timing="onload" />
+							</td>
+							<td width="240px">
+								<h:outputText value="Total a Prescribir" style="font-weight:bold;" />	
+							</td>
+							
+							<td>
+								<h:outputText value="#{descargoDeudasManaged.totalPrescribir}" style="color: red; font-weight:bold; font-size:14px;"/>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="130px">							
+								<h:outputText value="Observacion (max 300)" /><span style="color: red">*</span>
+							</td>
+							<td align="left" width="320px" colspan="3">
+								<h:inputTextarea value="#{descargoDeudasManaged.observacion}" cols="100" rows="5" maxlength="500" size="500"
+								required="true" requiredMessage="Indique la Observacion"
+								>
+								</h:inputTextarea>
+							</td>
+						</tr>			
+				
+					</table>
+				</rich:panel>
+			</rich:panel>			
+			
+			<br />
+				<h:outputText id="succ2" style="font-weight:bold;color:green" value="#{msg['des.messageMPConfirmPrescripcion']}" />
+			<br />
+				
+			 <h:panelGrid id="buttons2" columns="2" columnClasses="coldialogbutton1, coldialogbutton2" width="100%" rendered="#{!descargoDeudasManaged.showListaExpPrescipcion}">  
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelSi']}" style="width:100px;"
+						action="#{descargoDeudasManaged.prescribir}"
+						reRender="panelDeudas"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'panelprescripcion\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};     " >						
+				</a4j:commandButton>
+				
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelNo']}" style="width:100px;"
+						onclick="#{rich:component('panelprescripcion')}.hide();return false;" />
+			</h:panelGrid> 
+		</h:form>	
+	</rich:modalPanel>
+	
+	<!-- PANEL DE COMPENSACIONES -->
+		
+	<rich:modalPanel id="panelcompensacion" autosized="true" moveable="true" resizeable="false" minWidth="850" minHeight="250">
+		<f:facet name="header">COMPENSACIONES </f:facet>
+		
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepanelcompensacion"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelcompensacion"	attachTo="iconclosepanelcompensacion" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+			
+		<h:form id="frmCompensacion">
+		
+			<rich:panel style="width:100%;"	id="id_descargocompensacion">
+				<!-- ======================== -->			
+				<rich:simpleTogglePanel id="togglePanelResultadosPago"
+					rendered="#{descargoDeudasManaged.showListaPagosCompenzacion}"
+					style="margin-bottom: 20px;"
+					switchType="client"
+					label="Seleccione un expediente, se encontraron #{descargoDeudasManaged.listpagos.size()} resultados."
+					height="auto" styleClass="uniqueClassName" opened="true">
+					<rich:dataTable id="dataTablePagos"
+						value="#{descargoDeudasManaged.listpagos}"
+						var="recordsRecibos" rowKeyVar="rowIndex" rows="5"
+						rendered="#{not empty descargoDeudasManaged.listpagos}">
+						
+						<rich:column id="x0" width="50px" style="text-align:center">
+							<f:facet name="header">Item</f:facet>
+							<h:outputText value="#{rowIndex + 1}" />
+						</rich:column>
+				
+						<rich:column id="x1" width="150px" style="text-align:center"
+							filterBy="#{recordsRecibos.nroRecibo}"
+							filterStyle="width:100%;" 
+							sortBy="#{recordsRecibos.nroRecibo}">
+							<f:facet name="header">Nro. Recibo</f:facet>
+							<h:outputText value="#{recordsRecibos.nroRecibo}" />
+						</rich:column>
+		
+						<rich:column id="x2" width="150px" style="text-align:center">
+							<f:facet name="header">Fecha Cancelación</f:facet>
+							<h:outputText value="#{recordsRecibos.fechaRecibo}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeStyle="full"
+									timeZone="#{msg['param.timezone']}" />
+							</h:outputText>
+		
+						</rich:column>
+		
+						<rich:column id="x3" width="150px" style="text-align:center">
+							<f:facet name="header">Monto Cancelado</f:facet>
+							<h:outputText
+								value="#{recordsRecibos.montoACobrar le recordsRecibos.montoCobrado? recordsRecibos.montoACobrar : recordsRecibos.montoCobrado}" />
+						</rich:column>
+						
+						<rich:column id="x10" width="150px" style="text-align:center">
+							<f:facet name="header">Monto a compensar</f:facet>
+							<h:outputText
+								value="#{recordsRecibos.selectTotal != null? recordsRecibos.selectTotal:'-'}" />
+						</rich:column>
+		
+						<rich:column width="130px" style="text-align:center">
+							<f:facet name="header">Estado</f:facet>
+							<h:outputText value="Pagado"
+								rendered="#{recordsRecibos.estado == '1'}" />
+							<h:outputText value="Pendiente compensar completo "
+								rendered="#{recordsRecibos.estado == '2' and recordsRecibos.tipoDescargo == 4}" />
+							<h:outputText value="Pendiente compensar  parcial"
+								rendered="#{recordsRecibos.estado == '3' and recordsRecibos.tipoDescargo == 4}" />
+								
+							<h:outputText value="Pendiente tranferir completo "
+								rendered="#{recordsRecibos.estado == '2' and recordsRecibos.tipoDescargo == 6}" />
+							<h:outputText value="Pendiente tranferir  parcial"
+								rendered="#{recordsRecibos.estado == '3' and recordsRecibos.tipoDescargo == 6}" />
+								
+							<h:outputText value="Compensación  parcial"
+								rendered="#{recordsRecibos.estado == '10' and recordsRecibos.tipoDescargo == 4}" />
+								
+							<h:outputText value="Transferencia  parcial"
+								rendered="#{recordsRecibos.estado == '10' and recordsRecibos.tipoDescargo == 6}" />
+								
+							<h:outputText value="Extornado"
+								rendered="#{recordsRecibos.estado == '9'}" />
+								<h:outputText value="Transferencia"
+								rendered="#{recordsRecibos.estado == '4'}" />
+								<h:outputText value="Compensación"
+								rendered="#{recordsRecibos.estado == '8'}" />
+						</rich:column>
+								
+						<h:column >
+							<div align="center">
+								<h:selectBooleanCheckbox rendered="#{recordsRecibos.estado == 1 or recordsRecibos.estado == 3 or recordsRecibos.estado == 10}" 
+										value="#{recordsRecibos.select}" >													
+									<a4j:support event="onchange" ajaxSingle="true"
+									action="#{descargoDeudasManaged.selectReciboPagosCompensacion(recordsRecibos)}"
+									oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+									reRender="frmCompensacion" />
+								</h:selectBooleanCheckbox>
+							</div>
+						</h:column>	
+																
+					</rich:dataTable>
+					<rich:datascroller id="tableDataScrollerPago" align="center"
+						for="dataTablePagos" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+					
+						<br/>
+						<div style="text-align: right;">
+							<h:outputText 
+							id="succ111" style="font-weight:bold;color:green;font-size: 14px;"
+							value="Monto total a compensar : #{descargoDeudasManaged.montoTotalRecibos}" />
+						</div>
+						<div style="text-align: right;">
+								
+								<h:outputText 
+									value="Deuda Compensada :#{descargoDeudasManaged.totalCompensar}" 
+									style="color: red; font-weight:bold; font-size:14px;" 
+								/>
+						</div>
+						<br/>
+					
+						 <div style="width: 100%; text-align: right; margin-top: 10px;" >
+							<a4j:commandLink id="seg_exp" rendered="#{!descargoDeudasManaged.showSelectRecibo and !descargoDeudasManaged.showSelectReciboParcial}" >
+								<h:graphicImage value="/images/font-icon/correct-symbol.png" style="border: 0px; padding-right: 15px;"
+											alt="Seleccionar" width="20" height="20" />
+								<a4j:support ajaxSingle="true" event="onclick"
+											action="#{descargoDeudasManaged.changePagosCompensacion()}"
+											oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};     " 
+											reRender="frmCompensacion" status="ajaxStatus">
+								</a4j:support>								
+								<rich:toolTip for="seg_exp">Seleccionar Pagos.</rich:toolTip>
+							</a4j:commandLink>
+						</div>
+						
+							<div style="text-align: center;">
+								<h:outputText rendered="#{descargoDeudasManaged.showSelectRecibo and !descargoDeudasManaged.showSelectReciboParcial}" 
+								id="succ10" style="font-weight:bold;color:green; text-align: center;"
+								value="¿Desea seleccionar todo el monto del recibo y sus deudas?" />
+							</div>
+						<br/>
+							
+					<div style="text-align: center;">
+						<a4j:commandButton rendered="#{descargoDeudasManaged.showSelectRecibo and !descargoDeudasManaged.showSelectReciboParcial}" 
+								value="Si" style="width:100px;"
+								action="#{descargoDeudasManaged.selectReciboPagosSi()}"
+								oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+								reRender="frmCompensacion">				
+						</a4j:commandButton>
+				
+						<a4j:commandButton rendered="#{descargoDeudasManaged.showSelectRecibo and !descargoDeudasManaged.showSelectReciboParcial}" 
+								value="No" style="width:100px;"
+								action="#{descargoDeudasManaged.selectReciboPagosNo()}"
+								oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+								reRender="frmCompensacion"/>
+								
+						<a4j:commandButton rendered="#{descargoDeudasManaged.showSelectRecibo and !descargoDeudasManaged.showSelectReciboParcial}" 
+								value="Cancelar" style="width:100px;"
+								action="#{descargoDeudasManaged.selectReciboPagosCancel()}"
+								reRender="frmCompensacion"/>
+				
+					</div>					
+				</rich:simpleTogglePanel>
+				
+				
+				<rich:simpleTogglePanel id="tableDataDeudaPago"
+					rendered="#{descargoDeudasManaged.showSelectRecibo and descargoDeudasManaged.showSelectReciboParcial}"
+					style="margin-bottom: 20px;"
+					switchType="client"
+					label="Seleccione las deudas, se encontraron #{descargoDeudasManaged.showlistReciboPagoDetalle.size()} resultados."
+					height="auto" styleClass="uniqueClassName" opened="true">
+					<rich:dataTable id="dataTableCuotas"
+						value="#{descargoDeudasManaged.showlistReciboPagoDetalle}"
+						var="record" rowKeyVar="rowIndex" rows="5"
+						rendered="#{not empty descargoDeudasManaged.listpagos}">
+						
+						<rich:column id="x10" width="50px" style="text-align:center">
+							<f:facet name="header">Item</f:facet>
+							<h:outputText value="#{rowIndex + 1}" />
+						</rich:column>
+						
+						<rich:column id="x0" width="150px" style="text-align:center"
+							filterBy="#{record.referencia}"
+							filterStyle="width:100%;" 
+							sortBy="#{record.referencia}">
+							
+							<f:facet name="header">Predio </f:facet>
+							<h:outputText value="#{record.referencia}" />
+						</rich:column>
+				
+						<rich:column id="x1" width="150px" style="text-align:center"
+							filterBy="#{record.concepto}"
+							filterStyle="width:100%;" 
+							sortBy="#{record.concepto}">
+							<f:facet name="header">Concepto</f:facet>
+							<h:outputText value="#{record.concepto}" />
+						</rich:column>
+						
+						<rich:column id="x2" width="150px" style="text-align:center"
+							filterBy="#{record.cuota}"
+							filterStyle="width:100%;" 
+							sortBy="#{record.cuota}">
+							<f:facet name="header">Cuota</f:facet>
+							<h:outputText value="#{record.cuota}" />
+						</rich:column>
+						
+						<rich:column id="x3" width="150px" style="text-align:center">
+							<f:facet name="header">Monto</f:facet>
+							<h:outputText value="#{record.monto}" />
+						</rich:column>
+						
+						<rich:column id="x4" width="150px" style="text-align:center">
+							<f:facet name="header">Reaju.</f:facet>
+							<h:outputText value="#{record.reajuste}" />
+						</rich:column>
+						
+						<rich:column id="x5" width="150px" style="text-align:center">
+							<f:facet name="header">Inter.</f:facet>
+							<h:outputText value="#{record.interes}" />
+						</rich:column>
+						
+						<rich:column id="x6" width="150px" style="text-align:center">
+							<f:facet name="header">Total</f:facet>
+							<h:outputText value="#{record.total}" />
+						</rich:column>
+								
+						<h:column >
+							<div align="center">
+								<h:selectBooleanCheckbox 
+									rendered="#{record.estado}"
+										value="#{record.select}" >													
+									<a4j:support event="onchange" ajaxSingle="true"
+									action="#{descargoDeudasManaged.seletItemRecibo(record)}"
+									oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+									reRender="frmCompensacion" />
+								</h:selectBooleanCheckbox>
+							</div>
+						</h:column>	
+																
+					</rich:dataTable>
+					<rich:datascroller id="tableDataDeudaPagoSc" align="center"
+						for="dataTableCuotas" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+					
+					<br/>
+					<div style="text-align: right;">
+						<h:outputText rendered="#{descargoDeudasManaged.showSelectRecibo and descargoDeudasManaged.showSelectReciboParcial}" 
+						id="succ110" style="font-weight:bold;color:green;font-size: 14px;"
+						value="Monto recibo : #{descargoDeudasManaged.reciboSelect.selectTotal}" />
+					</div>
+					<br/>
+					
+					
+					<div style="text-align: center;">
+						<a4j:commandButton rendered="#{descargoDeudasManaged.showSelectRecibo and descargoDeudasManaged.showSelectReciboParcial}" 
+								value="Confirmar" style="width:100px;"
+								action="#{descargoDeudasManaged.confirmarReciboParcial()}"
+								oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};     " 
+								reRender="frmCompensacion">				
+						</a4j:commandButton>
+				
+						<a4j:commandButton rendered="#{descargoDeudasManaged.showSelectRecibo and descargoDeudasManaged.showSelectReciboParcial}" 
+								value="Cancelar" style="width:100px;"
+								action="#{descargoDeudasManaged.cancelarReciboParcial()}"
+								reRender="frmCompensacion"/>	
+					</div>
+										
+				</rich:simpleTogglePanel>
+				
+
+				<!-- ======================== -->
+				<rich:panel style="width:100%; margin-bottom: 20px;"	id="id_selectExpe" 
+					rendered="#{!descargoDeudasManaged.showListaPagosCompenzacion}">
+					
+					<ui:repeat var="recibo" value="#{descargoDeudasManaged.listpagos}" varStatus="status">
+						<rich:panel style="width:100%; margin-bottom: 0px;"	id="selectExpe" 
+						rendered="#{recibo.select}">
+							<table border="0" width="100%" style="color: green;">
+								<tr> 
+										<td align="left" width="80px" >							
+											<b><h:outputText value="Nro. Recibo "/></b>
+										</td>
+										
+										<td align="left" width="120px" style="color: #000;">							
+											<h:outputText value=": #{recibo.nroRecibo}"/>
+										</td>
+										
+										<td align="left" width="80px">							
+											<b><h:outputText value="Monto Cancelado "/></b>
+										</td>
+										
+										<td align="left" width="120px" style="color: #000;">							
+											<h:outputText value=": #{recibo.montoACobrar le recibo.montoCobrado? recibo.montoACobrar : recibo.montoCobrado}"/>
+										</td>
+										
+										
+										<td align="left" width="80px">							
+											<b><h:outputText value="Monto a compensar "/></b>
+										</td>
+										<td align="left" width="120px" style="color: #000;">	
+											: <h:outputText value="#{recibo.selectTotal}"/>
+											
+										</td>
+								</tr>
+							</table>
+							
+							
+						</rich:panel>
+					</ui:repeat>
+					<br/>
+						<div style="text-align: right;">
+							<h:outputText 
+							id="succ1111" style="font-weight:bold;color:green;font-size: 14px;"
+							value="Monto total a compensar : #{descargoDeudasManaged.montoTotalRecibos}" />
+						</div>
+					<br/>
+					<div style="width: 100%; text-align: right; margin-top: 0px;" >
+						<a4j:commandLink rendered="#{descargoDeudasManaged.canPagosCompenzacion > 1}" id="editSelecExp">
+								<h:graphicImage value="/images/font-icon/pencil.png" style="border: 0px; padding-right: 15px;"
+										alt="Cambiar Recibos" width="20" height="20" />
+										
+								<a4j:support ajaxSingle="true" event="onclick"
+										action="#{descargoDeudasManaged.cancelpagos}"
+										reRender="frmCompensacion" status="ajaxStatus">
+									</a4j:support>
+										
+								<rich:toolTip for="editSelecExp">Cambiar selección</rich:toolTip>					
+						</a4j:commandLink>
+					</div>	
+				</rich:panel>
+				
+				<!-- ======================== -->
+				<rich:panel style="width:100%; margin-bottom: 20px;"	id="id_select_tipo" 
+					rendered="#{!descargoDeudasManaged.showListaPagosCompenzacion 
+						and descargoDeudasManaged.showOptionTipoDescargo}">
+					<h:selectOneRadio  value="#{descargoDeudasManaged.seleccionarDescargo}"
+						title="Select">
+						<f:selectItem itemValue="1" itemLabel="Compensación  pedido de parte" />
+						<f:selectItem itemValue="2" itemLabel="Compensación de oficio" />
+
+						<a4j:support
+							reRender="#{rich:clientId('frmCompensacion')}"
+							event="onchange" BypassUpdates="false" ajaxSingle="true" />
+					</h:selectOneRadio>
+				</rich:panel>
+				<!-- ======================== -->
+							
+				<rich:simpleTogglePanel id="togglePanelResultados"
+					rendered="#{!descargoDeudasManaged.showListaPagosCompenzacion 
+								and descargoDeudasManaged.listItemsExpedientes.size() > 0
+								and descargoDeudasManaged.seleccionarDescargo == 1}"
+					style="margin-bottom: 20px;"
+					switchType="client"
+					label="Seleccione un expediente, se encontraron #{descargoDeudasManaged.listItemsExpedientes.size()} resultados."
+					height="auto" styleClass="uniqueClassName" opened="true">
+					<rich:dataTable id="dataTableExpedientes"
+						value="#{descargoDeudasManaged.listItemsExpedientes}"
+						var="item" rowKeyVar="rowIndex" rows="5"
+						rendered="#{not empty descargoDeudasManaged.listItemsExpedientes}">
+						<h:column >
+							<div align="center" >
+								<h:outputText value="#{rowIndex + 1}" />
+							</div>
+						</h:column>
+								
+						<h:column>
+							<f:facet name="header">Expediente</f:facet>
+							<div style=" width: 200px;" align="center">
+								<h:outputText value="#{item.nroExpedienteGenerico}"
+									id="expedienteIdAr"  />
+																
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="Cod. Interno: #{item.codExpediente}" />
+										<h:outputText
+											value="Cod. Anterior: #{item.nroExpedienteAnterior}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Tramite</f:facet>
+							<div style="width: 300px;" align="left">
+								<h:outputText value="#{item.tipoTramite}" />
+							</div>
+						</h:column>	
+						
+						<h:column>
+							<f:facet name="header">Fecha Recepción</f:facet>
+							<div align="center">
+								<h:outputText value="#{item.fechaRecepcion}" id="fechaRecepcionId">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="#{msg['param.timezone']}" />	
+								</h:outputText>
+								<rich:toolTip for="fechaRecepcionId">
+									<h:panelGrid>
+										<h:outputText value="Registrado por: #{item.usuarioRegistrador}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>
+						
+						<h:column >
+							<div align="center">
+							
+								<h:selectBooleanCheckbox rendered="#{item.flagDescargo != 1}" value="#{item.select}" >													
+									<a4j:support event="onchange" ajaxSingle="true"
+									/>
+								</h:selectBooleanCheckbox>
+								
+								<rich:toolTip rendered="#{item.flagDescargo == 1}">
+									<h:panelGrid>
+										<h:outputText value="El expediente ya fue usado" />
+										
+									</h:panelGrid>
+								</rich:toolTip>
+								
+							</div>
+						</h:column>	
+						
+																
+					</rich:dataTable>
+					<rich:datascroller id="tableDataScroller" align="center"
+						for="dataTableExpedientes" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+					
+					
+						<!-- <div style="width: 100%; text-align: right; margin-top: 10px;" >
+							<a4j:commandLink id="seg_exp" >
+								<h:graphicImage value="/images/font-icon/correct-symbol.png" style="border: 0px; padding-right: 15px;"
+											alt="Seleccionar" width="20" height="20" />
+								<a4j:support ajaxSingle="true" event="onclick"
+											action="#{descargoDeudasManaged.changeExpPrescripcion()}"
+											oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};     " 
+											reRender="frmPrescripcion" status="ajaxStatus">
+								</a4j:support>								
+								<rich:toolTip for="seg_exp">Seleccionar Expedientes.</rich:toolTip>
+							</a4j:commandLink>
+						</div>	-->					
+				</rich:simpleTogglePanel>
+				
+				
+				<!-- ======================== -->
+				
+				<rich:panel style="width:100%; margin-bottom: 20px;"	id="id_data" 
+					rendered="#{!descargoDeudasManaged.showListaPagosCompenzacion
+								and descargoDeudasManaged.seleccionarDescargo != 0}">
+			 
+					<table border="0" width="100%">
+						<tr>
+							<td align="left" width="130px">							
+								<h:outputText value="Tipo de Documento "/><span style="color: red">*</span>
+							</td>
+							<td width="320px" colspan="5">
+								<rich:comboBox
+								width="530px" defaultLabel="Seleccione"						
+								value="#{descargoDeudasManaged.tipoDocumento}"
+								style="width:530px; border: none"					
+								id="id_tipodocumento2"
+								valueChangeListener="#{descargoDeudasManaged.changeListenerCmbTipoDocumento}"
+								required="true" requiredMessage="Seleccione el Tipo de Documento" 
+								>					
+								<f:selectItems id="id_lsttipodocumento2" value="#{descargoDeudasManaged.lstTipoDocumento}"/>
+								<a4j:support id="id_supportlsttipodocumento2" event="onchange" BypassUpdates="false" ajaxSingle="true" />						
+								</rich:comboBox>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="130px">							
+								<h:outputText value="Nro de Documento" /><span style="color: red">*</span>
+							</td>
+							<td align="left" width="320px" colspan="5">
+								<h:inputText styleClass="nro_doc"  
+									size="100" value="#{descargoDeudasManaged.nroDocumento}" maxlength="100"
+									required="true" requiredMessage="Indique el Numero de Documento">
+									<a4j:support ajaxSingle="true" event="onblur"
+										oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+										
+										action="#{descargoDeudasManaged.validarUltimosDigitos}" />
+										
+								</h:inputText>
+								<rich:jQuery id="mask12" selector=".nro_doc" query="mask('999-999-99999999-9999')" timing="onload" />
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="130px">
+								<h:outputText value="Fecha de Documento" /><span style="color: red">*</span>
+							</td>
+							<td width="150px" >
+								<rich:calendar
+									locale="en/US" direction="bottom-right"						
+									datePattern="dd/MM/yyyy"						
+									enableManualInput="true" inputClass="maskDate"
+									inputStyle="width:100px" id="id_fechadedocumento2"
+									value="#{descargoDeudasManaged.fechaDocumento}"
+									required="true" requiredMessage="Indique la Fecha de Documento"
+									>
+								</rich:calendar> 
+								<rich:jQuery id="maskedo2" selector=".maskDate"
+									query="mask('99/99/9999')" timing="onload" />
+							</td>
+							<td align="left">
+								<h:outputText value="Monto de Compensación" style="font-weight:bold;" />	
+							</td>
+							<td align="left">
+								<h:inputText size="10"
+									valueChangeListener="#{descargoDeudasManaged.validarMontoCompenzar}"
+									value="#{descargoDeudasManaged.montoACompensar}" maxlength="10"
+									oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};" 
+									required="true" requiredMessage="Indique el Monto total a Compensar"
+									>
+									
+									<a4j:support event="onchange" ajaxSingle="true"/>
+								</h:inputText>
+								
+							</td>
+							<td align="left">
+								<h:outputText value="Deuda Compensada" style="font-weight:bold;" />	
+							</td>
+							<td>
+								<h:outputText value="#{descargoDeudasManaged.totalCompensar}" style="color: red; font-weight:bold; font-size:14px;" />
+							</td>
+						</tr>			
+						<tr>	
+							<td align="left" width="130px">							
+								<h:outputText value="Observacion (max 300)" /><span style="color: red">*</span>
+							</td>
+							<td align="left" width="320px" colspan="5">
+								<h:inputTextarea value="#{descargoDeudasManaged.observacion}" cols="100" rows="5" maxlength="500" size="500"
+								required="true" requiredMessage="Indique la Observacion"
+								>
+								
+								</h:inputTextarea>
+							</td>
+						</tr>			
+					</table>
+				</rich:panel>
+			</rich:panel>
+			
+			<br/>
+				<h:outputText rendered="#{!descargoDeudasManaged.showListaPagosCompenzacion}" id="succ3" style="font-weight:bold;color:green" value="#{msg['des.messageMPConfirmCompensacion']}" />
+			<br/>
+				
+			<h:panelGrid id="buttons3" columns="2" columnClasses="coldialogbutton1, coldialogbutton2" width="100%" 
+				rendered="#{!descargoDeudasManaged.showListaPagosCompenzacion}">
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelSi']}" style="width:100px;"
+						action="#{descargoDeudasManaged.compensar()}"
+						reRender="panelDeudas"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'panelcompensacion\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};     " >						
+				</a4j:commandButton>
+		
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelNo']}" style="width:100px;"
+						onclick="#{rich:component('panelcompensacion')}.hide();return false;" />
+		
+			</h:panelGrid>
+		</h:form>				
+	</rich:modalPanel>
+	
+	<!-- PANEL DE RECTIFICACION -->
+	<rich:modalPanel id="panelrectificacion" autosized="true" moveable="true" resizeable="false" minWidth="850" minHeight="250">
+		<f:facet name="header">RECTIFICACION</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepanelrectificacion"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelrectificacion" attachTo="iconclosepanelrectificacion" 
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmRectificacion">	
+			<rich:panel style="width:100%;"	id="id_descargoRectificacion"> 
+				<table border="0" width="100%">
+					<tr>
+						<td align="left" width="130px">							
+							<h:outputText value="Tipo de Documento "/><span style="color: red">*</span>
+						</td>
+						
+						<td width="320px" colspan="3">
+							<rich:comboBox 
+							width="530px" defaultLabel="Seleccione"			
+							value="#{descargoDeudasManaged.tipoDocumento}"
+							style="width:530px; border: none"
+							id="cmbTipoDocumento" valueChangeListener="#{descargoDeudasManaged.changeListenerCmbTipoDocumento}"
+							immediate="true"
+							required="true" requiredMessage="Seleccione el Tipo de Documento"
+							>
+							<f:selectItems id="id_lsttipodocumento" value="#{descargoDeudasManaged.lstTipoDocumento}"/>
+							<a4j:support id="id_supportlsttipodocumento1" event="onchange" ajaxSingle="true" />						
+							</rich:comboBox>
+						</td>
+						
+					</tr>
+					
+					<tr>
+						<td align="left" width="130px">							
+							<h:outputText value="Nro de Documento" /><span style="color: red">*</span>
+						</td>
+						<td align="left" width="320px" colspan="3">
+							<h:inputText size="100" value="#{descargoDeudasManaged.nroDocumento}" maxlength="100"
+							required="true" requiredMessage="Indique el Numero de Documento"
+							/>
+						</td>
+					</tr>
+					<tr>
+						<td align="left" width="130px">
+							<h:outputText value="Fecha de Documento" /><span style="color: red">*</span>
+						</td>
+						<td width="150px" colspan="3">
+							<rich:calendar
+								locale="en/US" direction="bottom-right"						
+								datePattern="dd/MM/yyyy"						
+								enableManualInput="true" inputClass="maskDate"
+								inputStyle="width:100px" id="id_fechadedocumento"
+								value="#{descargoDeudasManaged.fechaDocumento}"
+								required="true" requiredMessage="Indique la Fecha de Documento"
+								>
+							</rich:calendar> 
+							<rich:jQuery id="maskedo1" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" />
+						</td>
+						</tr>
+						<tr>
+						<td colspan="4">
+							<table>
+								<tr>
+								<td align="left">
+									<h:outputLabel value="Nuevo Insoluto  " style="font-weight:bold;" for="montoRectificado"/>
+									<h:inputText id="montoRectificado" size="15" value="#{descargoDeudasManaged.montoRectificado}" maxlength="15"
+									required="true" requiredMessage="Indique el Monto a Rectificar"
+									/>
+								</td>
+								<td>
+									<h:outputLabel value="Anterior Insoluto : " style="font-weight:bold" for="totalInsolutoRectificar"/>	
+									<h:outputText id="totalInsolutoRectificar" value="#{descargoDeudasManaged.totalInsolutoRectificar}" style="color: red; font-weight:bold; font-size:14px;" />
+								</td>						
+								<td>
+									<h:outputLabel value="Deuda Total : " for="totalRectificar" style="font-weight:bold;"/>							
+									<h:outputText id="totalRectificar" value="#{descargoDeudasManaged.totalRectificar}" style="color: red; font-weight:bold; font-size:14px;" />
+								</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="left" width="130px">							
+							<h:outputText value="Observación (max 300)" /><span style="color: red">*</span>
+						</td>
+						<td align="left" width="320px" colspan="3">
+							<h:inputTextarea value="#{descargoDeudasManaged.observacion}" cols="100" rows="5" maxlength="500" size="500"
+							required="true" requiredMessage="Indique la Observacion"
+							>
+							</h:inputTextarea>
+						</td>
+					</tr>			
+			
+				</table>
+			</rich:panel>			
+			
+			<br />
+				<h:outputText id="succ2" style="font-weight:bold;color:green" value="#{msg['des.messageMPConfirmCompensacion']}" />
+			<br />
+				
+			<h:panelGrid id="buttons2" columns="2" columnClasses="coldialogbutton1, coldialogbutton2" width="100%">
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelSi']}" style="width:100px;"
+						action="#{descargoDeudasManaged.rectificacion}"
+						reRender="panelDeudas"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'panelrectificacion\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};     " >						
+				</a4j:commandButton>
+				
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelNo']}" style="width:100px;"
+						onclick="#{rich:component('panelrectificacion')}.hide();return false;" />
+			</h:panelGrid>
+		</h:form>	
+	</rich:modalPanel>
+
+
+<!-- PANEL DE TRANSFERENCIA -->
+		
+	<rich:modalPanel id="paneltransferencia" autosized="true" moveable="true" resizeable="false" minWidth="850" minHeight="250">
+		<f:facet name="header">TRANSFERENCIAS </f:facet>
+		
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepaneltransferencia"
+					styleClass="hidelink" />
+				<rich:componentControl for="paneltransferencia"	attachTo="iconclosepaneltransferencia" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+			
+		<h:form id="frmTranferencia">
+			<rich:panel style="width:100%;"	id="id_descargocompensacion">
+				<!-- ======================== -->
+				<h:form id="formBuscarContribuyente" rendered="#{descargoDeudasManaged.contribuyente.personaId == null}">
+					<ui:include
+						src="/sisat/tramitedocumentario/popup/buscarcontribuyente.xhtml">
+						<ui:param name="componentModalId"
+							value="buscarContTranferencia"></ui:param>
+						<ui:param name="reRederIdComponent"
+							
+							value="frmTranferencia"></ui:param>
+						
+					</ui:include>
+				</h:form> 
+				<!-- ======================== -->
+							
+				<rich:simpleTogglePanel id="togglePanelResultadosPago"
+					rendered="#{descargoDeudasManaged.showListaPagosTransferencia
+								and (descargoDeudasManaged.contribuyente.personaId != null)}"
+					style="margin-bottom: 20px;"
+					switchType="client"
+					label="Seleccione recibos, se encontraron #{descargoDeudasManaged.listpagos.size()} recibos."
+					height="auto" styleClass="uniqueClassName" opened="true">
+					
+					<div style="text-align: left;     margin-bottom: 10px;">
+						
+						
+						<h:outputText rendered="#{descargoDeudasManaged.listpagos.size() > 0}" 
+						id="succ1155" style="font-weight:bold;font-size: 12px; padding-right: 15px;"
+						value="Contribuyente : (#{descargoDeudasManaged.contribuyente.personaId}) #{descargoDeudasManaged.contribuyente.apellidosNombres}" />
+					
+						<a4j:commandLink rendered="#{descargoDeudasManaged.listpagos.size() > 0}" id="editChangePersona">
+								<h:graphicImage value="/images/font-icon/pencil.png" style="border: 0px; padding-right: 15px;"
+										alt="Cambiar Recibos" width="17" height="17" />
+										
+								<a4j:support ajaxSingle="true" event="onclick"
+										action="#{descargoDeudasManaged.changePersonaRecibo}"
+										reRender="frmTranferencia" status="ajaxStatus">
+									</a4j:support>
+										
+								<rich:toolTip for="editSelecExp">Cambiar contributente</rich:toolTip>					
+						</a4j:commandLink>
+					
+					</div>
+					
+					<rich:dataTable id="dataTablePagos"
+						value="#{descargoDeudasManaged.listpagos}"
+						var="recordsRecibos" rowKeyVar="rowIndex" rows="5"
+						rendered="#{not empty descargoDeudasManaged.listpagos}">
+						
+						<rich:column id="x0" width="50px" style="text-align:center">
+							<f:facet name="header">Item</f:facet>
+							<h:outputText value="#{rowIndex + 1}" />
+						</rich:column>
+				
+						<rich:column id="x1" width="150px" style="text-align:center"
+							filterBy="#{recordsRecibos.nroRecibo}"
+							filterStyle="width:100%;" 
+							sortBy="#{recordsRecibos.nroRecibo}">
+							<f:facet name="header">Nro. Recibo</f:facet>
+							<h:outputText value="#{recordsRecibos.nroRecibo}" />
+						</rich:column>
+		
+						<rich:column id="x2" width="150px" style="text-align:center">
+							<f:facet name="header">Fecha Cancelación</f:facet>
+							<h:outputText value="#{recordsRecibos.fechaRecibo}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeStyle="full"
+									timeZone="#{msg['param.timezone']}" />
+							</h:outputText>
+		
+						</rich:column>
+		
+						<rich:column id="x3" width="150px" style="text-align:center">
+							<f:facet name="header">Monto Cancelado</f:facet>
+							<h:outputText
+								value="#{recordsRecibos.montoACobrar le recordsRecibos.montoCobrado? recordsRecibos.montoACobrar : recordsRecibos.montoCobrado}" />
+						</rich:column>
+						
+						<rich:column id="x10" width="150px" style="text-align:center">
+							<f:facet name="header">Monto a compensar</f:facet>
+							<h:outputText
+								value="#{recordsRecibos.selectTotal != null? recordsRecibos.selectTotal:'-'}" />
+						</rich:column>
+		
+						<rich:column width="130px" style="text-align:center">
+							<f:facet name="header">Estado</f:facet>
+							<h:outputText value="Pagado"
+								rendered="#{recordsRecibos.estado}" />
+								
+							<h:outputText value="Pendiente compensar completo "
+								rendered="#{recordsRecibos.estado == '2' and recordsRecibos.tipoDescargo == 4}" />
+							<h:outputText value="Pendiente compensar  parcial"
+								rendered="#{recordsRecibos.estado == '3' and recordsRecibos.tipoDescargo == 4}" />	
+								
+							<h:outputText value="Pendiente tranferir completo "
+								rendered="#{recordsRecibos.estado == '2' and recordsRecibos.tipoDescargo == 6}" />
+							<h:outputText value="Pendiente tranferir  parcial"
+								rendered="#{recordsRecibos.estado == '3' and recordsRecibos.tipoDescargo == 6}" />	
+							
+							<h:outputText value="Compensación  parcial"
+								rendered="#{recordsRecibos.estado == '10'  and recordsRecibos.tipoDescargo == 4}" />
+								
+							<h:outputText value="Transferencia  parcial"
+								rendered="#{recordsRecibos.estado == '10' and recordsRecibos.tipoDescargo == 6}" />
+								
+							<h:outputText value="Extornado"
+								rendered="#{recordsRecibos.estado == '9'}" />
+								<h:outputText value="Transferencia"
+								rendered="#{recordsRecibos.estado == '4' }" />
+								<h:outputText value="Compensación"
+								rendered="#{recordsRecibos.estado == '8'}" />
+						</rich:column>
+								
+						<h:column >
+							<div align="center">
+								<h:selectBooleanCheckbox rendered="#{recordsRecibos.estado == 1 or recordsRecibos.estado == 3 or recordsRecibos.estado == 10}" 
+										value="#{recordsRecibos.select}" >													
+									<a4j:support event="onchange" ajaxSingle="true"
+									action="#{descargoDeudasManaged.selectReciboPagosCompensacion(recordsRecibos)}"
+									oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+									reRender="frmTranferencia" />
+								</h:selectBooleanCheckbox>
+							</div>
+						</h:column>	
+																
+					</rich:dataTable>
+					<rich:datascroller id="tableDataScrollerPago" align="center"
+						for="dataTablePagos" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+					
+						<br/>
+						<div style="text-align: right;">
+							<h:outputText 
+							id="succ111" style="font-weight:bold;color:green;font-size: 14px;"
+							value="Monto total a compensar : #{descargoDeudasManaged.montoTotalRecibos}" />
+						</div>
+						<div style="text-align: right;">
+								
+								<h:outputText 
+									value="Deuda Compensada :#{descargoDeudasManaged.totalCompensar}" 
+									style="color: red; font-weight:bold; font-size:14px;" 
+								/>
+						</div>
+						<br/>
+					
+						 <div style="width: 100%; text-align: right; margin-top: 10px;" >
+							<a4j:commandLink id="seg_exp" rendered="#{!descargoDeudasManaged.showSelectRecibo and !descargoDeudasManaged.showSelectReciboParcial}" >
+								<h:graphicImage value="/images/font-icon/correct-symbol.png" style="border: 0px; padding-right: 15px;"
+											alt="Seleccionar" width="20" height="20" />
+								<a4j:support ajaxSingle="true" event="onclick"
+											action="#{descargoDeudasManaged.changePagosCompensacion()}"
+											oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};     " 
+											reRender="frmTranferencia" status="ajaxStatus">
+								</a4j:support>								
+								<rich:toolTip for="seg_exp">Seleccionar Pagos.</rich:toolTip>
+							</a4j:commandLink>
+						</div>
+						
+							<div style="text-align: center;">
+								<h:outputText rendered="#{descargoDeudasManaged.showSelectRecibo and !descargoDeudasManaged.showSelectReciboParcial}" 
+								id="succ10" style="font-weight:bold;color:green; text-align: center;"
+								value="¿Desea seleccionar todo el monto del recibo y sus deudas?" />
+							</div>
+						<br/>
+							
+					<div style="text-align: center;">
+						<a4j:commandButton rendered="#{descargoDeudasManaged.showSelectRecibo and !descargoDeudasManaged.showSelectReciboParcial}" 
+								value="Si" style="width:100px;"
+								action="#{descargoDeudasManaged.selectReciboPagosSi()}"
+								oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+								reRender="frmTranferencia">				
+						</a4j:commandButton>
+				
+						<a4j:commandButton rendered="#{descargoDeudasManaged.showSelectRecibo and !descargoDeudasManaged.showSelectReciboParcial}" 
+								value="No" style="width:100px;"
+								action="#{descargoDeudasManaged.selectReciboPagosNo()}"
+								oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+								reRender="frmTranferencia"/>
+								
+						<a4j:commandButton rendered="#{descargoDeudasManaged.showSelectRecibo and !descargoDeudasManaged.showSelectReciboParcial}" 
+								value="Cancelar" style="width:100px;"
+								action="#{descargoDeudasManaged.selectReciboPagosCancel()}"
+								reRender="frmTranferencia"/>
+				
+					</div>					
+				</rich:simpleTogglePanel>
+				
+				
+				<rich:simpleTogglePanel id="tableDataDeudaPago"
+					rendered="#{descargoDeudasManaged.showSelectRecibo and descargoDeudasManaged.showSelectReciboParcial}"
+					style="margin-bottom: 20px;"
+					switchType="client"
+					label="Seleccione las deudas, se encontraron #{descargoDeudasManaged.showlistReciboPagoDetalle.size()} resultados."
+					height="auto" styleClass="uniqueClassName" opened="true">
+					<rich:dataTable id="dataTableCuotas"
+						value="#{descargoDeudasManaged.showlistReciboPagoDetalle}"
+						var="record" rowKeyVar="rowIndex" rows="5"
+						rendered="#{not empty descargoDeudasManaged.listpagos}">
+						
+						<rich:column id="x10" width="50px" style="text-align:center">
+							<f:facet name="header">Item</f:facet>
+							<h:outputText value="#{rowIndex + 1}" />
+						</rich:column>
+						
+						<rich:column id="x0" width="150px" style="text-align:center"
+							filterBy="#{record.referencia}"
+							filterStyle="width:100%;" 
+							sortBy="#{record.referencia}">
+							
+							<f:facet name="header">Predio </f:facet>
+							<h:outputText value="#{record.referencia}" />
+						</rich:column>
+				
+						<rich:column id="x1" width="150px" style="text-align:center"
+							filterBy="#{record.concepto}"
+							filterStyle="width:100%;" 
+							sortBy="#{record.concepto}">
+							<f:facet name="header">Concepto</f:facet>
+							<h:outputText value="#{record.concepto}" />
+						</rich:column>
+						
+						<rich:column id="x2" width="150px" style="text-align:center"
+							filterBy="#{record.cuota}"
+							filterStyle="width:100%;" 
+							sortBy="#{record.cuota}">
+							<f:facet name="header">Cuota</f:facet>
+							<h:outputText value="#{record.cuota}" />
+						</rich:column>
+						
+						<rich:column id="x3" width="150px" style="text-align:center">
+							<f:facet name="header">Monto</f:facet>
+							<h:outputText value="#{record.monto}" />
+						</rich:column>
+						
+						<rich:column id="x4" width="150px" style="text-align:center">
+							<f:facet name="header">Reaju.</f:facet>
+							<h:outputText value="#{record.reajuste}" />
+						</rich:column>
+						
+						<rich:column id="x5" width="150px" style="text-align:center">
+							<f:facet name="header">Inter.</f:facet>
+							<h:outputText value="#{record.interes}" />
+						</rich:column>
+						
+						<rich:column id="x6" width="150px" style="text-align:center">
+							<f:facet name="header">Total</f:facet>
+							<h:outputText value="#{record.total}" />
+						</rich:column>
+								
+						<h:column >
+							<div align="center">
+								<h:selectBooleanCheckbox 
+									rendered="#{record.estado}"
+										value="#{record.select}" >													
+									<a4j:support event="onchange" ajaxSingle="true"
+									action="#{descargoDeudasManaged.seletItemRecibo(record)}"
+									oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+									reRender="frmTranferencia" />
+								</h:selectBooleanCheckbox>
+							</div>
+						</h:column>	
+																
+					</rich:dataTable>
+					<rich:datascroller id="tableDataDeudaPagoSc" align="center"
+						for="dataTableCuotas" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+					
+					<br/>
+					<div style="text-align: right;">
+						<h:outputText rendered="#{descargoDeudasManaged.showSelectRecibo and descargoDeudasManaged.showSelectReciboParcial}" 
+						id="succ110" style="font-weight:bold;color:green;font-size: 14px;"
+						value="Monto recibo : #{descargoDeudasManaged.reciboSelect.selectTotal}" />
+					</div>
+					<br/>
+					
+					
+					<div style="text-align: center;">
+						<a4j:commandButton rendered="#{descargoDeudasManaged.showSelectRecibo and descargoDeudasManaged.showSelectReciboParcial}" 
+								value="Confirmar" style="width:100px;"
+								action="#{descargoDeudasManaged.confirmarReciboParcial()}"
+								oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};     " 
+								reRender="frmTranferencia">				
+						</a4j:commandButton>
+				
+						<a4j:commandButton rendered="#{descargoDeudasManaged.showSelectRecibo and descargoDeudasManaged.showSelectReciboParcial}" 
+								value="Cancelar" style="width:100px;"
+								action="#{descargoDeudasManaged.cancelarReciboParcial()}"
+								reRender="frmTranferencia"/>	
+					</div>
+										
+				</rich:simpleTogglePanel>
+				
+
+				<!-- ======================== -->
+				<rich:panel style="width:100%; margin-bottom: 20px;"	id="id_selectExpe" 
+					rendered="#{!descargoDeudasManaged.showListaPagosTransferencia}">
+					
+					<ui:repeat var="recibo" value="#{descargoDeudasManaged.listpagos}" varStatus="status">
+						<rich:panel style="width:100%; margin-bottom: 0px;"	id="selectExpe" 
+						rendered="#{recibo.select}">
+							<table border="0" width="100%" style="color: green;">
+								<tr> 
+										<td align="left" width="80px" >							
+											<b><h:outputText value="Nro. Recibo "/></b>
+										</td>
+										
+										<td align="left" width="120px" style="color: #000;">							
+											<h:outputText value=": #{recibo.nroRecibo}"/>
+										</td>
+										
+										<td align="left" width="80px">							
+											<b><h:outputText value="Monto Cancelado "/></b>
+										</td>
+										
+										<td align="left" width="120px" style="color: #000;">							
+											<h:outputText value=": #{recibo.montoACobrar le recibo.montoCobrado? recibo.montoACobrar : recibo.montoCobrado}"/>
+										</td>
+										
+										
+										<td align="left" width="80px">							
+											<b><h:outputText value="Monto a compensar "/></b>
+										</td>
+										<td align="left" width="120px" style="color: #000;">	
+											: <h:outputText value="#{recibo.selectTotal}"/>
+											
+										</td>
+								</tr>
+							</table>
+							
+							
+						</rich:panel>
+					</ui:repeat>
+					<br/>
+						<div style="text-align: right;">
+							<h:outputText 
+							id="succ1111" style="font-weight:bold;color:green;font-size: 14px;"
+							value="Monto total a compensar : #{descargoDeudasManaged.montoTotalRecibos}" />
+						</div>
+					<br/>
+					<div style="width: 100%; text-align: right; margin-top: 0px;" >
+						<a4j:commandLink rendered="#{descargoDeudasManaged.canPagosCompenzacion > 1}" id="editSelecExp">
+								<h:graphicImage value="/images/font-icon/pencil.png" style="border: 0px; padding-right: 15px;"
+										alt="Cambiar Recibos" width="20" height="20" />
+										
+								<a4j:support ajaxSingle="true" event="onclick"
+										action="#{descargoDeudasManaged.cancelpagos}"
+										reRender="frmTranferencia" status="ajaxStatus">
+									</a4j:support>
+										
+								<rich:toolTip for="editSelecExp">Cambiar selección</rich:toolTip>					
+						</a4j:commandLink>
+					</div>	
+				</rich:panel>
+				
+				<!-- ======================== -->
+				<rich:panel style="width:100%; margin-bottom: 20px;"	id="id_select_tipo" 
+					rendered="#{!descargoDeudasManaged.showListaPagosTransferencia 
+						and descargoDeudasManaged.showOptionTipoDescargo}">
+					<h:selectOneRadio  value="#{descargoDeudasManaged.seleccionarDescargo}"
+						title="Select">
+						<f:selectItem itemValue="1" itemLabel="Compensación  pedido de parte" />
+						<f:selectItem itemValue="2" itemLabel="Compensación de oficio" />
+
+						<a4j:support
+							reRender="#{rich:clientId('frmTranferencia')}"
+							event="onchange" BypassUpdates="false" ajaxSingle="true" />
+					</h:selectOneRadio>
+				</rich:panel>
+				<!-- ======================== -->
+							
+				<rich:simpleTogglePanel id="togglePanelResultados"
+					rendered="#{!descargoDeudasManaged.showListaPagosTransferencia 
+								and descargoDeudasManaged.listItemsExpedientes.size() > 0
+								and descargoDeudasManaged.seleccionarDescargo == 1}"
+					style="margin-bottom: 20px;"
+					switchType="client"
+					label="Seleccione un expediente, se encontraron #{descargoDeudasManaged.listItemsExpedientes.size()} resultados."
+					height="auto" styleClass="uniqueClassName" opened="true">
+					<rich:dataTable id="dataTableExpedientes"
+						value="#{descargoDeudasManaged.listItemsExpedientes}"
+						var="item" rowKeyVar="rowIndex" rows="5"
+						rendered="#{not empty descargoDeudasManaged.listItemsExpedientes}">
+						<h:column >
+							<div align="center" >
+								<h:outputText value="#{rowIndex + 1}" />
+							</div>
+						</h:column>
+								
+						<h:column>
+							<f:facet name="header">Expediente</f:facet>
+							<div style=" width: 200px;" align="center">
+								<h:outputText value="#{item.nroExpedienteGenerico}"
+									id="expedienteIdAr"  />
+																
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="Cod. Interno: #{item.codExpediente}" />
+										<h:outputText
+											value="Cod. Anterior: #{item.nroExpedienteAnterior}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>
+						
+						<h:column>
+							<f:facet name="header">Tramite</f:facet>
+							<div style="width: 300px;" align="left">
+								<h:outputText value="#{item.tipoTramite}" />
+							</div>
+						</h:column>	
+						
+						<h:column>
+							<f:facet name="header">Fecha Recepción</f:facet>
+							<div align="center">
+								<h:outputText value="#{item.fechaRecepcion}" id="fechaRecepcionId">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="#{msg['param.timezone']}" />	
+								</h:outputText>
+								<rich:toolTip for="fechaRecepcionId">
+									<h:panelGrid>
+										<h:outputText value="Registrado por: #{item.usuarioRegistrador}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>
+						
+						<h:column >
+							<div align="center">
+							
+								<h:selectBooleanCheckbox rendered="#{item.flagDescargo != 1}" value="#{item.select}" >													
+									<a4j:support event="onchange" ajaxSingle="true"
+									/>
+								</h:selectBooleanCheckbox>
+								
+								<rich:toolTip rendered="#{item.flagDescargo == 1}">
+									<h:panelGrid>
+										<h:outputText value="El expediente ya fue usado" />
+										
+									</h:panelGrid>
+								</rich:toolTip>
+								
+							</div>
+						</h:column>	
+						
+																
+					</rich:dataTable>
+					<rich:datascroller id="tableDataScroller" align="center"
+						for="dataTableExpedientes" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+					
+					
+						<!-- <div style="width: 100%; text-align: right; margin-top: 10px;" >
+							<a4j:commandLink id="seg_exp" >
+								<h:graphicImage value="/images/font-icon/correct-symbol.png" style="border: 0px; padding-right: 15px;"
+											alt="Seleccionar" width="20" height="20" />
+								<a4j:support ajaxSingle="true" event="onclick"
+											action="#{descargoDeudasManaged.changeExpPrescripcion()}"
+											oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};     " 
+											reRender="frmPrescripcion" status="ajaxStatus">
+								</a4j:support>								
+								<rich:toolTip for="seg_exp">Seleccionar Expedientes.</rich:toolTip>
+							</a4j:commandLink>
+						</div>	-->					
+				</rich:simpleTogglePanel>
+				
+				
+				<!-- ======================== -->
+				
+				<rich:panel style="width:100%; margin-bottom: 20px;"	id="id_data" 
+					rendered="#{!descargoDeudasManaged.showListaPagosTransferencia
+								and descargoDeudasManaged.seleccionarDescargo != 0}">
+			 
+					<table border="0" width="100%">
+						<tr>
+							<td align="left" width="130px">							
+								<h:outputText value="Tipo de Documento "/><span style="color: red">*</span>
+							</td>
+							<td width="320px" colspan="5">
+								<rich:comboBox
+								width="530px" defaultLabel="Seleccione"						
+								value="#{descargoDeudasManaged.tipoDocumento}"
+								style="width:530px; border: none"					
+								id="id_tipodocumento2"
+								valueChangeListener="#{descargoDeudasManaged.changeListenerCmbTipoDocumento}"
+								required="true" requiredMessage="Seleccione el Tipo de Documento" 
+								>					
+								<f:selectItems id="id_lsttipodocumento2" value="#{descargoDeudasManaged.lstTipoDocumento}"/>
+								<a4j:support id="id_supportlsttipodocumento2" event="onchange" BypassUpdates="false" ajaxSingle="true" />						
+								</rich:comboBox>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="130px">							
+								<h:outputText value="Nro de Documento" /><span style="color: red">*</span>
+							</td>
+							<td align="left" width="320px" colspan="5">
+								<h:inputText styleClass="nro_doc"  
+									size="100" value="#{descargoDeudasManaged.nroDocumento}" maxlength="100"
+									required="true" requiredMessage="Indique el Numero de Documento">
+									<a4j:support ajaxSingle="true" event="onblur"
+										oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+										
+										action="#{descargoDeudasManaged.validarUltimosDigitos}" />
+										
+								</h:inputText>
+								<rich:jQuery id="mask12" selector=".nro_doc" query="mask('999-999-99999999-9999')" timing="onload" />
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="130px">
+								<h:outputText value="Fecha de Documento" /><span style="color: red">*</span>
+							</td>
+							<td width="150px" >
+								<rich:calendar
+									locale="en/US" direction="bottom-right"						
+									datePattern="dd/MM/yyyy"						
+									enableManualInput="true" inputClass="maskDate"
+									inputStyle="width:100px" id="id_fechadedocumento2"
+									value="#{descargoDeudasManaged.fechaDocumento}"
+									required="true" requiredMessage="Indique la Fecha de Documento"
+									>
+								</rich:calendar> 
+								<rich:jQuery id="maskedo2" selector=".maskDate"
+									query="mask('99/99/9999')" timing="onload" />
+							</td>
+							<td align="left">
+								<h:outputText value="Monto de Compensación" style="font-weight:bold;" />	
+							</td>
+							<td align="left">
+								<h:inputText size="10"
+									valueChangeListener="#{descargoDeudasManaged.validarMontoCompenzar}"
+									value="#{descargoDeudasManaged.montoACompensar}" maxlength="10"
+									oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};" 
+									required="true" requiredMessage="Indique el Monto total a Compensar"
+									>
+									
+									<a4j:support event="onchange" ajaxSingle="true"/>
+								</h:inputText>
+								
+							</td>
+							<td align="left">
+								<h:outputText value="Deuda Compensada" style="font-weight:bold;" />	
+							</td>
+							<td>
+								<h:outputText value="#{descargoDeudasManaged.totalCompensar}" style="color: red; font-weight:bold; font-size:14px;" />
+							</td>
+						</tr>			
+						<tr>	
+							<td align="left" width="130px">							
+								<h:outputText value="Observacion (max 300)" /><span style="color: red">*</span>
+							</td>
+							<td align="left" width="320px" colspan="5">
+								<h:inputTextarea value="#{descargoDeudasManaged.observacion}" cols="100" rows="5" maxlength="500" size="500"
+								required="true" requiredMessage="Indique la Observacion"
+								>
+								
+								</h:inputTextarea>
+							</td>
+						</tr>			
+					</table>
+				</rich:panel>
+			</rich:panel>
+			
+			<br/>
+				<h:outputText rendered="#{!descargoDeudasManaged.showListaPagosTransferencia}" id="succ3" style="font-weight:bold;color:green" value="#{msg['des.messageMPConfirmCompensacion']}" />
+			<br/>
+				
+			<h:panelGrid id="buttons3" columns="2" columnClasses="coldialogbutton1, coldialogbutton2" width="100%" 
+				rendered="#{!descargoDeudasManaged.showListaPagosTransferencia}">
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelSi']}" style="width:100px;"
+						action="#{descargoDeudasManaged.tranferencia()}"
+						reRender="panelDeudas"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'paneltransferencia\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};     " >						
+				</a4j:commandButton>
+		
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelNo']}" style="width:100px;"
+						onclick="#{rich:component('paneltransferencia')}.hide();return false;" />
+		
+			</h:panelGrid>
+		</h:form>				
+	</rich:modalPanel>
+	
+
+
+
+		<h:panelGrid columns="2" align="center" width="100%">
+			<a4j:commandButton value="Salir" style="width:150px;"
+				action="#{descargoDeudasManaged.salir}" reRender="panelinclude">
+				<f:setPropertyActionListener
+					value="/sisat/principal.xhtml"
+					target="#{sessionManaged.page}" />
+			</a4j:commandButton>
+		</h:panelGrid>
+
+
+</ui:composition>

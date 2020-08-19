@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HR_subreport1_subreport1" language="groovy" pageWidth="555" pageHeight="45" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.9487171000000014"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="anio" class="java.lang.String"/>
+	<parameter name="persona_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select count(p.persona_id) nro_predios,( select count(p.base_afecta) from dt_determinacion p
+			inner join dt_determinacion_predio d on (p.determinacion_id=d.determinacion_id)
+			inner join rp_djpredial dj on (dj.dj_id=d.dj_id)
+			where
+		   p.persona_id=$P{persona_id}  and
+			anno_determinacion=$P{anio}
+			and p.base_afecta>0
+		and p.estado='1' and d.estado='1')  predios_afectos,isnull(convert(varchar(50),convert(money,p.base_afecta),1),'0') base_afecta,
+			p.impuesto,p.nro_cuotas,Convert(Decimal(15,2),(p.impuesto/p.nro_cuotas)) cuota
+			from dt_determinacion p
+			inner join dt_determinacion_predio d on (p.determinacion_id=d.determinacion_id)
+			inner join rp_djpredial dj on (dj.dj_id=d.dj_id)
+			where
+		    p.persona_id=$P{persona_id} and
+			anno_determinacion=$P{anio}
+			and p.estado='1' and d.estado='1'
+			group by p.persona_id,p.base_afecta,p.base_afecta,p.impuesto,p.nro_cuotas]]>
+	</queryString>
+	<field name="nro_predios" class="java.lang.Integer"/>
+	<field name="predios_afectos" class="java.lang.Integer"/>
+	<field name="base_afecta" class="java.lang.String"/>
+	<field name="impuesto" class="java.math.BigDecimal"/>
+	<field name="nro_cuotas" class="java.lang.Integer"/>
+	<field name="cuota" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Total Nro Predios]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Predios Afectos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Total Afecto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="315" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Impuesto Predial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cuota Trimestral]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_predios}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{predios_afectos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{base_afecta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="315" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{impuesto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="0" width="100" height="12"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cuota}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="2" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="1" width="514" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

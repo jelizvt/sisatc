@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_sin_formato" language="groovy" pageWidth="650" pageHeight="842" columnWidth="610" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.4641000000000088"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="17"/>
+	<parameter name="determinacion_id" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\reporte de DJ por Determinacion\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="responsable" class="java.lang.String"/>
+	<parameter name="ruta_imagen" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[Set Language spanish
+select
+	 p.determinacion_id
+	,d.deter_predio_id
+	,pe.persona_id
+	,isnull(pe.apellidos_nombres,'-')apellidos_nombres
+	,isnull(tdi.descripcion,'-') tipo_documento_identidad
+	,isnull(pe.nro_docu_identidad,'-')nro_docu_identidad
+	,isnull(tp.descripcion,'-') tipo_persona
+	,isnull(stp.descripcion,'-') subtipo_persona
+	,isnull(pd.domicilio_completo,'-')domicilio_completo
+	,dj.predio_id
+	,dj.dj_id
+	,dj.anno_dj
+	,YEAR(GETDATE())anio
+	,datename(month,GETDATE())mes
+	,DAY(GETDATE())dia
+from
+dt_determinacion p
+inner join mp_persona pe on p.persona_id=pe.persona_id
+inner join mp_persona_domicilio pd on pe.persona_id=pd.persona_id and pd.flag_fiscal='1' and pd.estado='1'
+inner join mp_tipo_docu_identidad tdi on pe.tipo_doc_identidad_id=tdi.tipo_doc_identidad_id
+inner join mp_tipo_persona tp on pe.tipo_persona_id=tp.tipo_persona_id
+inner join mp_subtipo_persona stp on pe.subtipo_persona_id=stp.subtipo_persona_id
+inner join dt_determinacion_predio d on (p.determinacion_id=d.determinacion_id)
+inner join rp_djpredial dj on (dj.dj_id=d.dj_id)
+inner join rp_djdireccion dir on dj.dj_id=dir.dj_id
+left join rp_ubicacion_predio up on dj.ubicacion_predio_id=up.ubicacion_predio_id
+inner join rp_condicion_propiedad cp on dj.condicion_propiedad_id=cp.condicion_propiedad_id
+where
+ p.determinacion_id=$P{determinacion_id}
+and dir.estado=1
+and p.estado='1' and d.estado='1'
+order by dj.dj_id desc]]>
+	</queryString>
+	<field name="determinacion_id" class="java.lang.Integer"/>
+	<field name="deter_predio_id" class="java.lang.Integer"/>
+	<field name="persona_id" class="java.lang.Integer"/>
+	<field name="apellidos_nombres" class="java.lang.String"/>
+	<field name="tipo_documento_identidad" class="java.lang.String"/>
+	<field name="nro_docu_identidad" class="java.lang.String"/>
+	<field name="tipo_persona" class="java.lang.String"/>
+	<field name="subtipo_persona" class="java.lang.String"/>
+	<field name="domicilio_completo" class="java.lang.String"/>
+	<field name="predio_id" class="java.lang.Integer"/>
+	<field name="dj_id" class="java.lang.Integer"/>
+	<field name="anno_dj" class="java.lang.Integer"/>
+	<field name="anio" class="java.lang.Integer"/>
+	<field name="mes" class="java.lang.String"/>
+	<field name="dia" class="java.lang.Integer"/>
+	<group name="reporte_grupo_determinacion">
+		<groupExpression><![CDATA[$F{determinacion_id}]]></groupExpression>
+		<groupFooter>
+			<band height="246">
+				<rectangle radius="10">
+					<reportElement stretchType="RelativeToBandHeight" x="101" y="198" width="355" height="41"/>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Dashed"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="112" y="203" width="126" height="11"/>
+					<textElement markup="none">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Apellidos y Nombres / Razón Social  :]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="331" y="97" width="60" height="74"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="181" y="97" width="150" height="74"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="337" y="174" width="48" height="10"/>
+					<textElement textAlignment="Center" markup="none">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Huella Digital]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="181" y="171" width="150" height="20"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="331" y="171" width="60" height="20"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="193" y="171" width="126" height="20"/>
+					<textElement textAlignment="Center" markup="none">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Firma y/o sello del contribuyente y/o representante]]></text>
+				</staticText>
+				<subreport>
+					<reportElement x="0" y="19" width="610" height="26"/>
+					<subreportParameter name="anio">
+						<subreportParameterExpression><![CDATA[$F{anno_dj}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="determinacion_id">
+						<subreportParameterExpression><![CDATA[$F{determinacion_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "dj_datos_predio_determinacion.jasper"]]></subreportExpression>
+				</subreport>
+				<line>
+					<reportElement x="0" y="12" width="610" height="1"/>
+					<graphicElement>
+						<pen lineWidth="1.0" lineColor="#666666"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="0" y="2" width="237" height="9"/>
+					<textElement verticalAlignment="Middle">
+						<font size="7" isBold="true" isUnderline="false"/>
+						<paragraph lineSpacing="1_1_2"/>
+					</textElement>
+					<text><![CDATA[DETERMINACIÓN DE LA BASE IMPONIBLE E IMPUESTO PREDIAL]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="194" y="75" width="190" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+						<font size="7" isBold="true" isUnderline="false"/>
+						<paragraph lineSpacing="1_1_2"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Cajamarca "+$F{dia}+" de "+$F{mes}+" del "+$F{anio}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="112" y="214" width="126" height="11"/>
+					<textElement markup="none">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Nro. Docu. Identidad                          :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="112" y="225" width="126" height="11"/>
+					<textElement markup="none">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Observacion(es)                                :]]></text>
+				</staticText>
+				<line>
+					<reportElement x="238" y="211" width="208" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.75" lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="238" y="222" width="208" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.75" lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="238" y="233" width="208" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.75" lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement x="336" y="171" width="48" height="20"/>
+					<textElement textAlignment="Center" markup="none">
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Huella Digital]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="186" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="78" width="610" height="1"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#666666"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="1" y="78" width="40" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="449" y="78" width="106" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Nro Docu. Identidad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="78" width="136" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isUnderline="false" isStrikeThrough="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Apellidos y Nombres / Razón Social]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1" y="88" width="40" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{persona_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="68" width="164" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[DATOS DEL CONTRIBUYENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="107" width="84" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Domicilio Fiscal              :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="98" width="84" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Tipo Contribuyente        :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="353" y="97" width="84" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Sub Tipo Contribuyente :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="85" y="88" width="364" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellidos_nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="449" y="88" width="106" height="9"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_documento_identidad}+" : "+$F{nro_docu_identidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="98" width="173" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_persona}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="437" y="97" width="173" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{subtipo_persona}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="107" width="525" height="9"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{domicilio_completo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="84" y="114" width="152" height="9"/>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font size="5" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[(Vía Nro - Int - Letra / Mza - Lote - Block Zona Urbana Distrito )]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="143" width="610" height="43"/>
+				<subreportParameter name="persona_id">
+					<subreportParameterExpression><![CDATA[$F{persona_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["dj_relacionados.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement x="0" y="140" width="610" height="1"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineColor="#666666"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="130" width="164" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[RELACIONADOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="85" y="6" width="420" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[DECLARACIÓN JURADA DEL IMPUESTO  PREDIAL ]]></text>
+			</staticText>
+			<image>
+				<reportElement x="5" y="0" width="80" height="40"/>
+				<imageExpression><![CDATA[$P{ruta_imagen}+"logosatcaj.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="2" y="45" width="605" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineColor="#666666"/>
+				</graphicElement>
+			</line>
+			<componentElement>
+				<reportElement x="504" y="6" width="100" height="40"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="65">
+					<jr:codeExpression><![CDATA[$F{determinacion_id}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField>
+				<reportElement x="284" y="48" width="51" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dj_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="144" y="48" width="147" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[ DECLARACION JURADA N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="331" y="48" width="37" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[ -   AÑO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="370" y="49" width="55" height="15"/>
+				<textElement verticalAlignment="Top">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{anno_dj}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="259" y="28" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="205" y="27" width="57" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="false" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Fecha Emisión ]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="308" y="28" width="75" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{responsable}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="300" y="28" width="3" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+		</band>
+		<band height="221">
+			<subreport>
+				<reportElement x="0" y="0" width="610" height="221"/>
+				<subreportParameter name="determinacion_id">
+					<subreportParameterExpression><![CDATA[$F{determinacion_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="dj_id">
+					<subreportParameterExpression><![CDATA[$F{dj_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="anio_dj">
+					<subreportParameterExpression><![CDATA[$F{anno_dj}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["dj_datos_predio.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="45" splitType="Stretch">
+			<textField evaluationTime="Report" pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="575" y="5" width="36" height="17" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="424" y="5" width="147" height="17" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + " de "]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="227" y="23" width="282" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[de lunes a viernes de 01:00 p.m.  a 08:00 p.m. – sábados de 01:00 p.m. a 06:00 p.m.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="18" width="147" height="14" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[         www.satcajamarca.gob.pe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="157" y="23" width="81" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[C.C. El Quinde – 2° piso ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="32" width="65" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Jr. Junín N° 1031 ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="208" y="32" width="338" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[de lunes a viernes de 09:00 a.m. a 01:00 p.m. y de 03:00 p.m. a 06:00 p.m. – sábados de 09:00 a.m. a 12:00 m.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="5" width="201" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Horarios y Centros de Atención:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="145" y="5" width="1" height="35" forecolor="#000000"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="313" y="13" width="187" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[de lunes a viernes de 08:00 a.m.  a 05:00 p.m.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="14" width="176" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Av. Alameda de los Incas S/N – complejo Qhapac Ñan ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="1" width="605" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25" lineColor="#666666"/>
+				</graphicElement>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

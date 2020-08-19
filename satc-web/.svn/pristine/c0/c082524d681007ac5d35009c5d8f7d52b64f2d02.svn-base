@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<style>
+.texto {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.col_result_forma2_1 {
+	width: 190px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 9pt;
+	padding-right: 120px;
+	
+}
+
+.col_result_forma2_col2_1 {
+	width: 85px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 9pt;
+	padding-right: 2px;
+}
+.col_result_forma2_col3 {
+	width: 115px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 11pt;
+	padding-right: 1px;
+}	
+
+.col_result_forma1_1 {
+	width: 487px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 9pt;
+	
+}
+
+.col_result_forma1_2_1 {
+	width: 85px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 9pt;
+	padding-right: 2px;
+}
+.col_result_forma1_3 {
+	width: 110px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 11pt;
+	padding-right: 1px;
+}	
+	
+.rich-panel-header{
+	
+	background-color:#F3F2F2;
+	border-color: #000000;
+	font-size: 12px;
+	color: rgb(0, 0, 0);
+	font-weight: bold;
+	font-family: Arial,Verdana,sans-serif;
+	background-image:none;
+}
+	
+
+</style>
+<div align="center">
+	<h:form>
+		<input type="button" value="Imprimir" onclick="window.print(); javascript:window.close();" />
+	</h:form>
+	<br />
+	<h:outputText value="REPORTE DE CUENTAS " styleClass="texto" />
+	<br />
+	<h:outputText value="del " />
+	<h:outputText value="#{reporteCuentaManaged.fechaInicio}" style="font-weight: bold;">
+		<f:convertDateTime pattern="#{msg['param.datepattern']}" />
+	</h:outputText>
+	<h:outputText value=" al " />
+	<h:outputText value="#{reporteCuentaManaged.fechaFin}" style="font-weight: bold;">
+		<f:convertDateTime pattern="#{msg['param.datepattern']}" />
+	</h:outputText>
+	<br />
+
+<div style="width: 635px;">
+<rich:panel >
+	<f:facet name="header">
+		<div align="center">SAT</div>
+	</f:facet>
+	<rich:dataTable width="600px" value="#{reporteCuentaManaged.listaCuentaDTOs}" rows="5" first="0" var="item">
+		<rich:column width="320px">
+			<f:facet name="header">
+				<div align="center">Descripcion</div>
+			</f:facet>
+			<h:outputText value="#{item.descripcionCuenta}" />
+		</rich:column>
+		<rich:column width="190px">
+			<f:facet name="header">
+				<div align="center">Nro Cuenta Corriente</div>
+			</f:facet>
+		</rich:column>
+		<rich:column width="110px">
+			<f:facet name="header">
+				<div align="center">Total</div>
+			</f:facet>
+			<div align="right">
+				<h:outputText value="#{item.monto}">
+					<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+				</h:outputText>
+			</div>
+		</rich:column>
+	</rich:dataTable>
+	<h:panelGrid columns="2" columnClasses="col_result_forma1_1, col_result_forma1_3" cellpadding="0" cellspacing="0">
+		<h:outputText value="Sub Total" />
+		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(18).monto}" style="align:right">
+			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+		</h:outputText>
+	</h:panelGrid>
+</rich:panel>
+<rich:panel>
+	<f:facet name="header">
+		<div align="center">MPC</div>
+	</f:facet>
+	<rich:dataTable width="600px" value="#{reporteCuentaManaged.listaCuentaDTOs}" rows="8" first="5" var="item">
+		<rich:column width="320px">
+			<f:facet name="header">
+				<div align="center">Descripcion</div>
+			</f:facet>
+			<h:outputText value="#{item.descripcionCuenta}" />
+		</rich:column>
+		<rich:column width="80px">
+			<f:facet name="header">
+				<div align="center">SAT</div>
+			</f:facet>
+			<div align="right">
+			<h:outputText value="#{item.columnaParcial1}">
+					<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2" />
+				</h:outputText>
+				</div>
+		</rich:column>
+		<rich:column width="80px">
+			<f:facet name="header">
+				<div align="center">MPC</div>
+			</f:facet>
+			<div align="right">
+			<h:outputText value="#{item.columnaParcial2}">
+					<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2" />
+				</h:outputText>
+				</div>
+		</rich:column>
+		<rich:column width="110px">
+			<f:facet name="header">
+				<div align="center">Total</div>
+			</f:facet>
+			<div align="right">
+				<h:outputText value="#{item.monto}">
+					<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2" />
+				</h:outputText>
+			</div>
+		</rich:column>
+	</rich:dataTable>
+	<h:panelGrid columns="4" columnClasses="col_result_forma2_1, col_result_forma2_col2_1, col_result_forma2_col2_1, col_result_forma2_col3" cellpadding="0" cellspacing="0">
+		<h:outputText value="Sub Total" />
+		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(19).columnaParcial1}">
+			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+		</h:outputText>
+		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(19).columnaParcial2}">
+			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+		</h:outputText>
+		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(19).monto}">
+			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+		</h:outputText>
+	</h:panelGrid>
+</rich:panel>
+<rich:panel>
+	<f:facet name="header">
+		<div align="center">Policia de Tránsito</div>
+	</f:facet>
+	<rich:dataTable width="600px" value="#{reporteCuentaManaged.listaCuentaDTOs}" rows="2" first="13" var="item">
+		<rich:column width="320px">
+			<f:facet name="header">
+				<div align="center">Descripcion</div>
+			</f:facet>
+			<h:outputText value="#{item.descripcionCuenta}" />
+		</rich:column>
+		<rich:column width="190px">
+			<f:facet name="header">
+				<div align="center">Nro Cuenta Corriente</div>
+			</f:facet>
+		</rich:column>
+		<rich:column width="110px">
+			<f:facet name="header">
+				<div align="center">Total</div>
+			</f:facet>
+			<div align="right">
+				<h:outputText value="#{item.monto}">
+					<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+				</h:outputText>
+			</div>
+		</rich:column>
+	</rich:dataTable>
+	<h:panelGrid columns="2" columnClasses="col_result_forma1_1, col_result_forma1_3" cellpadding="0" cellspacing="0">
+		<h:outputText value="Sub Total" />
+		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(20).monto}">
+			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+		</h:outputText>
+	</h:panelGrid>
+</rich:panel>
+<rich:panel>
+	<f:facet name="header">
+		<div align="center">Ministerio Transportes</div>
+	</f:facet>
+	<rich:dataTable width="600px" value="#{reporteCuentaManaged.listaCuentaDTOs}" rows="2" first="15" var="item">
+		<rich:column width="320px">
+			<f:facet name="header">
+				<div align="center">Descripcion</div>
+			</f:facet>
+			<h:outputText value="#{item.descripcionCuenta}" />
+		</rich:column>
+		<rich:column width="190px">
+			<f:facet name="header">
+				<div align="center">Nro Cuenta Corriente</div>
+			</f:facet>
+		</rich:column>
+		<rich:column width="110px">
+			<f:facet name="header">
+				<div align="center">Total</div>
+			</f:facet>
+			<div align="right">
+				<h:outputText value="#{item.monto}">
+					<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+				</h:outputText>
+			</div>
+		</rich:column>
+	</rich:dataTable>
+	<h:panelGrid columns="2" columnClasses="col_result_forma1_1, col_result_forma1_3" cellpadding="0" cellspacing="0">
+		<h:outputText value="Sub Total" />
+		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(21).monto}">
+			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+		</h:outputText>		
+	</h:panelGrid>
+</rich:panel>
+<rich:panel>
+	<f:facet name="header">
+		<div align="center">Ministerio De Trabajo</div>
+	</f:facet>
+	<rich:dataTable width="600px" value="#{reporteCuentaManaged.listaCuentaDTOs}" rows="1" first="17" var="item">
+		<rich:column width="320px">
+			<f:facet name="header">
+				<div align="center">Descripcion</div>
+			</f:facet>
+			<h:outputText value="#{item.descripcionCuenta}" />
+		</rich:column>
+<!-- 		<rich:column width="80px"> -->
+<!-- 			<f:facet name="header"> -->
+<!-- 				<div align="center">SAT (15%)</div> -->
+<!-- 			</f:facet> -->
+<!-- 			<div align="right"> -->
+<!-- 			<h:outputText value="#{item.columnaParcial1}"> -->
+<!-- 					<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2" /> -->
+<!-- 				</h:outputText> -->
+<!-- 				</div> -->
+<!-- 		</rich:column> -->
+<!-- 		<rich:column width="80px"> -->
+<!-- 			<f:facet name="header"> -->
+<!-- 				<div align="center">MT (85%)</div> -->
+<!-- 			</f:facet> -->
+<!-- 			<div align="right"> -->
+<!-- 				<h:outputText value="#{item.columnaParcial2}"> -->
+<!-- 					<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2" /> -->
+<!-- 				</h:outputText> -->
+<!-- 			</div> -->
+<!-- 		</rich:column> -->
+		<rich:column width="190px">
+			<f:facet name="header">
+				<div align="center">Nro Cuenta Corriente</div>
+			</f:facet>
+		</rich:column>
+		<rich:column width="110px">
+			<f:facet name="header">
+				<div align="center">Total</div>
+			</f:facet>
+			<div align="right">
+				<h:outputText value="#{item.monto}">
+					<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+				</h:outputText>
+			</div>
+		</rich:column>
+	</rich:dataTable>
+<!-- 	<h:panelGrid columns="4" columnClasses="col_result_forma2_1, col_result_forma2_col2_1, col_result_forma2_col2_1, col_result_forma2_col3" cellpadding="0" cellspacing="0"> -->
+<!-- 		<h:outputText value="Sub Total" /> -->
+<!-- 		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(20).columnaParcial1}"> -->
+<!-- 			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/> -->
+<!-- 		</h:outputText> -->
+<!-- 		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(20).columnaParcial2}"> -->
+<!-- 			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/> -->
+<!-- 		</h:outputText> -->
+<!-- 		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(20).monto}"> -->
+<!-- 			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/> -->
+<!-- 		</h:outputText> -->
+<!-- 	</h:panelGrid> -->
+	<h:panelGrid columns="2" columnClasses="col_result_forma1_1, col_result_forma1_3" cellpadding="0" cellspacing="0">
+		<h:outputText value="Sub Total" />
+		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(22).monto}">
+			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+		</h:outputText>		
+	</h:panelGrid>
+	<h:panelGrid columns="2" columnClasses="col_result_forma1_1, col_result_forma1_3" cellpadding="0" cellspacing="0">		
+		<h:outputText value="TOTAL" />
+		<h:outputText value="#{reporteCuentaManaged.listaCuentaDTOs.get(23).monto}">
+			<f:convertNumber locale="#{msg['param.localecurrency']}" minFractionDigits="2" maxFractionDigits="2"/>
+		</h:outputText>
+	</h:panelGrid>
+</rich:panel>
+<h:panelGroup layout="block" style="text-align:left;font-size: 11pt;">
+<h:outputLabel value="Fecha Emision: " />
+<h:outputText value="#{reporteCuentaManaged.fechaEmision}" >
+	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+</h:outputText>
+</h:panelGroup>
+</div>
+</div>
+</html>

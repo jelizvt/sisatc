@@ -1,0 +1,957 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+
+	<link href="../../css/tabla_one.css" type="text/css" rel="stylesheet" />
+
+
+<h:form id="formConsultaReniec">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+
+
+	<script type="text/javascript">
+	 function validaNroDocumento(nroDocumento){
+		 if(jQuery.trim(nroDocumento).length==8){
+				 return true;
+		 }
+		 return false;
+	 }
+	</script>
+
+        
+
+
+		<table border="0" width="100%"
+			style="border-collapse: collapse; font-size: 90%;">
+			<tr>
+				<td><rich:panel header="Consulta SUNARP" id="id_busqueda">
+						<table border="0">
+							<tr>
+								<td bgcolor="#E7E9EE" colspan="7" valign="top"
+									style="border-color: #E7E9EF; border-style: solid; border-width: 1px;">
+
+									<h:selectOneRadio  value="#{consultaSunarpManaged.tipoPersona}"
+										title="Select">
+										<f:selectItem itemValue="1" itemLabel="Persona Natural" />
+										<f:selectItem itemValue="2" itemLabel="Persona Jurídica" />
+										<f:selectItem itemValue="3" itemLabel="Número de Partida" />
+
+										<f:selectItem itemValue="4" itemLabel="Registro vehicular" />
+
+										<a4j:support
+											reRender="#{rich:clientId('id_busqueda')},#{rich:clientId('id_panelConsultaReniec')}"
+											event="onchange" BypassUpdates="false" ajaxSingle="true" />
+									</h:selectOneRadio>
+								</td>
+
+
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td width="20%"></td>
+
+								<td rowspan="4" align="right" width="500px">
+								
+								<rich:panel rendered="#{consultaSunarpManaged.tipoPersona==1}" >
+								
+								<table width="500px" border="1" bordercolor="#E7E9EE"
+										style="border-collapse: collapse; font-size: 80%;">
+
+										<tr>
+											<td height="80px" width="90px" rowspan="4"><h:graphicImage
+													id="id_imagen" width="55" height="75"
+													value="#{consultaSunarpManaged.rutaFotoReniec}"
+													alt="Sin Foto">
+												</h:graphicImage></td>
+											<td width="20px"><h:outputText value="Dirección: " /></td>
+											<td width="92"><h:outputText id="id_direccion"
+													style="color:#060B52"
+													value="#{consultaSunarpManaged.resultadoConsultaReniec.datosPersona.direccion}" />
+											</td>
+										</tr>
+										<tr>
+											<td width="20px"><h:outputText value="Ubigeo: " /></td>
+											<td width="250px"><h:outputText id="id_ubigeo"
+													style="color:#060B52"
+													value="#{consultaSunarpManaged.resultadoConsultaReniec.datosPersona.ubigeo}" />
+											</td>
+										</tr>
+										<tr>
+											<td width="20px"><h:outputText value="Estado Civil: " /></td>
+											<td width="92"><h:outputText id="id_estadocivil"
+													style="color:#060B52"
+													value="#{consultaSunarpManaged.resultadoConsultaReniec.datosPersona.estadoCivil}" />
+											</td>
+										</tr>
+										<tr>
+											<td width="20px"><h:outputText value="Observaciones: " /></td>
+											<td width="92"><h:outputText id="id_restriccion"
+													style="color:#060B52"
+													value="#{consultaSunarpManaged.resultadoConsultaReniec.datosPersona.restriccion}" />
+											</td>
+										</tr>
+
+									</table>
+								</rich:panel>
+								
+									
+								</td>
+
+
+
+
+							</tr>
+							
+
+							<tr style="height: 10px">
+							
+							
+							
+								<td colspan="2" width="100px">
+								
+								<h:outputText
+										value="#{consultaSunarpManaged.tipoPersona==1 ? 'Ingrese Nº DNI.':consultaSunarpManaged.tipoPersona==2 ? 'Ingrese RUC.':consultaSunarpManaged.tipoPersona==3 ?'Ingrese Nro. Partiuda':'Ingrese Placa'}" />
+
+
+								</td>
+
+								<td colspan="3" width="250px" align="left"><h:inputText
+										rendered="#{consultaSunarpManaged.tipoPersona==1}" id="dni"
+										value="#{consultaSunarpManaged.dniConsultaReniec}">
+									</h:inputText> <h:inputText disabled="true"
+										rendered="#{consultaSunarpManaged.tipoPersona==2}" id="ruc"
+										value="#{consultaSunarpManaged.RUCConsultasSunat}">
+									</h:inputText> <h:inputText
+										rendered="#{consultaSunarpManaged.tipoPersona==3}"
+										id="nro_partida"
+										value="#{consultaSunarpManaged.numeroPartida}">
+									</h:inputText> <h:inputText
+										rendered="#{consultaSunarpManaged.tipoPersona==4}"
+										id="id_placa" value="#{consultaSunarpManaged.placa}">
+									</h:inputText> <a4j:commandLink id="id_busquedareniec"
+										rendered="#{consultaSunarpManaged.tipoPersona==1}"
+										status="ajaxStatus"
+										action="#{consultaSunarpManaged.consultaReniec()}"
+										reRender="id_imagen,id_paterno,id_materno,id_nombres,id_restriccion,id_estadocivil,id_ubigeo,id_direccion"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');return false;return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+
+										<h:graphicImage width="80" height="25"
+											value="/images/modal/botonreniec.jpg" style="border:1" />
+
+										<rich:toolTip for="id_busquedareniec"
+											value="CONSULTA RENIEC EN LÍNEA" />
+
+
+									</a4j:commandLink> <a4j:commandLink id="id_busquedasunat" disabled="true"
+										rendered="#{consultaSunarpManaged.tipoPersona==2}"
+										status="ajaxStatus"
+										reRender="id_imagen,id_paterno,id_materno,id_nombres,id_restriccion,id_estadocivil,id_ubigeo,id_direccion"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');return false;return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+
+										<h:graphicImage width="80" height="25"
+											value="/images/modal/botonSunat.jpg" style="border:1" />
+
+										<rich:toolTip for="id_busquedasunat"
+											value="CONSULTA SUNAT EN LÍNEA (Deshabilitado)" />
+
+									</a4j:commandLink></td>
+							</tr>
+
+							<tr>
+
+								<td colspan="2" width="20%"><h:outputText
+										value="#{consultaSunarpManaged.tipoPersona==1 ? 'Apellido Paterno':consultaSunarpManaged.tipoPersona==2 ?'Razón Social':'Oficina'}" />
+
+								</td>
+
+
+								<td><h:inputText id="id_paterno"
+										style="text-transform:uppercase;"
+										value="#{consultaSunarpManaged.apellidoPaterno}"
+										rendered="#{consultaSunarpManaged.tipoPersona==1}" /> <h:inputText
+										id="id_ruc" value="#{consultaSunarpManaged.razonSocial}"
+										rendered="#{consultaSunarpManaged.tipoPersona==2}"
+										style="width:500px;text-transform:uppercase;" /> <h:selectOneMenu
+										rendered="#{consultaSunarpManaged.tipoPersona >= 3}"
+										id="id_oficinas_select"
+										value="#{consultaSunarpManaged.oficinaSelect}"
+										style="width:140px;">
+										<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+										<f:selectItems value="#{consultaSunarpManaged.oficinas}"
+											var="item" itemLabel="#{item.descripcion}"
+											itemValue="#{item.descripcion}">
+										</f:selectItems>
+
+										<a4j:support id="idEventRs2" event="onchange"
+											reRender="id_oficinas_select" BypassUpdates="false"
+											ajaxSingle="true" />
+
+
+
+									</h:selectOneMenu></td>
+
+
+								<td width="20%"><h:outputText value="Apellido Materno"
+										rendered="#{consultaSunarpManaged.tipoPersona==1}" /> <h:outputText
+										rendered="#{consultaSunarpManaged.tipoPersona == 3}"
+										value="Tipo Registro">
+									</h:outputText> <h:selectOneMenu
+										rendered="#{consultaSunarpManaged.tipoPersona == 3}"
+										id="id_tipo_registro_select"
+										value="#{consultaSunarpManaged.tipoRegistro}"
+										style="width:140px;">
+										<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+										<f:selectItems value="#{consultaSunarpManaged.tiposRegistro}"
+											var="item" itemLabel="#{item.tipoRegistro}"
+											itemValue="#{item.codigo}">
+										</f:selectItems>
+
+										<a4j:support id="idEventRs3" event="onchange"
+											reRender="id_tipo_registro_select" BypassUpdates="false"
+											ajaxSingle="true" />
+
+
+
+									</h:selectOneMenu></td>
+
+
+								<td><h:inputText id="id_materno"
+										style="text-transform:uppercase;"
+										value="#{consultaSunarpManaged.apellidoMaterno}"
+										rendered="#{consultaSunarpManaged.tipoPersona==1}" /></td>
+
+								<td><h:outputText value="Nombres"
+										rendered="#{consultaSunarpManaged.tipoPersona==1}" /></td>
+								<td><h:inputText id="id_nombres"
+										style="text-transform:uppercase;"
+										value="#{consultaSunarpManaged.nombres}"
+										rendered="#{consultaSunarpManaged.tipoPersona==1}" /></td>
+
+								<td align="center"><a4j:commandLink id="id_busquedaSunarp"
+										rendered="#{consultaSunarpManaged.tipoPersona == 1 || consultaSunarpManaged.tipoPersona == 2}"
+										status="ajaxStatus"
+										action="#{consultaSunarpManaged.consultaTitularidad()}"
+										reRender="id_resultadosunarp,id_detalletitularidad,id_asientos"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');return false;return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+
+
+										<h:graphicImage width="80" height="30"
+											value="/images/modal/botonSunarpTit.png" style="border:1" />
+
+										<rich:toolTip for="id_busquedaSunarp"
+											value="CONSULTA SUNARP EN LÍNEA" />
+									</a4j:commandLink> <a4j:commandLink
+										rendered="#{consultaSunarpManaged.tipoPersona==3}"
+										id="id_PROPIETARIOvEHICULO" status="ajaxStatus"
+										action="#{consultaSunarpManaged.consultarAsientos()}"
+										reRender="id_asientos"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');return false;return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+
+
+										<h:graphicImage width="80" height="35"
+											value="/images/modal/botonSunarpAsiento.png" style="border:1" />
+
+										<rich:toolTip for="id_asientosreniec"
+											value="CONSULTA ASIENTOS EN LÍNEA" />
+
+									</a4j:commandLink> 
+									<a4j:commandLink
+										rendered="#{consultaSunarpManaged.tipoPersona==4}"
+										id="id_asientosreniecDirecto" status="ajaxStatus"
+										action="#{consultaSunarpManaged.registrovehicular()}"
+										reRender="id_resultadosunarp"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');return false;return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+
+
+										<h:graphicImage width="80" height="35"
+											value="/images/modal/botonSunarpVeh.jpg" style="border:1" />
+
+										<rich:toolTip for="id_asientosreniec"
+											value="CONSULTA REGISTRO VEHICULAR EN LÍNEA" />
+
+									</a4j:commandLink>
+									</td>
+								<td>
+								
+								
+								<a4j:commandLink
+										id="id_limpiar"
+										action="#{consultaSunarpManaged.limpiarAll()}"
+										reRender="formConsultaReniec"
+										>
+
+
+										<h:graphicImage width="25" height="25"
+											value="/images/modal/limpiar.png" style="border:1" />
+
+										<rich:toolTip for="id_limpiar"
+											value="Limpiar datos ingresados" />
+
+								</a4j:commandLink>
+									
+										
+								</td>
+							</tr>
+
+						</table>
+
+					</rich:panel></td>
+
+			</tr>
+
+		</table>
+
+
+		<a4j:outputPanel id="id_panelConsultaReniec">
+
+			<table border="0">
+				<tr>
+					<td valign="top"><rich:panel style="width:600px"
+							header="Titularidad" id="id_resultadosunarp">
+
+							<rich:panel rendered="#{consultaSunarpManaged.tipoPersona==4}">
+							
+							<h:panelGrid columns="1" style="text-align:center" width="500px">
+								<h:graphicImage id="id_img_vehicular" 
+									style="border-left:50px"
+									value="/images/modal/consultaVehicular.jpg" alt="Sin Foto">
+								</h:graphicImage>
+							
+							</h:panelGrid>
+
+							
+
+								<table width="500px" border="1" bordercolor="#CED0D5"
+									style="border-collapse: collapse;">
+									<tbody>
+
+										<tr>
+											<td bgcolor="#0079c2" style="color: white">Placa:</td>
+											<td><h:inputText
+													style="width:90%;height:25px;color:#060B52" disabled="true"
+													value="#{consultaSunarpManaged.respuestaVehiculo.placa}" />
+											</td>
+										</tr>
+										<tr>
+											<td bgcolor="#0079c2" style="color: white">Marca:</td>
+											<td><h:inputText
+													style="width:90%;height:25px;color:#060B52" disabled="true"
+													value="#{consultaSunarpManaged.respuestaVehiculo.marca}" />
+											</td>
+										</tr>
+										<tr>
+											<td bgcolor="#0079c2" style="color: white">Modelo:</td>
+											<td><h:inputText
+													style="width:90%;height:25px;color:#060B52" disabled="true"
+													value="#{consultaSunarpManaged.respuestaVehiculo.modelo}" />
+											</td>
+										</tr>
+										<tr>
+											<td bgcolor="#0079c2" style="color: white">Nro. Motor:</td>
+											<td><h:inputText
+													style="width:90%;height:25px;color:#060B52" disabled="true"
+													value="#{consultaSunarpManaged.respuestaVehiculo.nroMotor}" />
+											</td>
+										</tr>
+										<tr>
+											<td bgcolor="#0079c2" style="color: white">Nro. Serie:</td>
+											<td><h:inputText
+													style="width:90%;height:25px;color:#060B52" disabled="true"
+													value="#{consultaSunarpManaged.respuestaVehiculo.serie}" />
+											</td>
+										</tr>
+
+										<tr>
+											<td bgcolor="#0079c2" style="color: white">Nro. Vin:</td>
+											<td><h:inputText
+													style="width:90%;height:25px;color:#060B52" disabled="true"
+													value="#{consultaSunarpManaged.respuestaVehiculo.vin}" />
+											</td>
+										</tr>
+
+										<tr>
+											<td bgcolor="#0079c2" style="color: white">Color:</td>
+											<td><h:inputText
+													style="width:90%;height:25px;color:#060B52" disabled="true"
+													value="#{consultaSunarpManaged.respuestaVehiculo.color}" />
+											</td>
+										</tr>
+
+										<tr>
+											<td bgcolor="#0079c2" style="color: white">Sede:</td>
+											<td><h:inputText
+													style="width:90%;height:25px;color:#060B52" disabled="true"
+													value="#{consultaSunarpManaged.respuestaVehiculo.sede}" />
+											</td>
+										</tr>
+
+										<tr>
+											<td bgcolor="#0079c2" style="color: white">Estado:</td>
+											<td><h:inputText
+													style="width:90%;height:25px;color:#060B52" disabled="true"
+													value="#{consultaSunarpManaged.respuestaVehiculo.estado}" />
+											</td>
+										</tr>
+
+									</tbody>
+								</table>
+
+								<rich:extendedDataTable
+									rendered="#{consultaSunarpManaged.tipoPersona==4}"
+									selectionMode="single" width="500px" var="propitarios"
+									value="#{consultaSunarpManaged.respuestaVehiculo.propietarios.nombre}"
+									showColumnControl="true" height="200px" rowClasses="fila2"
+									styleClass="tabla">
+
+									<rich:column style="text-align:left" width="100%">
+										<f:facet name="header">Propietario(s)</f:facet>
+										<h:outputText value="#{propitarios}" />
+									</rich:column>
+
+								</rich:extendedDataTable>
+							</rich:panel>
+
+
+
+
+
+
+
+
+
+
+							<rich:extendedDataTable
+								rendered="#{consultaSunarpManaged.tipoPersona!=4}"
+								selectionMode="single" width="580px" var="titularidad"
+								value="#{consultaSunarpManaged.rsultadoTitularidad}"
+								showColumnControl="true" height="610px" rowClasses="fila2"
+								styleClass="tabla">
+
+
+								<rich:column id="c0" style="text-align:center" width="8%">
+									<f:facet name="header"></f:facet>
+									<a4j:commandLink
+										action="#{consultaSunarpManaged.limpiarAsientos()}"
+										ajaxSingle="true" id="clDetTiularidad"
+										reRender="id_detalletitularidad,id_asientos">
+										<h:graphicImage width="20px" height="15px"
+											value="/images/VerDetalle.png" style="border:0;" />
+										<f:setPropertyActionListener value="#{titularidad}"
+											target="#{consultaSunarpManaged.titularidad}" />
+
+										<rich:toolTip for="clDetTiularidad" value="VER DETALLE" />
+
+
+									</a4j:commandLink>
+								</rich:column>
+
+								<rich:column style="text-align:center" width="10%">
+									<f:facet name="header">Item</f:facet>
+									<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+								</rich:column>
+
+								<rich:column width="15%">
+									<f:facet name="header">Nº Partida</f:facet>
+									<h:outputText value="#{titularidad.numeroPartida}" />
+								</rich:column>
+
+
+								<rich:column width="20%" style="text-align:center">
+									<f:facet name="header" width="10%">Doc. Identidad.</f:facet>
+									<h:outputText
+										value="#{titularidad.tipoDocumento.concat(' ').concat(titularidad.numeroDocumento)}" />
+								</rich:column>
+
+
+								<rich:column width="50%" id="id_titularidadDireccion">
+									<f:facet name="header">Dirección</f:facet>
+									<h:outputText value="#{titularidad.direccion}" />
+								</rich:column>
+
+							</rich:extendedDataTable>
+
+
+						</rich:panel></td>
+
+
+
+					<td width="100%" valign="top">
+
+						<table width="100%">
+
+							<tr>
+
+								<td><rich:panel
+										rendered="#{consultaSunarpManaged.tipoPersona != 4}"
+										header="Detalle Titularidad" style="width:100%"
+										id="id_detalletitularidad">
+
+										<table border="1" bordercolor="#E7E9EE"
+											style="border-collapse: collapse; font-size: 90%;">
+
+
+											<tr>
+
+												<td width="50px" bgcolor="#0079c2" style="color: white"><h:outputText
+														value="Nº Partida: "></h:outputText></td>
+
+												<td><h:outputText
+														value="#{consultaSunarpManaged.titularidad.numeroPartida}" />
+												</td>
+											</tr>
+
+											<tr>
+												<td bgcolor="#0079c2" style="color: white"><h:outputText
+														value="Dirección: "></h:outputText></td>
+
+												<td colspan="6"><h:outputText
+														value="#{consultaSunarpManaged.titularidad.direccion}" />
+												</td>
+											</tr>
+
+											<tr>
+												<td bgcolor="#0079c2" style="color: white"><h:outputText
+														value="Registro: "></h:outputText></td>
+
+												<td><h:outputText
+														value="#{consultaSunarpManaged.titularidad.registro}" />
+												</td>
+												<td bgcolor="#0079c2" style="color: white"><h:outputText
+														value="Libro: "></h:outputText></td>
+
+												<td><h:outputText
+														value="#{consultaSunarpManaged.titularidad.libro}" /></td>
+
+											</tr>
+
+											<tr>
+
+
+												<td bgcolor="#0079c2" style="color: white"><h:outputText
+														value="Zona:  "></h:outputText></td>
+
+												<td><h:outputText
+														value="#{consultaSunarpManaged.titularidad.zona}" /></td>
+
+												<td bgcolor="#0079c2" style="color: white"><h:outputText
+														value="Oficina: "></h:outputText></td>
+
+												<td><h:outputText
+														value="#{consultaSunarpManaged.titularidad.oficina}" /></td>
+
+												<td bgcolor="#0079c2" style="color: white"><h:outputText
+														value="Placa: "></h:outputText></td>
+
+												<td><h:outputText
+														value="#{consultaSunarpManaged.titularidad.numeroPlaca}" />
+												</td>
+
+
+												<td bgcolor="#0079c2" style="color: white"><h:outputText
+														value="Estado: "></h:outputText></td>
+
+												<td><h:outputText
+														value="#{consultaSunarpManaged.titularidad.estado}" /></td>
+
+
+											</tr>
+
+											<tr style="height: 10px"></tr>
+											<tr>
+												<td width="1px"></td>
+											</tr>
+
+
+
+										</table>
+
+										<table>
+
+											<tr>
+
+
+												<td><a4j:commandLink
+														rendered="#{consultaSunarpManaged.tipoPersona!=3}"
+														id="id_asientosreniec" status="ajaxStatus"
+														action="#{consultaSunarpManaged.consultarAsientos()}"
+														reRender="id_asientos"
+														oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');return false;return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+
+
+														<h:graphicImage width="80" height="35"
+															value="/images/modal/botonSunarpAsiento.png"
+															style="border:1" />
+
+														<rich:toolTip for="id_asientosreniec"
+															value="CONSULTA ASIENTOS EN LÍNEA" />
+
+
+													</a4j:commandLink></td>
+
+											</tr>
+
+
+										</table>
+
+
+
+									</rich:panel></td>
+
+							</tr>
+
+
+							<tr>
+								<td><rich:panel style="width:100%" id="id_asientos"
+										rendered="#{consultaSunarpManaged.tipoPersona != 4}">
+
+
+										<table width="100%">
+											<tr>
+
+												<td><h:outputText value="Transacción:" /></td>
+												<td><h:outputText
+														value="#{consultaSunarpManaged.resultadoAsientos.transaccion}" />
+
+												</td>
+
+												<td><h:outputText value="Total de Páginas:" /></td>
+												<td><h:outputText
+														value="#{consultaSunarpManaged.resultadoAsientos.nroTotalPag}" />
+
+												</td>
+
+
+											</tr>
+
+											<tr>
+												<td colspan="3"><rich:panel header="Asientos">
+
+														<rich:extendedDataTable selectionMode="single"
+															width="300px" height="100px" var="asiento"
+															value="#{consultaSunarpManaged.resultadoAsientos.listAsientos}"
+															showColumnControl="true" rowClasses="fila2"
+															styleClass="tabla">
+
+															<rich:column id="c0" style="text-align:center"
+																width="10%">
+																<f:facet name="header"></f:facet>
+																<a4j:commandLink ajaxSingle="true" id="clDetAsiento"
+																	reRender="id_listaPaginas">
+																	<h:graphicImage width="20px" height="15px"
+																		value="/images/VerDetalle.png" style="border:0;" />
+																	<f:setPropertyActionListener value="#{asiento}"
+																		target="#{consultaSunarpManaged.resultadoAsiento}" />
+
+																	<rich:toolTip for="clDetAsiento"
+																		value="VER PÁGINAS DE ASIENTOS" />
+
+
+																</a4j:commandLink>
+
+															</rich:column>
+
+
+
+															<rich:column width="30%">
+																<f:facet name="header">ID Imagen</f:facet>
+																<h:outputText value="#{asiento.idImgAsiento}" />
+															</rich:column>
+
+															<rich:column width="30%">
+																<f:facet name="header">Nº Página</f:facet>
+																<h:outputText value="#{asiento.numPag}" />
+															</rich:column>
+
+															<rich:column width="30%">
+																<f:facet name="header">Tipo</f:facet>
+																<h:outputText value="#{asiento.tipo}" />
+															</rich:column>
+
+														</rich:extendedDataTable>
+													</rich:panel></td>
+
+
+
+												<td width="100%"><rich:panel
+														header="Seleccione una páginas para ver la Foto de Asiento">
+
+
+														<rich:extendedDataTable id="id_listaPaginas"
+															selectionMode="single" width="100%" height="100px"
+															var="paginas"
+															value="#{consultaSunarpManaged.resultadoAsiento.listPag}"
+															showColumnControl="true" rowClasses="fila2"
+															styleClass="tabla">
+
+
+															<rich:column id="c0" style="text-align:center"
+																width="10%">
+																<f:facet name="header"></f:facet>
+																<a4j:commandLink
+																	action="#{consultaSunarpManaged.verAsiento()}"
+																	ajaxSingle="true" id="clListarPaginasAsiento"
+																	reRender="id_modealImagen"
+																	oncomplete="#{rich:component('id_modealImagen')}.show()"
+																	status="ajaxStatus">
+
+																	<h:graphicImage width="25px" height="25px"
+																		value="/images/verFoto.png" style="border:0;" />
+																	<f:setPropertyActionListener value="#{paginas}"
+																		target="#{consultaSunarpManaged.resultadoNumeroPagina}" />
+
+																	<rich:toolTip for="clListarPaginasAsiento"
+																		value="VER FOTO ASIENTO" />
+
+
+																</a4j:commandLink>
+
+															</rich:column>
+
+
+															<rich:column style="text-align:center" width="20%">
+																<f:facet name="header">Referencia</f:facet>
+																<h:outputText value="#{paginas.nroPagRef}" />
+
+															</rich:column>
+
+															<rich:column style="text-align:center" width="20%">
+																<f:facet name="header">Página</f:facet>
+																<h:outputText value="#{paginas.pagina}" />
+															</rich:column>
+														</rich:extendedDataTable>
+
+													</rich:panel></td>
+											</tr>
+
+
+											<tr>
+
+												<td colspan="3"><rich:panel header="Fichas">
+
+														<rich:extendedDataTable selectionMode="single"
+															width="300px" height="100px" var="fichas"
+															value="#{consultaSunarpManaged.resultadoAsientos.listFichas}"
+															showColumnControl="true" rowClasses="fila2"
+															styleClass="tabla">
+
+															<rich:column id="c0" style="text-align:center"
+																width="10%">
+																<f:facet name="header"></f:facet>
+																<a4j:commandLink ajaxSingle="true" id="clDeFichas"
+																	reRender="id_listaPaginasFichas">
+																	<h:graphicImage width="20px" height="15px"
+																		value="/images/VerDetalle.png" style="border:0;" />
+																	<f:setPropertyActionListener value="#{fichas}"
+																		target="#{consultaSunarpManaged.resuladoFicha}" />
+
+																	<rich:toolTip for="clDeFichas"
+																		value="VER PÁGINAS DE FICHAS" />
+
+
+																</a4j:commandLink>
+
+															</rich:column>
+
+
+
+															<rich:column width="30%">
+																<f:facet name="header">ID Imagen</f:facet>
+																<h:outputText value="#{fichas.idImgFicha}" />
+															</rich:column>
+
+															<rich:column width="30%">
+																<f:facet name="header">Nº Página</f:facet>
+																<h:outputText value="#{fichas.numPag}" />
+															</rich:column>
+
+															<rich:column width="30%">
+																<f:facet name="header">Tipo</f:facet>
+																<h:outputText value="#{fichas.tipo}" />
+															</rich:column>
+
+														</rich:extendedDataTable>
+													</rich:panel></td>
+
+
+
+												<td width="100%"><rich:panel
+														header="Seleccione una páginas para ver la Foto de Ficha">
+
+
+														<rich:extendedDataTable id="id_listaPaginasFichas"
+															selectionMode="single" width="100%" height="100px"
+															var="paginasFicha"
+															value="#{consultaSunarpManaged.resuladoFicha.listPag}"
+															showColumnControl="true" rowClasses="fila2"
+															styleClass="tabla">
+
+
+															<rich:column id="c0" style="text-align:center"
+																width="10%">
+																<f:facet name="header"></f:facet>
+																<a4j:commandLink
+																	action="#{consultaSunarpManaged.verFicha()}"
+																	ajaxSingle="true" id="clListarPaginasAsiento"
+																	reRender="id_modealImagen"
+																	oncomplete="#{rich:component('id_modealImagen')}.show()"
+																	status="ajaxStatus">
+
+
+																	<h:graphicImage width="25px" height="25px"
+																		value="/images/verFoto.png" style="border:0;" />
+																	<f:setPropertyActionListener value="#{paginasFicha}"
+																		target="#{consultaSunarpManaged.resultadoNumeroPaginaFicha}" />
+
+																	<rich:toolTip for="clListarPaginasAsiento"
+																		value="VER FOTO FICHA" />
+
+
+																</a4j:commandLink>
+
+															</rich:column>
+
+
+															<rich:column style="text-align:center" width="20%">
+																<f:facet name="header">Referencia</f:facet>
+																<h:outputText value="#{paginasFicha.nroPagRef}" />
+
+															</rich:column>
+
+															<rich:column style="text-align:center" width="20%">
+																<f:facet name="header">Página</f:facet>
+																<h:outputText value="#{paginasFicha.pagina}" />
+															</rich:column>
+														</rich:extendedDataTable>
+
+													</rich:panel></td>
+
+
+											</tr>
+
+
+
+
+
+											<tr>
+
+												<td colspan="3"><rich:panel header="Folios">
+
+														<rich:extendedDataTable selectionMode="single"
+															width="300px" height="100px" var="folios"
+															value="#{consultaSunarpManaged.resultadoAsientos.listFolios}"
+															showColumnControl="true" rowClasses="fila2"
+															styleClass="tabla">
+
+															<rich:column style="text-align:center" width="15%">
+																<f:facet name="header"></f:facet>
+																<a4j:commandLink id="id_verfotoFolio" ajaxSingle="true"
+																	action="#{consultaSunarpManaged.verFolio()}"
+																	reRender="id_modealImagen"
+																	oncomplete="#{rich:component('id_modealImagen')}.show()"
+																	status="ajaxStatus">
+																	<h:graphicImage width="25px" height="20px"
+																		value="/images/verFoto.png" style="border:0;" />
+																	<f:setPropertyActionListener value="#{folios}"
+																		target="#{consultaSunarpManaged.resuladoFolio}" />
+
+																	<rich:toolTip for="id_verfotoFolio"
+																		value="VER FOTO FOLIO" />
+
+
+																</a4j:commandLink>
+
+															</rich:column>
+
+
+															<rich:column width="30%">
+																<f:facet name="header">ID Imagen</f:facet>
+																<h:outputText value="#{folios.idImgFolio}" />
+															</rich:column>
+
+															<rich:column width="30%">
+																<f:facet name="header">Nº Página</f:facet>
+																<h:outputText value="#{folios.pagina}" />
+															</rich:column>
+
+															<rich:column width="30%">
+																<f:facet name="header">Nº Página Ref.</f:facet>
+																<h:outputText value="#{folios.nroPagRef}" />
+															</rich:column>
+
+															<rich:column width="30%">
+																<f:facet name="header">Tipo</f:facet>
+																<h:outputText value="#{folios.tipo}" />
+															</rich:column>
+
+														</rich:extendedDataTable>
+													</rich:panel></td>
+
+											</tr>
+
+
+
+										</table>
+
+
+									</rich:panel></td>
+							</tr>
+
+						</table>
+
+					</td>
+
+				</tr>
+
+
+			</table>
+
+
+		</a4j:outputPanel>
+	</h:form>
+
+	<h:form id="form_modal">
+
+		<rich:modalPanel id="id_modealImagen" autosized="true" moveable="true"
+			modal="true">
+
+			<h:graphicImage width="400" height="600" id="id_imagenAsiento"
+				value="#{consultaSunarpManaged.rutaImagenAsiento}" />
+
+			<table>
+				<tr>
+					<td><a href="#{consultaSunarpManaged.rutaImagenAsiento}"
+						target="_blank">Abrir Imagen</a></td>
+
+					<td width="100PX"></td>
+					<td><a4j:commandButton value="Cerrar"
+							onclick="#{rich:component('id_modealImagen')}.hide(); return false;" />
+					</td>
+
+				</tr>
+
+			</table>
+
+		</rich:modalPanel>
+	</h:form>
+
+
+
+
+
+
+	<!-- panelRegistroDireccion -->
+
+
+</ui:composition>
+
+
+

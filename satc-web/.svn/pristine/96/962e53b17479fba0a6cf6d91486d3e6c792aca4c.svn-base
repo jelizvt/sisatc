@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+		<h:form id="id_formBuscarCarteraVehicular">
+	
+
+		<rich:panel id="id_panelresultados">
+		<f:facet name="header">
+							<h:outputLabel value="#{msg['rv.carteravehicular']}" />
+						</f:facet>
+				<h:panelGrid columns="3" align="center">
+<!-- 					<a4j:commandLink ajaxSingle="true" id="newlink1" -->
+<!-- 						action="#{sessionManaged.sendRedirectPrincipal}"> -->
+<!-- 						<h:graphicImage value="/images/modal/new.gif" style="border:0" /> -->
+<!-- 						<f:setPropertyActionListener -->
+<!-- 							value="/sisat/controlycobranza/registroloterscontrib.xhtml" -->
+<!-- 							target="#{sessionManaged.page}" /> -->
+<!-- 					</a4j:commandLink> -->
+<!-- 					<rich:toolTip id="x2" for="newlink1" value="Nueva Cartera" /> -->
+				</h:panelGrid>
+		
+				<rich:datascroller for="datoslotesrv" maxPages="10"></rich:datascroller>
+				<rich:extendedDataTable rows="10" id="datoslotesrv"
+					value="#{busquedaLoteCarteraVehicularManaged.lstFindLoteVehicular}" var="loterv"
+					width="100%" height="310px" selectionMode="single"
+					noDataLabel="No se Encontró Información"
+					rowKeyVar="row" enableContextMenu="false">
+					 
+
+						<rich:column style="text-align:center" id="x2" width="3%">
+							<f:facet name="header">Edit</f:facet>
+								<a4j:commandLink ajaxSingle="true" id="newlink3"
+									action="#{busquedaLoteCarteraVehicularManaged.edit}" status="ajaxStatus"
+									reRender="panelinclude">
+									<h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+								
+								<f:setPropertyActionListener value="#{loters}"
+									target="#{busquedaLoteCarteraVehicularManaged.findCcLoteItem}" id="r4253" />
+									
+								<f:setPropertyActionListener
+									value="/sisat/fiscalizacion/buscarcarteravehicular.xhtml"
+									target="#{sessionManaged.page}" />
+									
+									
+							</a4j:commandLink>
+							<rich:toolTip for="newlink3" value="Actualizacion" />
+						</rich:column>
+						
+						 
+						
+						<rich:column style="text-align:center"
+							filterBy="#{loterv.loteId}" id="x3" width="10%">
+							<f:facet name="header" width="10%">Nro Lote</f:facet>
+							<h:outputText value="#{loterv.loteId} - #{loterv.annoLote}" />
+						</rich:column>
+						<rich:column style="text-align:center" filterBy="#{loterv.descripcionLote}"
+							id="rvDescripcion" width="30%">
+							<f:facet name="header">Descripción</f:facet>
+							<h:outputText id="concepto1" value="#{loterv.descripcionLote}" />
+							<rich:toolTip for="concepto1" value="#{loterv.descripcionLote}" />
+						</rich:column>
+						<rich:column style="text-align:center" filterBy="#{loterv.nombreEjecutor}"
+							id="rvUsuario" width="15%">
+							<f:facet name="header">Registra</f:facet>
+							<h:outputText id="concepto2" value="#{loterv.nombreEjecutor}" />
+							<rich:toolTip for="concepto2" value="#{loterv.nombreEjecutor}" />
+						</rich:column>
+						<rich:column style="text-align:center" id="rvFecha" width="8%">
+							<f:facet name="header">Fec. Reg.</f:facet>
+							<h:outputText value="#{loterv.fechaRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</rich:column>
+		
+					</rich:extendedDataTable>
+			</rich:panel>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form  id="formbusquedaprograma">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	<a4j:loadScript src="/js/sisat.js" />
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+	<rich:hotKey key="return"
+		handler="#{rich:element('id_commandbuscar')}.click()"
+		selector="#formbusquedaprograma" />
+			
+     <rich:panel  id="p01" >
+		<f:facet  name="header">		
+			BUSQUEDA DE PROGRAMAS DE FISCALIZACIÓN
+		</f:facet>
+		<table border="0" width="100%" >
+			
+			<tr>
+				<td align="left" width="120px">
+					<h:outputLabel rendered="#{registrarProgramaManaged.permisoBuscar}"  value="Nombre de Programa :" />			
+				</td>
+				<td align="left">
+					 <h:inputText rendered="#{registrarProgramaManaged.permisoBuscar}"  id="id_txtcontribuyenteId" style="width:145px" 
+					 value="#{registrarProgramaManaged.descripcionProgramaB}" >
+					
+					 </h:inputText></td>
+			</tr>
+
+<!-- 			<tr> -->
+<!-- 				<td align="left" width="50px" > -->
+<!-- 						<h:outputText value="Numero de  :" /> -->
+<!-- 				</td> -->
+				
+<!-- 				<td colspan="3"> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+		</table>
+	</rich:panel>
+		
+	<h:panelGrid rendered="#{registrarProgramaManaged.permisoBuscar}" columns="3" align="center" >
+			<a4j:commandButton id="id_commandbuscar" value="Buscar" style="width:100px;"	
+			action="#{registrarProgramaManaged.buscar}" status="ajaxStatus" reRender="id_panelresultados" />
+			
+			<a4j:commandButton id="id_commandlimpiar" value="Limpiar"  style="width:100px;"	
+			action="#{registrarProgramaManaged.limpiar}" status="ajaxStatus" reRender="id_panelresultados,p01" />
+	</h:panelGrid>
+	    
+		<rich:panel  id="id_panelresultados" style = "width:100%;" >
+			<h:panelGrid rendered="#{registrarProgramaManaged.permisoAgregarRegistrar}"  columns="3" align="center" >
+				<a4j:commandLink ajaxSingle="true" id="newlink1" action="#{registrarProgramaManaged.inscripcion}" immediate="true" reRender="panelinclude" >
+                    <h:graphicImage value="/images/modal/new.gif" style="border:0" />
+                    <f:setPropertyActionListener value="/sisat/fiscalizacion/registrarprograma.xhtml" target="#{sessionManaged.page}" />
+                </a4j:commandLink>
+                <rich:toolTip id="x2" for="newlink1" value="Registro de programa" />
+			</h:panelGrid>
+			<rich:extendedDataTable 
+				id="datosConstruccion" value="#{registrarProgramaManaged.resultados}" var="record" width="100%" height="300px"
+				sortMode="single" selectionMode="single" enableContextMenu="false" 
+				rowKeyVar="row"	>
+				
+				<rich:column rendered="#{registrarProgramaManaged.permisoModificarActualizar}"  id="x15" width="2%">
+	            	<f:facet name = "header"></f:facet>
+	            	<a4j:commandLink id="newlink3" action="#{registrarProgramaManaged.actualizacion}" immediate="true" reRender="panelinclude" >
+	                    <h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+	                    <f:setPropertyActionListener value="#{record}" target="#{registrarProgramaManaged.currentItem}" id="r427"/>
+	                    <f:setPropertyActionListener value="/sisat/fiscalizacion/registrarprograma.xhtml" target="#{sessionManaged.page}" />
+	                </a4j:commandLink>
+	                <rich:toolTip for="newlink3" value="Actualizacion" />
+		        </rich:column>
+		        
+				<rich:column id="dd" style="text-align:center" width="30px">
+				<f:facet name="header">Item</f:facet>
+				<div align="center">
+					<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+				</div>
+			</rich:column>
+			<rich:column id="c1" style="text-align:center" width="300px">
+				<f:facet name="header">Programa</f:facet>
+				<div align="left">
+					<h:outputText value="#{record.nombrePrograma}" />
+				</div>
+			</rich:column>
+			<rich:column id="c2" style="text-align:center" width="350px">
+				<f:facet name="header">Periodo</f:facet>
+				<div align="left">
+					<h:outputText value="#{record.termninal}" />
+				</div>
+			</rich:column>
+			<rich:column id="c3" style="text-align:center" width="200px">
+				<f:facet name="header">Registra</f:facet>
+				<div align="left">
+					<h:outputText value="#{record.descripcionCortaPrograma}" />
+				</div>
+			</rich:column>
+   			</rich:extendedDataTable>
+   			
+        </rich:panel>           
+	</h:form>
+	
+
+	
+</ui:composition>

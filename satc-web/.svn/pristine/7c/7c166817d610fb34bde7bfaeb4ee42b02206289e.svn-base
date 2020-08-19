@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+	<body onload="loadFocus()">
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadScript src="/js/vehicular/djvehicular.js" />
+
+		<h:form id="frmRegistroVehicular" prependId="false">
+			<rich:panel id="pnlDatosDJ" style="min-width: 1000px;">
+				<f:facet name="header">#{msg['rv.titulodatosdeclaracion']}</f:facet>
+				<table cellpadding="6">
+					<tbody>
+						<tr>
+							<td width="150"><h:outputLabel
+									value="#{msg['rv.nrodeclaracion']}: ">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td width="250"><h:inputText id="txtNroDecla"
+									value="#{nuevadjRegistroManaged.numeroDecla}" disabled="true" /></td>
+							<td width="150"><h:outputLabel
+									value="#{msg['rv.fechadeclaracion']}: ">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td><h:panelGroup>
+									<rich:calendar value="#{nuevadjRegistroManaged.fechaDecla}"
+										locale="#{msg['param.localedate']}"
+										datePattern="#{msg['param.datepattern']}"
+										timeZone="#{aplicationManaged.timeZone}"
+										enableManualInput="true" inputClass="maskDateFechaDeclar"
+										disabled="true"></rich:calendar>
+									<rich:jQuery selector=".maskDateFechaDeclar"
+										query="mask('99/99/9999')" timing="onload" />
+								</h:panelGroup></td>
+						</tr>
+						<tr>
+							<td><h:outputLabel value="#{msg['rv.motivo']}: ">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td><rich:comboBox
+									value="#{nuevadjRegistroManaged.selectedMotivoDecla}"
+									defaultLabel="#{msg['param.defaultlabelcombo']}"
+									disabled="true" width="200"
+									onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+									>
+									<f:selectItems id="itmMotivoDecla"
+										value="#{nuevadjRegistroManaged.lstMotivoDecla}" />
+								</rich:comboBox></td>
+							<td><h:outputLabel value="#{msg['rv.aniodeclaracion']}: ">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td><h:inputText value="#{nuevadjRegistroManaged.anioDecla}"
+									maxlength="4" disabled="true"
+									onkeypress="return validaEnteroPositivo(event)"
+									style="width: 60px;" /></td>
+						</tr>
+						<tr>
+							<td><h:outputLabel value="#{msg['rv.glosa']}: "/></td>
+							<td colspan="3"><h:inputText value="#{nuevadjRegistroManaged.glosa}" disabled="true"/></td>							
+						</tr>
+					</tbody>
+				</table>
+			</rich:panel>
+			<div style="width: 100%; height: 4px;"></div>
+			<rich:panel id="pnlDatosVehiculo" style="min-width: 1000px;">
+				<f:facet name="header">#{msg['rv.titulodatosvehiculo']}</f:facet>
+				<h:panelGroup id="pnlGroupDatosVehic">
+					<table cellpadding="6">
+						<tbody>
+							<tr >
+								<td width="150"><h:outputLabel value="#{msg['rv.placaAnterior']}: " rendered="#{nuevadjRegistroManaged.placaVehicAnterior}"/></td>
+								<td width="250"><h:inputText id="txtPlacaAnterior"
+										value="#{nuevadjRegistroManaged.placaVehicAnterior}" maxlength="15"
+										disabled="true" rendered="#{not empty nuevadjRegistroManaged.placaVehicAnterior}"></h:inputText></td>
+								<td width="150"></td>
+								<td width="250"></td>
+							</tr>
+							<tr>
+								<td width="150"><h:outputLabel value="#{msg['rv.placa']}: ">
+										<span style="color: red;">*</span>
+									</h:outputLabel></td>
+								<td width="250"><h:inputText id="txtPlaca"
+										value="#{nuevadjRegistroManaged.placaVehic}" maxlength="15"
+										disabled="#{not empty nuevadjRegistroManaged.placaVehic}"
+										styleClass="textUpperCase" converter="uppeCaseConverter"></h:inputText></td>
+								<td width="150"><h:outputLabel
+										value="#{msg['rv.nromotor']}: ">
+										<span style="color: red;">*</span>
+									</h:outputLabel></td>
+								<td width="250"><h:inputText id="txtNumMotor"
+										value="#{nuevadjRegistroManaged.nroMotorVehic}"
+										disabled="true"></h:inputText></td>
+							</tr>
+							<tr>
+								<td><h:outputLabel
+										value="#{msg['rv.fechaprimerainsreg']}: ">
+										<span style="color: red;">*</span>
+									</h:outputLabel></td>
+								<td><h:panelGroup>
+										<rich:calendar
+											value="#{nuevadjRegistroManaged.fechaPrimeraInsReg}"
+											locale="#{msg['param.localedate']}"
+											datePattern="#{msg['param.datepattern']}"
+											timeZone="#{aplicationManaged.timeZone}"
+											disabled="true"></rich:calendar>
+									</h:panelGroup></td>
+								<td><h:outputLabel value="#{msg['rv.aniofabricacion']}: ">
+										<span style="color: red;">*</span>
+									</h:outputLabel></td>
+								<td><h:inputText
+										value="#{nuevadjRegistroManaged.anioFabricVehic}"
+										disabled="true" style="width: 60px;" /></td>
+							</tr>
+							<tr>
+								<td><h:outputLabel value="#{msg['rv.clase']}: ">
+										<span style="color: red;">*</span>
+									</h:outputLabel></td>
+								<td><rich:comboBox
+										value="#{nuevadjRegistroManaged.selectedClaseVehic}"
+										width="200" disabled="true"
+										onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+										>
+										<f:selectItems id="itmClase"
+											value="#{nuevadjRegistroManaged.lstClaseVehiculo}" />
+									</rich:comboBox></td>
+								<td><h:outputLabel value="#{msg['rv.categoria']}: ">
+										<span style="color: red;">*</span>
+									</h:outputLabel></td>
+								<td><rich:comboBox
+										value="#{nuevadjRegistroManaged.selectedCategoriaVehic}"
+										width="200" disabled="true"
+										onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+										>
+										<f:selectItems id="itmCategoria"
+											value="#{nuevadjRegistroManaged.lstCategoriaVehiculo}" />
+									</rich:comboBox></td>
+							</tr>
+							<tr>
+								<td><h:outputLabel value="#{msg['rv.marca']}: ">
+										<span style="color: red;">*</span>
+									</h:outputLabel></td>
+								<td><rich:comboBox id="cboMarcaVehic"
+										value="#{nuevadjRegistroManaged.selectedMarcaVehic}"
+										width="200" disabled="true"
+										onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+										>
+										<f:selectItems id="itmMarca"
+											value="#{nuevadjRegistroManaged.lstMarcaVehiculo}" />
+									</rich:comboBox></td>
+								<td><h:outputLabel value="#{msg['rv.modelo']}: ">
+										<span style="color: red;">*</span>
+									</h:outputLabel></td>
+								<td><rich:comboBox id="cboModeloVehic"
+										value="#{nuevadjRegistroManaged.selectedModeloVehic}"
+										width="200" disabled="true"
+										onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+										>
+										<f:selectItems id="itmModelo"
+											value="#{nuevadjRegistroManaged.lstModelo}" />
+									</rich:comboBox></td>
+							</tr>
+
+							<tr>
+								<td><h:outputLabel
+										value="#{msg['rv.condicionespecialvehic']}: ">
+										<span style="color: red;">*</span>
+									</h:outputLabel></td>
+								<td><rich:comboBox id="cboCondicionEspecial"
+										value="#{nuevadjRegistroManaged.selectedCondicionVehic}"
+										width="200" disabled="true"
+										onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+										>
+										<f:selectItems id="itmCondicionEspecial"
+											value="#{nuevadjRegistroManaged.lstCondicionVehic}" />
+									</rich:comboBox></td>
+							</tr>
+						</tbody>
+					</table>
+					<h:panelGroup id="pnlCondicionEspecial">
+						<h:panelGroup
+							rendered="#{nuevadjRegistroManaged.selectedCondicionVehic!=msg['param.rv.condicionvehic.ningunodes']}">
+							<table cellpadding="6" class="rich-panel">
+								<tbody>
+									<tr>
+										<td width="150"><h:outputLabel
+												value="#{msg['rv.fechainicial']}: ">
+												<span style="color: red;">*</span>
+											</h:outputLabel></td>
+										<td width="250"><rich:calendar
+												value="#{nuevadjRegistroManaged.fechaInicial}"
+												disabled="true" locale="#{msg['param.localedate']}"
+												datePattern="#{msg['param.datepattern']}"
+												timeZone="#{aplicationManaged.timeZone}"></rich:calendar></td>
+										<td width="150"><h:outputLabel
+												value="#{msg['rv.fechafinal']}: ">
+												<span style="color: red;">*</span>
+											</h:outputLabel></td>
+										<td><rich:calendar
+												value="#{nuevadjRegistroManaged.fechaFinal}" disabled="true"
+												locale="#{msg['param.localedate']}"
+												datePattern="#{msg['param.datepattern']}"
+												timeZone="#{aplicationManaged.timeZone}"></rich:calendar></td>
+									</tr>
+									<tr>
+										<td><h:outputLabel value="#{msg['gn.tipodoc']}: ">
+												<span style="color: red;">*</span>
+											</h:outputLabel></td>
+										<td><rich:comboBox id="cboTipoDoc"
+												value="#{nuevadjRegistroManaged.selectedTipoDoc}"
+												disabled="true" width="200"
+												onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+												>
+												<f:selectItems id="itmTipoDocs"
+													value="#{nuevadjRegistroManaged.lstTipoDoc}" />
+											</rich:comboBox></td>
+										<td><h:outputLabel value="#{msg['gn.nrodoc']}: ">
+												<span style="color: red;">*</span>
+											</h:outputLabel></td>
+										<td><h:inputText value="#{nuevadjRegistroManaged.nroDoc}"
+												disabled="true" /></td>
+									</tr>
+									<tr>
+										<td><h:outputLabel
+												value="#{msg['rv.tipoinafectacion']}: ">
+												<span style="color: red;">*</span>
+											</h:outputLabel></td>
+										<td><rich:comboBox
+												value="#{nuevadjRegistroManaged.selectedTipoInafec}"
+												disabled="true" width="200"
+												onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+												>
+												<f:selectItem itemValue="#{msg['rv.tipoinafec.porcentaje']}" />
+												<f:selectItem
+													itemValue="#{msg['rv.tipoinafec.valormaximo']}" />
+											</rich:comboBox></td>
+										<td><h:outputLabel id="lblValorInafec"
+												value="#{msg['rv.valor']}	(#{nuevadjRegistroManaged.selectedTipoInafec}): ">
+												<span style="color: red;">*</span>
+											</h:outputLabel></td>
+										<td><h:inputText
+												value="#{nuevadjRegistroManaged.valorInafec}"
+												disabled="true" /></td>
+									</tr>
+									<tr>
+										<td>#{msg['gn.comentario']}:</td>
+										<td colspan="3"><h:inputTextarea
+												value="#{nuevadjRegistroManaged.comentario}" disabled="true"
+												style="width: 566px;" /></td>
+									</tr>
+								</tbody>
+							</table>
+						</h:panelGroup>
+					</h:panelGroup>
+				</h:panelGroup>
+			</rich:panel>
+			<div style="width: 100%; height: 4px;"></div>
+			<rich:panel id="pnlAquisicion" style="min-width: 1000px;">
+				<f:facet name="header">#{msg['rv.titulodatosadquisicion']}</f:facet>
+				<table cellpadding="6">
+					<tbody>
+						<tr>
+							<td width="150"><h:outputLabel
+									value="#{msg['rv.tipoadquisicion']}: ">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td width="250"><rich:comboBox
+									value="#{nuevadjRegistroManaged.selectedAdquisicion}"
+									width="200" disabled="true"
+									onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+									>
+									<f:selectItems id="itmAdquisicion"
+										value="#{nuevadjRegistroManaged.lstAdquisicion}" />
+								</rich:comboBox></td>
+							<td width="150"><h:outputLabel
+									value="#{msg['rv.fechaadquisicion']}: ">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td><h:panelGroup>
+									<rich:calendar
+										value="#{nuevadjRegistroManaged.fechaAdquisicion}"
+										disabled="true" locale="#{msg['param.localedate']}"
+										datePattern="#{msg['param.datepattern']}"
+										timeZone="#{aplicationManaged.timeZone}"></rich:calendar>
+								</h:panelGroup></td>
+						</tr>
+						<tr>
+							<td><h:outputLabel value="#{msg['rv.tarjetapropiedad']}: ">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td><h:inputText
+									value="#{nuevadjRegistroManaged.tarjetaPropiedad}"
+									disabled="true" /></td>
+							<td><h:outputLabel value="#{msg['rv.condicionpropiedad']}: ">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td><rich:comboBox id="cboCondicionPropiedad"
+									value="#{nuevadjRegistroManaged.selectedCondicionPropiedad}"
+									width="200" disabled="true"
+									onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+									>
+									<f:selectItems id="itmCondicionPropiedad"
+										value="#{nuevadjRegistroManaged.lstCondicionPropiedad}" />
+								</rich:comboBox></td>
+						</tr>
+						<tr>
+							<td><h:outputLabel
+									value="#{msg['rv.porcentajepropiedad']}: ">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td><h:inputText id="txtPorecentajeProp"
+									value="#{nuevadjRegistroManaged.porcentajePropiedad}"
+									disabled="true" style="width: 60px;" />#{msg['gn.sporcentaje']}</td>
+							<td><h:outputLabel value="#{msg['gn.tipomoneda']}: ">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td><rich:comboBox
+									value="#{nuevadjRegistroManaged.selectedTipoMoneda}"
+									width="200" disabled="true"
+									onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+									>
+									<f:selectItems id="itmTipoMoneda"
+										value="#{nuevadjRegistroManaged.lstTipoMoneda}" />
+								</rich:comboBox></td>
+						</tr>
+						<tr>
+							<td><h:panelGroup id="pnlLabelDolares">
+									<h:outputLabel
+										value="#{msg['rv.valoradquisicion']} (#{nuevadjRegistroManaged.selectedTipoMoneda}):"
+										rendered="#{(nuevadjRegistroManaged.selectedTipoMonedaId!=msg['param.rv.tipomoneda.sol']) and (nuevadjRegistroManaged.selectedTipoMonedaId!=0)}">
+										<span style="color: red;">*</span>
+									</h:outputLabel>
+								</h:panelGroup></td>
+							<td><h:panelGroup id="pnlTextDolares">
+									<h:inputText id="txtDolares"
+										value="#{nuevadjRegistroManaged.valorAdquisicionDolares}"
+										rendered="#{(nuevadjRegistroManaged.selectedTipoMonedaId!=msg['param.rv.tipomoneda.sol']) and (nuevadjRegistroManaged.selectedTipoMonedaId!=0)}"
+										style="width: 60px;">
+									</h:inputText>
+								</h:panelGroup></td>
+							<td><h:outputLabel
+									value="#{msg['rv.valoradquisicion']} (#{msg['gn.soles']}):">
+									<span style="color: red;">*</span>
+								</h:outputLabel></td>
+							<td><h:panelGroup id="pnlSoles">
+									<h:inputText id="txtSoles"
+										value="#{nuevadjRegistroManaged.valorAdquisicion}"
+										disabled="true" style="width: 60px;" />
+									<h:outputLabel
+										rendered="#{nuevadjRegistroManaged.selectedTipoMonedaId!=msg['param.rv.tipomoneda.sol']}"
+										value="#{msg['gn.tcambio']}: "
+										style="margin-left: 14px; margin-right:10px;" />
+									<h:inputText
+										rendered="#{nuevadjRegistroManaged.selectedTipoMonedaId!=msg['param.rv.tipomoneda.sol']}"
+										value="#{nuevadjRegistroManaged.tipoCambio.valorVenta}"
+										disabled="true" style="width: 60px;" />
+								</h:panelGroup></td>
+						</tr>
+					</tbody>
+				</table>
+			</rich:panel>
+			<div style="width: 100%; height: 4px;"></div>
+			<rich:panel id="pnlTransferente"
+				style="height:220px; min-width: 1000px;">
+				<f:facet name="header">#{msg['rv.titulodatostransferente']}</f:facet>
+				<table cellpadding="6" width="100%">
+					<tbody>
+						<tr>
+							<td width="180"><label>#{msg['rv.notaria']}: </label></td>
+							<td><rich:comboBox
+									value="#{nuevadjRegistroManaged.selectedNotaria}" width="300"
+									disabled="true"
+									onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+									>
+									<f:selectItems value="#{nuevadjRegistroManaged.lstNotarias}"></f:selectItems>
+								</rich:comboBox></td>
+						</tr>
+					</tbody>
+				</table>
+				<a4j:commandButton value="#{msg['rv.agregarnuevotransferente']}"></a4j:commandButton>
+				<rich:extendedDataTable id="tblTransferentes"
+					value="#{nuevadjRegistroManaged.lstTransferentes}" var="record"
+					width="100%" height="120px" sortMode="single"
+					selectionMode="single" enableContextMenu="false"
+					noDataLabel="#{msg['rv.noexistentransferentes']}">
+
+					<rich:column width="40" style="text-align: center">
+						<a4j:commandButton disabled="true" title="#{msg['gn.eliminar']}"
+							image="/images/remove.png" style="width: 16px; height: 16px;"></a4j:commandButton>
+					</rich:column>
+
+					<rich:column width="10%">
+						<f:facet name="header">#{msg['gn.id']}</f:facet>
+						<h:outputText value="#{record.personaId}" />
+					</rich:column>
+
+					<rich:column width="30%">
+						<f:facet name="header">#{msg['gn.tipodoc']}</f:facet>
+						<h:outputText value="#{record.tipoDocIdentidad}" />
+					</rich:column>
+
+					<rich:column width="10%">
+						<f:facet name="header">#{msg['gn.nrodoc']}</f:facet>
+						<h:outputText value="#{record.nroDocuIdentidad}" />
+					</rich:column>
+
+					<rich:column width="40%">
+						<f:facet name="header">#{msg['gn.apenomorazonsocial']}</f:facet>
+						<h:outputText
+							value="#{record.apellidosNombres} #{record.apellidosNombres != null ? record.razonSocial != null ? ' - ': '' : ''} #{record.razonSocial}" />
+					</rich:column>
+				</rich:extendedDataTable>
+			</rich:panel>
+			<div style="width: 100%; height: 4px;"></div>
+			<rich:panel id="pnlAnexos" style="height: 250px; min-width: 1000px;">
+				<f:facet name="header">#{msg['rv.tituloanexos']}</f:facet>
+				<a4j:commandButton value="#{msg['rv.agregardocs']}"></a4j:commandButton>
+				<rich:extendedDataTable id="tblAnexos"
+					value="#{nuevadjRegistroManaged.lstAnexos}" var="record"
+					width="100%" height="150px" sortMode="single"
+					selectionMode="single" enableContextMenu="false"
+					noDataLabel="#{msg['rv.noexistenanexos']}">
+
+					<rich:column width="40" style="text-align: center">
+						<a4j:commandButton title="#{msg['gn.eliminar']}"
+							image="/images/remove.png" style="width: 16px; height: 16px;"></a4j:commandButton>
+					</rich:column>
+
+					<rich:column width="50%">
+						<f:facet name="header">#{msg['gn.descripciondoc']}</f:facet>
+						<h:outputText value="#{record.descripcionDoc}" />
+					</rich:column>
+
+					<rich:column width="20%">
+						<f:facet name="header">#{msg['rv.glosa']}</f:facet>
+						<h:outputText value="#{record.glosaDoc}"
+							 style="width: 100%" />
+					</rich:column>
+
+					<rich:column width="20%">
+						<f:facet name="header">#{msg['gn.docadjunto']}</f:facet>
+						<h:outputText value="#{record.nomDocAdjunto}" />
+					</rich:column>
+				</rich:extendedDataTable>
+			</rich:panel>
+			<div style="width: 100%; text-align: center; margin-top: 20px;">
+				<a4j:commandButton value="#{msg['gn.cancelar']}"
+					action="#{sessionManaged.sendRedirectPrincipal}" immediate="true"
+					style="width: 150px; margin-left:2px;">
+					<f:setPropertyActionListener
+						value="/sisat/vehicular/historicovehiculodj.xhtml"
+						target="#{sessionManaged.page}" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</body>
+
+</ui:composition>

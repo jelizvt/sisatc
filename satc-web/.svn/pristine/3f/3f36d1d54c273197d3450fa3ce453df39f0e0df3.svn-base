@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<head>
+<title>Vista Lectura Recibo de Pago</title>
+<script language="javascript">		
+	function ejecutarImpresion(){
+		window.print();
+	}
+	function imprimir(){
+		document.getElementById("Cabecera").style.display="none";
+		ejecutarImpresion();
+		document.getElementById("Cabecera").style.display="";			
+	}			
+</script>
+</head>
+
+<body
+	style="margin: 0px; padding: 0px; font-size: 16px; font-family: Arial, Verdana, sans-serif">
+	<h:form style="margin: 0px; padding: 0px;">
+<!-- 		<div id="Cabecera" style="width: 300px; text-align: center;"> -->
+<!-- 			<input type="button" value="Imprimir" onclick="imprimir();javascript:window.close();" /> -->
+<!-- 		</div>		 -->
+		<div style="width: 300px; text-align: center;">
+			SERVICIO DE ADMINISTRACION TRIBUTARIA <br /> CAJAMARCA <br /> RUC :
+			20453807267 <br />
+			VISTA DE SOLO LECTURA <br/>
+			<a4j:outputPanel rendered="#{imprimirReciboManaged.reciboPago.estaExtornado}">
+			<table style="margin-top: 10px;" width="100%">
+				<tbody align="left">
+					<tr>
+						<td width="100%" colspan="3"
+							style="border-bottom: 1px dotted #000;"></td>
+					</tr>
+					<tr>
+						<td colspan="3" align="center">ESTE RECIBO FUE EXTORNADO</td>
+					</tr>
+					<tr>
+						<td width="90px;">Por</td>
+						<td>:</td>
+						<td>#{imprimirReciboManaged.reciboPago.usuarioAsStringExtorno}</td>
+					</tr>
+					<tr style="font-size: 15px;">
+						<td >Fecha Extorno</td>
+						<td>:</td>
+						<td><h:outputText value="#{imprimirReciboManaged.reciboPago.fechaExtorno}" >
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+						</h:outputText></td>
+					</tr>					
+					<tr>
+						<td >Motivo</td>
+						<td colspan="2" align="left">:</td>
+					</tr>	
+					<tr>	
+						<td colspan="3">#{imprimirReciboManaged.reciboPago.observacionExtorno}</td>
+					</tr>
+					<tr>
+						<td width="100%" colspan="3"
+							style="border-bottom: 1px dotted #000;"></td>
+					</tr>					
+				</tbody>
+			</table>
+			
+			</a4j:outputPanel>
+			
+			<table style="margin-top: 10px;">
+				<tbody align="left">
+					<tr>
+						<td width="120px">Recibo Nro<span style="float: right;">:</span></td>
+						<td>#{imprimirReciboManaged.reciboPago.nroRecibo}</td>
+					</tr>
+					<tr>
+						<td>Código<span style="float: right;">:</span></td>
+						<td>#{imprimirReciboManaged.reciboPago.personaId}</td>
+					</tr>
+					<tr>
+						<td valign="top">Nombre<span style="float: right;">:</span></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="2">#{imprimirReciboManaged.reciboPago.personaDes}</td>
+					</tr>
+					<tr>
+						<td valign="top">Dirección<span style="float: right;">:</span></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td colspan="2">#{imprimirReciboManaged.reciboPago.direccion}</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<table style="margin-top: 5px;" cellpadding="0">
+				<tbody align="left">
+					<tr style="font-size: 14px;">
+						<td align="left" width="90">Concepto</td>
+						<td align="left" width="40">Cuota</td>
+						<td align="right" width="50">Monto</td>
+						<td align="right" width="50">Reaju.</td>
+						<td align="right" width="50">Inter.</td>
+						<td align="right" width="50">Total</td>
+					</tr>
+					<tr>
+						<td width="100%" colspan="6"
+							style="border-bottom: 1px dotted #000;"></td>
+					</tr>
+					<ui:repeat var="record"
+						value="#{imprimirReciboManaged.listReciboPagoDetalle}">
+						<ui:repeat var="item" value="#{record.listReciboPagoDetalle}">
+							<tr style="font-size: 16px;">
+								<td align="left" >#{item.concepto}</td>
+								<td align="center" style="font-size: 13px" >#{item.cuota}</td>
+								<td align="right">#{item.monto}</td>
+								<td align="right">#{item.reajuste}</td>
+								<td align="right">#{item.interes}</td>
+								<td align="right">#{item.total}</td>
+							</tr>
+						</ui:repeat>
+						
+						<a4j:outputPanel rendered="#{record.referencia != null}">
+							<tr>
+								<td colspan="6" align="left" style="font-size: 14px;">#{record.referenciaLabel}:<span
+									style="margin-left: 10px;" />#{record.referencia}
+								</td>
+							</tr>
+						</a4j:outputPanel>	
+					</ui:repeat>
+				</tbody>
+			</table>
+			<div style="width: 100%; border-top: 1px dotted #000000;"></div>
+			<table style="margin-top: 10px;" width="100%">
+				<tbody align="left">
+					<tr>
+						<td style="text-align: right;" >Sub Total<span style="float: right;">:</span></td>
+						<td style="text-align: right;" width="120px">#{imprimirReciboManaged.reciboPago.montoSubTotal}</td>
+					</tr>
+					<a4j:outputPanel rendered="#{not empty imprimirReciboManaged.listReciboPagoDescuentoDetalle}">					
+						<tr>
+							<td style="font-size: 14px;">Descuentos</td>						
+						</tr>
+						<ui:repeat var="itemDescuento" value="#{imprimirReciboManaged.listReciboPagoDescuentoDetalle}">
+							<tr>
+								<td style="font-size: 14px; text-align: right;">#{itemDescuento.referencia}<span style="float: right;">:</span></td>
+								<td style="text-align: right;" width="120px">#{itemDescuento.montoDescuento}</td>
+							</tr>
+						</ui:repeat>
+					</a4j:outputPanel>
+					<tr>
+						<td style="text-align: right;">Total Gen.<span style="float: right;">:</span></td>
+						<td style="text-align: right;" width="120px">#{(imprimirReciboManaged.reciboPago.montoACobrar.compareTo(imprimirReciboManaged.reciboPago.montoCobrado) >= 0)?imprimirReciboManaged.reciboPago.montoCobrado:imprimirReciboManaged.reciboPago.montoACobrar}</td>
+					</tr>					
+					<tr style="font-size: 13px;">
+						<td valign="top">Son</td>
+						<td valign="top"></td>
+					</tr>
+					<tr style="font-size: 15px;">
+						<td colspan="2">#{imprimirReciboManaged.reciboPago.montoLetras}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="width: 100%; border-top: 1px dotted #000000;"></div>
+			<table width="100%">
+				<tr>
+					<td width="100">Pagado por<span style="float: right;">:</span></td>
+					<td style="text-align: right;">#{imprimirReciboManaged.reciboPago.pagadoPor}</td>
+				</tr>
+			</table>
+			<table width="100%">
+				<tbody align="left">					
+					<tr>
+						<td style="text-align: right;">Efec. Entregado<span style="float: right;">:</span></td>
+						<td style="text-align: right;" width="120px">#{imprimirReciboManaged.reciboPago.montoCobrado}</td>						
+					</tr>
+					<tr>
+						<td style="text-align: right;">Total pagado<span style="float: right;">:</span></td>
+						<td style="text-align: right;">#{(imprimirReciboManaged.reciboPago.montoACobrar.compareTo(imprimirReciboManaged.reciboPago.montoCobrado) >= 0)?imprimirReciboManaged.reciboPago.montoCobrado:imprimirReciboManaged.reciboPago.montoACobrar}</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">Vuelto<span style="float: right;">:</span></td>
+						<td style="text-align: right;" >#{imprimirReciboManaged.reciboPago.montoVuelto}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="width: 100%; border-top: 1px dotted #000000;"></div>
+			<table width="100%" >
+				<tbody align="left">
+					<tr style="font-size: 15px;">
+						<td width="90px" >Fecha</td><td>:</td>
+						<td><h:outputText value="#{imprimirReciboManaged.reciboPago.fechaRecibo}" >
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+						</h:outputText> </td>
+					</tr>
+					<tr>
+						<td>Cajero</td><td>:</td>
+						<td>#{imprimirReciboManaged.reciboPago.cajeroDes}</td>
+					</tr>
+					<tr>
+						<td valign="top">Forma pago</td><td valign="top">:</td>
+						<td>
+							<table width="100%" cellspacing="0px" cellpadding="0px">
+								<a4j:repeat	value="#{imprimirReciboManaged.listReciboPagoFormaPago}" var="itemFormaPago">
+									<tr>
+										<td>#{itemFormaPago.formaPagoDes}</td>									
+										<td align="right"><h:outputText value="#{itemFormaPago.montoTotalSoles}"/></td>										
+									</tr>
+								</a4j:repeat>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		<table width="100%">
+			<tbody align="left">
+				<tr style="font-size: 11px; text-align: justify;">
+					<td><i>#{imprimirReciboManaged.reciboPago.mensaje}</i></td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+	</h:form>
+</body>
+</html>

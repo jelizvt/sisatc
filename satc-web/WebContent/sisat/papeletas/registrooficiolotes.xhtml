@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formRegistroOficioLotes">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+	
+		<a4j:outputPanel id='outputregistrooficio'>
+		<rich:panel style="width:100%; height: 180px;" id='panelregistrooficio' >
+			<f:facet name="header">		
+				RECEPCION Y CARGA DE LOTES
+			</f:facet>
+			<table align="center" border="0" cellpadding="0" cellspacing="0"  width="100%" >
+				<tr>
+					<td width="100%">
+							<table width="100%" border="0" cellpadding="2" cellspacing="2" >
+								<tr>
+									<td align="left" width="120px">
+										<h:outputLabel value="Nro Oficio :" />
+										<span style="color: red;">*</span>			
+									</td>
+									<td width="100px">
+										<h:inputHidden value="#{registroOficioLotesManaged.cargaLote.cargaLotesId}" />
+										<h:inputText value="#{registroOficioLotesManaged.cargaLote.numOficio}" size="10"  
+										style="width:80%" required="true" requiredMessage="Ingrese el número de oficio" 
+										maxlength="10"
+										/>
+									</td>
+									
+									<td align="left" width="120px">
+										<h:outputLabel value="Fecha Oficio :" />
+										<span style="color: red;">*</span>			
+									</td>
+									<td width="100px">
+										<rich:calendar locale="en/US"
+												datePattern="dd/MM/yyyy" enableManualInput="true"
+												inputClass="maskDate01" required="true"
+												id="id_fechaoficio"
+												value="#{registroOficioLotesManaged.fechaOficio}"
+												requiredMessage="Ingrese la Fecha de Oficio"
+												inputStyle="width:70px">
+										</rich:calendar> 
+										<rich:jQuery id="masked02" selector=".maskDate01"
+												query="mask('99/99/9999')" timing="onload" />
+									</td>
+									<td>
+									</td>
+								</tr>
+								
+								<tr>
+									<td align="left" width="120px">
+										<h:outputLabel value="Fecha Recepción :" />
+										<span style="color: red;">*</span>			
+									</td>
+									<td width="100px">
+										<rich:calendar locale="en/US"
+												datePattern="dd/MM/yyyy" enableManualInput="true"
+												inputClass="maskDate02" required="true"
+												id="id_fecharecepcion"
+												value="#{registroOficioLotesManaged.fechaRecepcion}"
+												requiredMessage="Ingrese la Fecha de Recepción"
+												inputStyle="width:70px">
+										</rich:calendar> 
+										
+										<rich:jQuery id="masked01" selector=".maskDate02"
+												query="mask('99/99/9999')" timing="onload" />
+									</td>
+									<td align="left" width="120px">
+										<h:outputLabel value="Cantidad entregada :" />
+										<span style="color: red;">*</span>			
+									</td>
+									<td>
+										<h:inputText value="#{registroOficioLotesManaged.cargaLote.cantidad}" size="10" maxlength="10" 
+										style="width:80%" required="true" requiredMessage="Ingrese la Cantidad entregada" 
+										onkeypress="return numbersonly(this.value,event)"
+										/>
+										
+									</td>	
+									<td>
+									</td>
+								</tr>
+								<tr>
+									<td align="left" width="120px">
+										<h:outputLabel value="Observaciones :" />
+									</td>
+									<td colspan="3">
+										<h:inputTextarea value="#{registroOficioLotesManaged.cargaLote.observaciones}" label="Observaciones" cols="70" rows="3" >
+										  <f:validateLength maximum="5000"></f:validateLength>
+										</h:inputTextarea>
+									</td>
+									<td>
+									
+									</td>
+								</tr>
+							</table>
+					</td>
+				</tr>
+				<tr>
+					<td width="100%" align="center" >
+						<table width="100%" border="0" cellpadding="4" cellspacing="4">
+							<tr>
+								<td>
+									<a4j:commandButton value="Guardar"
+										style="width:100px;"
+										action="#{registroOficioLotesManaged.guardar}"
+										oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+										reRender="outputregistrooficio" status="ajaxStatus"
+										id="id_guardarcommand" />
+										
+									<a4j:commandButton value="Salir"
+											style="width:100px;"
+											action="#{registroOficioLotesManaged.sendRedirectPrincipal}" immediate="true"
+											reRender="panelinclude">
+											<f:setPropertyActionListener
+												value="/sisat/papeletas/buscaroficiolotes.xhtml"
+												target="#{sessionManaged.page}" />
+									</a4j:commandButton>
+												
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		 </rich:panel>
+		 
+		 <rich:panel style="width:100%;" id="outpanelcarga" rendered="#{registroOficioLotesManaged.pendienteCarga}" > 	
+				<table width="100%" border="0" cellpadding="4" cellspacing="4">
+					<tr>
+						<td align="left" width="120px">
+							<h:outputLabel value="Nombre de Archivo :" />
+							<span style="color: red;">*</span>
+						</td>
+						<td width="200px">
+							<h:inputText binding="#{registroOficioLotesManaged.txtarchivo}" immediate="true"
+							 size="50" maxlength="50" style="width:100%" styleClass="textUpperCase" converter="uppeCaseConverter"/>
+						</td>
+						
+						<td>
+							<a4j:commandButton value="Cargar Lote"
+								style="width:100px;"
+								action="#{registroOficioLotesManaged.procesarcarga}"
+								oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								reRender="outputregistrooficio,datosResultados" status="ajaxStatus"	immediate="true"/>
+						</td>
+					</tr>
+				</table>
+				<rich:dataTable  style="width:100%;" id="datosResultados" value="#{registroOficioLotesManaged.records}" var="record" 
+						rowKeyVar="row">
+					<rich:column id="x0" style="text-align:center;width:10%"  >
+		                <f:facet name="header">Nro Lote</f:facet>
+		                <h:outputText value="#{record.cargaLoteId}"/>
+		            </rich:column>
+					<rich:column id="x1" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Archivo</f:facet>
+		                <h:outputText value="#{record.archivoCarga}"/>
+		            </rich:column>
+		            <rich:column id="x2" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Correctos</f:facet>
+		                <h:outputText value="#{record.cantidadSubidos}"/>
+		            </rich:column>
+		            <rich:column id="x3" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Con error</f:facet>
+		                <h:outputText value="#{record.cantidadError}"/>
+		            </rich:column>
+		            <rich:column id="x4" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Estado</f:facet>
+		                <h:graphicImage value="#{(record.cantidadError>0)?'/images/modal/warning.png':'/images/modal/success.png'}" height="25px" width="25px" style="border:0" />
+		            </rich:column>
+		            
+		            <rich:column id="x5" style="text-align:center;width:20%" >
+		            	<f:facet name = "header">Revisar Archivo</f:facet>
+		                <h:commandLink  ajaxSingle="true" id="newlink33" action="#{registroOficioLotesManaged.desacargaError}" >
+		            		 <h:graphicImage value="/images/modal/excel.png" height="20px" width="20px" style="border:0" />
+		            		 <f:setPropertyActionListener value="#{record}" target="#{registroOficioLotesManaged.currentItem}" id="rcurr"/>
+		                </h:commandLink>
+			        </rich:column>
+				</rich:dataTable>
+				
+		</rich:panel>
+	</a4j:outputPanel>		 			
+	</h:form>
+	
+	
+</ui:composition>

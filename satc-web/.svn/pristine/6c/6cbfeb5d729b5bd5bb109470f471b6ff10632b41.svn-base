@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:form id="formReporteDJPredialConsolidado">
+	<style>
+.col1 {
+	vertical-align: top;
+	width: 480px;
+}
+
+.col2 {
+	vertical-align: top;
+	width: 260px;
+}
+
+.col3 {
+	vertical-align: top;
+	width: 260px;
+}
+.col1recaudacion{
+	width: 160px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+	height: 25px;
+}
+.col2recaudacion{
+	width: 88px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+}
+</style>
+	<rich:panel id="idPanelReporteVehicular">
+		<f:facet name="header">REPORTE DE DECLARACIONES JURADAS PREDIALES - CONSOLIDADO</f:facet>
+		<h:panelGrid columns="6">
+			<h:outputLabel value="Fecha de inicio de la declaración:">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{reporteDJPredialManaged.fechaInicio}" datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Fecha de inicio de la declaración:" enableManualInput="true" >
+			</rich:calendar>
+			<h:outputLabel value="Fecha fin de la declaración:">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{reporteDJPredialManaged.fechaFin}" datePattern="dd/MM/yyyy" inputSize="8" required="true" 
+				requiredMessage="Fecha fin de la declaración:" enableManualInput="true">
+			</rich:calendar>
+
+			<h:commandLink id="id_buttonConsolidadoXLS"
+				action="#{reporteDJPredialManaged.imprimirConsolidadoXLS}">
+				<h:graphicImage value="/images/modal/excel.png" style="border:0"
+					width="20" height="20" />
+			</h:commandLink>
+
+			<h:commandLink id="id_buttonConsolidadoPDF"
+				action="#{reporteDJPredialManaged.imprimirConsolidadoPdf}">
+				<h:graphicImage value="/images/modal/pdf_1.png" style="border:0"
+					width="15" height="15" />
+			</h:commandLink>
+		
+		</h:panelGrid>
+	</rich:panel>
+
+</h:form>
+</html>

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+		<style type="text/css">
+		  .body3 {
+		   height: 300px;
+		   overflow: auto;
+		  }
+		</style>
+	<h:form id="frm">
+	
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<rich:hotKey key="return" handler="#{rich:element('cmdBuscarLote')}.click()" selector="#frm"/>
+		<rich:panel id="p01">
+			<f:facet name="header">
+				<h:outputLabel value="MULTAS DE TRANSITO" />
+			</f:facet>
+			<table border="0" width="100%">
+				<tr>
+					<td align="left" width="150px">
+						<h:outputText value="Nro Placa :" />
+					</td>
+					<td width="150px">
+						<h:inputText maxlength="50" styleClass="placa"
+							value="#{multasTransito2014_2Managed.placa}" 
+							style="width:50%; text-transform:uppercase;"  onkeyup="validaPlacaMotor(this)" converter="#{upperCaseConverter}"
+							/>
+							<rich:jQuery id="maskPlaca" selector=".placa" query="mask('******?**',{placeholder:' '})" timing="onload" />
+					</td>
+					<td align="left" width="150px">
+						<h:outputText value="Nro Papeleta :" />
+					</td>
+					<td width="150px">
+						<h:inputText maxlength="50" style="width:50%" styleClass="papeleta"
+							value="#{multasTransito2014_2Managed.papeleta}" />
+							<rich:jQuery id="mask12" selector=".papeleta" query="mask('*99999-99')" timing="onload" />
+					</td>
+					<td align="left" width="150px">
+						<h:outputText value="Nro de Valor :" />
+					</td>
+					<td width="150px">
+						<h:inputText maxlength="50" style="width:50%" styleClass="valor"
+							value="#{multasTransito2014_2Managed.nroValor}" />
+<!-- 							<rich:jQuery id="maskvalor" selector=".valor" query="mask('*9999')" timing="onload" /> -->
+					</td>
+					
+					<td>
+						<h:outputText id="idXlsLista" value="Exportar toda la base de datos : " />
+						<h:commandLink id="downloadXLS" immediate="true" action="#{multasTransito2014_2Managed.exportHtmlTableToExcel}" >
+					       <h:graphicImage value="/images/modal/excel.png" style="border:0" width="22" height="22" />
+					    </h:commandLink>
+					</td>
+				</tr>
+			</table>
+		</rich:panel>
+		
+		<h:panelGrid columns="3" align="center">
+			<a4j:commandButton value="Buscar" style="width:100px;" id="cmdBuscarLote"
+				action="#{multasTransito2014_2Managed.buscar}" status="ajaxStatus"
+				reRender="principal" />
+			<a4j:commandButton value="Limpiar" style="width:100px;"
+				action="#{multasTransito2014_2Managed.limpiar}"
+				status="ajaxStatus" reRender="p01,principal" />
+		</h:panelGrid>
+			<rich:panel bodyClass="body3" style="width:1300px;" id="principal">
+				<rich:extendedDataTable id="cctable"
+						value="#{multasTransito2014_2Managed.lista}" var="r"
+						 selectionMode="single"
+						 width="7000px"
+						 height="280px"
+						noDataLabel="No se encontró registros"
+						enableContextMenu="false" rowKeyVar="idx">
+					<!-- BLOQUEADOS NO PERMITE ACTUALIZACION ::INICIO -->
+					<rich:column id="idedit" style="background-color:#{r.cusEditFlag?'yellow':'none'};"
+					rendered="#{sessionManaged.permisoModulo['4']!=null}"
+					>
+			            <f:facet name="header">Editar</f:facet>
+	                    <a4j:commandLink id="Edit" value="Edit"  styleClass="lk"  action="#{multasTransito2014_2Managed.cusEditAction(r)}" rendered="#{not r.cusEditFlag}" reRender="cctable" >
+	                    	<f:setPropertyActionListener value="#{idx}" target="#{multasTransito2014_2Managed.selectedRow}" />
+	                    </a4j:commandLink>
+	                    <a4j:commandLink id="Save" value="Save" styleClass="lk" action="#{multasTransito2014_2Managed.cusSaveAction(r)}" rendered="#{r.cusEditFlag}" reRender="cctable" >
+	                    	<f:setPropertyActionListener value="#{idx}" target="#{multasTransito2014_2Managed.selectedRow}" />
+	                    </a4j:commandLink>
+	                    <a4j:commandLink id="Cancel" value=" / Cancel"  styleClass="lk"  action="#{multasTransito2014_2Managed.cusCancelAction(r)}" rendered="#{r.cusEditFlag}" reRender="cctable" >
+	                    	<f:setPropertyActionListener value="#{idx}" target="#{multasTransito2014_2Managed.selectedRow}" />
+	                    </a4j:commandLink>
+			        </rich:column>
+			        <!-- 
+			        <rich:column id="idid" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+						<f:facet name="header" >ID</f:facet>
+						<h:outputText value="#{r.id}" />
+					</rich:column>
+					-->
+					<rich:column id="idestadocolor" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+								<f:facet name="header" >ESTADO COLOR</f:facet>
+								<rich:comboBox defaultLabel="Selecccione" selectFirstOnUpdate="true" directInputSuggestions="false"
+									value="#{r.estado}" style="width:30px;"
+									onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+									rendered="#{r.cusEditFlag}">
+									<f:selectItem itemValue="EMB. SECUESTRO CONSERVATIVO" />
+									<f:selectItem itemValue="CANCELADO" />
+									<f:selectItem itemValue="PAGO A CUENTA" />
+									<f:selectItem itemValue="SIN PLACA" />
+									<f:selectItem itemValue="EMBARGO INSCRIPCION" />
+									<f:selectItem itemValue="PENDIENTE" />
+									<f:selectItem itemValue="INUBICABLE" />
+								</rich:comboBox>
+								<h:outputText value="#{r.estado}" rendered="#{not r.cusEditFlag}" />
+					</rich:column>
+					<rich:column id="idestadoreal" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+						<f:facet name="header" >ESTADO ACTUAL</f:facet>
+						<h:outputText value="#{r.estado_real}"/>
+					</rich:column>
+<!-- 					<rich:column id="idcampo1" style="background-color:#{r.cusEditFlag?'yellow':'none'};"> -->
+<!-- 						<f:facet name="header" >NRO_EXPEDIENTE</f:facet> -->
+<!-- 						<h:outputText value="#{r.campo1}"/> -->
+<!-- 					</rich:column> -->
+					
+					<rich:column id="idcampo1" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+						<f:facet name="header" >PLACA</f:facet>
+						<h:outputText value="#{r.campo1}"/>
+					</rich:column>
+					<rich:column id="idcampo2" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+						<f:facet name="header" >NRO. PAPELETA</f:facet>
+						<h:outputText value="#{r.campo2}"/>
+					</rich:column>
+					
+					<rich:column id="idcampo3" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+						<f:facet name="header" >TIPO DE INFRACCIÓN</f:facet>
+						<h:outputText value="#{r.campo3}"/>
+					</rich:column>
+															
+					<rich:column id="idcampo4" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+						<f:facet name="header" >PROPIETARIO </f:facet>
+						<h:outputText value="#{r.campo4}"/>
+					</rich:column>
+					
+					<rich:column id="idcampodeudaActual" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+									<f:facet name="header" >DEUDA_ACTUAL</f:facet>
+									<h:outputText value="#{r.deuda}" />
+					</rich:column>
+					<rich:column id="idcampo18" style="background-color:#{r.cusEditFlag?'yellow':'none'};" width="3%" >
+							<f:facet name="header" >FECHA GENERACION REC INICIO</f:facet>
+							<h:inputText value="#{r.fecha_genera_rec1}" rendered="#{r.cusEditFlag}" styleClass="ffechaGeneraRec1" />
+							<rich:jQuery selector=".ffechaGeneraRec1" query="mask('99/99/9999',{placeholder:' '})" timing="onload" />
+							<h:outputText value="#{r.fecha_genera_rec1}" rendered="#{not r.cusEditFlag}" />
+					</rich:column>
+					
+					<rich:column id="idcampo19" style="background-color:#{r.cusEditFlag?'yellow':'none'};" width="3%">
+							<f:facet name="header" >FECHA EMISION REC INICIO</f:facet>
+							<h:inputText value="#{r.fecha_emision_rec1}" rendered="#{r.cusEditFlag}" styleClass="ffechaEmisionRec1" />
+							<rich:jQuery selector=".ffechaEmisionRec1" query="mask('99/99/9999',{placeholder:' '})" timing="onload" />
+							<h:outputText value="#{r.fecha_emision_rec1}" rendered="#{not r.cusEditFlag}" />
+						</rich:column>
+						<rich:column id="idcampo20" style="background-color:#{r.cusEditFlag?'yellow':'none'};" width="3%">
+							<f:facet name="header" >FECHA NOTIFIC REC INICIO</f:facet>
+							<h:inputText value="#{r.fecha_notificacion_rec1}" rendered="#{r.cusEditFlag}" styleClass="ffechaNotificacionRec1" />
+							<rich:jQuery selector=".ffechaNotificacionRec1" query="mask('99/99/9999',{placeholder:' '})" timing="onload" />
+							<h:outputText value="#{r.fecha_notificacion_rec1}" rendered="#{not r.cusEditFlag}" />
+						</rich:column>
+						<rich:column id="idcampo21" style="background-color:#{r.cusEditFlag?'yellow':'none'};" width="3%">
+							<f:facet name="header" >REC MEDIDA CAUTELAR GENERACION</f:facet>
+							<h:inputText value="#{r.fecha_genera_rec2}" rendered="#{r.cusEditFlag}" styleClass="fcampo24" />
+							<rich:jQuery selector=".fcampo24" query="mask('99/99/9999',{placeholder:' '})" timing="onload" />
+							<h:outputText value="#{r.fecha_genera_rec2}" rendered="#{not r.cusEditFlag}" />
+						</rich:column>
+						<rich:column id="idcampo22" style="background-color:#{r.cusEditFlag?'yellow':'none'};" width="3%">
+							<f:facet name="header" >REC M.CAUTELAR NOTIFICACION</f:facet>
+							<h:inputText value="#{r.fecha_notificacion_rec2}" rendered="#{r.cusEditFlag}" styleClass="fcampo25" />
+							<rich:jQuery selector=".fcampo25" query="mask('99/99/9999',{placeholder:' '})" timing="onload" />
+							<h:outputText value="#{r.fecha_notificacion_rec2}" rendered="#{not r.cusEditFlag}" />
+						</rich:column>
+				
+					
+					<rich:column id="idcampo23" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+							<f:facet name="header" >COSTAS </f:facet>
+							<h:inputText value="#{r.costas}" rendered="#{r.cusEditFlag}" />
+							<h:outputText value="#{r.costas}" rendered="#{not r.cusEditFlag}" />
+						</rich:column>
+					<rich:column id="idcampo24" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+							<f:facet name="header" >SUSPENSION </f:facet>
+							<h:inputText value="#{r.suspension}" rendered="#{r.cusEditFlag}" />
+							<h:outputText value="#{r.suspension}" rendered="#{not r.cusEditFlag}" />
+						</rich:column>
+					
+					<rich:column id="idcampo25" style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+							<f:facet name="header" >OBSERVACIONES </f:facet>
+							<h:inputText value="#{r.observaciones}" rendered="#{r.cusEditFlag}" />
+							<h:outputText value="#{r.observaciones}" rendered="#{not r.cusEditFlag}" />
+						</rich:column>
+
+				<rich:column id="idusuario"
+					style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+					<f:facet name="header">ACTUALIZADO POR</f:facet>
+					<h:outputText value="#{r.usuarioIdUpd}" />
+				</rich:column>
+				<rich:column id="idfecha"
+					style="background-color:#{r.cusEditFlag?'yellow':'none'};">
+					<f:facet name="header">FECHA ACTUALIZA</f:facet>
+					<h:outputText value="#{r.fechaRegistroUpd}">
+						<f:convertDateTime pattern="dd/MM/yyyy hh:mm:ss" timeZone="GMT-5" />
+					</h:outputText>
+				</rich:column>
+
+
+			</rich:extendedDataTable>
+			</rich:panel>		
+	</h:form>
+</ui:composition>

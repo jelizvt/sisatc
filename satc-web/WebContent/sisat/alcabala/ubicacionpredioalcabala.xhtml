@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+
+	<h:form id="formRegistroDireccion">
+
+		<rich:panel id="id_registrodireccion" width="100%">
+
+			<table border="0" width="100%">
+
+				<tr>
+					<td align="left" width="80px"><h:outputText
+							value="Departamento :" /></td>
+					<td><h:inputText readonly="true"
+							style="width:100%;border: none"
+							value="#{direccionAlcabalaManaged.ubigeo.departamento}" /></td>
+					<td align="left" width="80px"><h:outputText
+							value="Provincia :" /></td>
+					<td><h:inputText readonly="true"
+							style="width:100%;border: none"
+							value="#{direccionAlcabalaManaged.ubigeo.provincia}" /></td>
+					<td align="left" width="80px"><h:outputText
+							value="Distrito :" /></td>
+					<td><rich:comboBox required="true"
+							requiredMessage="#{msg['ra.seleccioneDistrito']}"
+							value="#{direccionAlcabalaManaged.valorDistrito}" width="150px"
+							defaultLabel="Seleccione" onblur="validaInputCbo(this)" id="id_2"
+							binding="#{direccionAlcabalaManaged.cmbDistrito}"
+							valueChangeListener="#{direccionAlcabalaManaged.loadIdDistrito}">
+							<f:selectItems id="id_lst2"
+								value="#{direccionAlcabalaManaged.lstdistrito}" />
+						</rich:comboBox></td>
+				</tr>
+			</table>
+		</rich:panel>
+
+		<rich:panel id="ubicaciondireccion">
+			<table border="0" width="100%">
+				<tr>
+					<td align="left" width="80px"><h:outputText
+							value="Tipo via :" /> <span style="color: red;">*</span></td>
+					<td colspan="2"><rich:comboBox width="150px"
+							defaultLabel="Selecccione" id="id_tipovia"
+							binding="#{direccionAlcabalaManaged.cmbTipoVia}" immediate="true"
+							valueChangeListener="#{direccionAlcabalaManaged.loadTIpoVia}"
+							value="#{direccionAlcabalaManaged.valorTipoVia}">
+							<a4j:support id="id_supportTipovia" event="onchange"
+								immediate="true"
+								reRender="id_nombrevia, id_numero1, id_letra1, id_numero2, id_letra2"
+								ajaxSingle="true" />
+							<f:selectItem itemLabel="--" itemValue="--" />
+							<f:selectItems id="id_lsttipovia"
+								value="#{direccionAlcabalaManaged.lsttipovia}" />
+						</rich:comboBox></td>
+					<td align="left"><h:outputText value="Nombre via :" /> <span
+						style="color: red;">*</span></td>
+					<td colspan="2"><h:inputText id="id_nombrevia"
+							styleClass="textUpperCase"
+							requiredMessage="#{msg['mp.errornombrevia']}"
+							readonly="#{!direccionAlcabalaManaged.selVia}"
+							required="#{direccionAlcabalaManaged.selVia}" style="width:80%;"
+							value="#{direccionAlcabalaManaged.nombreVia}">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText></td>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<table cellpadding="2" cellspacing="0" border="0">
+							<tr>
+								<td align="left" width="80px"><h:outputText
+										value="Numero 1 :" /> <span style="color: red;">*</span></td>
+								<td><h:inputText id="id_numero1"
+										requiredMessage="#{msg['mp.errornumero1']}"
+										onkeypress="return validaEnteroPositivo(event)" maxlength="10"
+										readonly="#{!direccionAlcabalaManaged.selVia}"
+										required="#{direccionAlcabalaManaged.selVia}"
+										style="width:62px" value="#{direccionAlcabalaManaged.numero}" />
+								</td>
+								<td align="left"><h:outputText value="Letra 1 :" /></td>
+								<td><h:inputText id="id_letra1" styleClass="textUpperCase"
+										style="width:62px" maxlength="5"
+										value="#{direccionAlcabalaManaged.letra}"
+										readonly="#{!direccionAlcabalaManaged.selVia}">
+										<f:converter converterId="uppeCaseConverter" />
+									</h:inputText></td>
+								<td align="left"><h:outputText value="Numero 2 :" /></td>
+								<td><h:inputText id="id_numero2" style="width:62px"
+										onkeypress="return validaEnteroPositivo(event)" maxlength="10"
+										value="#{direccionAlcabalaManaged.numero2}"
+										readonly="#{!direccionAlcabalaManaged.selVia}" /></td>
+								<td align="left"><h:outputText value="Letra 2 :" /></td>
+								<td><h:inputText id="id_letra2" styleClass="textUpperCase"
+										style="width:62px" maxlength="5"
+										value="#{direccionAlcabalaManaged.letra2}"
+										readonly="#{!direccionAlcabalaManaged.selVia}">
+										<f:converter converterId="uppeCaseConverter" />
+									</h:inputText></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="6">
+						<hr width="100%" align="left" />
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="80px"><h:outputText
+							value="Tipo edificacion:" /></td>
+					<td><rich:comboBox width="220px" defaultLabel="Seleccione"
+							id="id_tipoedificio"
+							binding="#{direccionAlcabalaManaged.cmbtipoedificio}"
+							value="#{direccionAlcabalaManaged.valorTipoEdificacion}"
+							immediate="true"
+							valueChangeListener="#{direccionAlcabalaManaged.loadTipoEdificacion}">
+							<a4j:support id="id_supporttipoedificio" event="onchange"
+								immediate="true" reRender="id_nombreedificio, id_pisoedificio"
+								ajaxSingle="true" />
+							<f:selectItem id="si00" itemLabel="--" itemValue="--" />
+							<f:selectItems id="id_lsttipoedificio1"
+								value="#{direccionAlcabalaManaged.lsttipoedificio}" />
+						</rich:comboBox></td>
+					<td align="left" width="80px"><h:outputText
+							value="Nombre edif. :" /></td>
+					<td><h:inputText
+							requiredMessage="#{msg['mp.errornombreedificio']}" maxlength="50"
+							styleClass="textUpperCase" id="id_nombreedificio"
+							style="width:100%;"
+							value="#{direccionAlcabalaManaged.nombreEdificacion}"
+							readonly="#{!direccionAlcabalaManaged.selEdificio}">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText></td>
+					<td align="left" width="80px"><h:outputText value="Piso :" />
+					</td>
+					<td><h:inputText maxlength="2"
+							onkeypress="return validaEnteroPositivo(event)"
+							id="id_pisoedificio" style="width:100%;"
+							value="#{direccionAlcabalaManaged.piso}"
+							readonly="#{!direccionAlcabalaManaged.selEdificio}">
+						</h:inputText></td>
+				</tr>
+				<tr>
+					<td align="left" width="80px"><h:outputText
+							value="Tipo interior :" /></td>
+					<td><rich:comboBox width="220px" defaultLabel="Seleccione"
+							selectFirstOnUpdate="true" directInputSuggestions="false"
+							id="id_tipointerior"
+							binding="#{direccionAlcabalaManaged.cmbtipointerior}"
+							value="#{direccionAlcabalaManaged.cmbvaluetipointerior}"
+							immediate="true" enableManualInput="false"
+							valueChangeListener="#{direccionAlcabalaManaged.loadtipoInterior}">
+							<a4j:support id="id_supporttipointerior" event="onchange"
+								immediate="true" ajaxSingle="true"
+								reRender="id_numerointerior, id_letrainterior" />
+							<f:selectItem id="si01tipointerior" itemLabel="--" itemValue="--" />
+							<f:selectItems id="id_lsttipointerior"
+								value="#{direccionAlcabalaManaged.lsttipointerior}" />
+						</rich:comboBox></td>
+					<td align="left" width="80px"><h:outputText value="Numero :" />
+					</td>
+					<td><h:inputText maxlength="10" id="id_numerointerior"
+							style="width:100%;"
+							onkeypress="return validaEnteroPositivo(event)"
+							value="#{direccionAlcabalaManaged.numeroInterior}"
+							readonly="#{!direccionAlcabalaManaged.selTipoInte}" /></td>
+					<td align="left" width="80px"><h:outputText value="Letra :" />
+					</td>
+					<td><h:inputText maxlength="5" id="id_letrainterior"
+							styleClass="textUpperCase" style="width:100%;"
+							value="#{direccionAlcabalaManaged.letraInterior}"
+							readonly="#{!direccionAlcabalaManaged.selTipoInte}">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText></td>
+				</tr>
+				<tr>
+					<td align="left" width="80px"><h:outputText
+							value="Tipo ingreso :" /></td>
+					<td><rich:comboBox width="220px" defaultLabel="Seleccione"
+							selectFirstOnUpdate="true" directInputSuggestions="false"
+							id="id_tipoingreso"
+							binding="#{direccionAlcabalaManaged.cmbtipoingreso}"
+							value="#{direccionAlcabalaManaged.cmbvaluetipoingreso}"
+							immediate="true" enableManualInput="false"
+							valueChangeListener="#{direccionAlcabalaManaged.loadTipoIngreso}">
+							<a4j:support id="id_supporttipoingreso" event="onchange"
+								reRender="id_numeroingreso" immediate="true" ajaxSingle="true" />
+							<f:selectItem id="si02" itemLabel="--" itemValue="--" />
+							<f:selectItems id="id_lsttipoingreso"
+								value="#{direccionAlcabalaManaged.lsttipoingreso}" />
+						</rich:comboBox></td>
+					<td align="left" width="80px"><h:outputText value="Numero :" />
+					</td>
+					<td><h:inputText
+							onkeypress="return validaEnteroPositivo(event)"
+							id="id_numeroingreso" maxlength="40" style="width:100%;"
+							value="#{direccionAlcabalaManaged.mpDireccion.nombreIngreso}"
+							readonly="#{!direccionAlcabalaManaged.selTipoIngre}" /></td>
+					<td align="left" width="80px"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td align="left" width="80px"><h:outputText value="Manzana :" />
+					</td>
+					<td><h:inputText maxlength="5" id="id_manzana"
+							styleClass="textUpperCase" style="width:100%;"
+							value="#{direccionAlcabalaManaged.manzana}">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText></td>
+					<td align="left" width="80px"><h:outputText value="Lote :" />
+					</td>
+					<td><h:inputText maxlength="5" id="id_lote"
+							style="width:100%;" value="#{direccionAlcabalaManaged.lote}" />
+					</td>
+					<td align="left" width="80px"></td>
+					<td></td>
+				</tr>
+
+
+
+				<tr>
+					<td align="left" width="80px"><h:outputText
+							value="Referencia :" /></td>
+					<td colspan="5"><h:inputText maxlength="100"
+							id="id_referencia" styleClass="textUpperCase" style="width:100%;"
+							value="#{direccionAlcabalaManaged.referencia}">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText></td>
+				</tr>
+			</table>
+		</rich:panel>
+		<table align="center" border="0" width="100%">
+			<tr>
+				<td width="50%" align="right"><a4j:commandButton
+						value="Guardar"
+						action="#{direccionAlcabalaManaged.guardarDireccion}"
+						style="width:100px;"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.hideModalPanel(\'id_panelUbicacionPredio\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="#{rich:clientId('id_direccionAlcabala')},#{rich:clientId('id_hiddemDireccionAlcabala')}">
+					</a4j:commandButton></td>
+				<td width="50%" align="left"><h:commandButton value="Cancelar"
+						style="width:100px;" reRender="formCalculoAlcabala"
+						oncomplete="#{rich:component('id_panelUbicacionPredio')}.hide()" />
+				</td>
+			</tr>
+		</table>
+	</h:form>
+
+</h:panelGrid>

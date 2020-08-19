@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+D:\Liz Vigo\REPO-OFICIAL\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+1291028360.index
+2340463364.index
+2439737939.index
+3590645662.index
+4084019612.index
+2003959752.index

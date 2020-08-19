@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<head>
+<title>RENIEC WS</title>
+<link rel="stylesheet" href="/css/manuales.css" type="text/css"
+	charset="utf-8" />
+<script type="text/javascript" src="/js/jquery-1.3.2.js"></script>
+<style>
+.link-mensaje-1 {
+	font-size: 10pt;
+	color: #FF5555 !important;
+}
+
+.link-mensaje-2 {
+	font-size: 10pt;
+	color: #FFFFAA !important;
+}
+</style>
+</head>
+<body>
+
+<table border="1">
+<tr>
+<td>celda</td>
+</tr>
+</table>
+
+</body>
+
+</html>

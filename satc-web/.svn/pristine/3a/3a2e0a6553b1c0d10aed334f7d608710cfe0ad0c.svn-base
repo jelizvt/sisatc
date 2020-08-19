@@ -1,0 +1,689 @@
+package com.sat.sisat.common.managed;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
+
+import com.sat.sisat.caja.business.CajaBoRemote;
+import com.sat.sisat.caja.dto.AgenciaUsuarioDTO;
+import com.sat.sisat.caja.managed.PreDestroyCajeroManaged;
+import com.sat.sisat.cobranzacoactiva.dto.PerfilCoactivo;
+import com.sat.sisat.common.dto.PermisoDTO;
+import com.sat.sisat.common.util.BaseManaged;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.WebMessages;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.persistence.entity.CjCajaApertura;
+import com.sat.sisat.persistence.entity.MpPersona;
+import com.sat.sisat.persistence.entity.SgUsuario;
+import com.sat.sisat.predial.dto.FindMpPersona;
+import com.sat.sisat.usuario.business.UsuarioBoRemote;
+import com.sat.sisat.usuario.dto.MenusDTO;
+import com.sat.sisat.usuario.dto.MenusPermisosDTO;
+import com.sat.sisat.usuario.dto.SubMenuDTO;
+import com.sat.sisat.usuario.dto.UsuarioDTO;
+import com.sat.sisat.util.exception.ConstantMenuDTO;
+
+@ManagedBean
+@SessionScoped
+public class SessionManaged extends BaseManaged {
+
+	private static final long serialVersionUID = -1058341713870379572L;
+
+	@EJB
+	private UsuarioBoRemote usuarioBo;
+	@EJB
+	private CajaBoRemote cajaBo;
+
+	public String page;
+
+	public int selectedMenu = 0; // Ninguno
+
+	private FindMpPersona contribuyente;
+
+	private FindMpPersona finMpPersonaItem;
+	private MpPersona mpPersona;
+
+	private SgUsuario usuarioLogIn;
+	private String terminalLogIn = "default";
+	private int dias = 0;
+	private boolean renderExpiraDias = false;
+
+	/* control, include content */
+	private String linkRegresar = null;
+
+	/* menu tribute control */
+	private boolean tributoPage = false;
+	private boolean moduloFisca = false;
+	
+	//para mostrar datos de contribuyente en fiscalizacuion
+	private boolean datosContribuyente = false;
+
+	// Variables for Menu enabled
+	private Map<String, Boolean> permisoModulo = new HashMap<String, Boolean>();
+	private Map<String, Boolean> permisoN = new HashMap<String, Boolean>();
+	private Map<String, Boolean> permisoM = new HashMap<String, Boolean>();
+	private Map<String, Boolean> permisoE = new HashMap<String, Boolean>();
+	private Map<String, Boolean> permisoQ = new HashMap<String, Boolean>();
+		
+	private List<MenusDTO> listMenus = new ArrayList<MenusDTO>();
+	
+	private List<MenusDTO> listMenuContribuyete = new ArrayList<MenusDTO>();
+	
+	private boolean supervisor;
+	private boolean agenciaAperturada;
+	private boolean cajero;
+	private boolean cajaAperturada;
+
+	private Integer rolUnidad;
+	private Integer unidadId;
+	private String unidadDescripcion;
+
+	private int indiceMensaje = 0;
+
+	private boolean gerente;
+	private boolean administrador;
+	private ConstantMenuDTO contantesMenu; 
+	
+	
+
+	private HashMap<Integer, MensajeSisatDTO> listMensajes = new HashMap<Integer, MensajeSisatDTO>();
+
+	//cchaucca
+	private PerfilCoactivo coPerfil=new PerfilCoactivo();
+	private Integer materiaId;
+	
+	public SessionManaged() {
+		mpPersona = new MpPersona();
+		finMpPersonaItem = new FindMpPersona();
+		finMpPersonaItem.setPersonaId(1); // default
+
+		contribuyente = new FindMpPersona();
+		contribuyente.setPersonaId(1); // default
+	}
+
+	@PostConstruct
+	public void iniciar() {
+		try {
+			
+			contantesMenu = new ConstantMenuDTO();
+			contantesMenu.setVER_DATOS_GENERALES(Constante.VER_DATOS_GENERALES) ;
+			contantesMenu.setEDITAR_DATOS_GENERALES(Constante.EDITAR_DATOS_GENERALES);
+			contantesMenu.setIMPRIMIR_DECLARACION(Constante.IMPRIMIR_DECLARACION);
+			contantesMenu.setCARTERA_VALORES_TRIB(Constante.CARTERA_VALORES_TRIB);
+			contantesMenu.setCARTERA_VALORES_NO_TRIB(Constante.CARTERA_VALORES_NO_TRIB);
+			contantesMenu.setCONSULTA_DE_VEHICULOS(Constante.CONSULTA_DE_VEHICULOS);
+			
+			fillDatosUsuario();
+			fillPermisosModuloUsuario();
+			
+			if (cajero) {
+				// start managed why make pre-destroy. this is very useful.
+				// Create managed.
+				PreDestroyCajeroManaged cm = (PreDestroyCajeroManaged) getManaged("preDestroyCajeroManaged");
+				cm.setCajeroId(getUsuarioLogIn().getUsuarioId());
+			}
+			
+			//cchaucca
+			fillCargoUsuario();
+			
+		} catch (SisatException e) {
+			WebMessages.messageFatal(e);
+		}
+	}
+	
+	private void fillCargoUsuario(){
+		try{
+			coPerfil=usuarioBo.getCargoUsuario(getUsuarioLogIn().getUsuarioId());
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private void fillDatosUsuario() {
+		String userName = getServletRequest().getUserPrincipal().getName();
+		try {
+			UsuarioDTO us = usuarioBo.getUsuarioLoginData(userName);
+			usuarioLogIn = us.getUsuario();
+			terminalLogIn = us.getTerminal();
+			dias = us.getDias();
+			rolUnidad = us.getRolUnidad();
+			setUnidadDescripcion(us.getUnidadDescripcion());
+			rolUnidad = us.getRolUnidad();
+			setUnidadDescripcion(us.getUnidadDescripcion());
+			setUnidadId(us.getUnidadId());
+			if (dias <= 5) {
+				renderExpiraDias = true;
+			} else {
+				renderExpiraDias = false;
+			}
+
+		} catch (SisatException ex) {
+			addErrorMessage(ex.getMessage());
+		}
+	}
+
+	public String fillPermisosModuloUsuario() {
+		try {
+			if (usuarioLogIn == null) {
+				return null;
+			}
+			int userId = usuarioLogIn.getUsuarioId();
+			Set<PermisoDTO> permiso = usuarioBo.getPermisos(userId);
+			Iterator<PermisoDTO> it = permiso.iterator();
+			while (it.hasNext()) {
+				PermisoDTO p = it.next();
+				String modId = String.valueOf(p.getModuloId());
+				permisoModulo.put(modId, true);
+				permisoN.put(modId, p.isNuevo());
+				permisoM.put(modId, p.isModificacion());
+				permisoE.put(modId, p.isCambioEstado());
+				permisoQ.put(modId, p.isConsulta());
+			}
+			//INICIO RECUPERAR MENUS SEGUN PERFIL // -=CRAMIREZ=-
+			//INICIO MENUS PRINCIPAL
+			List<MenusPermisosDTO> menuContibuyente = new ArrayList<MenusPermisosDTO>(); 
+			menuContibuyente = usuarioBo.getMenusPermisos(userId, Constante.MENU_CONTRIBUYENTE);
+			String menuLabel = "";
+			
+			List<SubMenuDTO> listSubMenuContribuyente = new ArrayList<SubMenuDTO>(); 
+			
+			Iterator<MenusPermisosDTO> menuContIterar = menuContibuyente.iterator();
+			while (menuContIterar.hasNext()) {
+				MenusPermisosDTO m = menuContIterar.next();
+				
+				MenusDTO objMenuContribuyente = new MenusDTO();
+				
+				if( !m.getMenu().equals(menuLabel)) {
+					
+					menuLabel = m.getMenu();				
+					objMenuContribuyente.setMenuId(m.getMenuId());
+					objMenuContribuyente.setMenu(m.getMenu());
+					
+					this.listMenuContribuyete.add(objMenuContribuyente);
+					
+				}				
+			}
+			
+			List<MenusPermisosDTO> submenuContribuyente = new ArrayList<MenusPermisosDTO>();
+			submenuContribuyente = usuarioBo.getSubmenusPermisos(userId, Constante.MENU_CONTRIBUYENTE);
+			
+			List<MenusDTO> optListMenuContri = new ArrayList<MenusDTO>();
+			optListMenuContri = listMenuContribuyete;
+			listMenuContribuyete = new ArrayList<MenusDTO>();
+			Iterator<MenusDTO> selectMenuContrIterar = optListMenuContri.iterator();
+			
+			while (selectMenuContrIterar.hasNext()) {
+				
+				MenusDTO me = selectMenuContrIterar.next();
+				listSubMenuContribuyente = new ArrayList<SubMenuDTO>();
+				
+				Iterator<MenusPermisosDTO> submenuIterar = submenuContribuyente.iterator();
+				
+				while (submenuIterar.hasNext()) {
+					MenusPermisosDTO sm = submenuIterar.next();
+					
+					if(me.getMenuId() == sm.getMenuId()) {						
+						SubMenuDTO objSubMenu = new SubMenuDTO();
+						objSubMenu.setMenuId(sm.getMenuId());
+						objSubMenu.setSubMenuId(sm.getSubMenuId());
+						objSubMenu.setSubmenu(sm.getSubmenu());
+						objSubMenu.setUrl(sm.getUrl());
+						objSubMenu.setTipoUrl(sm.getTipoUrl());
+						listSubMenuContribuyente.add(objSubMenu);
+					}
+				}
+				me.setListMenus(listSubMenuContribuyente);
+				this.listMenuContribuyete.add(me);
+			}
+			//FIN MENUS PRINCIPAL
+			//INICIO MENUS CONTRIBUYENTE
+			List<MenusPermisosDTO> menus = new ArrayList<MenusPermisosDTO>(); 
+			menus = usuarioBo.getMenusPermisos(userId, Constante.MENU_PRINCIPAL);
+			String menu = "";
+			
+			List<SubMenuDTO> listSubMenus = new ArrayList<SubMenuDTO>(); 
+			
+			Iterator<MenusPermisosDTO> menuIterar = menus.iterator();
+			while (menuIterar.hasNext()) {
+				MenusPermisosDTO m = menuIterar.next();
+				
+				MenusDTO objMenu = new MenusDTO();
+				
+				if( !m.getMenu().equals(menu)) {
+					
+					menu = m.getMenu();				
+					objMenu.setMenuId(m.getMenuId());
+					objMenu.setMenu(m.getMenu());
+					
+					this.listMenus.add(objMenu);
+					
+				}				
+			}
+			
+			List<MenusPermisosDTO> submenus = new ArrayList<MenusPermisosDTO>();
+			submenus = usuarioBo.getSubmenusPermisos(userId, Constante.MENU_PRINCIPAL);
+			
+			List<MenusDTO> optListMenus = new ArrayList<MenusDTO>();
+			optListMenus = listMenus;
+			listMenus = new ArrayList<MenusDTO>();
+			Iterator<MenusDTO> selectMenusIterar = optListMenus.iterator();
+			
+			while (selectMenusIterar.hasNext()) {
+				
+				MenusDTO me = selectMenusIterar.next();
+				listSubMenus = new ArrayList<SubMenuDTO>();
+				
+				Iterator<MenusPermisosDTO> submenuIterar = submenus.iterator();
+				
+				while (submenuIterar.hasNext()) {
+					MenusPermisosDTO sm = submenuIterar.next();
+					
+					if(me.getMenuId() == sm.getMenuId()) {						
+						SubMenuDTO objSubMenu = new SubMenuDTO();
+						objSubMenu.setMenuId(sm.getMenuId());
+						objSubMenu.setSubMenuId(sm.getSubMenuId());
+						objSubMenu.setSubmenu(sm.getSubmenu());
+						objSubMenu.setUrl(sm.getUrl());
+						objSubMenu.setTipoUrl(sm.getTipoUrl());
+						listSubMenus.add(objSubMenu);
+					}
+				}
+				me.setListMenus(listSubMenus);
+				this.listMenus.add(me);
+			}
+			//FIN MENUS CONTRIBUYENTE
+			//FIN RECUPERAR MENUS SEGUN PERFIL
+			Map<Integer, String> roles = usuarioBo.getRolesUsuario(userId);
+			String rolS = roles.get(7);
+			String rolC = roles.get(8);
+			String rolG = roles.get(6);
+			String rolA = roles.get(9);
+
+			// Verificando si el usuario tiene rol: GO/GA/JEFE SAT
+			if (rolG != null && rolG.equals("R6")) {
+				gerente = true;
+			}
+
+			// Verificando si el usuario tiene rol: Administrador
+			if (rolA != null && rolA.equals("R9")) {
+				administrador = true;
+			}
+
+			// Verificando si este usuario tiene rol supervisor y/o cajero.
+			if (rolS != null && rolS.equals("R7") && rolC != null
+					&& rolC.equals("R8")) {
+				supervisor = true;
+				cajero = true;
+				AgenciaUsuarioDTO au = cajaBo.getAgenUsuarioCajero(userId);
+				if (au == null) {
+					// System.out.println("Verificar agencia usuario");
+					return null;
+				}
+
+				agenciaAperturada = cajaBo.isAgenciaAperturada(au
+						.getAgenciaId());
+				if (agenciaAperturada) {
+					CjCajaApertura ca = cajaBo.getCajaAperturada(userId,
+							au.getAgenciaId());
+					if (ca == null) {
+						cajaAperturada = false;
+					} else {
+						cajaAperturada = true;
+					}
+				} else {
+					cajaAperturada = false;
+				}
+			} else if (rolS != null && rolS.equals("R7")) {
+				supervisor = true;
+				cajero = false;
+			} else if (rolC != null && rolC.equals("R8")) {
+				supervisor = false;
+				cajero = true;
+				AgenciaUsuarioDTO au = cajaBo.getAgenUsuarioCajero(userId);
+				if (au == null) {
+					// System.out.println("Verificar agencia usuario");
+					return null;
+				}
+
+				agenciaAperturada = cajaBo.isAgenciaAperturada(au
+						.getAgenciaId());
+				if (agenciaAperturada) {
+					CjCajaApertura ca = cajaBo.getCajaAperturada(userId,
+							au.getAgenciaId());
+					if (ca == null) {
+						cajaAperturada = false;
+					} else {
+						cajaAperturada = true;
+					}
+				} else {
+					cajaAperturada = false;
+				}
+			} else {
+				supervisor = false;
+				cajero = false;
+			}
+		} catch (SisatException ex) {
+			String msg = "No se ha recuperado los permisos";
+			System.out.println(msg + ex);
+		}
+		return null;
+	}
+
+	public String getPage() {
+		return page;
+	}
+
+	public void setPage(String page) {
+		try {
+			this.page = page;
+			
+			// cajaBo.eliminarTmpDeuda(getSessionManaged().getUsuarioLogIn().getUsuarioId());
+			cajaBo.limpiarCjTmpDeudaCajero(getSessionManaged()
+					.getUsuarioLogIn().getUsuarioId());
+		} catch (SisatException e) {
+			WebMessages.messageFatal(e);
+		}
+	}
+
+	public void liberarContribuyente() {
+
+		try {
+			/** limpiamos las consultas de la tabla temporal de deudas */
+			cajaBo.limpiarCjTmpDeudaCajero(getSessionManaged()
+					.getUsuarioLogIn().getUsuarioId());
+
+			/** Bajamos la session */
+
+			this.getServletRequest().getSession().invalidate();
+		} catch (SisatException e) {
+			addErrorMessage(e.getMessage());
+		}
+	}
+
+	public void anhadirMensaje(MensajeSisatDTO mensaje) {
+
+		listMensajes.put(indiceMensaje, mensaje);
+		indiceMensaje = indiceMensaje + 1;
+	}
+
+	public void removerMensaje(Integer indice) {
+
+		listMensajes.remove(indice);
+	}
+
+	public MpPersona getMpPersona() {
+		return mpPersona;
+	}
+
+	public void setMpPersona(MpPersona mpPersona) {
+		this.mpPersona = mpPersona;
+	}
+
+	public FindMpPersona getFinMpPersonaItem() {
+		return finMpPersonaItem;
+	}
+
+	public void setFinMpPersonaItem(FindMpPersona finMpPersonaItem) {
+		this.finMpPersonaItem = finMpPersonaItem;
+	}
+
+	public int getDias() {
+		return dias;
+	}
+
+	public void setDias(int dias) {
+		this.dias = dias;
+	}
+
+	public String getTerminalLogIn() {
+		return terminalLogIn;
+	}
+
+	public void setTerminalLogIn(String terminalLogIn) {
+		this.terminalLogIn = terminalLogIn;
+	}
+
+	public FindMpPersona getContribuyente() {
+		return contribuyente;
+	}
+
+	public void setContribuyente(FindMpPersona contribuyente) {
+		this.contribuyente = contribuyente;
+	}
+
+	public boolean isTributoPage() {
+		return tributoPage;
+	}
+
+	public void setTributoPage(boolean tributoPage) {
+		this.tributoPage = tributoPage;
+	}
+	
+	public SgUsuario getUsuarioLogIn() {
+		return usuarioLogIn;
+	}
+
+	public void setUsuarioLogIn(SgUsuario usuarioLogIn) {
+		this.usuarioLogIn = usuarioLogIn;
+	}
+
+	public String getLinkRegresar() {
+		if (linkRegresar == null || linkRegresar.isEmpty()) {
+			tributoPage = false;
+			datosContribuyente = false;
+			return "/sisat/bienvenida.xhtml";
+		}
+		return linkRegresar;
+	}
+
+	public void setLinkRegresar(String linkRegresar) {
+		this.linkRegresar = linkRegresar;
+	}
+
+	public Map<String, Boolean> getPermisoModulo() {
+		return permisoModulo;
+	}
+
+	public void setPermisoModulo(Map<String, Boolean> permisoModulo) {
+		this.permisoModulo = permisoModulo;
+	}
+
+	public Map<String, Boolean> getPermisoN() {
+		return permisoN;
+	}
+
+	public void setPermisoN(Map<String, Boolean> permisoN) {
+		this.permisoN = permisoN;
+	}
+
+	public Map<String, Boolean> getPermisoM() {
+		return permisoM;
+	}
+
+	public void setPermisoM(Map<String, Boolean> permisoM) {
+		this.permisoM = permisoM;
+	}
+
+	public Map<String, Boolean> getPermisoE() {
+		return permisoE;
+	}
+
+	public void setPermisoE(Map<String, Boolean> permisoE) {
+		this.permisoE = permisoE;
+	}
+
+	public Map<String, Boolean> getPermisoQ() {
+		return permisoQ;
+	}
+
+	public void setPermisoQ(Map<String, Boolean> permisoQ) {
+		this.permisoQ = permisoQ;
+	}
+
+	public boolean isAgenciaAperturada() {
+		return agenciaAperturada;
+	}
+
+	public void setAgenciaAperturada(boolean agenciaAperturada) {
+		this.agenciaAperturada = agenciaAperturada;
+	}
+
+	public boolean isSupervisor() {
+		return supervisor;
+	}
+
+	public void setSupervisor(boolean supervisor) {
+		this.supervisor = supervisor;
+	}
+
+	public boolean isCajero() {
+		return cajero;
+	}
+
+	public void setCajero(boolean cajero) {
+		this.cajero = cajero;
+	}
+
+	public boolean isCajaAperturada() {
+		return cajaAperturada;
+	}
+
+	public void setCajaAperturada(boolean cajaAperturada) {
+		this.cajaAperturada = cajaAperturada;
+	}
+
+	public boolean isModuloFisca() {
+		return moduloFisca;
+	}
+
+	public void setModuloFisca(boolean moduloFisca) {
+		this.moduloFisca = moduloFisca;
+	}
+
+	public int getSelectedMenu() {
+		return selectedMenu;
+	}
+
+	public void setSelectedMenu(int selectedMenu) {
+		this.selectedMenu = selectedMenu;
+	}
+
+	public HashMap<Integer, MensajeSisatDTO> getListMensajes() {
+		return listMensajes;
+	}
+
+	public void setListMensajes(HashMap<Integer, MensajeSisatDTO> listMensajes) {
+		this.listMensajes = listMensajes;
+	}
+
+	public Integer getRolUnidad() {
+		return rolUnidad;
+	}
+
+	public void setRolUnidad(Integer rolUnidad) {
+		this.rolUnidad = rolUnidad;
+	}
+
+	public String getUnidadDescripcion() {
+		return unidadDescripcion;
+	}
+
+	public void setUnidadDescripcion(String unidadDescripcion) {
+		this.unidadDescripcion = unidadDescripcion;
+	}
+	
+	public Integer getUnidadId() {
+		return unidadId;
+	}
+		
+	public void setUnidadId(Integer unidadId) {
+		this.unidadId = unidadId;
+	}
+	
+	public boolean isGerente() {
+		return gerente;
+	}
+
+	public void setGerente(boolean gerente) {
+		this.gerente = gerente;
+	}
+
+	public boolean isRenderExpiraDias() {
+		return renderExpiraDias;
+	}
+
+	public void setRenderExpiraDias(boolean renderExpiraDias) {
+		this.renderExpiraDias = renderExpiraDias;
+	}
+
+	public boolean isAdministrador() {
+		return administrador;
+	}
+
+	public void setAdministrador(boolean administrador) {
+		this.administrador = administrador;
+	}
+
+	public PerfilCoactivo getCoPerfil() {
+		return coPerfil;
+	}
+
+	public void setCoPerfil(PerfilCoactivo coPerfil) {
+		this.coPerfil = coPerfil;
+	}
+
+	public Integer getMateriaId() {
+		return materiaId;
+	}
+
+	public void setMateriaId(Integer materiaId) {
+		this.materiaId = materiaId;
+	}
+	
+	//para mostrar menu tributo en fisca
+	public boolean isDatosContribuyente() {
+		return datosContribuyente;
+	}
+
+	public void setDatosContribuyente(boolean datosContribuyente) {
+		this.datosContribuyente = datosContribuyente;
+	}
+
+	public List<MenusDTO> getListMenus() {
+		return listMenus;
+	}
+
+	public void setListMenus(List<MenusDTO> listMenus) {
+		this.listMenus = listMenus;
+	}
+
+	public List<MenusDTO> getListMenuContribuyete() {
+		return listMenuContribuyete;
+	}
+
+	public void setListMenuContribuyete(List<MenusDTO> listMenuContribuyete) {
+		this.listMenuContribuyete = listMenuContribuyete;
+	}
+
+	public ConstantMenuDTO getContantesMenu() {
+		return contantesMenu;
+	}
+
+	public void setContantesMenu(ConstantMenuDTO contantesMenu) {
+		this.contantesMenu = contantesMenu;
+	}
+
+	
+	
+	
+}

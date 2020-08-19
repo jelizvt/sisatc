@@ -1,0 +1,747 @@
+package com.sat.sisat.persona.business;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
+
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.persistence.entity.GnCondicionEspecial;
+import com.sat.sisat.persistence.entity.GnCondicionEspecialPK;
+import com.sat.sisat.persistence.entity.GnDepartamento;
+import com.sat.sisat.persistence.entity.GnDistrito;
+import com.sat.sisat.persistence.entity.GnPersona;
+import com.sat.sisat.persistence.entity.GnProvincia;
+import com.sat.sisat.persistence.entity.GnTipoDenoUrbana;
+import com.sat.sisat.persistence.entity.GnTipoEdificacion;
+import com.sat.sisat.persistence.entity.GnTipoIngreso;
+import com.sat.sisat.persistence.entity.GnTipoInterior;
+import com.sat.sisat.persistence.entity.GnTipoVia;
+import com.sat.sisat.persistence.entity.GnUbicacion;
+import com.sat.sisat.persistence.entity.GnVia;
+import com.sat.sisat.persistence.entity.MpDireccion;
+import com.sat.sisat.persistence.entity.MpPersona;
+import com.sat.sisat.persistence.entity.MpPersonaDomicilio;
+import com.sat.sisat.persistence.entity.MpPersonaHistorico;
+import com.sat.sisat.persistence.entity.MpRelacionado;
+import com.sat.sisat.persistence.entity.MpRelacionadoPK;
+import com.sat.sisat.persistence.entity.MpSituacionEmpresarial;
+import com.sat.sisat.persistence.entity.MpSubtipoPersona;
+import com.sat.sisat.persistence.entity.MpTipoCondicionEspecial;
+import com.sat.sisat.persistence.entity.MpTipoDocuIdentidad;
+import com.sat.sisat.persistence.entity.MpTipoDocumentoCondicionEspecial;
+import com.sat.sisat.persistence.entity.MpTipoPersona;
+import com.sat.sisat.persistence.entity.MpTipoPersonaTipoDocIden;
+import com.sat.sisat.persistence.entity.MpTipoRelacion;
+import com.sat.sisat.persistence.entity.TgPersona;
+import com.sat.sisat.persona.dao.PersonaBusinessDao;
+import com.sat.sisat.persona.dto.ParamBusquedaPersonaDTO;
+import com.sat.sisat.persona.dto.PersonaEditTelEmailDTO;
+import com.sat.sisat.persona.dto.PersonaEstadoCuentaResumido;
+import com.sat.sisat.persona.dto.ValidaUbicacionDTO;
+import com.sat.sisat.predial.business.BaseBusiness;
+import com.sat.sisat.predial.dto.FindDireccion;
+import com.sat.sisat.predial.dto.FindMpDireccion;
+import com.sat.sisat.predial.dto.FindMpPersona;
+import com.sat.sisat.predial.dto.FindMpRelacionado;
+import com.sat.sisat.predial.dto.FindPersona;
+import com.sat.sisat.tramitedocumentario.dto.RelacionadosDTO;
+import com.sat.sisat.vehicular.dto.BuscarPersonaDTO;
+
+@Stateless
+public class PersonaBo extends BaseBusiness implements PersonaBoRemote {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1278410936444125151L;
+	private PersonaBusinessDao service;
+
+	public PersonaBusinessDao getService() {
+		return this.service;
+	}
+
+	public PersonaBo() {
+	}
+
+	@PostConstruct
+	public void initialize() {
+		this.service = new PersonaBusinessDao();
+		setDataManager(this.service);
+	}
+
+	public List<MpTipoDocuIdentidad> getAllMpTipoDocumento() throws Exception {
+		return getService().getAllMpTipoDocumento();
+	}
+
+	/*
+	 * public GnDenominacionUrbana getGnDenominacionUrbana(Integer DenoId) throws Exception{ return
+	 * getService().getGnDenominacionUrbana(DenoId); }
+	 */
+
+	// GnTipoEdificacion
+	public List<GnTipoEdificacion> getAllGnTipoEdificacion() throws Exception {
+		return getService().getAllGnTipoEdificacion();
+	}
+	
+	public List<RelacionadosDTO> GetRelacionadosNew(int persona_id ) throws Exception {
+		return getService().GetRelacionadosNew(persona_id);
+	}
+	
+	
+
+	// GnTipoIngreso
+	public List<GnTipoIngreso> getAllGnTipoIngreso() throws Exception {
+		return getService().getAllGnTipoIngreso();
+	}
+
+	// GnTipoInterior
+	public List<GnTipoInterior> getAllGnTipoInterior() throws Exception {
+		return getService().getAllGnTipoInterior();
+	}
+
+	public List<GnTipoDenoUrbana> getAllGnTipoDenoUrbana() throws Exception {
+		return getService().getAllGnTipoDenoUrbana();
+	}
+
+	public GnVia getGnVia(Integer ViaId) throws Exception {
+		return getService().getGnVia(ViaId);
+	}
+
+	public List<MpPersona> listarPersonasxDni(String numeroDocumento) throws Exception {
+		return getService().listarPersonasxDni(numeroDocumento);
+	}
+
+	public List<GnTipoVia> getAllGnTipoVia() throws Exception {
+		return getService().getAllGnTipoVia();
+	}
+
+	public ArrayList<FindPersona> getFindPersona() throws Exception {
+		return getService().getFindPersona();
+	}
+
+	public ArrayList<FindPersona> getFindEmpresas() throws Exception {
+		return getService().getFindEmpresas();
+	}
+
+	public Integer getPersonaId(Integer tipDoc, String numeroDoc) throws Exception {
+		return getService().getPersonaId(tipDoc, numeroDoc);
+	}
+
+	public GnCondicionEspecial findCondicionEspecial(MpPersona mpersona) throws Exception {
+		return getService().findCondicionEspecial(mpersona);
+	}
+
+	public FindDireccion verificaDireccion(Integer djId,
+			Integer idVia,
+			String numero1,
+			String letra1,
+			String numero2,
+			String letra2) throws Exception {
+		return getService().verificaDireccion(djId, idVia, numero1, letra1, numero2, letra2);
+	}
+
+	// --
+	/*
+	 * public List<GnTipoDocumento> findGnTipoDocumento( Integer tipo_documento) throws Exception{
+	 * return getService().findGnTipoDocumento(tipo_documento); }
+	 */
+
+	public List<MpTipoDocumentoCondicionEspecial> findMpTipoDocumentoCondicionEspecial(Integer tipoDocumentoCondicionEspecial_id)
+			throws Exception {
+		return getService().findMpTipoDocumentoCondicionEspecial(tipoDocumentoCondicionEspecial_id);
+	}
+
+	public int guardarMpRelacionado(MpRelacionado mpRelacionado) throws Exception {
+		mpRelacionado.setUsuarioId(getUser().getUsuarioId());
+		mpRelacionado.setTerminal(getUser().getTerminal());
+		mpRelacionado.setFechaRegistro(DateUtil.getCurrentDate());
+		return getService().guardarMpRelacionado(mpRelacionado);
+	}
+
+	public Integer guardarMpRelacionado(Integer personaId, ArrayList<MpRelacionado> lRelacionado) throws Exception {
+		int res = getService().actualizarEstadoMpRelacionado(Constante.ESTADO_INACTIVO,
+				Constante.ESTADO_ACTIVO,
+				personaId,
+				Constante.RESULT_PENDING);
+
+		Iterator<MpRelacionado> it = lRelacionado.iterator();
+		while (it.hasNext()) {
+			Integer mpRelacionadoId = getService().ObtenerCorrelativoTabla("mp_relacionado", 1);
+			MpRelacionadoPK id = new MpRelacionadoPK(personaId, mpRelacionadoId);
+			MpRelacionado relacionado = it.next();
+			relacionado.setId(id);
+			relacionado.setUsuarioId(getUser().getUsuarioId());
+			relacionado.setTerminal(getUser().getTerminal());
+			relacionado.setFechaRegistro(DateUtil.getCurrentDate());
+			getService().create(relacionado);
+		}
+		return Constante.RESULT_SUCCESS;
+	}
+
+	public MpPersona guardarPersona(MpPersona mpPersona) throws Exception {
+		mpPersona.setFechaRegistro(DateUtil.getCurrentDate());
+		mpPersona.setTerminal(getUser().getTerminal());
+		mpPersona.setUsuarioId(getUser().getUsuarioId());
+		mpPersona = getService().create(mpPersona);
+
+		return mpPersona;
+	}
+
+	public Integer actualizarPersona(MpPersona mpPersona) throws Exception {
+		mpPersona.setFechaActualizacion(DateUtil.getCurrentDate());
+		// TODO resolver la recuperacion de usuarios y terminales del UserSession
+		// mpPersona.setTerminal(getUser().getTerminal());
+		// mpPersona.setUsuarioId(getUser().getUsuarioId());
+		getService().update(mpPersona);
+		return mpPersona.getPersonaId();
+	}
+
+	public int GenerarDjMpPersona(MpPersona mpPersona) throws Exception {
+		return getService().GenerarDjMpPersona(mpPersona);
+	}
+
+	public ArrayList<FindMpPersona> getmpPersona(Integer personaId,
+			String apePaterno,
+			String apeMaterno,
+			String primerNombre,
+			String apellidos_nombres,
+			String documentoidentidad,
+			Integer nroDj,
+			Integer tipoDocumentoIdentidad,
+			String razonSocial,
+			String codigoAnterior,
+			String placa) throws Exception {
+		return getService().getmpPersona(personaId,
+				apePaterno,
+				apeMaterno,
+				primerNombre,
+				apellidos_nombres,
+				documentoidentidad,
+				nroDj,
+				tipoDocumentoIdentidad,
+				razonSocial,
+				codigoAnterior,
+				placa);
+	}
+
+	public FindMpPersona findmpPersona(Integer personaId) throws Exception {
+		return getService().findmpPersona(personaId);
+	}
+
+	public FindMpPersona findmpPersona(String nroDocumento) throws Exception {
+		return getService().findmpPersona(nroDocumento);
+	}
+
+	public ArrayList<MpTipoPersona> findMpTipoPersona(Integer tipoPersonaId) throws Exception {
+		return getService().findMpTipoPersona(tipoPersonaId);
+	}
+
+	public ArrayList<MpRelacionado> findMpRelacionado(Integer Persona_id) throws Exception {
+		return getService().findMpRelacionado(Persona_id);
+	}
+
+	public ArrayList<FindMpRelacionado> findMpRelacionadoPersona(Integer Persona_id) throws Exception {
+		return getService().findMpRelacionadoPersona(Persona_id);
+	}
+
+	public ArrayList<MpRelacionado> getAllMpRelacionadoPersona(Integer personaId) throws Exception {
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("p_persona_id", personaId);
+		return (ArrayList<MpRelacionado>) (List) getService()
+				.findByNamedQuery("getAllMpRelacionadoPersona", parameters);
+	}
+	
+	
+
+	public List<MpTipoPersona> getAllMpTipoPersona() throws Exception {
+		return getService().getAllMpTipoPersona();
+
+	}
+
+	public List<MpTipoRelacion> getAllMpTipoRelacion() throws Exception {
+		return getService().getAllMpTipoRelacion();
+	}
+
+	public List<MpTipoRelacion> findMpTipoRelacion(Integer tipoRelacionId) throws Exception {
+		return getService().findMpTipoRelacion(tipoRelacionId);
+	}
+
+	public ArrayList<MpTipoDocuIdentidad> findMpTipoDocuIdentidad(Integer tipoPersonaId) throws Exception {
+		return getService().findMpTipoDocuIdentidad(tipoPersonaId);
+	}
+
+	public ArrayList<MpTipoDocuIdentidad> findMpTipoDocuIdentidad(Integer tipoPersonaId, Integer subtipoPersonaId)
+			throws Exception {
+		return getService().findMpTipoDocuIdentidad(tipoPersonaId, subtipoPersonaId);
+	}
+
+	public List<MpTipoDocuIdentidad> getAllMpTipoDocumentoIdentidad() throws Exception {
+		return getService().getAllMpTipoDocumentoIdentidad();
+	}
+
+	public List<MpTipoCondicionEspecial> getAllMpTipoCondicionEspecial(Integer tipoPersonaId, Integer subtipoPersonaId)
+			throws Exception {
+		return getService().getAllMpTipoCondicionEspecial(tipoPersonaId, subtipoPersonaId);
+	}
+
+	public List<MpTipoDocumentoCondicionEspecial> getAllMpTipoDocumentoCondicionEspecial() throws Exception {
+		return getService().getAllMpTipoDocumentoCondicionEspecial();
+	}
+
+	public List<MpSituacionEmpresarial> getAllMpSituacionEmpresarial(Integer tipoPersonaId) throws Exception {
+		return getService().getAllMpSituacionEmpresarial(tipoPersonaId);
+	}
+
+	public List<MpSituacionEmpresarial> findMpSituacionEmpresarial(Integer situacion_empresarial_id) throws Exception {
+		return getService().findMpSituacionEmpresarial(situacion_empresarial_id);
+	}
+
+	public List<MpTipoCondicionEspecial> findMpTipoCondicionEspecial(Integer tipo_cond_especial_id) throws Exception {
+		return getService().findMpTipoCondicionEspecial(tipo_cond_especial_id);
+	}
+
+	public List<MpSubtipoPersona> finMpSubtipoPersona(Integer tipoPersonaId) throws Exception {
+		return getService().finMpSubtipoPersona(tipoPersonaId);
+	}
+
+	public List<MpSubtipoPersona> finMpSubtipoPersona(String tipoPersona) throws Exception {
+		return getService().finMpSubtipoPersona(tipoPersona);
+	}
+
+	public String ConcatenarMpDireccion(MpDireccion direccion,
+			HashMap<Integer, String> mapIGnTipoEdificacion,
+			HashMap<Integer, String> mapIGnTipoInterior,
+			HashMap<Integer, String> mapIGnTipoIngreso,
+			HashMap<Integer, String> mapIGnTipoVia,
+			Integer nroCuadra,
+			String sector) {
+		return getService().ConcatenarMpDireccion(direccion,
+				mapIGnTipoEdificacion,
+				mapIGnTipoInterior,
+				mapIGnTipoIngreso,
+				mapIGnTipoVia,
+				nroCuadra,
+				sector);
+	}
+
+	public Integer guardarMpdireccion(MpDireccion direccion) throws Exception {
+		Integer Id = Constante.RESULT_PENDING;
+		direccion.setFechaRegistro(DateUtil.getCurrentDate());
+		direccion.setUsuarioId(getUser().getUsuarioId());
+		direccion.setTerminal(getUser().getTerminal());
+		if (direccion.getDireccionId() == Constante.RESULT_PENDING) {
+			Id = getService().ObtenerCorrelativoTabla("mp_direccion", 1);
+			direccion.setDireccionId(Id);
+			getService().create(direccion);
+		} else {
+			getService().update(direccion);
+			Id = direccion.getDireccionId();
+		}
+		return Id;
+	}
+
+	public Integer guardarMpPersonadireccion(MpPersonaDomicilio mpPersonaDomicilio) throws Exception {
+		Integer Id = Constante.RESULT_PENDING;
+		if (mpPersonaDomicilio.getDomicilio_persona_id() > Constante.RESULT_PENDING) {
+			mpPersonaDomicilio.setFechaRegistro(DateUtil.getCurrentDate());
+			mpPersonaDomicilio.setTerminal(getUser().getTerminal());
+			mpPersonaDomicilio.setUsuarioId(getUser().getUsuarioId());
+			mpPersonaDomicilio.setFechaActualizacion(DateUtil.getCurrentDate());
+			mpPersonaDomicilio.setTerminalActualizacion(getUser().getTerminal());
+			mpPersonaDomicilio.setUsuarioIdActualizacion(getUser().getUsuarioId());
+			getService().update(mpPersonaDomicilio);
+			Id = mpPersonaDomicilio.getDomicilio_persona_id();
+		} else {
+			mpPersonaDomicilio.setDomicilio_persona_id(getService().ObtenerCorrelativoTabla("mp_persona_domicilio", 1));
+			mpPersonaDomicilio.setFechaRegistro(DateUtil.getCurrentDate());
+			mpPersonaDomicilio.setTerminal(getUser().getTerminal());
+			mpPersonaDomicilio.setUsuarioId(getUser().getUsuarioId());
+			getService().create(mpPersonaDomicilio);
+			Id = mpPersonaDomicilio.getDomicilio_persona_id();
+		}
+		return Id;
+	}
+
+	public ArrayList<FindMpDireccion> finMpDireccionPersona(int persona_id) throws Exception {
+		return getService().finMpDireccionPersona(persona_id);
+	}
+
+	public Integer guardarGnCondicionEspecial(Integer personaId, GnCondicionEspecial gnCondicionEspecial)
+			throws Exception {
+
+		if (gnCondicionEspecial.getId().getCondicionEspecialId() == Constante.RESULT_PENDING) {
+			getService().desactiveCondicionEspecial(personaId);
+			GnCondicionEspecialPK id = new GnCondicionEspecialPK();
+			id.setPersonaId(personaId);
+			id.setCondicionEspecialId(getService().ObtenerCorrelativoTabla("gn_condicion_especial", 1));
+			gnCondicionEspecial.setId(id);
+
+			gnCondicionEspecial.setTerminal(getUser().getTerminal());
+			gnCondicionEspecial.setUsuarioId(getUser().getUsuarioId());
+			gnCondicionEspecial.setFechaRegistro(DateUtil.getCurrentDate());
+			getService().create(gnCondicionEspecial);
+		} else {
+			gnCondicionEspecial.setTerminal(getUser().getTerminal());
+			gnCondicionEspecial.setUsuarioId(getUser().getUsuarioId());
+			getService().desactiveCondicionEspecial(personaId);
+			getService().update(gnCondicionEspecial);
+		}
+		return Constante.RESULT_SUCCESS;
+	}
+
+	public List<GnDepartamento> getAllGnDepartamento() throws Exception {
+		return getService().getAllGnDepartamento();
+	}
+
+	public List<GnProvincia> getAllGnProvincia(Integer departamentoId) throws Exception {
+		return getService().getAllGnProvincia(departamentoId);
+	}
+
+	public List<GnDistrito> getAllGnDistrito(Integer departamentoId, Integer provinciaId) throws Exception {
+		return getService().getAllGnDistrito(departamentoId, provinciaId);
+	}
+
+	public int ActualizarCondicionEspecial(GnCondicionEspecial condicionEspecial) throws Exception {
+		condicionEspecial.setFechaRegistro(DateUtil.getCurrentDate());
+		condicionEspecial.setTerminal(getUser().getTerminal());
+		condicionEspecial.setUsuarioId(getUser().getUsuarioId());
+		return getService().ActualizarCondicionEspecial(condicionEspecial);
+	}
+
+	public int darBajaCondicionEspecial(GnCondicionEspecial condicionEspecial) throws Exception {
+		return getService().darBajaCondicionEspecial(condicionEspecial);
+	}
+
+	public int ActualizarMpPersona(MpPersona mpPersona) throws Exception {
+		return getService().ActualizarMpPersona(mpPersona);
+	}
+
+	public int ActualizarMpRelacionado(MpRelacionado mpRelacionado) throws Exception {
+		mpRelacionado.setUsuarioId(getUser().getUsuarioId());
+		mpRelacionado.setTerminal(getUser().getTerminal());
+		mpRelacionado.setFechaRegistro(DateUtil.getCurrentDate());
+		return getService().ActualizarMpRelacionado(mpRelacionado);
+	}
+
+	public FindMpRelacionado findMpRelacionadoPersona(Integer Persona_id, Integer relacionado_id) throws Exception {
+		return getService().findMpRelacionadoPersona(Persona_id, relacionado_id);
+	}
+
+	public MpDireccion finMpDireccion(Object pk) throws Exception {
+		return (MpDireccion) em.find(MpDireccion.class, pk);
+	}
+
+	public MpPersonaDomicilio finMpPersonaDomicilio(Object pk) throws Exception {
+		return (MpPersonaDomicilio) em.find(MpPersonaDomicilio.class, pk);
+	}
+
+	public void editMpDireccion(MpDireccion mp_direccion) throws Exception {
+		mp_direccion.setFechaRegistro(DateUtil.getCurrentDate());
+		mp_direccion.setUsuarioId(getUser().getUsuarioId());
+		mp_direccion.setTerminal(getUser().getTerminal());
+		em.merge(mp_direccion);
+	}
+
+	public void editMpPersonaDomicilio(MpPersonaDomicilio mpPersonaDomicilio) throws Exception {
+		mpPersonaDomicilio.setFechaActualizacion(DateUtil.getCurrentDate());
+		mpPersonaDomicilio.setUsuarioIdActualizacion(getUser().getUsuarioId());
+		mpPersonaDomicilio.setTerminalActualizacion(getUser().getTerminal());
+		em.merge(mpPersonaDomicilio);
+	}
+
+	public MpTipoCondicionEspecial finMpTipoCondicionEspecial(Object pk) throws Exception {
+		return (MpTipoCondicionEspecial) em.find(MpTipoCondicionEspecial.class, pk);
+	}
+
+	public int verificarTipoDocumentoTipoPersona(MpTipoPersonaTipoDocIden tipoperTipoDoc) throws Exception {
+		return getService().verificarTipoDocumentoTipoPersona(tipoperTipoDoc);
+
+	}
+
+	// cchaucca:ini 28/05/2012
+	public TgPersona buscarPersonaReniec(String numeroDni) throws Exception {
+		return getService().findTgPersona(numeroDni);
+	}
+
+	public List<BuscarPersonaDTO> findPersona(Integer persId, String apePat, String apeMat, String nombres)
+			throws Exception {
+		return getService().findPersona(persId, apePat, apeMat, nombres);
+	}
+
+	public List<BuscarPersonaDTO> findPersona(String razonSocial) throws Exception {
+		return getService().findPersona(razonSocial);
+	}
+
+	public List<BuscarPersonaDTO> findPersona(int tipoDocuIdentidadId, String nroDocuIdentidad) throws Exception {
+		return getService().findPersona(tipoDocuIdentidadId, nroDocuIdentidad);
+	}
+
+	public Integer registraPersona(GnPersona persona) throws Exception {
+		Integer Id = Constante.RESULT_PENDING;
+		if (persona.getPersonaId() != null && persona.getPersonaId() > 0) {
+			GnPersona tmp = getService().find(persona.getPersonaId(), GnPersona.class);
+			if (tmp != null) {
+				persona.setUsuarioId(getUser().getUsuarioId());
+				persona.setFechaRegistro(DateUtil.getCurrentDate());
+				persona.setTerminalRegistro(getUser().getTerminal());
+				getService().update(persona);
+				Id = persona.getPersonaId();
+
+			} else {
+				Id = getService().ObtenerCorrelativoTabla("gn_persona", 1);
+				persona.setPersonaId(Id);
+				persona.setUsuarioId(getUser().getUsuarioId());
+				persona.setFechaRegistro(DateUtil.getCurrentDate());
+				persona.setTerminalRegistro(getUser().getTerminal());
+				getService().create(persona);
+			}
+		} else {
+			Id = getService().ObtenerCorrelativoTabla("gn_persona", 1);
+			persona.setPersonaId(Id);
+			persona.setUsuarioId(getUser().getUsuarioId());
+			persona.setFechaRegistro(DateUtil.getCurrentDate());
+			persona.setTerminalRegistro(getUser().getTerminal());
+			getService().create(persona);
+		}
+		return Id;
+	}
+
+	// cchaucca:fin 28/05/2012
+
+	// cchaucca:ini 05/04/2013 para la busqueda de personas con papeletas
+	public List<BuscarPersonaDTO> findPersonaPapeletas(Integer persId, String apeNom) throws Exception {
+		return getService().findPersonaPapeletas(persId, apeNom);
+	}
+
+	public List<BuscarPersonaDTO> findPersonaPapeletas(int tipoDocuIdentidadId, String nroDocuIdentidad)
+			throws Exception {
+		return getService().findPersonaPapeletas(tipoDocuIdentidadId, nroDocuIdentidad);
+	}
+
+	// cchaucca:fin 05/04/2013 para la busqueda de personas con papeletas
+
+	public int grabarTablaMpPersonaHistorico(MpPersona persona) throws Exception {
+		Integer id = getService().ObtenerCorrelativoTabla("mp_persona_historico", 1);
+		MpPersonaHistorico personaHistorico = new MpPersonaHistorico();
+		personaHistorico.setHistoricoPersonaId(id);
+		personaHistorico.setPersonaId(persona.getPersonaId());
+		personaHistorico.setUsuarioId(getUser().getUsuarioId());
+		personaHistorico.setTerminal(getUser().getTerminal());
+		personaHistorico.setFechaRegistro(persona.getFechaRegistro());
+		personaHistorico.setApePaterno(persona.getApePaterno());
+		personaHistorico.setApeMaterno(persona.getApeMaterno());
+		personaHistorico.setPrimerNombre(persona.getPrimerNombre());
+		personaHistorico.setSegundoNombre(persona.getSegundoNombre());
+		personaHistorico.setRazonSocial(persona.getRazonSocial());
+		personaHistorico.setFechaInscripcion(persona.getFechaInscripcion());
+		personaHistorico.setNroDocuIdentidad(persona.getNroDocuIdentidad());
+		personaHistorico.setTelefono(persona.getTelefono());
+		personaHistorico.setFax(persona.getFax());
+		personaHistorico.setEmail(persona.getEmail());
+		personaHistorico.setTwitter(persona.getTwitter());
+		personaHistorico.setFacebook(persona.getFacebook());
+		personaHistorico.setFlagNotificaEmail(persona.getFlagNotificaEmail());
+		personaHistorico.setFechaDeclaracion(persona.getFechaDeclaracion());
+		personaHistorico.setNroDj(persona.getNroDj());
+		personaHistorico.setFechaBaja(persona.getFechaBaja());
+		personaHistorico.setNroPartidaDefuncion(persona.getNroPartidaDefuncion());
+		personaHistorico.setFechaDefuncion(persona.getFechaDefuncion());
+		personaHistorico.setFechaSituacionEmpre(persona.getFechaSituacionEmpre());
+		personaHistorico.setFechaActualizacion(DateUtil.getCurrentDate());
+		personaHistorico.setFechaFinSituacionEmpresarial(persona.getFechaFinSituacionEmpresarial());
+		personaHistorico.setTipoDocSustSituacionEmpresarial(persona.getTipoDocSustSituacionEmpresarial());
+		personaHistorico.setNroDocSustSituacionEmpresarial(persona.getNroDocSustSituacionEmpresarial());
+		personaHistorico.setFechaEmisionSituacionEmpresarial(persona.getFechaEmisionSituacionEmpresarial());
+		getService().create(personaHistorico);
+		return 1;
+		// return getService().grabarTablaMpPersonaHistorico(persona);
+	}
+
+	/*
+	 * private MpPersonaHistorico getMpPersonaHistorico(MpPersona persona){ MpPersonaHistorico
+	 * historico=new MpPersonaHistorico(); historico.setPersonaId(persona.getPersonaId());
+	 * historico.setHistoricoPersonaId() historico.setApeMaterno; historico.setApePaterno;
+	 * historico.setEmail; historico.setFacebook; historico.setFax; historico.setFechaActualizacion;
+	 * historico.setFechaBaja; historico.setFechaDeclaracion; historico.setFechaDefuncion;
+	 * historico.setFechaFinSituacionEmpresarial; historico.setFechaInscripcion;
+	 * historico.setfechaRegistro; historico.setfechaSituacionEmpre; historico.setflagNotificaEmail;
+	 * historico.setlogin; historico.setnroDj; historico.setnroDocuIdentidadAdi;
+	 * historico.setnroDocuIdentidad3; historico.setnroPartidaDefuncion; historico.setprimerNombre;
+	 * historico.setrazonSocial; historico.setsegundoNombre; historico.settelefono;
+	 * historico.setterminal; historico.setterminalRegistro; historico.settwitter;
+	 * historico.setusuarioId; }
+	 */
+	public int actualizarEstadoMpDireccion(String estadoCambiar,
+			String estadoCondicion,
+			Integer persona_id,
+			Integer direccion_id) throws Exception {
+		return getService().actualizarEstadoMpDireccion(estadoCambiar, estadoCondicion, persona_id, direccion_id);
+	}
+
+	public int actualizarEstadoMpDireccion(Integer direccion_id, String estado) throws Exception {
+		return getService().actualizarEstadoMpDireccion(direccion_id, estado);
+	}
+
+	public int actualizarEstadoMpPersonaDomicilio(Integer personaDomicilio_id, String estado) throws Exception {
+		return getService().actualizarEstadoMpPersonaDomicilio(personaDomicilio_id, estado);
+	}
+
+	public int actualizarEstadoMpPersonaDomicilio(String estadoCambiar,
+			String estadoCondicion,
+			Integer persona_id,
+			Integer domicilio_persona_id) throws Exception {
+		return getService().actualizarEstadoMpPersonaDomicilio(estadoCambiar,
+				estadoCondicion,
+				persona_id,
+				domicilio_persona_id);
+	}
+
+	public int actualizarEstadoMpRelacionado(String estadoCambiar,
+			String estadoCondicion,
+			Integer persona_id,
+			Integer relacionado_id) throws Exception {
+		return getService().actualizarEstadoMpRelacionado(estadoCambiar, estadoCondicion, persona_id, relacionado_id);
+	}
+
+	public int actualizarEstadoMpRelacionado(String estado, Integer persona_id, Integer relacionado_id)
+			throws Exception {
+		return getService().actualizarEstadoMpRelacionado(estado, persona_id, relacionado_id);
+	}
+
+	public int grabarTablaGnCondicionEspecialHistorico(GnCondicionEspecial gnCondicionEspecial) throws Exception {
+		gnCondicionEspecial.setFechaRegistro(DateUtil.getCurrentDate());
+		gnCondicionEspecial.setTerminal(getUser().getTerminal());
+		gnCondicionEspecial.setUsuarioId(getUser().getUsuarioId());
+
+		return getService().grabarTablaGnCondicionEspecialHistorico(gnCondicionEspecial);
+	}
+
+	public int verificarRelacionadoTipoPersonaJuridica(Integer persona_id) throws Exception {
+		return getService().verificarRelacionadoTipoPersonaJuridica(persona_id);
+	}
+
+	/**
+	 * Se utiliza esta funciona para la validacion del tipo de persona por su numero de documento
+	 */
+	public FindMpPersona findmpPersona(Integer tipodocumentoid, String nroDocumento) throws Exception {
+		return getService().findmpPersona(tipodocumentoid, nroDocumento);
+	}
+
+	public FindMpPersona existeContribuyente(Integer tipoContribuyente,
+			Integer subTipoContribuyente,
+			Integer tipodocumentoid,
+			String nroDocumento) throws Exception {
+		return getService().existeContribuyente(tipoContribuyente, subTipoContribuyente, tipodocumentoid, nroDocumento);
+	}
+
+	public ArrayList<FindMpDireccion> finMpDireccionPersona(int persona_id, String estado) throws Exception {
+		return getService().finMpDireccionPersona(persona_id, estado);
+	}
+
+	public int grabarTablaMpRelacionadoHistorico(MpRelacionado mpRelacionado) throws Exception {
+		mpRelacionado.setFechaRegistro(DateUtil.getCurrentDate());
+		mpRelacionado.setUsuarioId(getUser().getUsuarioId());
+		mpRelacionado.setTerminal(getUser().getTerminal());
+		return getService().grabarTablaMpRelacionadoHistorico(mpRelacionado);
+	}
+
+	public GnUbicacion getGnUbicacion(Integer ubicacionId) throws Exception {
+		return getService().find(ubicacionId, GnUbicacion.class);
+	}
+
+	public MpPersona getMpPersona(Integer personaId) throws Exception {
+		return getService().find(personaId, MpPersona.class);
+	}
+
+	@Override
+	public List<TgPersona> buscarDNIPorDatosIdentificacion(String ape_pat,
+			String ape_mat,
+			String primerNombre,
+			String segundoNombre) throws Exception {
+		return getService().findDNIPersona(ape_pat, ape_mat, primerNombre, segundoNombre);
+	}
+
+	public FindMpPersona existeContribuyente2(Integer tipodocumentoid, String nroDocumento) throws Exception {
+		return getService().existeContribuyente2(tipodocumentoid, nroDocumento);
+	}
+
+	public GnPersona getGnPersona(Integer personaId) throws Exception {
+		return getService().find(personaId, GnPersona.class);
+	}
+
+	public BuscarPersonaDTO findPaPersona(Integer personaId) throws Exception {
+		return getService().findPaPersona(personaId);
+	}
+
+	public List<BuscarPersonaDTO> findTraDocPersona(Integer personaId,
+			String apePaterno,
+			String apeMaterno,
+			String primerNombre,
+			String apellidos_nombres,
+			String documentoidentidad,
+			Integer nroDj,
+			Integer tipoDocumentoIdentidad,
+			String razonSocial,
+			String codigoAnterior,
+			String placa) throws SisatException {
+		return getService().findTraDocPersona(personaId,
+				apePaterno,
+				apeMaterno,
+				primerNombre,
+				apellidos_nombres,
+				documentoidentidad,
+				nroDj,
+				tipoDocumentoIdentidad,
+				razonSocial,
+				codigoAnterior,
+				placa);
+	}
+	
+	public List<BuscarPersonaDTO> busquedaPersona(ParamBusquedaPersonaDTO paramBusquedaPersonaDTO) throws SisatException{
+		
+		return getService().busquedaPersona(paramBusquedaPersonaDTO);
+	}
+
+	@Override
+	public PersonaEditTelEmailDTO finPersonaEditTelEmail(Integer persona_id) throws Exception {
+		return  getService().finPersonaEditTelEmail(persona_id);
+	}
+
+	@Override
+	public int editarCorreoTelefono(PersonaEditTelEmailDTO persona, Integer usuarioId, String terminal)
+			throws Exception {
+		
+		return  getService().editarCorreoTelefono(persona, usuarioId, terminal);
+	}
+
+	@Override
+	public List<PersonaEstadoCuentaResumido> getEstadoCuentaResumido(Integer personaId) {
+		// TODO Auto-generated method stub
+		return getService().getEstadoCuentaResumido(personaId);
+		
+	}
+	
+	public int changeFlagUbicableControl(Integer personaId, Integer flagUbicable)
+			throws Exception {
+		return  getService().changeFlagUbicableControl(personaId, flagUbicable, getUser().getUsuarioId(),getUser().getTerminal());
+	}
+	
+	public List<ValidaUbicacionDTO> getValidaPersonaUbicacion(Integer personaId) {
+		// TODO Auto-generated method stub
+		
+		return getService().getValidaPersonaUbicacion(personaId);
+		
+	}
+	
+	public int changeFlagUbicableVerifica(Integer personaId,Integer estado,String glosa ,Integer flagUbicable)
+			throws Exception {
+		return  getService().changeFlagUbicableVerifica(personaId, estado,glosa,flagUbicable, getUser().getUsuarioId(),getUser().getTerminal());
+	}
+}

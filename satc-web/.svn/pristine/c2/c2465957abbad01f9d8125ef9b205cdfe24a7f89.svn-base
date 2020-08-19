@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<h:form id="idFormReporteExpediente">
+		<!-- 		<rich:hotKey key="return" -->
+		<!-- 			handler="#{rich:element('idCommandButtonFiltar')}.click()" -->
+		<!-- 			selector="#idFormBusquedaExpediente" /> -->
+		<rich:panel>
+			<f:facet name="header">Reporte de Expedientes</f:facet>
+			<h:panelGrid columns="2">
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Fecha Inicio" />
+					<rich:calendar locale="en/US" datePattern="dd/MM/yyyy"
+						enableManualInput="true" inputClass="maskDate"
+						inputStyle="width: 60px;padding-left: 5px;"
+						value="#{reporteTramiteDocManaged.fechaInicio}" required="true">
+					</rich:calendar>
+					<!-- 					<rich:jQuery id="maskedo3" selector=".maskDate" -->
+					<!-- 						query="mask('99/99/9999')" timing="onload" /> -->
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Fecha Fin " />
+					<rich:calendar locale="en/US" datePattern="dd/MM/yyyy"
+						enableManualInput="true" inputClass="maskDate"
+						inputStyle="width: 60px;padding-left: 5px;"
+						value="#{reporteTramiteDocManaged.fechaFin}" required="true">
+					</rich:calendar>
+
+				</h:panelGrid>
+			</h:panelGrid>
+			<a4j:commandButton value="Ver Reporte"
+				action="#{reporteTramiteDocManaged.buscar}"
+				reRender="idPanelReporteExp"></a4j:commandButton>
+				
+		<rich:panel id="idPanelReporteExp">
+			<rich:dataTable
+				value="#{reporteTramiteDocManaged.listResumenReporteExpedientesDTOs}"
+				var="item">
+				<h:column>
+					<f:facet name="header"><h:panelGroup layout="block" style="text-align:center;width:100px;"> Cant. Expedientes</h:panelGroup></f:facet>
+					<h:panelGroup layout="block" style="text-align:center;width:100px;">
+						<h:outputText value="#{item.cantidad}" />
+					</h:panelGroup>
+				</h:column>
+				<h:column >
+					<f:facet name="header"><h:panelGroup layout="block" style="text-align:center;width:350px;">Área</h:panelGroup></f:facet>
+					<h:panelGroup layout="block" style="text-align:center;width:350px;">
+					<h:outputText value="#{item.unidadAsString}" />
+					</h:panelGroup>
+				</h:column>
+				<h:column>
+					<f:facet name="header"><h:panelGroup layout="block" style="text-align:center;width:100px;">-</h:panelGroup></f:facet>
+					<h:panelGroup layout="block" style="text-align:center;width:100px;">
+					<h:commandLink value="Descargar"
+						action="#{reporteTramiteDocManaged.descargar(item.unidadId)}" />
+					</h:panelGroup>	
+				</h:column>
+				<f:facet name="footer">				
+					<h:panelGroup layout="block" style="width=100%; text-align: right;">
+					<h:outputText value="Total de Expedientes: #{reporteTramiteDocManaged.totalFinal} | " />
+					<h:commandLink value="Descargar Todo"
+							action="#{reporteTramiteDocManaged.descargar(null)}" />
+					</h:panelGroup>
+				</f:facet>
+			</rich:dataTable>
+		</rich:panel>
+		
+		
+	</rich:panel>
+			
+	</h:form>
+</ui:composition>

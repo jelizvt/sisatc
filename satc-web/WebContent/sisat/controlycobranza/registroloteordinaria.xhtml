@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form id="formregistroLoteOrdinario">
+	
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	<a4j:loadScript src="/js/sisat.js"/>
+		<style type="text/css">
+	.extdt-empty-cell {
+		width: 0;
+	}
+	
+	th.extdt-empty-cell {
+		width: 0;
+	}
+	/* Disables resizing */
+	.extdt-hsep {
+		display: none;
+	}
+	</style>
+
+	<a4j:outputPanel id="id_panelprincipalregistroLoteOrdinario">
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+	<tr><td>
+			<table align="center" width="100%">
+				<tr>
+					<td>
+						<table align="center" border="0" width="100%">
+							<tr>
+								<td>
+									
+								</td>
+							</tr>
+						    <tr>
+						    	<td align="left" width="100%">
+							    	<rich:panel style="width:100%;  height: 230px;" id="id_paneldatosloteordinario">
+								    	<f:facet name="header">		
+												<h:outputLabel value="#{msg['cc.registrolotesordinario']}" /> 
+										</f:facet>
+												<table width="100%" >
+													<tr>
+														<td align="left" width="130px">
+															<h:outputText value="Nro Lote :" />
+														</td>
+														<td align="left" width="150px" >
+															<h:outputText value="#{registroLoteOrdinarioManaged.lote_id}" style="font-weight:bold"  />	
+														</td>
+														<td >
+																<h:outputText rendered="#{registroLoteOrdinarioManaged.findCcLoteItem.flag_generacion==2}" value="Descarga de archivos :" />
+														</td>
+														
+														<td>
+																<h:commandLink rendered="#{registroLoteOrdinarioManaged.findCcLoteItem.flag_generacion==2}" id="newlinkHL" action="#{registroLoteOrdinarioManaged.generacionArchivos}" immediate="true" >
+													            		 <h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+													            </h:commandLink>
+														</td>
+														<td colspan="4">
+														</td>
+													</tr>
+													<tr>
+														<td colspan="8">
+															<hr width="100%"></hr>
+														</td>
+													</tr>
+														<tr>
+															<td align="left" width="130px">
+																<h:outputText value="Tipo de Lote" />
+															</td>
+															<td align="left" width="150px" >
+																	<rich:comboBox width="150px" required="true"  requiredMessage="#{msg['cc.errortipolote']}" defaultLabel="Selecccione" selectFirstOnUpdate="true" directInputSuggestions="false"  value="#{registroLoteOrdinarioManaged.cmbValuetipolote}"
+																			 onblur="validaInputCbo(this)"  id="id_tipolote" binding="#{registroLoteOrdinarioManaged.cmbtipodlote}" immediate="true" valueChangeListener="#{registroLoteOrdinarioManaged.loadtipoLoteById}" 																		>
+																			<f:selectItems id="id_lsttipolote" value="#{registroLoteOrdinarioManaged.lsttipolote}"/>
+																			<a4j:support id="id_supportlsttipolote" reRender="id_tipoacto,id_paneldatosloteordinario,id_concepto,selperiodocuota" event="onchange"  BypassUpdates="false" ajaxSingle="true"/>	
+																	</rich:comboBox>
+															</td>
+															<td align="left" width="130px" >
+																<h:panelGroup>
+																<h:outputText value="Tipo de Acto"  />
+																</h:panelGroup>
+															</td>
+															<td align="left" width="200px" >
+																<h:panelGroup>
+																<rich:comboBox width="200px" required="true"  requiredMessage="#{msg['cc.errortipoacto']}"  defaultLabel="Selecccione" selectFirstOnUpdate="true" directInputSuggestions="false"  value="#{registroLoteOrdinarioManaged.cmbValuetipoacto}"
+																				onblur="validaInputCbo(this)"  id="id_tipoacto" binding="#{registroLoteOrdinarioManaged.cmbtipoacto}" immediate="true" 	valueChangeListener="#{registroLoteOrdinarioManaged.loadtipoActoById}" 																	>
+																				<f:selectItems id="id_lsttipoacto" value="#{registroLoteOrdinarioManaged.lsttipoacto}"/>
+																				<a4j:support id="id_supportlsttipoacto" reRender="id_paneldatosloteordinario,id_firmantes,id_lstconcepto,selperiodocuota" event="onchange"  BypassUpdates="false" ajaxSingle="true"/>	
+																		</rich:comboBox>
+																</h:panelGroup>
+															</td>
+															<td align="left" width="130px"  >
+																<h:panelGroup>
+																<h:outputText value="Concepto"  />
+																</h:panelGroup>
+															</td>
+															<td>
+																	<rich:comboBox width="150px"   defaultLabel="Selecccione" selectFirstOnUpdate="true" directInputSuggestions="false"  value="#{registroLoteOrdinarioManaged.cmbValueConcepto}"
+																			    onblur="validaInputCbo(this)"   disabled="#{registroLoteOrdinarioManaged.isRecordatorioDeudas}"  id="id_concepto" binding="#{registroLoteOrdinarioManaged.cmbgnConcepto}" immediate="true" 
+																			 	valueChangeListener="#{registroLoteOrdinarioManaged.loadGnConceptoById}"													>
+																			<f:selectItems id="id_lstconcepto" value="#{registroLoteOrdinarioManaged.lstgnConcepto}"/>
+																			<a4j:support id="id_supportlstconcepto" reRender="selperiodocuota,selsubconcepto,id_firmantes" event="onchange"  BypassUpdates="false" ajaxSingle="true"/>	
+																	</rich:comboBox>
+															</td>
+															<td>
+															</td>
+															<td>
+															</td>
+														</tr>
+												<tr></tr>
+												<tr>
+													<td align="left" width="130px" >
+													<h:panelGroup>
+														<h:outputText value="Tipo de Persona:" />
+														</h:panelGroup>
+													</td>
+												<td>
+															 	<h:selectManyListbox id="seltipopersona" required="true" 
+																 	disabled="#{registroLoteOrdinarioManaged.isResolucionSancion}"
+																  	requiredMessage="#{msg['cc.errortipopersona']}"  value="#{registroLoteOrdinarioManaged.lstMpTipoPersonaSeleccionados}"  size="5">
+	                      									  		<f:selectItems value="#{registroLoteOrdinarioManaged.lstTipoPersona}"/>
+                   									 			</h:selectManyListbox>
+														</td>
+												
+															<td align="left" width="130px" >
+													<h:panelGroup>
+														<h:outputText value="Sector:" />
+														</h:panelGroup>
+													</td>
+												<td>
+													 <h:selectManyListbox id="selsector"  required="true" 
+													  disabled="#{registroLoteOrdinarioManaged.isResolucionSancion}"
+													  requiredMessage="#{msg['cc.errorsector']}" value="#{registroLoteOrdinarioManaged.lstGnSectorSeleccionados}"  style="width:200px"  size="9" immediate="true">
+                      									  <f:selectItems value="#{registroLoteOrdinarioManaged.lstGnSector}"/>
+                      								 </h:selectManyListbox>
+														</td>
+													<td align="left" width="130px" >
+													<h:panelGroup>
+														<h:outputText value="Sub Concepto:" />
+														</h:panelGroup>
+													</td>
+												<td>
+														 <h:selectManyListbox id="selsubconcepto"   required="true"  requiredMessage="#{msg['cc.errorsubconcepto']}" 
+														   disabled="#{registroLoteOrdinarioManaged.isRecordatorioDeudas}"  value="#{registroLoteOrdinarioManaged.lstGnSubConceptoSeleccionados}" style="width:150px"   size="9">
+                      									  <f:selectItems value="#{registroLoteOrdinarioManaged.lstGnSubConcepto}"/>
+                   									 	  <a4j:support id="id_supportlstsubconcepto" reRender="selperiodocuota" event="onchange"  BypassUpdates="false" ajaxSingle="true"/>	
+														</h:selectManyListbox>
+														</td>
+													
+															<td align="left" width="130px" >
+													<h:panelGroup>
+														<h:outputText value="Periodo-Cuota:" />
+														</h:panelGroup>
+													</td>
+												<td>
+															 <h:selectManyListbox id="selperiodocuota"   required="true"  requiredMessage="#{msg['cc.errorperiodo']}" 
+															    disabled="#{registroLoteOrdinarioManaged.isRecordatorioDeudas}"   value="#{registroLoteOrdinarioManaged.lstPeriodoCuotaSeleccionados}" style="width:100px"  size="9">
+                      									  <f:selectItems value="#{registroLoteOrdinarioManaged.lstPeriodoCuota}"/>
+                   									 </h:selectManyListbox>
+														</td>
+												
+												</tr>
+												</table>
+									</rich:panel>	
+								</td>
+							</tr>
+						</table>
+						</td>
+				</tr>
+				<tr>
+					<td align="center">
+					 	<a4j:outputPanel id="botones" >
+					 	
+						 	<a4j:commandButton value="Guardar" style="width:100px;"
+						 	 	id="id_btnguardar"	action="#{registroLoteOrdinarioManaged.guardar}" 
+						 	 	reRender="id_panelprincipalregistroLoteOrdinario,outputrespreliminar,formregistroLoteOrdinario"
+						 	 	disabled="#{registroLoteOrdinarioManaged.findCcLoteItem.flag_generacion==2}"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton  value="Generacion Preliminar"
+								 style="width:150px;" immediate="true"
+								 action="#{registroLoteOrdinarioManaged.motrarLotePreliminar}" 	
+								 disabled="#{registroLoteOrdinarioManaged.findCcLoteItem.flag_generacion==2}"
+								 reRender="id_panelprincipalregistroLoteOrdinario,outputrespreliminar,formregistroLoteOrdinario" 
+								 status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton  value="Generacion Valores"
+								 style="width:150px;" immediate="true"
+								 action="#{registroLoteOrdinarioManaged.generacionValores}" 	
+								 disabled="#{registroLoteOrdinarioManaged.findCcLoteItem.flag_generacion==2}"
+								 reRender="id_panelprincipalregistroLoteOrdinario,outputrespreliminar,formregistroLoteOrdinario" 
+								 status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton  value="Mostrar Valores"
+								 style="width:150px;" immediate="true"
+								 action="#{registroLoteOrdinarioManaged.mostrarValores}"
+								 disabled="#{registroLoteOrdinarioManaged.findCcLoteItem.flag_generacion==1}"
+								 reRender="id_panelprincipalregistroLoteOrdinario,outputrespreliminar,formregistroLoteOrdinario"
+								 status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton id="idBtnSalir" value="Salir" style="width:100px;"
+											action="#{registroLoteOrdinarioManaged.sa}" immediate="true" reRender="panelinclude">
+											<f:setPropertyActionListener
+												value="/sisat/controlycobranza/buscarloteordinaria.xhtml"
+												target="#{sessionManaged.page}" />
+										</a4j:commandButton>
+						</a4j:outputPanel>
+					</td>
+				</tr>
+			</table>
+			<table align="center" width="100%">
+				<tr>
+					<td>
+						<a4j:outputPanel id="outputrespreliminar">
+						
+							 <rich:datascroller for="resultadofinal" maxPages="10" ></rich:datascroller>
+							 <rich:extendedDataTable 
+								id="resultadofinal" value="#{registroLoteOrdinarioManaged.lstlotePreliminar}" 
+								var="lotePreliminar"  width="100%" height="310px" rows="10"
+								 selectionMode="single"   noDataLabel="No Se Encontro Información para esta Busqueda"
+								rowKeyVar="row" enableContextMenu="false"	>
+							  <rich:column id="x1" width="5%"  style="text-align:center" filterBy="#{lotePreliminar.personaId}"  >
+					                <f:facet name="header"  >Cod. Per.</f:facet>
+					                 <h:outputText value="#{lotePreliminar.personaId}"/>
+			         		   </rich:column>
+			         		   
+					           <rich:column id="x2" width="20%" filterBy="#{lotePreliminar.descripcionPersona}" >
+					                <f:facet name="header">Apellidos Y Nombres/Razón Social</f:facet>
+					                <h:outputText value="#{lotePreliminar.descripcionPersona}"/>
+					            </rich:column>            				                
+					            <rich:column id="x3" width="5%"  style="text-align:center" filterBy="#{lotePreliminar.nroDocumento}" >
+					                <f:facet name="header" >Nro Doc</f:facet>
+					                 <h:outputText value="#{lotePreliminar.nroDocumento}"/>
+					         	</rich:column>
+					         	<rich:column id="x4" width="15%"  style="text-align:center" >
+					                <f:facet name="header" >Direccion</f:facet>
+					                 <h:outputText value="#{lotePreliminar.direccion}"/>
+					         	</rich:column>
+					         	<rich:column id="x5" width="10%"  style="text-align:center">
+					                <f:facet name="header">Sector</f:facet>
+					                <h:outputText value="#{lotePreliminar.sector}"/>
+					            </rich:column>
+					            <rich:column id="x6" width="5%"  style="text-align:center">
+					                <f:facet name="header">Deuda Total</f:facet>
+					                <h:outputText value="#{lotePreliminar.deudaTotal}"/>
+					            </rich:column>
+					            <rich:column id="x7" width="5%"  style="text-align:center">
+					                <f:facet name="header">Insoluto</f:facet>
+					                <h:outputText value="#{lotePreliminar.insoluto}"/>
+					            </rich:column>
+					            <rich:column id="x8" width="5%"  style="text-align:center">
+					                <f:facet name="header">Reajuste</f:facet>
+					                <h:outputText value="#{lotePreliminar.reajuste}"/>
+					            </rich:column>
+					            <rich:column id="x9" width="5%"  style="text-align:center">
+					                <f:facet name="header">Dere. Emisi</f:facet>
+					                <h:outputText value="#{lotePreliminar.derechoEmision}"/>
+					            </rich:column>
+					            <rich:column id="x10" width="5%"  style="text-align:center">
+					                <f:facet name="header">Inte. capit</f:facet>
+					                <h:outputText value="#{lotePreliminar.interesCapitalizado}"/>
+					            </rich:column>
+					            <rich:column id="x11" width="5%"  style="text-align:center">
+					                <f:facet name="header">Inte. simple</f:facet>
+					                <h:outputText value="#{lotePreliminar.interesSimple}"/>
+					            </rich:column>
+					            <rich:column id="x12" width="5%"  style="text-align:center">
+					                <f:facet name="header">Total Deuda</f:facet>
+					                <h:outputText value="#{lotePreliminar.deudaTotal}"/>
+					            </rich:column>
+					            <rich:column id="x13" width="10%"  style="text-align:center">
+					                <f:facet name="header">Nro Valor</f:facet>
+					                <h:outputText value="#{lotePreliminar.nroActo}"/>
+					            </rich:column>
+					   		</rich:extendedDataTable>
+					   	</a4j:outputPanel>	
+					</td>
+				</tr>
+			</table>
+			
+	</td></tr>
+</table>
+</a4j:outputPanel>
+
+
+
+</h:form>
+
+</ui:composition>

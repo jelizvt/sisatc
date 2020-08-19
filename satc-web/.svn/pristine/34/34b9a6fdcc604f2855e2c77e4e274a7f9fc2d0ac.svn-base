@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		
+	<h:form id="idFormReporteSegExpediente">
+				
+		<rich:panel id="idPanelDerivacionExp">
+		
+			<f:facet name="header">Hoja de Derivación de Expedientes</f:facet>			
+			
+			<div align="left"  style="background-color: #DAB626; width: 590px; height: 25px; border: 1px solid #FFFFFF; ">				 
+				 <h:selectOneRadio id="situacionRadio" value="#{reporteTramiteDocManaged.situacionExpediente}" required="true" requiredmessage="Seleccionar Situación de Expediente">
+				   <f:selectItem itemValue="11" itemLabel="Derivados" />   
+				   <f:selectItem itemValue="13" itemLabel="Recepcionados" />   
+				   <f:selectItem itemValue="0" itemLabel="Ambos" /> 
+				</h:selectOneRadio> 	
+			</div>
+						
+			<div style="width: 590px; height: 155px; ">
+			<rich:panel id="idPanelCriterioBus">
+				<f:facet name="header">
+		        	CRITERIOS DE BUSQUEDA
+		        </f:facet>
+		        
+		        <h:panelGrid columns="4">
+		        	<h:outputLabel value="Oficina Origen" for="idSelectOneSubTipo">
+					 :</h:outputLabel>
+					<h:selectOneMenu id="idSelectOneAreaOri" style="width:189px"
+								value="#{reporteTramiteDocManaged.unidadOrigen}">
+								<f:selectItem itemLabel="Todas" noSelectionOption="true" />
+								<f:selectItems value="#{registroTramiteManaged.listGnUnidad}"
+									var="itUnidad" itemLabel="#{itUnidad.descripcion}"
+									itemValue="#{itUnidad.unidadId}" />
+					</h:selectOneMenu>	
+				
+					<h:outputLabel value="Oficina Destino" for="idSelectOneSubTipo">
+					 :</h:outputLabel>
+					 <h:selectOneMenu id="idSelectOneAreaDes" style="width:189px"
+								value="#{reporteTramiteDocManaged.unidadDestino}">
+								<f:selectItem itemLabel="Todas" noSelectionOption="true" />
+								<f:selectItems value="#{registroTramiteManaged.listGnUnidad}"
+									var="itUnidad" itemLabel="#{itUnidad.descripcion}"
+									itemValue="#{itUnidad.unidadId}" />
+					 </h:selectOneMenu>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="2">
+					 <h:outputLabel value="Procedimiento" for="idSelectOneSubTipo">
+					 :</h:outputLabel>
+					 <h:selectOneMenu id="idSelectOneSubTipo" style="width:189px"
+							value="#{reporteTramiteDocManaged.procedimientoExpediente}">
+							<f:selectItem itemLabel="Todos" noSelectionOption="true" />
+							<f:selectItems
+								value="#{registroTramiteManaged.listProcedimientos.entrySet().toArray()}"
+								var="iterProc" itemLabel="#{iterProc.key}"
+								itemValue="#{iterProc.value}" />
+					</h:selectOneMenu>
+		        </h:panelGrid>
+				
+				<h:panelGrid columns="2">	 
+					 <h:outputLabel value="Tipo Tramite" for="idSelectOneSubTipo">
+					 :</h:outputLabel>
+					 	<h:selectOneMenu id="idSelectOneTramite"
+							value="#{reporteTramiteDocManaged.tipoTramite}">
+							<f:selectItem itemLabel="Todos" noSelectionOption="true" />
+							<f:selectItems
+								value="#{registroTramiteManaged.listTdTipoTramites}" var="item"
+								itemLabel="#{item.descripcion}"
+								itemValue="#{item.tipoTramiteId}"></f:selectItems>
+						</h:selectOneMenu>
+				</h:panelGrid>
+					<h:panelGrid columns="2" >
+					<h:panelGrid columns="2" columnClasses="colLabel, colField">
+						<h:outputLabel value="Fecha Inicio" for="idInputFechaInicio"> :</h:outputLabel>
+						<rich:calendar id="idInputFechaInicio"
+							value="#{reporteTramiteDocManaged.fechaInicio}"
+							datePattern="dd/MM/yyyy" inputClass="maskDate"
+							inputStyle="width: 60px;padding-left: 5px;"
+							enableManualInput="true" required="true"></rich:calendar>
+						<rich:jQuery id="maskedoi" selector=".maskDate"
+							query="mask('99/99/9999')" timing="onload" />
+					</h:panelGrid>
+					<h:panelGrid columns="2" columnClasses="colLabel, colField">
+						<h:outputLabel value="Fecha Fin" for="idInputFechaFin"> :</h:outputLabel>
+						<rich:calendar id="idInputFechaFin"
+							value="#{reporteTramiteDocManaged.fechaFin}"
+							datePattern="dd/MM/yyyy" inputClass="maskDate"
+							inputStyle="width: 60px;padding-left: 5px;"
+							enableManualInput="true" required="true"></rich:calendar>
+						<rich:jQuery id="maskedof" selector=".maskDate"
+							query="mask('99/99/9999')" timing="onload" />
+					</h:panelGrid>
+				</h:panelGrid>				
+			</rich:panel>
+			</div>
+			
+			<div style="width: 590px; height: 75px; ">
+			<rich:panel id="idPanelControlPrint">
+				<f:facet name="header">CONTROL DE IMPRESION</f:facet>
+				<h:panelGrid columns="1">
+				  
+					<h:selectOneRadio id="printRadio" value="#{reporteTramiteDocManaged.reportExpediente}" required="true" requiredmessage="Seleccionar tipo de Impresión">					     
+					   <f:selectItem itemValue="1" itemLabel="No Impresos" />   
+					   <f:selectItem itemValue="0" itemLabel="Impresos" />
+					   <f:selectItem itemValue="2" itemLabel="Imprimir Todo" />
+					</h:selectOneRadio>			
+					
+				</h:panelGrid>
+		    </rich:panel>
+			</div>
+			<h:panelGrid columns="2">
+				<a4j:commandButton value="Mostrar"
+					action="#{reporteTramiteDocManaged.buscarhd}" 
+					reRender="idPanelReporteExp"></a4j:commandButton>
+						
+				<a4j:commandButton value="Limpiar"
+					action="#{reporteTramiteDocManaged.limpiarhd}" 
+					reRender="idPanelDerivacionExp"></a4j:commandButton>
+			</h:panelGrid>
+				<br />		<br />	
+		<rich:panel id="idPanelReporteExp">		
+			<rich:dataTable 
+				value="#{reporteTramiteDocManaged.listResumenReporteExpedientesDTOs}"
+				var="item">
+				<h:column>
+					<f:facet name="header"><h:panelGroup layout="block" style="text-align:center;width:100px;"> Cant. Expedientes</h:panelGroup></f:facet>
+					<h:panelGroup layout="block" style="text-align:center;width:100px;">
+						<h:outputText value="#{item.cantidad}" />
+					</h:panelGroup>
+				</h:column>
+				<h:column >
+					<f:facet name="header"><h:panelGroup layout="block" style="text-align:center;width:350px;">Área</h:panelGroup></f:facet>
+					<h:panelGroup layout="block" style="text-align:center;width:350px;">
+					<h:outputText value="#{item.unidadAsString}" />
+					</h:panelGroup>
+				</h:column>
+				<h:column>
+					<f:facet name="header"><h:panelGroup layout="block" style="text-align:center;width:100px;">-</h:panelGroup></f:facet>
+					<h:panelGroup layout="block" style="text-align:center;width:100px;">						
+						<a4j:commandLink value="Imprimir" action="#{reporteTramiteDocManaged.areaexp(item.unidadId)}"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelMensajePrint\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+						reRender="panelMensajePrint" 
+						status="ajaxStatus" ></a4j:commandLink>	
+									
+					</h:panelGroup>	
+				</h:column>
+				<f:facet name="footer">				
+					<h:panelGroup layout="block" style="width=100%; text-align: right;">
+						<h:outputText value="Total de Expedientes: #{reporteTramiteDocManaged.totalFinal} | " />						  
+						<!--  <h:commandLink value="Imprimir Todo" action="#{reporteTramiteDocManaged.descargarhr(null)}" /> -->
+						<a4j:commandLink value="Imprimir todo" 
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelMensajePrintAll\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+						reRender="panelMensajePrintAll" 
+						status="ajaxStatus" ></a4j:commandLink>	
+						
+					</h:panelGroup>
+				</f:facet>	
+			</rich:dataTable>			
+		</rich:panel>		
+			
+		
+	<!-- Para mostrar mensaje de alerta al imprimir reporte  por area-->
+				<rich:modalPanel id="panelMensajePrint" width="365" height="175"  moveable="true" resizeable="false" >
+				    <f:facet name="header">Alerta de Impresión</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/images/modal/close.png" id="iconclosepanelMensajePrint"
+								styleClass="hidelink" />
+							<rich:componentControl for="panelMensajePrint" attachTo="iconclosepanelMensajePrint" 
+								operation="hide" event="onclick" />
+						</h:panelGroup>
+					</f:facet>
+				         <h:outputText value="La Impresion de este reporte es exclusivo para el responsable de Mesa de Partes."/>
+				         <br />
+				         <br />
+				         <br />
+							<h:outputText style="font-weight:bold;color:green" value="Desea proseguir?" />
+						<br />
+				         <br />
+				         				         				         
+				         <table border="0" width="50%" align="center" cellpadding="4" cellspacing="8" >
+							<tr align="center">
+								<td>								
+									<a4j:commandButton id="cmdlnkprintreport" style="width:60px;"
+										 value="Aceptar" reRender="idPanelReporteExp" 
+										oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.prueba2\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' }; ">
+									</a4j:commandButton> <h:commandLink id="linkprintok" styleClass="prueba2" value="Aceptar"
+										style="display: none;"
+										action="#{reporteTramiteDocManaged.descargarhr(reporteTramiteDocManaged.idArea)}"										
+										reRender="idPanelReporteExp"  /> <rich:toolTip
+										for="cmdlnkprintreport" value="Expedientes Derivados por Area" />
+									<rich:componentControl for="panelMensajePrint" attachTo="linkprintok" operation="hide" event="onclick"/>	
+								</td>
+								<td>
+									<a4j:commandButton value="Cancelar" style="width:60px;" onclick="#{rich:component('panelMensajePrint')}.hide();return false;" />																			 								
+								</td>
+							</tr>							
+						</table>
+				</rich:modalPanel> 
+				
+	<!-- Para mostrar mensaje de alerta al imprimir reporte  todas las areas-->
+				<rich:modalPanel id="panelMensajePrintAll" width="365" height="175"  moveable="true" resizeable="false" >
+				    <f:facet name="header">Alerta de Impresión</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/images/modal/close.png" id="iconclosepanelMensajePrintAll"
+								styleClass="hidelink" />
+							<rich:componentControl for="panelMensajePrintAll" attachTo="iconclosepanelMensajePrintAll" 
+								operation="hide" event="onclick" />
+						</h:panelGroup>
+					</f:facet>
+				         <h:outputText value="La Impresion de este reporte es exclusivo para el responsable de Mesa de Partes."/>
+				         <br />
+				         <br />
+				         <br />
+							<h:outputText style="font-weight:bold;color:green" value="Desea proseguir?" />
+						<br />
+				         <br />
+				         				         				         
+				         <table border="0" width="50%" align="center" cellpadding="4" cellspacing="8" >
+							<tr align="center">
+								<td>								
+									<a4j:commandButton id="cmdlnkprintreportall" style="width:60px;"
+										 value="Aceptar" reRender="idPanelReporteExp"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.prueba2\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' }; ">
+									</a4j:commandButton> <h:commandLink id="linkprintokall" styleClass="prueba2" value="Aceptar"
+										style="display: none;" 
+										action="#{reporteTramiteDocManaged.descargarhr(null)}" reRender="idPanelReporteExp" /> <rich:toolTip
+										for="cmdlnkprintreportall" value="Expedientes Derivados todas las Areas" />
+									<rich:componentControl for="panelMensajePrintAll" attachTo="linkprintokall" operation="hide" event="onclick" />	
+								</td>
+								<td>
+									<a4j:commandButton value="Cancelar" style="width:60px;" onclick="#{rich:component('panelMensajePrintAll')}.hide();return false;" />																			 								
+								</td>
+							</tr>							
+						</table>
+				</rich:modalPanel> 
+		</rich:panel>	
+	</h:form>
+</ui:composition>

@@ -1,0 +1,817 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+	<h:form prependId="false">
+		<rich:panel id="pnlDatosVehic" style="min-width: 1000px;">
+			<f:facet name="header">
+			Lote (#{carteraVehicularManaged.loteId})
+			</f:facet>
+			 
+			
+			<h:panelGrid id="idPanelOpcionesBusqueda" rendered="#{!carteraVehicularManaged.editMultiple}">			
+				<h:panelGrid columns="4">
+					<!-- <h:panelGrid columns="2" columnClasses="colLabel, colField">
+						<h:outputLabel value="Lote"
+							for="idInputLote"> :</h:outputLabel>
+						<h:inputText id="idInputLote"
+							value="#{carteraVehicularManaged.loteId}"
+							converter="uppeCaseConverter" styleClass="textUpperCase, formatoNroExp" />
+					</h:panelGrid>-->
+					
+					
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Sector">
+							 :</h:outputLabel>
+						<h:selectOneMenu id="idSelectSector"
+							value="#{carteraVehicularManaged.sectorId}">
+							<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+							<f:selectItems
+								value="#{carteraVehicularManaged.lstSector}"
+								var="it" itemLabel="#{it.descripcion}"
+								itemValue="#{it.sectorId}"></f:selectItems>
+						</h:selectOneMenu>
+					</h:panelGrid>
+					
+					
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Distrito">
+							 :</h:outputLabel>
+						<h:selectOneMenu id="idSelectDistrito"
+							value="#{carteraVehicularManaged.distritoId}">
+							<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+							<f:selectItems
+								value="#{carteraVehicularManaged.lstDistritos}"
+								var="it" itemLabel="#{it.descripcion}"
+								itemValue="#{it.distrito_id}"></f:selectItems>
+						</h:selectOneMenu>
+					</h:panelGrid>
+				
+				
+					<h:panelGrid columns="2" columnClasses="colLabel, colField">
+						<h:outputLabel value="Codigo"
+							for="idInputCodigo"> :</h:outputLabel>
+						<h:inputText id="idInputCodigo"
+							value="#{carteraVehicularManaged.personaId}"
+							converter="uppeCaseConverter" styleClass="textUpperCase, formatoNroExp" />
+							
+					</h:panelGrid>
+					
+				</h:panelGrid>
+				<h:panelGrid columns="2">	
+					<h:panelGrid columns="2" columnClasses="colLabel, colField">
+						<h:outputLabel value="Placa"
+							for="idInputPlaca"> :</h:outputLabel>
+						<h:inputText id="idInputPlaca"
+							value="#{carteraVehicularManaged.placa}"
+							converter="uppeCaseConverter" styleClass="textUpperCase, formatoNroExp" />
+							
+					</h:panelGrid>
+					
+					<h:panelGrid columns="2" columnClasses="colLabel, colField">
+						<h:outputLabel value="Nro Requerimiento"
+							for="idInputNroRequerimiento"> :</h:outputLabel>
+						<h:inputText id="idInputNroRequerimiento"
+							value="#{carteraVehicularManaged.nroRequerimiento}"
+							converter="uppeCaseConverter" styleClass="textUpperCase, formatoNroExp" />
+							
+					</h:panelGrid>
+				
+				</h:panelGrid>
+			
+			</h:panelGrid>
+			
+			
+			<h:panelGrid columns="2" cellspacing="0" cellpadding="0" rendered="#{!carteraVehicularManaged.editMultiple}">
+				
+				<a4j:commandButton value="Buscar"
+					action="#{carteraVehicularManaged.buscar()}"
+					reRender="panelResultadoBusquedaCartera" style="width:80px;"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					status="ajaxStatus"></a4j:commandButton>
+				<a4j:commandButton value="Limpiar"
+					action="#{carteraVehicularManaged.limpiar}"
+					reRender="pnlDatosVehic" style="width:80px;"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"></a4j:commandButton>
+
+			</h:panelGrid>
+			
+			
+			<h:panelGrid id="idPanelEditMultiple" rendered="#{carteraVehicularManaged.editMultiple}">			
+				<h:panelGrid columns="4">
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Marca : ">
+							 :</h:outputLabel>
+						<h:selectOneMenu id="idSelectMarcaTemp"
+							value="#{carteraVehicularManaged.marcaTemp}">
+							<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+							<f:selectItems
+								value="#{carteraVehicularManaged.lstMarcaTemp}"
+								var="it" itemLabel="#{it.descripcion}"
+								itemValue="#{it.descripcion}"></f:selectItems>
+						</h:selectOneMenu>
+					</h:panelGrid>
+					
+					
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Modelo : ">
+							 :</h:outputLabel>
+						<h:selectOneMenu id="idSelectModeloTemp"
+							value="#{carteraVehicularManaged.modeloTemp}">
+							<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+							<f:selectItems
+								value="#{carteraVehicularManaged.lstModeloTemp}"
+								var="it" itemLabel="#{it.descripcion}"
+								itemValue="#{it.descripcion}"></f:selectItems>
+						</h:selectOneMenu>
+					</h:panelGrid>					
+				</h:panelGrid>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="3" cellspacing="10" cellpadding="0" rendered="#{carteraVehicularManaged.editMultiple}">
+
+				<a4j:commandButton value="Buscar"
+					action="#{carteraVehicularManaged.buscarEdicionMultiple}"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"					
+					
+					reRender="pnlDatosVehic, togglePanelResultados" style="width:80px;"
+					></a4j:commandButton>
+					
+				<a4j:commandButton value="Actualizar"
+					action="#{carteraVehicularManaged.actualizarEdicionMultiple}"
+					rendered="#{not empty carteraVehicularManaged.lstCarteraVehiculo}"
+					reRender="pnlDatosVehic, togglePanelResultados" style="width:80px;"
+					oncomplete="#{rich:component('modalEditarMultiple')}.hide();#{rich:component('modalEditarMultiple')}.show();"></a4j:commandButton>
+				
+				<a4j:commandButton value="Cancelar"
+					action="#{carteraVehicularManaged.inactivarEdicionMasiva}"
+					reRender="pnlDatosVehic, togglePanelResultados" style="width:80px;"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"></a4j:commandButton>
+
+			</h:panelGrid>
+			
+		</rich:panel>
+		
+		<div style="width: 100%; height: 4px;"></div>
+		
+		<div style="width: 100%; height: 4px;">
+		
+		
+		
+		</div>
+		
+		
+		<div style="min-width: 1000px;">
+			
+			
+			<!-- INICIO TABLA -->
+				<a4j:outputPanel id="panelResultadoBusquedaCartera">
+					
+				
+					<rich:simpleTogglePanel id="togglePanelResultados"
+						switchType="client"
+						label="Resultados #{carteraVehicularManaged.lstCarteraVehiculo.size()} registros"
+						height="auto" styleClass="uniqueClassName" opened="true">
+						
+						<div style="margin-bottom: 10px;">
+							<h:outputText value="Descargar Requerimientos: "	rendered="#{not empty carteraVehicularManaged.lstCarteraVehiculo and !carteraVehicularManaged.editMultiple}"/>
+	
+							<h:commandLink rendered="#{not empty carteraVehicularManaged.lstCarteraVehiculo and !carteraVehicularManaged.editMultiple}"
+								id="id_descargarRm"
+								action="#{carteraVehicularManaged.generacionReqCarteraVehicular}"
+								immediate="true">
+								<h:graphicImage id="btnServ" value="/images/modal/pdf.png"
+									style="border:0 ; height:22px; width:22px;"
+									title="Lista de Requerimientos Vehicular " />
+							</h:commandLink>
+							
+							<h:outputText style="margin-left: 20px;" value="||"	
+								rendered="#{not empty carteraVehicularManaged.lstCarteraVehiculo  and !carteraVehicularManaged.editMultiple}"/>
+								
+							<h:outputText style="margin-left: 20px;" value="Editar múltiple: "	
+								rendered="#{not empty carteraVehicularManaged.lstCarteraVehiculo and !carteraVehicularManaged.editMultiple}"/>
+	
+							<h:commandLink rendered="#{not empty carteraVehicularManaged.lstCarteraVehiculo and !carteraVehicularManaged.editMultiple}"
+								id="id_editarmultiple"
+								action="#{carteraVehicularManaged.activarEdicionMasiva}"
+								immediate="true"
+								reRender="pnlDatosVehic">
+								<h:graphicImage id="btnServ1" value="/images/modal/edit.gif"
+									style="border:0 ; height:22px; width:22px;"
+									title="Editar" />
+							</h:commandLink>
+						</div>	
+						
+						<rich:dataTable id="dataTableExpedientes"
+							value="#{carteraVehicularManaged.lstCarteraVehiculo}"
+							var="item" rowKeyVar="rowIndex" rows="20"
+							rendered="#{not empty carteraVehicularManaged.lstCarteraVehiculo}">
+							<h:column>
+								<div align="center">
+									<h:outputText value="#{rowIndex + 1}" />
+								</div>
+							</h:column>
+							
+							<rich:column style="text-align:center" id="x212" width="3%">
+								<f:facet name="header">Edit</f:facet>
+								<rich:toolTip for="newlinkab" value="Editar"></rich:toolTip>
+								<a4j:commandLink ajaxSingle="true" id="newlinkab"
+									reRender="modalEditar"
+									action="#{carteraVehicularManaged.cargaItem(item)}"
+									oncomplete="#{rich:component('modalEditar')}.hide();#{rich:component('modalEditar')}.show();"
+									>
+			
+									<h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+									<f:setPropertyActionListener value="#{item}"
+										target="#{carteraVehicularManaged.omisoItem}"
+										id="r4253" />
+			
+								</a4j:commandLink>
+							</rich:column>
+							
+							<h:column>
+								<f:facet name="header">Propietario</f:facet>
+								<div style="width: 250px;" align="left">
+									<h:outputText value="#{item.propietario}" />
+								</div>
+							</h:column>
+							
+							<h:column rendered="#{!carteraVehicularManaged.editMultiple}">
+								<f:facet name="header">Dirección</f:facet>
+								<div style="width: 400px;" align="left">
+									<h:outputText value="#{item.direccionCompleta}" />
+								</div>
+							</h:column>
+							
+							<h:column rendered="#{!carteraVehicularManaged.editMultiple}">
+								<f:facet name="header">Nro Requerimiento</f:facet>
+								<div style="width: 120px;" align="left">
+									<h:outputText value="#{item.nroRequerimiento}" />
+								</div>
+							</h:column>
+							
+							 <h:column>
+								<f:facet name="header">Placa</f:facet>
+								<div style="width: 50px;" align="center">
+									<h:outputText value="#{item.placa}" />
+								</div>
+							</h:column>	
+							
+							<h:column rendered="#{!carteraVehicularManaged.editMultiple}">
+								<f:facet name="header">Fecha Inscripción</f:facet>
+								<div style="width: 80px;" align="center">
+									<h:outputText value="#{item.fechaInscripcion}" />
+								</div>
+							</h:column>	
+							
+							<h:column rendered="#{!carteraVehicularManaged.editMultiple}">
+								<f:facet name="header">Fecha Adquisición </f:facet>
+								<div style="width: 80px;" align="center">
+									<h:outputText value="#{item.fechaPropiedad}" />
+								</div>
+							</h:column>	
+							
+							<h:column rendered="#{!carteraVehicularManaged.editMultiple}">
+								<f:facet name="header">Distrito  </f:facet>
+								<div style="width: 80px;" align="center">
+									<h:outputText value="#{item.distritoDescripcion}" />
+								</div>
+							</h:column>	
+							
+							<h:column rendered="#{!carteraVehicularManaged.editMultiple}">
+								<f:facet name="header">Sector  </f:facet>
+								<div style="width: 100px;" align="center">
+									<h:outputText value="#{item.sector}" />
+								</div>
+							</h:column>	
+							
+							
+							<!-- INICO COLUMNAS EDICION MASIVA -->
+								<h:column rendered="#{carteraVehicularManaged.editMultiple}">
+									<f:facet name="header">Marca  </f:facet>
+									<div style="width: 120px;" align="center">
+										<h:outputText value="#{item.marcaDescripcion}" />
+									</div>
+								</h:column>	
+								
+								<h:column rendered="#{carteraVehicularManaged.editMultiple}">
+									<f:facet name="header">Categoria  </f:facet>
+									<div style="width: 120px;" align="center">
+										<h:outputText value="#{item.categoriaDescripcion}" />
+									</div>
+								</h:column>	
+								
+								<h:column rendered="#{carteraVehicularManaged.editMultiple}">
+									<f:facet name="header">Modelo  </f:facet>
+									<div style="width: 120px;" align="center">
+										<h:outputText value="#{item.modeloDescripcion}" />
+									</div>
+								</h:column>	
+								
+								<h:column rendered="#{carteraVehicularManaged.editMultiple}">
+									<f:facet name="header">Clase  </f:facet>
+									<div style="width: 120px;" align="center">
+										<h:outputText value="#{item.claseDescripcion}" />
+									</div>
+								</h:column>
+								
+								<h:column rendered="#{carteraVehicularManaged.editMultiple}">
+									<f:facet name="header">Tipo Carroceria  </f:facet>
+									<div style="width: 120px;" align="center">
+										<h:outputText value="#{item.tipoCarroceriaDescripcion}" />
+									</div>
+								</h:column>
+								
+								
+								<h:column rendered="#{carteraVehicularManaged.editMultiple}">
+									<f:facet name="header">Marca Temporal  </f:facet>
+									<div style="width: 120px;" align="center">
+										<h:outputText value="#{item.marcaDescripcionTemporal}" />
+									</div>
+								</h:column>
+								
+								<h:column rendered="#{carteraVehicularManaged.editMultiple}">
+									<f:facet name="header">Modelo Temporal  </f:facet>
+									<div style="width: 120px;" align="center">
+										<h:outputText value="#{item.modeloDescripcionTemporal}" />
+									</div>
+								</h:column>
+							<!-- FIN COLUMNAS EDICION MASIVA -->
+							
+							
+							
+												
+																
+						</rich:dataTable>
+						<rich:datascroller id="tableDataScroller" align="center"
+							for="dataTableExpedientes" renderIfSinglePage="false"
+							status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+							<f:facet name="pages">
+								<h:outputText value="#{pageIndex} / #{pages}" />
+							</f:facet>
+						</rich:datascroller>
+						
+					</rich:simpleTogglePanel>				
+				</a4j:outputPanel>
+			<!-- FIN TABLA -->
+		</div>
+		
+		<a4j:commandButton value="#{msg['gn.regresar']}" style="width: 100px;" reRender="panelinclude" action="#{sessionManaged.sendRedirectPrincipal}">
+			<f:setPropertyActionListener
+				value="/sisat/fiscalizacion/buscarcarteravehicularmasiva.xhtml"
+				target="#{sessionManaged.page}" />
+		</a4j:commandButton>
+	</h:form>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- Panel de Editar -->
+	<rich:modalPanel id="modalEditar" width="400" autosized="true"
+		top="110" styleClass="sisatModalPanel">
+		<f:facet name="header">Ver</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi111"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalEditar" attachTo="hlpconfi111"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:panel id="p010011">			
+				<table class="tablamodal">	
+					<tr bgcolor="84B4DB" >
+						<td colspan="4">
+							Datos del Contribuyente
+						</td>
+					</tr>							
+					<tr>
+						<td style="width: 150px">
+							<h:outputText id="tdCodigoEditar"
+							value="Código:" />
+													
+						</td>
+						<td>
+							<h:inputText size="10" id="txtCodigoEditar" disabled="true"  
+								value="#{carteraVehicularManaged.omisoItem.personaId}">									
+							</h:inputText>						
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 150px">
+							<h:outputText id="tdNombresEditar"
+							value="Nombres o Razón Social:" />
+													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtNombresEditar" disabled="true" 
+								value="#{carteraVehicularManaged.omisoItem.propietario}">									
+							</h:inputText>
+						</td>
+					</tr>				
+					<tr>
+						<td style="width: 150px">
+							<h:outputText id="tdDireccionEditar"
+							value="Dirección:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtDireccionEditar" disabled="true" 
+								value="#{carteraVehicularManaged.omisoItem.direccionCompleta}">									
+							</h:inputText>
+						</td>
+					</tr>																							
+			<!-- Datos del vehiculo -->	
+					<tr bgcolor="84B4DB" >
+						<td colspan="4">
+							Datos del Vehículo
+						</td>
+					</tr>		
+						
+					<tr>
+						<td style="width: 150px">
+							<h:outputText size="20" id="tdPlacaEditar"
+							value="Placa:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtPlacaEditar" disabled="true" 
+								value="#{carteraVehicularManaged.omisoItem.placa}">									
+							</h:inputText>
+						</td>
+					</tr>
+					<!--  <tr>
+						<td>
+							<h:outputText id="tdPlacaAnteriorEditar"
+							value="Placa antigua:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtPlacaAnteriorEditar" disabled="true" 
+								value="#{carteraVehicularManaged.omisoItem.placaAntigua}">									
+							</h:inputText>
+						</td>
+					</tr>-->
+					
+					<tr>
+						<td style="width: 150px">
+							<h:outputText id="tdAnnoFabricacionEditar"
+							value="Año de fabricación :" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtPAnnoFabricacionEditar" disabled="true" 
+								value="#{carteraVehicularManaged.omisoItem.annoFabricacion}">									
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 150px">
+							<h:outputText id="tdFechaInscripcionEditar"
+							value="Fecha de Inscripción:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtFechaInscripcionEditar" disabled="true" 
+								value="#{carteraVehicularManaged.omisoItem.fechaInscripcion}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />									
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td style="width: 150px">
+							<h:outputText id="tdAnnoAfectacionEditar"
+							value="Año de afectación:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtFechaAfectacionEditar" disabled="true" 
+								value="#{carteraVehicularManaged.omisoItem.annoAfectacion}">																    
+							</h:inputText>
+						</td>
+					</tr>
+					
+					
+					<tr>
+						<td style="width: 150px" >Clase:</td>
+						
+						<td>	  
+							<h:selectOneMenu style="width: 250px;" 
+								id="idSelectClase"
+								value="#{carteraVehicularManaged.omisoItem.claseVehiculoId}"
+								>
+								
+								<f:selectItem itemLabel="Seleccione" 
+									noSelectionOption="true" />
+								
+								<f:selectItems
+									value="#{carteraVehicularManaged.listaClaseVehiculos}"
+									var="it" itemLabel="#{it.descripcion}"
+									itemValue="#{it.claseVehiculoId}">
+									
+								</f:selectItems>
+							</h:selectOneMenu> 
+						</td>
+					</tr>
+																						
+					<tr>
+						<td style="width: 150px">
+							<p>Categoria:</p>
+						</td>													
+						<td>
+
+							<h:selectOneMenu style="width: 250px;" id="idSelectCategoria"
+								value="#{carteraVehicularManaged.omisoItem.categoriaVehiculoId}"
+								valueChangeListener="#{carteraVehicularManaged.cargarMarca}">
+								
+								<f:selectItem itemLabel="Seleccione" noSelectionOption="true"/>
+								
+								<f:selectItems
+									value="#{carteraVehicularManaged.listaCategoriaVehiculos}"
+									var="it" itemLabel="#{it.descripcion}"
+									itemValue="#{it.categoriaVehiculoId}"></f:selectItems>
+									
+								 <a4j:support event="onchange" reRender="idSelectMarca" execute="@this" />
+							</h:selectOneMenu> 
+							
+							
+						</td>	
+					</tr>
+					<tr>
+						<td>
+							<p style="width: 150px">Marca:</p>													
+						</td>
+						<td>						
+							<h:selectOneMenu style="width: 250px;" id="idSelectMarca"
+								value="#{carteraVehicularManaged.omisoItem.marcaVehiculoId}"
+								valueChangeListener="#{carteraVehicularManaged.cargarModelos}">
+								
+								<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+								<f:selectItems
+									value="#{carteraVehicularManaged.listaMarcaVehiculos}"
+									var="it" itemLabel="#{it.descripcion}"
+									itemValue="#{it.marcaVehiculoId}"></f:selectItems>
+								<a4j:support event="onchange" reRender="idSelectModelo" execute="@this" />
+							</h:selectOneMenu> 
+						</td>
+					</tr>
+					<tr>																				
+						<td style="width: 150px">
+							<p>Modelo:  </p>													
+						</td>
+						<td>
+							<h:selectOneMenu style="width: 250px;" id="idSelectModelo"
+								value="#{carteraVehicularManaged.omisoItem.modeloVehiculoId}">
+								<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+								<f:selectItems
+									value="#{carteraVehicularManaged.listaModeloVehiculos}"
+									var="it" itemLabel="#{it.descripcion}"
+									itemValue="#{it.id.modeloVehiculoId}"></f:selectItems>
+							</h:selectOneMenu> 						
+						</td>						
+						
+					</tr>
+					<tr>
+						<td style="width: 150px">
+							<p>Carroceria:</p>													
+						</td>
+							<td align="left" >
+								<h:selectOneMenu style="width: 250px;" id="idSelectCarroceria"
+									value="#{carteraVehicularManaged.omisoItem.carroceriaId}">
+									<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+									<f:selectItems
+										value="#{carteraVehicularManaged.listaCarroceriaVehiculos}"
+										var="it" itemLabel="#{it.descripcion}"
+										itemValue="#{it.tipoCarroceriaId}"></f:selectItems>
+								</h:selectOneMenu> 
+							</td>						
+
+					</tr>
+					<tr>
+						<td style="width: 150px">
+							<p>Tipo de Motor:</p>													
+						</td>
+							<td align="left" >
+								<h:selectOneMenu style="width: 250px;" id="idSelectMotor"
+									value="#{carteraVehicularManaged.omisoItem.tipoMotorId}">
+									<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+									<f:selectItems
+										value="#{carteraVehicularManaged.listaMotorVehiculos}"
+										var="it" itemLabel="#{it.descripcion}"
+										itemValue="#{it.tipoMotorId}"></f:selectItems>
+								</h:selectOneMenu> 
+							</td>
+					</tr>	
+																			<tr>
+						<td style="width: 150px">
+							<h:outputText id="tdNumeroCilindrosEditar"
+							value="Número de cilindros:" />													
+						</td>
+						<td>
+							<h:inputText style="width: 250px;" id="txtNumeroCilindrosEditar"  value="#{carteraVehicularManaged.omisoItem.numeroCilindros}">																    
+							</h:inputText>
+						</td>
+					</tr>	
+					
+					</table>								
+			</rich:panel>
+			<!-- Fin Datos del vehiculo -->
+						
+			
+			
+			
+				<div style="width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;">
+					<a4j:commandButton value="Guardar"
+						actionListener="#{carteraVehicularManaged.editarVehiculo()}"
+						status="ajaxStatus"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'modalEditar\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						
+						reRender="togglePanelResultados" style="width: 100px;"></a4j:commandButton>
+						
+						<a4j:commandButton value="#{msg['gn.cancelar']}" immediate="true"
+							onclick="Richfaces.hideModalPanel('modalEditar')"
+							style="margin-left:4px; width: 100px;"></a4j:commandButton>
+				</div>
+				
+				
+		</h:form>
+	</rich:modalPanel>
+	<!-- Fin de panel de Editar -->
+	
+	
+	
+	
+	<!-- Panel de Editar Multiple-->
+	<rich:modalPanel id="modalEditarMultiple" width="400" autosized="true"
+		top="110" styleClass="sisatModalPanel">
+		<f:facet name="header">Ver</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfiMultiple"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalEditarMultiple" attachTo="hlpconfiMultiple"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:panel id="p010011">			
+				<table class="tablamodal">	
+																												
+			<!-- Datos del vehiculo -->	
+					<tr bgcolor="84B4DB" >
+						<td colspan="4">
+							Datos del Vehículo
+						</td>
+					</tr>		
+						
+					
+					
+					
+					<tr>
+						<td style="width: 150px" >Clase:</td>
+						
+						<td>	  
+							<h:selectOneMenu style="width: 250px;" 
+								id="idSelectClaseMultiple"
+								value="#{carteraVehicularManaged.omisoItem.claseVehiculoId}">
+								
+								<f:selectItem itemLabel="Seleccione" 
+									noSelectionOption="true" />
+								<f:selectItems
+									value="#{carteraVehicularManaged.listaClaseVehiculos}"
+									var="it" itemLabel="#{it.descripcion}"
+									itemValue="#{it.claseVehiculoId}">
+								</f:selectItems>
+							</h:selectOneMenu> 
+						</td>
+					</tr>
+																						
+					<tr>
+						<td style="width: 150px">
+							<p>Categoria:</p>
+						</td>													
+						<td>
+							<h:selectOneMenu style="width: 250px;" id="idSelectCategoriaMultiple"
+								value="#{carteraVehicularManaged.omisoItem.categoriaVehiculoId}"
+								valueChangeListener="#{carteraVehicularManaged.cargarMarca}">
+								
+								<f:selectItem itemLabel="Seleccione" noSelectionOption="true"/>
+								<f:selectItems
+									value="#{carteraVehicularManaged.listaCategoriaVehiculos}"
+									var="it" itemLabel="#{it.descripcion}"
+									itemValue="#{it.categoriaVehiculoId}">
+								</f:selectItems>
+									
+								 <a4j:support event="onchange" reRender="idSelectMarcaMultiple" execute="@this" />
+							</h:selectOneMenu> 
+							
+							
+						</td>	
+					</tr>
+					<tr>
+						<td>
+							<p style="width: 150px">Marca:</p>													
+						</td>
+						<td>						
+							<h:selectOneMenu style="width: 250px;" id="idSelectMarcaMultiple"
+								value="#{carteraVehicularManaged.omisoItem.marcaVehiculoId}"
+								valueChangeListener="#{carteraVehicularManaged.cargarModelos}">
+								
+								<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+								<f:selectItems
+									value="#{carteraVehicularManaged.listaMarcaVehiculos}"
+									var="it" itemLabel="#{it.descripcion}"
+									itemValue="#{it.marcaVehiculoId}"></f:selectItems>
+								<a4j:support event="onchange" reRender="idSelectModeloMultiple" execute="@this" />
+							</h:selectOneMenu> 
+						</td>
+					</tr>
+					<tr>																				
+						<td style="width: 150px">
+							<p>Modelo:  </p>													
+						</td>
+						<td>
+							<h:selectOneMenu style="width: 250px;" id="idSelectModeloMultiple"
+								value="#{carteraVehicularManaged.omisoItem.modeloVehiculoId}">
+								<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+								<f:selectItems
+									value="#{carteraVehicularManaged.listaModeloVehiculos}"
+									var="it" itemLabel="#{it.descripcion}"
+									itemValue="#{it.id.modeloVehiculoId}"></f:selectItems>
+							</h:selectOneMenu> 						
+						</td>						
+						
+					</tr>
+					<tr>
+						<td style="width: 150px">
+							<p>Carroceria:</p>													
+						</td>
+							<td align="left" >
+								<h:selectOneMenu style="width: 250px;" id="idSelectCarroceriaMultiple"
+									value="#{carteraVehicularManaged.omisoItem.carroceriaId}">
+									<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+									<f:selectItems
+										value="#{carteraVehicularManaged.listaCarroceriaVehiculos}"
+										var="it" itemLabel="#{it.descripcion}"
+										itemValue="#{it.tipoCarroceriaId}"></f:selectItems>
+								</h:selectOneMenu> 
+							</td>						
+
+					</tr>
+					<tr>
+						<td style="width: 150px">
+							<p>Tipo de Motor:</p>													
+						</td>
+							<td align="left" >
+								<h:selectOneMenu style="width: 250px;" id="idSelectMotorMultiple"
+									value="#{carteraVehicularManaged.omisoItem.tipoMotorId}">
+									<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+									<f:selectItems
+										value="#{carteraVehicularManaged.listaMotorVehiculos}"
+										var="it" itemLabel="#{it.descripcion}"
+										itemValue="#{it.tipoMotorId}"></f:selectItems>
+								</h:selectOneMenu> 
+							</td>
+					</tr>	
+																			
+					
+					</table>								
+			</rich:panel>
+			<!-- Fin Datos del vehiculo -->
+						
+			
+			
+			
+				<div style="width: 100%; text-align: center; margin-top: 20px; margin-bottom: 20px;">
+					<a4j:commandButton value="Actualizar"
+						actionListener="#{carteraVehicularManaged.editarVehiculoMasivo()}"
+						status="ajaxStatus"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'modalEditarMultiple\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						
+						reRender="togglePanelResultados" style="width: 100px;"></a4j:commandButton>
+						
+						<a4j:commandButton value="#{msg['gn.cancelar']}" immediate="true"
+							onclick="Richfaces.hideModalPanel('modalEditarMultiple')"
+							style="margin-left:4px; width: 100px;"></a4j:commandButton>
+				</div>
+				
+				
+		</h:form>
+	</rich:modalPanel>
+	<!-- Fin de panel de Editar Multiple -->
+	
+	
+	
+	
+	
+	
+
+	
+</ui:composition>

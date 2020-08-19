@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formCalculoAlcabala">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js"/>
+		
+	 <rich:panel id="a01">
+			<f:facet name="header">
+      DATOS DE LA PROPIEDAD
+      </f:facet>
+      
+			<table border="0" width="100%">
+
+				<tr>
+					<td align="left" width="150px">
+					<h:outputLabel value="Ubicación Propiedad:" ><span class="requiredField">*</span></h:outputLabel>
+					</td>
+					<td width="250px">
+					<rich:comboBox  id="cmb_ubicacion" width="150px" onblur="validaInputCbo(this)"  onkeypress="return showListCbo(this,event)" defaultLabel="Dentro de la Jurisdiccion" value="#{calculoAlcabalaManaged.tipoUbicacionPropiedad1}"
+					binding="#{calculoAlcabalaManaged.cmbUbicacion}"  valueChangeListener="#{calculoAlcabalaManaged.mostrarFueraDistrito}" immediate="true">	
+							<f:selectItem id="id1" itemValue="Dentro de la Jurisdiccion" ></f:selectItem>
+							<f:selectItem id="id2" itemValue="Fuera de la Jurisdiccion"></f:selectItem>
+							<a4j:support id="id_support" event="onchange" immediate="true" ajaxSingle="true"  reRender="AgregarTransfer,botones"  />
+					</rich:comboBox>
+					</td>
+
+					<td width="200px">
+					<h:outputLabel value="Dirección de Predio:" ><span class="requiredField">*</span></h:outputLabel>
+					</td>
+					<td>
+					<h:inputText size="40" id="id_direccionAlcabala" value="#{calculoAlcabalaManaged.direccionPredio}" readonly="true" />
+					<h:inputHidden id="id_hiddemDireccionAlcabala" required="true" value="#{calculoAlcabalaManaged.direccionPredio}" requiredMessage="#{msg['ra.errorDireccionPredio']}"/>
+					
+					</td>
+					<td>
+							
+					<h:panelGroup id="botones" >
+						<a4j:commandButton id="cmdBuscarPredioAlcabala2" rendered="#{calculoAlcabalaManaged.distrital}"
+								value="#{msg['gn.buscar']}" immediate="true" style="width:100px"
+								oncomplete="#{rich:component('id_panelBuscarPredio')}.show()" >
+								<rich:toolTip value="Buscar Predio" />
+						</a4j:commandButton>
+						<a4j:commandButton id="cmdAsigarUbicacionPredio2" immediate="true"
+								value="Registrar Dirección" style="width:120px" rendered="#{calculoAlcabalaManaged.fueraDistrito}" action="#{direccionAlcabalaManaged.init}" reRender="#{rich:clientId('formRegistroDireccion')}"
+								oncomplete="#{rich:component('id_panelUbicacionPredio')}.show()" >
+								<rich:toolTip value="Registrar Dirección Predio" />
+						</a4j:commandButton>
+					</h:panelGroup>
+					</td>
+					<td><h:outputLabel value="DJ Predial:" ><span class="requiredField">*</span></h:outputLabel></td>
+					<td><h:inputText size="3" id="id_predio" required="true" requiredMessage="#{msg['ra.errorDJPredial']}"
+							onkeypress="return validaEnteroPositivo(event)" maxlength="10" readonly="true"
+							style="width:150px" value="#{calculoAlcabalaManaged.djPredio}">
+							<rich:jQuery selector="#id_codigopredio"
+								query="mask('9999-9999')" timing="onload" />
+						</h:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="Tipo de Predio:" ><span class="requiredField">*</span></h:outputLabel></td>
+					<td colspan="6"><h:selectOneRadio id="id_selTipoPredio"
+							value="#{calculoAlcabalaManaged.selectedTipoPred}"
+							layout="lineDirection">
+							<f:selectItem id="si1" itemLabel="Predio Urbano" itemValue="1" />
+							<f:selectItem id="si2" itemLabel="Predio Rústico" itemValue="2" />
+					</h:selectOneRadio></td>
+				</tr>
+				<tr>
+					<td align="left" width="130px">
+					<h:outputLabel  value="Fecha Transferencia:"><span class="requiredField">*</span></h:outputLabel>
+					</td>
+					<td align="left">
+					
+					<rich:calendar required="true" requiredMessage="#{msg['ra.errorFechaTransferencia']}" inputStyle="width:100px"
+							locale="en/US" datePattern="dd/MM/yyyy" enableManualInput="false" 
+							inputClass="maskDate" id="idFechaTransferencia" value="#{calculoAlcabalaManaged.fechaTransferencia}">
+					
+					<a4j:support id="id_supportCalen" event="onchanged" ajaxSingle="true" action="#{calculoAlcabalaManaged.otenerAutovaluo}" reRender="id_Autovaluo"  />		
+					</rich:calendar> <rich:jQuery id="maskedo5" selector=".maskDate" query="mask('99/99/9999')" timing="onload" />
+					
+
+					</td>
+					<td align="left">
+					<h:outputLabel value="Porcentaje de Propiedad:" ><span class="requiredField">*</span></h:outputLabel>
+					</td>
+					<td align="left">
+					<h:inputText size="10" required="true" requiredMessage="#{msg['rp.porcentajepropiedad.required']}"
+							onkeypress="return validaEnteroPositivo(event)"
+							id="id_porPropiedad" maxlength="3"
+							value="#{calculoAlcabalaManaged.porcPropiedad}">
+							<rich:jQuery selector="#id_codigopredio"
+							query="mask('9999-9999')" timing="onload" />
+					</h:inputText>
+					</td>
+					<td align="left">
+					<h:outputLabel value="Notaria:" ><span class="requiredField">*</span></h:outputLabel>
+					</td>
+					
+					
+					<td colspan="2" align="left">
+					<rich:comboBox style="width:100%" required="#{calculoAlcabalaManaged.calculado}" requiredMessage="#{msg['ra.errorNotaria']}"
+							defaultLabel="#{msg['param.defaultlabelcombo']}" selectFirstOnUpdate="true"
+							id="id_Notaria"
+							binding="#{calculoAlcabalaManaged.cmbTipoNotaria}"
+							immediate="true"
+							valueChangeListener="#{calculoAlcabalaManaged.loadNotariaById}"
+							value="#{calculoAlcabalaManaged.cmbTipoNotariaValor}"
+							directInputSuggestions="false">
+							<f:selectItems id="id_lsNotaria"
+							value="#{calculoAlcabalaManaged.lstNotaria}" />
+							<a4j:support id="id_supportlsNotaria" reRender="p01"
+							event="onchange" BypassUpdates="false" ajaxSingle="true" />
+					</rich:comboBox></td>
+				</tr>
+				<tr>
+					<td align="left" width="100px">
+					<h:outputLabel value="Tipo Transferencia:" ><span class="requiredField">*</span></h:outputLabel>
+					</td>
+					<td align="left">
+					<rich:comboBox width="150px" required="#{calculoAlcabalaManaged.calculado}" requiredMessage="#{msg['ra.errorTipoTransferencia']}"
+							defaultLabel="Selecccione" selectFirstOnUpdate="true"
+							id="id_tipoTransferencia"
+							binding="#{calculoAlcabalaManaged.cmbTipoTransferencia}"
+							immediate="true"
+							valueChangeListener="#{calculoAlcabalaManaged.loadTipoTransferencia}"
+							value="#{calculoAlcabalaManaged.cmbTipoTransferenciaValor}"
+							directInputSuggestions="false">
+							<f:selectItems id="id_lsTipoTransferencia"
+								value="#{calculoAlcabalaManaged.lstTipoTransferencia}" />
+							<a4j:support id="id_supportlsTipoTransferencia" event="onchange" reRender="id_panelcalculo"	immediate="true" ajaxSingle="true" />
+						</rich:comboBox></td>
+						
+						
+						
+						
+					<td align="left" width="130px">
+					<h:outputLabel value="Condición de Propiedad:" ><span class="requiredField">*</span></h:outputLabel>
+					</td>
+					<td align="left" width="150px">
+					<rich:comboBox width="150px" required="#{calculoAlcabalaManaged.calculado}" requiredMessage="#{msg['ra.errorCondicionPropiedad']}"
+							defaultLabel="Selecccione" selectFirstOnUpdate="true"
+							id="id_condicionPropiedad"
+							binding="#{calculoAlcabalaManaged.cmbCondicionPropiedad}"
+							immediate="true"
+							valueChangeListener="#{calculoAlcabalaManaged.loadCondicionPropiedad}"
+							value="#{calculoAlcabalaManaged.cmbCondiPropiedadValor}"
+							directInputSuggestions="false">
+							<f:selectItems id="id_LstCondicionPropiedad" value="#{calculoAlcabalaManaged.lstCondicionPropiedad}" />
+							<a4j:support id="id_supportlstCondicionPropiedad" event="onchange" BypassUpdates="false" ajaxSingle="true" />
+						</rich:comboBox></td>
+					<td colspan="3"></td>
+				</tr>
+			</table>
+
+			<table width="100%" border="0">
+				<tr>
+					<td width="55%">
+					
+				<h:panelGroup id="AgregarTransfer">
+					<a4j:commandButton rendered="#{calculoAlcabalaManaged.fueraDistrito}"
+							id="cmdAgregarTransferentes2" value="Agregar Transferentes"
+							immediate="true"
+							oncomplete="#{rich:component('id_panelAgregarTransferente')}.show()">
+							<rich:toolTip value="Agregar Transferentes" />
+					</a4j:commandButton>
+					</h:panelGroup>
+					</td>
+					<td width="1%"></td>
+					<td>
+					<a4j:commandButton id="cmdAnexarDocumentos2"
+							value="Anexar Documentos" immediate="true"
+							oncomplete="#{rich:component('id_panelAnexarDocumentos')}.show()">
+							<rich:toolTip value="Anexar Documentos" />
+					</a4j:commandButton>
+					</td>
+				</tr>
+
+				<tr>
+					<td>
+					<h:inputHidden id="oculto_record" required="#{!(agregarTransferenteAlcabalaManaged.lstTransferentes.size()>0)}" requiredMessage="#{msg['ra.errorTransferentes']}" />
+					<rich:extendedDataTable id="tblTransferente"
+							value="#{agregarTransferenteAlcabalaManaged.lstTransferentes}"
+							var="record" width="100%" height="150px" sortMode="single"
+							selectionMode="single" enableContextMenu="false" 
+							noDataLabel="Noexisten transferentes">
+
+							<rich:column width="5%" style="text-align: center">
+								<a4j:commandButton title="#{msg['gn.eliminar']}" immediate="true"
+									actionListener="#{agregarTransferenteAlcabalaManaged.eliminarTransferenteDeLista}"
+									image="/images/remove.png" reRender="tblTransferente,oculto_record"
+									style="width: 16px; height: 16px;">
+								
+									</a4j:commandButton>
+							</rich:column>
+
+							<rich:column width="26%">
+								<f:facet name="header">Nombre Transferente</f:facet>
+								<h:outputText rendered="#{not empty record.razonSocial}" value="#{record.razonSocial}" />
+								<h:outputText rendered="#{not empty record.nombresCompletos}" value="#{record.nombresCompletos}" />
+							</rich:column>
+
+							<rich:column width="15%">
+								<f:facet name="header">Tipo Documento</f:facet>
+								<h:outputText value="#{record.tipoDocIdentidad}" />
+							</rich:column>
+
+							<rich:column width="15%">
+								<f:facet name="header">Nro Documento</f:facet>
+								<h:outputText value="#{record.nroDocuIdentidad}" />
+							</rich:column>							
+							<rich:column width="25%">
+								<f:facet name="header">Dirección</f:facet>
+								<h:outputText value="#{record.direccionCompleta}" />
+							</rich:column>
+						</rich:extendedDataTable></td>
+					<td width="1%"></td>
+
+					<td>
+					<rich:extendedDataTable id="tblAnexos2"
+					value="#{sustentoAlcabalaManaged.lstAnexosMuestra}" var="records"
+					width="100%" height="150px" rowKeyVar="row"
+					selectionMode="single" enableContextMenu="false"							
+					noDataLabel="#{msg['rv.noexistenanexos']}">
+
+							<rich:column width="40" style="text-align: center">
+								<a4j:commandButton title="#{msg['gn.eliminar']}" immediate="true"
+									actionListener="#{sustentoAlcabalaManaged.eliminarAnexoDeLista}"
+									reRender="tblAnexos2" image="/images/remove.png"
+									style="width: 16px; height: 16px;">
+								</a4j:commandButton>
+							</rich:column>
+
+							<rich:column width="50%">
+								<f:facet name="header">#{msg['gn.descripciondoc']}</f:facet>
+								<h:outputText value="#{records.descripcionDoc}" />
+							</rich:column>
+
+							<rich:column width="20%">
+								<f:facet name="header">#{msg['rv.glosa']}</f:facet>
+								<h:outputText value="#{records.glosaDoc}" style="width: 100%" />
+							</rich:column>
+
+							<rich:column width="20%">
+								<f:facet name="header">#{msg['gn.docadjunto']}</f:facet>
+								
+								
+							<h:commandLink id="newlink3" action="#{sustentoAlcabalaManaged.download}" immediate="true">
+								<h:outputText  value="#{records.nomDocAdjunto}" />
+							      <f:setPropertyActionListener  value="#{records}" target="#{sustentoAlcabalaManaged.anexosDecla}" id="id_docAnexo"/>
+							
+							</h:commandLink>
+							
+							</rich:column>
+						</rich:extendedDataTable>
+					
+						</td>
+				</tr>
+			</table>
+
+		</rich:panel>
+
+		<br />
+
+		<rich:panel id="id_panelcalculo" >
+		<f:facet name="header">
+	      CALCULO DEL IMPUESTO
+    	</f:facet>
+			<div style="width: 100%;" align="center">
+				<table>
+					<tr>
+						<td width="170px"><h:outputLabel value="Tipo Moneda:">
+								<span class="requiredField">*</span>
+							</h:outputLabel></td>
+						<td align="left" width="160px" style="padding-left: 4px"><rich:comboBox width="125px" required="true"
+								requiredMessage="#{msg['ra.errorMoneda']}" defaultLabel="Selecccione" selectFirstOnUpdate="true"
+								id="id_tipomoneda" binding="#{calculoAlcabalaManaged.cmbTipoMoneda}" immediate="true"
+								valueChangeListener="#{calculoAlcabalaManaged.loadMonedaById}"
+								value="#{calculoAlcabalaManaged.cmbTipoMonedaValor}">
+								<f:selectItems id="id_lsttipomoneda" value="#{calculoAlcabalaManaged.lstTipoMoneda}" />
+								<a4j:support id="id_supportlsttimoneda" event="onchange" BypassUpdates="false" ajaxSingle="true" />
+							</rich:comboBox></td>
+						<td style="padding-left: 0px;" width="120px;"><h:outputLabel value="Valor de Autovalúo:">
+								<span class="requiredField">*</span>
+							</h:outputLabel></td>
+						<td width="160px;"><h:inputText id="id_Autovaluo" maxlength="20"
+								required="true"
+								requiredMessage="#{msg['ra.errorValorAutovaluo']}" style="width:120px; text-align: right;"
+								value="#{calculoAlcabalaManaged.autovaluo}" size="20">
+							</h:inputText></td>
+						<td width="150px"><h:outputText value="Valor de Autovalúo ajustado :" /></td>
+						<td><h:inputText id="id_AutovaluoAjuste" maxlength="10" disabled="true" style="text-align: right;"
+								value="#{calculoAlcabalaManaged.autovaluoAjuste}">
+							</h:inputText></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="Valor de Transferencia:">
+								<span class="requiredField">*</span>
+							</h:outputLabel></td>
+						<td><h:inputText id="id_Transferencia" maxlength="18" required="true"
+								requiredMessage="#{msg['ra.errorValorTransferencia']}" value="#{calculoAlcabalaManaged.valorTransferencia}"
+								style="text-align: right;" onkeypress="return validaEnteroPositivo2(event)">								
+							</h:inputText></td>
+						<td><h:outputText value="Valor UIT :" /></td>
+						<td><h:inputText id="id_ValorUIT" maxlength="10" disabled="true" style="width:120px; text-align: right;"
+								value="#{calculoAlcabalaManaged.valorUIT}">
+							</h:inputText></td>
+						<td><h:outputText value="Factor de Ajuste :" /></td>
+						<td><h:inputText id="id_FactorAjuste" maxlength="10" disabled="true" style="width:60%; text-align: right;"
+								value="#{calculoAlcabalaManaged.factorAjuste}">
+							</h:inputText></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Tipo de Cambio :" /></td>
+						<td><h:inputText id="id_tipoCambio" value="#{calculoAlcabalaManaged.tipoCambio}" disabled="true"
+								style="text-align: right;" /></td>
+						<td><h:outputText value="IPM " /> <h:outputText value="#{calculoAlcabalaManaged.textoIPM1}" /></td>
+						<td><h:inputText id="id_ipmMes1" value="#{calculoAlcabalaManaged.iPMmesAnte}" disabled="true"
+								style="text-align: right;" /></td>
+						<td><h:outputText value="Ajuste :" /></td>
+						<td><h:inputText id="id_ajuste" value="#{calculoAlcabalaManaged.ajuste}" disabled="true"
+								style="text-align: right;" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Valor de Transferencia en Soles :" /></td>
+						<td><h:inputText id="id_TransferenciaSoles" maxlength="10" disabled="true" style="text-align: right;"
+								value="#{calculoAlcabalaManaged.valorTransferenciaSoles}">
+							</h:inputText></td>
+						<td><h:outputText value="IPM Diciembre " /> <h:outputText value="#{calculoAlcabalaManaged.textoIPM2}" /></td>
+						<td><h:inputText id="id_ipmMes2" value="#{calculoAlcabalaManaged.iPMdicAnte}" disabled="true"
+								style="text-align: right;" /></td>
+						<td><h:outputText value="Nro. de UIT de Deducción :" /></td>
+						<td><h:inputText id="id_NroUITdeduc" disabled="true" style="width:60%; text-align: right;"
+								value="#{calculoAlcabalaManaged.nroUitDeduc}">
+							</h:inputText></td>
+					</tr>
+					<tr>
+						<td align="left"><h:outputText value="Primera Venta :" /></td>
+						<td colspan="6"><h:selectBooleanCheckbox valueChangeListener="#{calculoAlcabalaManaged.checkPrimeraVenta}"
+								style="align:right;text-align:right;" value="#{calculoAlcabalaManaged.primeraVEnta}" immediate="true"
+								reRender="id_panelcalculo">
+								<a4j:support event="onchange" />
+							</h:selectBooleanCheckbox></td>
+					</tr>
+				</table>
+			</div>
+			<table align="center" border="0">
+				<tr>
+					<td><a4j:commandButton id="cmdCalcularAlcabala"
+							rendered="#{!calculoAlcabalaManaged.inafectoImpuesto}"
+							
+							image="/images/calculo.png" size="500" status="ajaxStatus"
+							
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							actionListener="#{calculoAlcabalaManaged.realizarCalculo}"
+							reRender="id_panelcalculo,id_guardarGroup,cmdCalcularAlcabala">
+							
+							<rich:toolTip value="Calcular" />
+						</a4j:commandButton>
+					</td>
+
+					<td><a4j:commandButton id="cmdLimpiarCalculo" action="#{calculoAlcabalaManaged.limpiarCalculo}" immediate="true" status="ajaxStatus"
+							image="/images/limpiar.png" size="500" 
+							reRender="#{rich:clientId('id_panelcalculo')}"
+							>
+							<rich:toolTip value="Limpiar Calculo" />
+					</a4j:commandButton></td>
+				</tr>
+			</table>
+
+			<br />
+
+			<table border="0" width="80%" align="center">
+				<tr>
+					<td><h:outputText value="Mayor Valor Comparado :" /></td>
+					<td><h:inputText id="id_MayorValorComparado" maxlength="10"
+							style="width:80%; text-align: right;"
+							value="#{calculoAlcabalaManaged.mayorValorComparado}"
+							disabled="true">
+							
+						</h:inputText></td>
+
+					<td><h:outputText value="Valor Deducción :" /></td>
+					<td><h:inputText id="id_ValorDeduc" maxlength="10"
+							style="width:80%; text-align: right;"
+							value="#{calculoAlcabalaManaged.valorDeduccion}" disabled="true">
+							
+						</h:inputText></td>
+
+					<td><h:outputText value="Base imponible :" /></td>
+					<td><h:inputText id="id_Baseimponible" maxlength="10"
+							style="width:80%; text-align: right;" value="#{calculoAlcabalaManaged.baseImponible}"
+							disabled="true">
+						</h:inputText></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Base Exonerada :" /></td>
+					<td><h:inputText id="id_BaseExonerada" maxlength="10"
+							style="width:80%; text-align: right;" value="#{calculoAlcabalaManaged.baseExonerada}"
+							disabled="true">
+					    </h:inputText></td>
+
+					<td><h:outputText value="Base Afecta :" /></td>
+					<td><h:inputText id="id_BaseAfecta" maxlength="10"
+							style="width:80%; text-align: right;" value="#{calculoAlcabalaManaged.baseAfecta}"
+							disabled="true">
+						</h:inputText></td>
+
+					<td><h:outputText value="Tasa (%) :" /></td>
+					<td><h:inputText id="id_Tasa" maxlength="10" style="width:80%; text-align: right;"
+							value="#{calculoAlcabalaManaged.tasa}" disabled="true">
+						</h:inputText></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Impuesto a Pagar :" /></td>
+					<td><h:inputText id="id_ImpuestoPagarc" maxlength="10"
+							style="width:80%; text-align: right;" value="#{calculoAlcabalaManaged.impuestoPagar}"
+							disabled="true">
+						</h:inputText></td>
+
+					<td><h:outputText value="Interés Moratorio :" /></td>
+					<td><h:inputText id="id_InteresMoratorio" maxlength="10"
+							style="width:80%; text-align: right;" value="#{calculoAlcabalaManaged.interesMora}"
+							disabled="true">
+						</h:inputText></td>
+
+					<td><h:outputText value="Total a Pagar :" /></td>
+					<td><h:inputText id="id_TotalPagar" maxlength="10"
+							style="width:80%; text-align: right;" value="#{calculoAlcabalaManaged.totalPagar}"
+							disabled="true">
+						</h:inputText></td>
+				</tr>
+			</table>
+			<br />
+		</rich:panel>
+		
+		<div style="width: 100%; text-align: center; margin-top: 20px;">
+
+			<table align="center">
+				<tr>
+					<td colspan="3"><h:panelGroup id="id_presentaPreliminar">
+							<a4j:commandButton id="cmdPresentacionPreliminar"
+								value="Presentación Preliminar" immediate="true"
+								reRender="panelinclude"
+								action="#{calculoAlcabalaManaged.vistaPrevia}"
+								style="width: 150px; margin-left:2px;"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');window.open(\'/satc/sisat/alcabala/imprimir.jsf\');return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+							</a4j:commandButton>
+						</h:panelGroup></td>					
+				</tr>
+				<tr><td colspan="3"><br />¿ Los Datos son los correctos ? se creara la Liquidacón del Impuesto de Alcabala <br /> </td></tr>
+				<tr>
+					<td>
+						<!-- <h:inputHidden id="id_validaBotones" value="#{calculoAlcabalaManaged.totalPagar}" required=""/> -->
+		
+						<h:panelGroup id="id_guardarGroup">
+							<a4j:commandButton id="cmdGuardarAlcabala"
+								disabled="#{calculoAlcabalaManaged.flagGuardado}"
+								rendered="#{calculoAlcabalaManaged.botonGuarda}" value="Guardar"
+								action="#{calculoAlcabalaManaged.guardar}" style="width: 150px;"
+								status="ajaxStatus"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								reRender="#{rich:clientId('cmdGuardarAlcabala')},#{rich:clientId('id_presentaPreliminar')}">
+							</a4j:commandButton>
+						</h:panelGroup>
+					</td>
+					<td><h:panelGroup id="id_guardarCambiosGroup">
+							<a4j:commandButton id="cmdGuardarCambiosAlcabala"
+								disabled="#{calculoAlcabalaManaged.flagGuardado}"
+								rendered="#{calculoAlcabalaManaged.botonActualiza}"
+								value="Guardar Cambios"
+								action="#{calculoAlcabalaManaged.actualizar}"
+								style="width: 150px;" status="ajaxStatus"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								reRender="#{rich:clientId('id_guardarCambiosGroup')},#{rich:clientId('id_presentaPreliminar')}">
+							</a4j:commandButton>
+						</h:panelGroup></td>
+					<td><a4j:commandButton value="Salir" style="width:100px;"
+							action="#{calculoAlcabalaManaged.salir}" immediate="true"
+							reRender="panelinclude">
+							<f:setPropertyActionListener
+								value="/sisat/alcabala/busquedaalcabala.xhtml"
+								target="#{sessionManaged.page}" />
+						</a4j:commandButton></td>	
+				</tr>
+			</table>
+		</div>
+
+	</h:form>
+
+
+
+
+
+
+
+
+
+	<rich:modalPanel id="id_panelBuscarPredio" autosized="true"
+		width="1100" height="500">
+		<f:facet name="header">Buscar Predios</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddPredio" styleClass="hidelink" />
+				<rich:componentControl for="id_panelBuscarPredio"
+					attachTo="hideIconAddPredio" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/alcabala/busquedapredioalcabala.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+	<br />
+
+	<rich:modalPanel id="id_panelAnexarDocumentos" autosized="true"
+		width="1000" height="350">
+		<f:facet name="header">Anexar Documentos</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddDocuments" styleClass="hidelink" />
+				<rich:componentControl for="id_panelAnexarDocumentos"
+					attachTo="hideIconAddDocuments" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/alcabala/sustentoalcabala.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="id_panelAgregarTransferente" autosized="true"
+		width="1000" height="420">
+		<f:facet name="header">Agregar Transferentes</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddTransferent" styleClass="hidelink" />
+				<rich:componentControl for="id_panelAgregarTransferente"
+					attachTo="hideIconAddTransferent" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/alcabala/agregartransferente.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="id_panelUbicacionPredio" autosized="true"
+		width="1000" height="400">
+		<f:facet name="header">Ubicación Predio</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddUbicacion" styleClass="hidelink" />
+				<rich:componentControl for="id_panelUbicacionPredio"
+					attachTo="hideIconAddUbicacion" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/alcabala/ubicacionpredioalcabala.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+</ui:composition>

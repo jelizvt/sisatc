@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<style type="">
+		.classRight {
+		    text-align: right;
+		}
+		.classCenter {
+		    text-align: center;
+		}
+		.classLeft {
+		    text-align: left;
+		}
+	</style>
+	
+	<h:form id="formReporteControlExpediente">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		
+	<rich:hotKey key="return"
+			handler="#{rich:element('btnBuscar')}.click()"
+			selector="#formReporteControlExpediente" />
+		
+	<h:panelGrid columns="1" style="width:100%;" cellpadding="0" cellspacing="0">	
+	    <rich:panel>
+	        <f:facet name="header">
+	        	Control de Expedientes
+	        </f:facet>
+			<h:panelGrid columns="2">
+				<h:outputText for="txtNroExpediente" value="Nro Expediente: " />
+				<h:inputText id="txtNroExpediente" value="#{reporteControlExpedienteManaged.nroExpediente}"/>
+				
+				<h:outputText for="txtEjeCoactivo" value="Ejecutor Coactivo: " />
+	        	<h:selectOneMenu id="txtEjeCoactivo"
+	        		value="#{reporteControlExpedienteManaged.coactivoId}" style="width:150px;" >
+	        		<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems
+						value="#{reporteControlExpedienteManaged.listaEjecutor}"
+						var="item" itemLabel="#{item.descripcion}"
+						itemValue="#{item.id}"></f:selectItems>
+	        	</h:selectOneMenu>
+				
+				<h:outputText value="Fecha Asignacion" />
+				<h:panelGroup>
+					<h:panelGrid columns="4">
+		        		<h:outputText for="calFechaDesde" value="Desde :" />
+		        		<h:panelGroup>
+			        		<rich:calendar id="calFechaDesde"
+								value="#{reporteControlExpedienteManaged.fechaDesde}"
+								enableManualInput="true" inputClass="maskDate"
+								locale="#{msg['param.localedate']}"
+								datePattern="#{msg['param.datepattern']}" inputSize="10"
+								tabindex="5" inputStyle="text-align:center">
+							</rich:calendar>
+							<rich:jQuery id="maskedo001" selector=".maskDate"
+								query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+						</h:panelGroup>	
+		        		<h:outputText for="calFechaHasta" value="Hasta :" />
+		        		<h:panelGroup>
+			        		<rich:calendar id="calFechaHasta"
+								value="#{reporteControlExpedienteManaged.fechaHasta}"
+								enableManualInput="true" inputClass="maskDate"
+								locale="#{msg['param.localedate']}"
+								datePattern="#{msg['param.datepattern']}" inputSize="10"
+								tabindex="5" inputStyle="text-align:center">
+							</rich:calendar>
+							<rich:jQuery id="maskedo002" selector=".maskDate"
+								query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+						</h:panelGroup>
+					</h:panelGrid>
+	        	</h:panelGroup>
+	        	
+				<h:outputText for="txtTipDeuda" value="Tipo de Deuda:" />
+	        	<h:selectOneMenu id="idSelectOneTipDeuda" style="width:150px;"
+	        	value="#{reporteControlExpedienteManaged.materiaId}">
+	        		<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItem itemLabel="Tributario" itemValue="1" />
+					<f:selectItem itemLabel="No Tributario" itemValue="2" />	
+	        	</h:selectOneMenu>
+	        	
+	        	<a4j:commandButton id="btnBuscar" value="Buscar" style="width:100px" 
+				action="#{reporteControlExpedienteManaged.buscar()}" reRender="panel"
+				status="ajaxStatus" />
+			</h:panelGrid>
+		</rich:panel>
+		
+		<rich:panel id="panel">
+			<h:panelGrid columns="2">
+				<h:commandLink id="btnExcel"
+					action="#{reporteControlExpedienteManaged.exportXls()}"
+					styleClass="button1" immediate="true">
+					<h:graphicImage value="/images/modal/excel.png"
+						style="border:0;width:23px;height:23px;" />
+				</h:commandLink>
+				<h:outputText value="#{reporteControlExpedienteManaged.records.size()} registros encontrados"/>
+			</h:panelGrid>
+            <rich:extendedDataTable id="edtResult" value="#{reporteControlExpedienteManaged.records}" width="100%" height="210px"
+				sortMode="single" selectionMode="single" enableContextMenu="false" var="record" 
+				rowKeyVar="row" rows="10" >
+				<rich:column id="e1" style="text-align:center" width="3%" >
+	                <f:facet name="header" >Item</f:facet>
+	                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+	            </rich:column>
+	            <rich:column id="e2" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Nro Expediente</f:facet>
+					<h:outputText value="#{record.nroExpediente}" />
+				</rich:column>
+				<rich:column id="e3" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Fecha Inicio</f:facet>
+					<h:outputText value="#{record.fechaRegistro}" />
+				</rich:column>
+				<rich:column id="e5" style="text-align:center" width="8%" >
+					<f:facet name="header" width="10%">Nro Valor</f:facet>
+					<h:outputText value="#{record.nroValor}" />
+				</rich:column>
+				<rich:column id="e4" style="text-align:center" width="3%" >
+					<f:facet name="header" width="10%">Tipo</f:facet>
+					<h:outputText value="#{record.tipoValor}" />
+				</rich:column>
+				<rich:column id="e10" style="text-align:left" width="8%" >
+					<f:facet name="header" width="10%">Concepto</f:facet>
+					<h:outputText value="#{record.concepto}" />
+				</rich:column>
+				<rich:column id="e6" style="text-align:center" width="5%" >
+					<f:facet name="header" width="10%">Periodo</f:facet>
+					<h:outputText value="#{record.periodoValor}" />
+				</rich:column>
+				<rich:column id="e7" style="text-align:right" width="6%" >
+					<f:facet name="header" width="10%">Deuda Valor</f:facet>
+					<h:outputText value="#{record.deudaValor}" />
+				</rich:column>
+				<rich:column id="e8" style="text-align:center" width="5%" >
+					<f:facet name="header" width="10%">Codigo</f:facet>
+					<h:outputText value="#{record.personaId}" />
+				</rich:column>
+				<rich:column id="e9" style="text-align:left" width="18%" >
+					<f:facet name="header" width="10%">Apellidos y Nombres</f:facet>
+					<h:outputText value="#{record.apellidosNombres}" />
+				</rich:column>
+				<rich:column id="e15" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Tipo REC/RC</f:facet>
+					<h:outputText value="#{record.tipoUltimaRC}" />
+				</rich:column>
+				<rich:column id="e16" style="text-align:center" width="5%" >
+					<f:facet name="header" width="10%">Nro RC</f:facet>
+					<h:outputText value="#{record.nroRC}" />
+				</rich:column>
+				<rich:column id="e17" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Fecha Notif. RC</f:facet>
+					<h:outputText value="#{record.fechaNotificaUltimaRC}" />
+				</rich:column>
+			</rich:extendedDataTable>
+			
+			<rich:datascroller for="edtResult" maxPages="5" fastStep="3"/>
+		</rich:panel>
+	</h:panelGrid>
+	</h:form>
+
+</ui:composition>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<!-- usa consultaCarteraMedidaCautelarManaged -->
+	
+	<h:form id="formConsultaCarteraMedidaCautelar">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscar')}.click()"
+			selector="#formConsultaCarteraMedidaCautelar" />
+	    <rich:panel>
+	        <f:facet name="header">
+	        	Cartera de expedientes en Medida cautelar
+	        </f:facet>
+	        <h:panelGrid columns="2">
+	        	<h:outputText for="txtNroLotAsignado" value="Nro. Cartera en Medida Cautelar: " />
+	        	<h:inputText id="txtNroLotAsignado" value="#{consultaCarteraMedidaCautelarManaged.nroCartera}" />
+	        	
+	        	<h:outputText for="txtEjeCoactivo" value="Ejecutor Coactivo: " rendered="#{sessionManaged.coPerfil.cargoId==2}" />
+	        	<h:selectOneMenu id="txtEjeCoactivo"
+	        		value="#{consultaCarteraMedidaCautelarManaged.coactivoId}" style="width:150px;"
+	        		rendered="#{sessionManaged.coPerfil.cargoId==2}">
+	        		<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems
+						value="#{consultaCarteraMedidaCautelarManaged.listaEjecutor}"
+						var="item" itemLabel="#{item.descripcion}"
+						itemValue="#{item.id}"></f:selectItems>
+	        	</h:selectOneMenu>
+	        	 
+	        	<h:outputText for="txtSituacion" value="Situacion: " />
+	        	<h:selectOneMenu id="txtSituacion"
+	        		value="#{consultaCarteraMedidaCautelarManaged.situacionCarteraId}" style="width:150px;">
+	        		<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems
+						value="#{consultaCarteraMedidaCautelarManaged.listaSituacion}"
+						var="item" itemLabel="#{item.descripcion}"
+						itemValue="#{item.id}"></f:selectItems>
+	        	</h:selectOneMenu>
+	        	
+	        </h:panelGrid> 
+	        <h:panelGrid columns="1">
+		        
+				<a4j:commandButton id="cmdBuscar" value="Buscar" style="width:100px;"	
+				action="#{consultaCarteraMedidaCautelarManaged.buscar}" status="ajaxStatus" reRender="rpanelresultadoscabecera"/>
+	        </h:panelGrid>
+	      </rich:panel>
+	      
+          <rich:panel  id="rpanelresultadoscabecera" style = "width:100%;">
+				<h:panelGrid columns="3">
+		        	<a4j:commandButton id="btnNueCarValores" value="Nueva Cartera Expedientes"
+						action="#{consultaCarteraMedidaCautelarManaged.nuevaCartera}" rendered="#{sessionManaged.coPerfil.cargoId==1}">
+						<f:setPropertyActionListener
+							value="/sisat/coactivav2/creaCarteraMedidaCautelar.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandButton>
+	    		</h:panelGrid>
+    		
+		        <rich:extendedDataTable 
+					id="edt" value="#{consultaCarteraMedidaCautelarManaged.records}" var="record" width="100%" height="190px"
+					sortMode="single" selectionMode="single" enableContextMenu="false" 
+					rowKeyVar="row" rows="8">
+					<rich:column id="x0" style="text-align:center" width="8%" >
+		                <f:facet name="header" >Item</f:facet>
+		                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		            </rich:column>
+				
+					<rich:column id="x1" style="text-align:center" width="20%" >
+		                <f:facet name="header" >Nro Cartera</f:facet>
+		                <h:outputText value="#{record.nroCartera}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x2" style="text-align:center" width="10%">
+		                <f:facet name="header"  >Fecha asignación</f:facet>
+		                <h:outputText value="#{record.fechaAsignacion}"/>
+		            </rich:column>
+		            <rich:column id="x3" style="text-align:center" width="10%">
+		                <f:facet name="header"  >Hora Asignación</f:facet>
+		                <h:outputText value="#{record.horaAsignacion}"/>
+		            </rich:column>
+		            <rich:column id="x4" style="text-align:center" width="12%">
+		                <f:facet name="header"  >Ejecutor Coactivo</f:facet>
+		                <h:outputText value="#{record.ejecutorCoactivo}"/>
+		            </rich:column>
+		            <rich:column id="x5" style="text-align:center" width="10%">
+		                <f:facet name="header"  >Cantidad Valores</f:facet>
+		                <h:outputText value="#{record.cantidadRegistros}"/>
+		            </rich:column>
+		            <rich:column id="x6" style="text-align:center" width="10%">
+		                <f:facet name="header"  >Total exigible</f:facet>
+		                <h:outputText value="#{record.totalExigible}"/>
+		            </rich:column>
+		            <rich:column id="x7" style="text-align:center" width="5%">
+		                <f:facet name="header"  >Estado</f:facet>
+		                <h:outputText value="#{record.situacionCartera}"/>
+		            </rich:column>
+		            <rich:column id="x8" style="text-align:center" width="5%" >
+		                <f:facet name="header"  >Editar</f:facet>
+		                
+		            	<a4j:commandLink ajaxSingle="true" id="cmdlnkGestValores"
+		            		action="#{consultaCarteraMedidaCautelarManaged.gestionCartera}">
+							
+							<f:setPropertyActionListener
+							value="#{record.situacionCarteraId==1?'/sisat/coactivav2/creaCarteraMedidaCautelar.xhtml':'/sisat/coactivav2/acumulaCarteraMedidaCautelar.xhtml'}"
+							target="#{sessionManaged.page}" />
+							<h:graphicImage value="#{record.situacionCarteraId==1?'/images/editar2.png':'/images/acumula.png'}" style="border:0;" />
+						
+							<f:setPropertyActionListener value="#{record}"
+								target="#{consultaCarteraMedidaCautelarManaged.selCarteraExigibilidad}" />
+						</a4j:commandLink>
+					</rich:column>
+					
+					<rich:column id="x9" style="text-align:center" width="5%" rendered="#{sessionManaged.coPerfil.cargoId==2}">
+		                <f:facet name="header"  >Reasignar</f:facet>
+		            	<a4j:commandLink ajaxSingle="true" oncomplete="#{rich:component('mpAsignarCoactivo')}.show()"
+							reRender="mpAsignarCoactivo">
+							<h:graphicImage value="/images/user.png" style="border:0;width:18px" />
+							<f:setPropertyActionListener value="#{record}"
+								target="#{consultaCarteraMedidaCautelarManaged.selCarteraExigibilidad}" />
+						</a4j:commandLink>
+					</rich:column>
+		      	</rich:extendedDataTable>
+		        <rich:datascroller for="edt" maxPages="5" fastStep="3"/>
+		 	</rich:panel>
+	</h:form>
+	
+	<rich:modalPanel id="mpAsignarCoactivo" autosized="true" minWidth="450" >
+    	<f:facet name="header">
+			<h:outputText value="Asignar Ejecutor Coactivo" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose1" styleClass="hidelink" />
+				<rich:componentControl for="mpAsignarCoactivo"
+					attachTo="imgclose1" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+    	<h:form>
+            <h:panelGrid columns="2">
+            	<h:outputText value="Nro de cartera :" />
+            	<h:outputText value="#{consultaCarteraMedidaCautelarManaged.selCarteraExigibilidad.nroCartera}" />
+            	
+            	<h:outputText value="Ejecutor coactivo :" />
+            	<h:outputText value="#{consultaCarteraMedidaCautelarManaged.selCarteraExigibilidad.ejecutorCoactivo}" />
+            	
+	        	<h:outputText for="cmbEjecutor" value="Ejecutor coactivo asignar:" />
+				<h:selectOneMenu id="idSelectOneEjecutor" value="#{consultaCarteraMedidaCautelarManaged.coactivoAsignarId}"
+					 style="width:270px;">
+					<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems
+							value="#{consultaCarteraMedidaCautelarManaged.listaEjecutor}"
+							var="item" itemLabel="#{item.descripcion}"
+							itemValue="#{item.id}"></f:selectItems>
+				</h:selectOneMenu>
+            </h:panelGrid>
+            
+            <h:panelGrid columns="2" columnClasses="classNameCenter" >
+	        	<a4j:commandButton value="Asignar"
+				action="#{consultaCarteraMedidaCautelarManaged.registraAsignacion()}"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirmaAsignacion\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+				reRender="panelconfirmaAsignacion"/>
+	        	<a4j:commandButton value="Cancelar" onclick="#{rich:component('mpAsignarCoactivo')}.hide(); return false;" />
+        	</h:panelGrid>
+	   	</h:form>
+	</rich:modalPanel>
+	
+	
+	<rich:modalPanel id="panelconfirmaAsignacion" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose2" styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaAsignacion"
+					attachTo="imgclose2" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1" columnClasses="classNameCenter">
+				<h:outputText id="otSucc2" style="font-weight:bold;color:green"
+					value="El registro se realizó satisfactoriamente" />
+				<a4j:commandButton value="Aceptar" style="width:100px;" action="#{sessionManaged.sendRedirectPrincipal}" >
+					<f:setPropertyActionListener
+						value="/sisat/coactivav2/consultaCarteraMedidaCautelar.xhtml"
+						target="#{sessionManaged.page}" />
+				</a4j:commandButton>
+			</h:panelGrid>
+		</h:form>	
+	</rich:modalPanel>
+	
+</ui:composition>

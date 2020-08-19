@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="frmBuscarPersonaPapeletas">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+		<rich:jQuery query="focus().select()" selector="#txtCodigoBusc"
+			name="focusInputCodigoPersona" />
+
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscarPersona')}.click()"
+			selector="#frmBuscarPersonaPapeletas" />
+
+		<h:panelGroup id="pnlBuscarPersona">
+			<h:panelGrid columns="2">
+				<h:selectOneRadio
+					value="#{buscarPersonaPapeletasManaged.selectedOptBusc}"
+					layout="pageDirection">
+					<f:selectItem itemLabel="Cod. Persona" itemValue="4" />
+					<f:selectItem itemLabel="#{msg['mp.apellidosnombres']}"
+						itemValue="1" />
+					<f:selectItem itemLabel="#{msg['mp.docidentidad']}" itemValue="3" />
+					<a4j:support event="onchange"
+						actionListener="#{buscarPersonaPapeletasManaged.changeOpcionBusc}"
+						oncomplete="jQuery('#txtApePatBusc').focus()"
+						reRender="pnlBuscarPersona"></a4j:support>
+				</h:selectOneRadio>
+				<h:panelGrid columns="1">
+					<h:inputText id="txtCodigoBusc" style="height:12px;"
+						value="#{buscarPersonaPapeletasManaged.codigoPersBusc}"
+						disabled="#{buscarPersonaPapeletasManaged.selectedOptBusc==4 ? 'false' : 'true'}"
+						styleClass="textUpperCase" tabindex="0"
+						onkeypress="return validaEnteroPositivo(event)">
+						<f:converter converterId="uppeCaseConverter" />
+					</h:inputText>
+
+					<h:panelGrid columns="6">
+						<h:inputText id="txtApePatBusc" style="height:12px;width:365px"
+							value="#{buscarPersonaPapeletasManaged.apeNom}"
+							disabled="#{buscarPersonaPapeletasManaged.selectedOptBusc==1 ? 'false' : 'true'}"
+							styleClass="textUpperCase">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText>
+					</h:panelGrid>
+
+					<h:panelGrid columns="3">
+						<rich:comboBox style="width: 150px; height:12px;"
+							value="#{buscarPersonaPapeletasManaged.selectedTipoDocBusc}"
+							defaultLabel="#{msg['param.defaultlabelcombo']}"
+							disabled="#{buscarPersonaPapeletasManaged.selectedOptBusc==3 ? 'false' : 'true'}"
+							onkeypress="return showListCbo(this,event)"
+							onblur="validaInputCbo(this)">
+							<f:selectItems
+								value="#{buscarPersonaPapeletasManaged.lstTipoDoc}" />
+						</rich:comboBox>
+						<h:outputText value="N° de Documento" style="height:12px;" />
+						<h:inputText value="#{buscarPersonaPapeletasManaged.nroDocBusc}"
+							style="height:12px;"
+							disabled="#{buscarPersonaPapeletasManaged.selectedOptBusc==3 ? 'false' : 'true'}" />
+					</h:panelGrid>
+				</h:panelGrid>
+
+			</h:panelGrid>
+			<a4j:commandButton id="cmdBuscarPersona" value="#{msg['gn.buscar']}"
+				action="#{buscarPersonaPapeletasManaged.buscarPersona}"
+				reRender="frmBuscarPersonaPapeletas" status="ajaxStatus"></a4j:commandButton>
+		</h:panelGroup>
+		<!-- 
+		<div style="margin-top: 20px; margin-bottom: 2px;">
+			<a4j:commandButton value="#{msg['mp.registrarnuevapersona']}"
+				onclick="Richfaces.showModalPanel('modalRegistroPersona')">
+			</a4j:commandButton>
+		</div>
+		 -->
+		<a4j:region>
+			<div id="Layer1" style="height: 500px; overflow: scroll;">
+				<table id="tableper" width="100%" cellpadding="1" border="0">
+					<tr>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="" /></th>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="#{msg['gn.id']}" /></th>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="#{msg['gn.tipodoc']}" /></th>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="#{msg['gn.nrodoc']}" /></th>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="#{msg['gn.apenomorazonsocial']}" /></th>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="Nro Papeletas" /></th>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="Contribuyente" /></th>
+					</tr>
+					<a4j:repeat id="tblPersonas"
+						value="#{buscarPersonaPapeletasManaged.lstPersonas}" var="record"
+						width="720" height="330px"
+						noDataLabel="#{msg['gn.noexistendatos']}">
+						<tr style="background-color:#{record.styleSelected};text-align:center">
+
+							<rich:column>
+								<a4j:commandButton title="#{msg['gn.seleccionar']}"
+									image="/images/check.gif"
+									actionListener="#{buscarPersonaPapeletasManaged.seleccionarPersona}"
+									reRender="#{buscarPersonaPapeletasManaged.destinoRefresh}"
+									oncomplete="#{'Richfaces.hideModalPanel(\'id_panelBuscarPersonaPapeletas\'); return false'};"
+									style="width: 20px; height: 20px;">
+								</a4j:commandButton>
+							</rich:column>
+							<td><h:outputText value="#{record.personaId}" /></td>
+							<td><h:outputText value="#{record.tipoDocIdentidad}" /></td>
+							<td><h:outputText value="#{record.nroDocuIdentidad}" /></td>
+							<td><h:outputText
+									value="#{record.apellidosNombres} #{record.apellidosNombres != null ? record.razonSocial != null ? ' - ': '' : ''} #{record.razonSocial}" />
+							</td>
+							<td><h:outputText value="#{record.nroPapeletas}" /></td>
+							<td><h:outputText value="#{record.contribuyenteInfractor}" /></td>
+						</tr>
+					</a4j:repeat>
+				</table>
+			</div>
+		</a4j:region>
+
+	</h:form>
+
+</ui:composition>

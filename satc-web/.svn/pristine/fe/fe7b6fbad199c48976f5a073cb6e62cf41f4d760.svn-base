@@ -1,0 +1,738 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+
+
+	<style type="">
+#tablaResultadoEstado tr:nth-child(odd) {
+	background-color: #ddd;
+}
+
+#tablaResultadoEstado tr:nth-child(even) {
+	background-color: #eee;
+}
+</style>
+
+	<h:form id="formlistadecriterios">
+
+		<rich:panel id="id_paneltotal" styleClass="sisatPanel" width="100%"
+			height="270px">
+			<f:facet name="header">	CONSULTA ESTADO DE CUENTA</f:facet>
+
+			<table width="100%" cellpadding="0" cellspacing="0" border="1">
+				<!-- <tr>
+												<td colspan="2" width="40%" >
+													<table width="40%" cellpadding="0" cellspacing="0" border="0">
+														<tr>
+															<td><h:panelGroup id="pnlTipo">
+																				 <h:panelGroup>
+																					<td><h:selectBooleanCheckbox
+																							value="#{estadoCuentaManaged.todosdeuda}" >
+																								<a4j:support event="onchange" actionListener="#{estadoCuentaManaged.volvercargar}" ></a4j:support>
+																						</h:selectBooleanCheckbox>																		</td>
+																					<td><h:outputText value="Deuda" /> </td>
+																				</h:panelGroup> 
+																			
+																				<h:panelGroup>
+																					<td><h:selectBooleanCheckbox
+																							value="#{estadoCuentaManaged.detallado}" /></td>
+																					<td><h:outputText value="Detallado" /></td>
+																				</h:panelGroup>
+																	
+																</h:panelGroup>
+																</td>
+														</tr>
+														</table>
+														</td>
+											</tr>
+											-->
+
+
+
+
+
+				<tr>
+
+					<td width="50%" valign="top"><rich:panel
+							id="id_paneldeConcepto" style="width:100%; height: 70px;">
+							<table width="100%" cellpadding="0" cellspacing="0" border="0">
+								<tr>
+									<td
+										style="border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: silver;">
+										<table>
+											<tr>
+
+												<td><b><h:outputText value="Conceptos" /></b></td>
+												<td></td>
+												<td><h:selectBooleanCheckbox
+														value="#{estadoCuentaManaged.todosConceptos}">
+														<a4j:support event="onchange"
+															actionListener="#{estadoCuentaManaged.seleccionarTodosConceptos}"
+															reRender="pnlConceptos"></a4j:support>
+													</h:selectBooleanCheckbox></td>
+												<td><h:outputText value="Seleccionar todos" /></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+								<tr>
+									<td colspan="2">
+										<table width="100%" cellpadding="0" cellspacing="0" border="0">
+											<tr>
+												<td><h:panelGroup id="pnlConceptos">
+														<table>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.subConcepto}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup rendered="#{((rowKey-(rowKey%6))/6)==0}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}" /></td>
+																		<td><h:outputText
+																				value="#{record.subconceptoDes}" /> <h:inputHidden
+																				value="#{record.subconceptoId}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.subConcepto}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup rendered="#{((rowKey-(rowKey%6))/6)==1}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}" /></td>
+																		<td><h:outputText
+																				value="#{record.subconceptoDes}" /> <h:inputHidden
+																				value="#{record.subconceptoId}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.subConcepto}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup rendered="#{((rowKey-(rowKey%6))/6)==2}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}" /></td>
+																		<td><h:outputText
+																				value="#{record.subconceptoDes}" /> <h:inputHidden
+																				value="#{record.subconceptoId}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.subConcepto}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup rendered="#{((rowKey-(rowKey%6))/6)==3}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}" /></td>
+																		<td><h:outputText
+																				value="#{record.subconceptoDes}" /> <h:inputHidden
+																				value="#{record.subconceptoId}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.subConcepto}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup rendered="#{((rowKey-(rowKey%6))/6)==4}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}" /></td>
+																		<td><h:outputText
+																				value="#{record.subconceptoDes}" /> <h:inputHidden
+																				value="#{record.subconceptoId}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.subConcepto}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup rendered="#{((rowKey-(rowKey%6))/6)==5}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}" /></td>
+																		<td><h:outputText
+																				value="#{record.subconceptoDes}" /> <h:inputHidden
+																				value="#{record.subconceptoId}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.subConcepto}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup rendered="#{((rowKey-(rowKey%6))/6)==6}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}" /></td>
+																		<td><h:outputText
+																				value="#{record.subconceptoDes}" /> <h:inputHidden
+																				value="#{record.subconceptoId}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+														</table>
+													</h:panelGroup></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+
+							</table>
+						</rich:panel></td>
+
+
+
+					<td width="50%"
+						style="border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: silver;">
+
+
+						<rich:panel id="id_paneldeanyo" style="width:100%; height: 70px;">
+
+							<table width="100%" cellpadding="0" cellspacing="0" border="0">
+								<tr>
+									<td
+										style="border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: silver;">
+										<table>
+											<tr>
+												<td><b><h:outputText value="Años" /></b></td>
+												<td><h:outputText value="  " /></td>
+												<td><h:selectBooleanCheckbox
+														value="#{estadoCuentaManaged.todosAnios}">
+														<a4j:support event="onchange"
+															actionListener="#{estadoCuentaManaged.seleccionarTodosAnios}"
+															reRender="pnlAnyos"></a4j:support>
+													</h:selectBooleanCheckbox></td>
+												<td><h:outputText value="Seleccionar todos" /></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<table width="100%" cellpadding="1" cellspacing="0" border="0">
+											<tr>
+												<td><h:panelGroup id="pnlAnyos">
+														<table>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.nroAnyo}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup
+																		rendered="#{((rowKey-(rowKey%10))/10)==0}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}" /></td>
+																		<td><h:outputText value="#{record.codigo}" /> <h:inputHidden
+																				value="#{record.descripcion}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.nroAnyo}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup
+																		rendered="#{((rowKey-(rowKey%10))/10)==1}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}" /></td>
+																		<td><h:outputText value="#{record.codigo}" /> <h:inputHidden
+																				value="#{record.descripcion}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+														</table>
+													</h:panelGroup></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+
+
+
+							</table>
+						</rich:panel>
+					</td>
+				</tr>
+				<tr>
+					<td width="50%"
+						style="border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: silver;">
+						<rich:panel id="id_paneldecuotas"
+							style="width:100%; height: 70px;">
+							<table width="100%" cellpadding="0" cellspacing="0" border="0">
+								<tr>
+									<td
+										style="border-bottom-style: solid; border-bottom-width: 1px; border-bottom-color: silver;">
+										<table>
+											<tr>
+												<td><b><h:outputText value="Por Cuotas" /></b></td>
+												<td><h:outputText value="    " /></td>
+												<td><h:selectBooleanCheckbox
+														value="#{estadoCuentaManaged.todosCuotas}">
+														<a4j:support event="onchange"
+															actionListener="#{estadoCuentaManaged.seleccionarTodosCuotas}"
+															reRender="pnlCuotas">
+														</a4j:support>
+													</h:selectBooleanCheckbox></td>
+												<td><h:outputText value="Seleccionar todos" /></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<table>
+											<tr>
+												<td valign="top"><h:panelGroup id="pnlCuotas">
+														<table>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.nroCuotas}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup
+																		rendered="#{((rowKey-(rowKey%12))/12)==0}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}" /></td>
+																		<td><h:outputText value="#{record.codigo}" /> <h:inputHidden
+																				value="#{record.descripcion}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.nroCuotas}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup
+																		rendered="#{((rowKey-(rowKey%12))/12)==1}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}">
+																				<a4j:support event="onchange" ajaxSingle="true"></a4j:support>
+																			</h:selectBooleanCheckbox></td>
+																		<td><h:outputText value="#{record.codigo}" /> <h:inputHidden
+																				value="#{record.descripcion}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+															<tr>
+																<a4j:repeat value="#{estadoCuentaManaged.nroCuotas}"
+																	var="record" rowKeyVar="rowKey">
+																	<h:panelGroup
+																		rendered="#{((rowKey-(rowKey%12))/12)==2}">
+																		<td><h:selectBooleanCheckbox
+																				value="#{record.select}">
+																				<a4j:support event="onchange" ajaxSingle="true"></a4j:support>
+																			</h:selectBooleanCheckbox></td>
+																		<td><h:outputText value="#{record.codigo}" /> <h:inputHidden
+																				value="#{record.descripcion}" /></td>
+																	</h:panelGroup>
+																</a4j:repeat>
+															</tr>
+														</table>
+													</h:panelGroup></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</rich:panel>
+					</td>
+				</tr>
+			</table>
+
+			<table cellpadding="0" border="0" width="100%">
+				<tr>
+					<td colspan="1"><a4j:region>
+							<rich:panel id="id_panelapapeletas"
+								rendered="#{estadoCuentaManaged.renderedPapeletas}" width="100%"
+								height="300px">
+								<f:facet name="header">
+									<h:outputText value="#{estadoCuentaManaged.tituloPapeleta}" />
+								</f:facet>
+								<rich:extendedDataTable id="id_papeletas" var="record"
+									value="#{estadoCuentaManaged.lstPapeletas}" width="100%"
+									height="120px" sortMode="single" selectionMode="single"
+									selectedClass="dataTableSelectedRow" enableContextMenu="false"
+									styleClass="no-table-header">
+									<rich:column id="l1" width="5%" style="text-align: center">
+										<f:facet name="header">
+											<h:selectBooleanCheckbox
+												value="#{estadoCuentaManaged.todospapeletas}">
+												<a4j:support event="onchange"
+													actionListener="#{estadoCuentaManaged.seleccionarTodopapeletas}"
+													reRender="id_papeletas"></a4j:support>
+											</h:selectBooleanCheckbox>
+										</f:facet>
+										<div style="text-align: center">
+											<h:selectBooleanCheckbox value="#{record.select}"></h:selectBooleanCheckbox>
+										</div>
+									</rich:column>
+									<rich:column id="l2" width="15%">
+										<f:facet name="header">Fecha Infraccion</f:facet>
+										<h:outputText value="#{record.fechaIntraccion}" />
+									</rich:column>
+									<rich:column id="l3" width="8%">
+										<f:facet name="header">Nro Papeleta</f:facet>
+										<h:outputText value="#{record.nroPapeleta}" />
+									</rich:column>
+									<rich:column id="l4" width="10%">
+										<f:facet name="header">Placa de Vehiculo</f:facet>
+										<h:outputText value="#{record.placa}" />
+									</rich:column>
+									<rich:column id="l5" width="10%">
+										<f:facet name="header">Tasa Descuento</f:facet>
+										<h:outputText value="#{record.descuento}" />
+									</rich:column>
+									<rich:column id="l6" width="25%">
+										<f:facet name="header">Nombre Infractor</f:facet>
+										<h:outputText value="#{record.infractorDes}" />
+									</rich:column>
+
+								</rich:extendedDataTable>
+							</rich:panel>
+						</a4j:region></td>
+				</tr>
+			</table>
+			<table cellpadding="0" border="0" width="100%">
+				<tr>
+					<td width="50%" colspan="1" valign="top"><a4j:region>
+							<rich:panel id="id_panevehi" width="100%" height="500px">
+								<f:facet name="header">
+									<h:outputText value="#{estadoCuentaManaged.tituloVehiculo}" />
+								</f:facet>
+
+								<div id="Layer0" style="height: 155px; overflow: scroll;">
+									<table width="100%" cellpadding="1" cellspacing="0" border="0">
+										<tr>
+											<th bgcolor="#3F7FB2"><h:selectBooleanCheckbox
+													value="#{estadoCuentaManaged.todosvehiculos}">
+													<a4j:support event="onchange"
+														actionListener="#{estadoCuentaManaged.seleccionarTodoVehiculos}"
+														reRender="tblvehiculos"></a4j:support>
+												</h:selectBooleanCheckbox></th>
+											<th bgcolor="#3F7FB2"><h:outputText
+													style="color: #ffffff;" value="Placa Vehiculo" /></th>
+											<th bgcolor="#3F7FB2"><h:outputText
+													style="color: #ffffff;" value="Categoría" /></th>
+											<th bgcolor="#3F7FB2"><h:outputText
+													style="color: #ffffff;" value="Marca" /></th>
+											<th bgcolor="#3F7FB2"><h:outputText
+													style="color: #ffffff;" value="Modelo" /></th>
+										</tr>
+										<a4j:repeat id="tblvehiculos" rowKeyVar="index" var="record"
+											value="#{estadoCuentaManaged.lstDjVehicular}">
+											<tr>
+												<td><h:selectBooleanCheckbox value="#{record.select}"></h:selectBooleanCheckbox>
+												</td>
+												<td bgcolor="#FFFFFF"><h:outputText
+														value="#{record.placa}" /></td>
+												<td bgcolor="#FFFFFF"><h:outputText
+														value="#{record.categoria}" /></td>
+												<td bgcolor="#FFFFFF"><h:outputText
+														value="#{record.marca}" /></td>
+												<td bgcolor="#FFFFFF"><h:outputText
+														value="#{record.modelo}" /></td>
+											</tr>
+										</a4j:repeat>
+
+									</table>
+								</div>
+							</rich:panel>
+						</a4j:region></td>
+
+					<td width="50%" colspan="1" valign="top"><a4j:region>
+							<rich:panel id="id_panelpredio" width="50%" height="500px">
+								<f:facet name="header">
+									<h:outputText value="#{estadoCuentaManaged.tituloPredio}" />
+								</f:facet>
+								<div id="Layer1" style="height: 155px; overflow: scroll;">
+									<table width="100%" cellpadding="1" border="0">
+										<tr>
+											<th bgcolor="#3F7FB2"><h:selectBooleanCheckbox
+													value="#{estadoCuentaManaged.todospredios}">
+													<a4j:support event="onchange"
+														actionListener="#{estadoCuentaManaged.seleccionarTodoPredios}"
+														reRender="id_panelpredio,tblpredios"></a4j:support>
+												</h:selectBooleanCheckbox></th>
+											<th bgcolor="#3F7FB2"><h:outputText
+													style="color: #ffffff;" value="Cód. Pred." /></th>
+											<th bgcolor="#3F7FB2"><h:outputText
+													style="color: #ffffff;" value="Dirección" /></th>
+										</tr>
+										<a4j:repeat id="tblpredios" rowKeyVar="index" var="record"
+											value="#{estadoCuentaManaged.lstPredio}">
+											<tr>
+												<td><h:selectBooleanCheckbox value="#{record.select}"></h:selectBooleanCheckbox>
+												</td>
+												<td bgcolor="#FFFFFF"><h:outputText
+														value="#{record.predioId}" /></td>
+												<td bgcolor="#FFFFFF"><h:outputText
+														value="#{record.direccion}" /></td>
+											</tr>
+										</a4j:repeat>
+									</table>
+								</div>
+							</rich:panel>
+						</a4j:region></td>
+				</tr>
+			</table>
+
+			<table cellpadding="0" border="0" width="60%">
+
+				<tr>
+					<td colspan="4"><h:commandButton value="Buscar"
+							id="btn_buscar" style="width:100px;"
+							action="#{estadoCuentaManaged.buscar}" reRender="id_paneltotal"
+							accesskey="b" status="ajaxStatus" /> <h:commandButton
+							value="Imprimir" id="btn_imprimir" style="width:100px;"
+							action="#{estadoCuentaManaged.imprimirEstadoCuenta}"
+							accesskey="i" /> <a4j:commandButton value="Limpiar"
+							id="btn_limpiar" style="width:100px;"
+							action="#{estadoCuentaManaged.limpiar}" reRender="id_paneltotal"
+							accesskey="l" /> <h:commandButton value="Imp.Constancia"
+							id="btn_imprimirconstancia"
+							rendered="#{estadoCuentaManaged.esBuenContribuyente}"
+							style="width:100px;"
+							action="#{estadoCuentaManaged.imprimirConstancia}" accesskey="c" />
+					</td>
+				</tr>
+			</table>
+			<a4j:region id="tblListatotal">
+				<div id="Layer1" style="height: 500px; overflow: scroll;">
+					<table id="tablaResultadoEstado" cellpadding="1" border="0"
+						width="100%">
+						<tr>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Año" /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Tributo" /></th>
+							<!--
+					 <th bgcolor="#3F7FB2"  >
+					    <h:outputText style="color: #ffffff;"   value="Uso" />
+					</th> -->
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Cuota" /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="F. Vencimiento" /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Insoluto" /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Der. Emisión" /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Reajuste" /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Interés" /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Tot. Deuda" /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Descuento" /></th>
+							<!-- 
+					<th bgcolor="#3F7FB2"  >
+					    <h:outputText style="color: #ffffff;"   value="Tot. Pago" />
+					</th>-->
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Saldo" /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Fi." /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Es." /></th>
+							<th bgcolor="#3F7FB2"><h:outputText
+									style="color: #ffffff;" value="Observación" /></th>
+						</tr>
+						<ui:repeat value="#{estadoCuentaManaged.deuda}" var="record">
+							<tr>
+								<td align="center"><h:outputText
+										value="#{record.periodo}" /></td>
+								<td align="center"><h:outputText
+										value="#{record.listaConcepto}" /></td>
+
+								<!--  <td align="center" >
+						<h:outputText id="c66" value="#{record.uso}" />
+					    <rich:toolTip id="x22" for="c66" value="#{record.uso}" />
+					</td> -->
+
+								<td align="center"><h:outputText
+										value="#{record.listaCuota}" /></td>
+								<td align="center"><h:outputText
+										value="#{record.listaVencimientos}" /></td>
+								<td align="right"><h:outputText value="#{record.insoluto}" />
+								</td>
+								<td align="right"><h:outputText
+										value="#{record.derechoEmision}" /></td>
+								<td align="right"><h:outputText value="#{record.reajuste}" />
+								</td>
+								<td align="right"><h:outputText value="#{record.interes}" />
+								</td>
+								<td align="right"><h:outputText value="#{record.subTotal}" />
+								</td>
+								<td align="right"><h:outputText
+										value="#{record.descuento}" /></td>
+								<!-- <td align="right" >
+								<h:outputText value="#{record.totalCancelado}" />
+					</td>-->
+								<td align="right"><h:outputText value="#{record.subTotal}" />
+								</td>
+								<td align="center"><h:outputText value="#{record.fisca}" />
+								</td>
+								<td align="center"><f:facet name="header">Es.</f:facet>
+									<div style="text-align: right">
+										<a4j:commandLink ajaxSingle="true" id="newlink33"
+											action="#{estadoCuentaManaged.buscarActoAdministrativo}"
+											status="ajaxStatus"
+											disabled="#{record.estadoDeudaId == 1 || record.estadoDeudaId == 0 || record.estadoDeudaId == null}"
+											value="#{record.estadoDeudaId}"
+											oncomplete="#{rich:component('panelActo')}.hide();#{rich:component('panelActo')}.show();"
+											reRender="panel">
+											<f:setPropertyActionListener value="#{record}"
+												target="#{estadoCuentaManaged.deudaItem}" id="r4288" />
+										</a4j:commandLink>
+										<rich:toolTip id="x155" for="newlink33"
+											value="#{record.estadoDeudaDescripcion}" />
+									</div></td>
+								<td align="center"><h:outputText id="c19"
+										value="#{record.observacion}" /> <rich:toolTip id="x2"
+										for="c19" value="#{record.observacion}" /></td>
+							</tr>
+						</ui:repeat>
+					</table>
+				</div>
+			</a4j:region>
+		</rich:panel>
+	</h:form>
+
+
+
+	<rich:modalPanel id="panelActo" minWidth="500" minHeight="300">
+
+		<f:facet name="header">
+			<h:outputText value="Acto Administrativo" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelActo" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="panel">
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<table border="0" width="100%">
+						<tr>
+							<td><h:outputText id="succ2" value="Cod. Persona:" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ3"
+										value="#{estadoCuentaManaged.actoItem.personaId}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ0" value="Nro. de Acto:" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ1"
+										value="#{estadoCuentaManaged.actoItem.nroActo}" />
+								</h:panelGrid></td>
+						</tr>
+
+						<tr>
+							<td><h:outputText id="succ4" value="Tipo de Acto:" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ5"
+										value="#{estadoCuentaManaged.actoItem.tipoActo}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ6" value="Fecha Emisión:" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ7"
+										value="#{estadoCuentaManaged.actoItem.fechaEmision}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</h:panelGrid></td>
+						</tr>
+
+						<tr>
+							<td><h:outputText id="succ8" value="Monto Deuda Acto:" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ9"
+										value="#{estadoCuentaManaged.actoItem.montoDeuda}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ10" value="Concepto:" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ11"
+										value="#{estadoCuentaManaged.actoItem.concepto}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ112" value="Cuotas:" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ13"
+										value="#{estadoCuentaManaged.actoItem.cuotas}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ1141" value="Tipo Acto REC:" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ151"
+										value="#{estadoCuentaManaged.actoItem.tipoActoRec}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ114" value="Nro. REC:" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ15"
+										value="#{estadoCuentaManaged.actoItem.nroRec}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ116" value="Monto Deuda REC:" />
+							</td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ17"
+										value="#{estadoCuentaManaged.actoItem.deudaTotalRecActo}" />
+								</h:panelGrid></td>
+						</tr>
+
+
+					</table>
+
+				</a4j:outputPanel>
+
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+
+
+
+	<rich:modalPanel id="modalGrabo" autosized="true" width="450">
+		<f:facet name="header">
+			<h:outputText value="#{msg['gn.mensajes']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelGrabo"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalGrabo" attachTo="hidelGrabo"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages style="color: blue;'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton id="btnGrabo" value="#{msg['gn.aceptar']}"
+					actionListener="#{estadoCuentaManaged.cobroCorrecto}">
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+
+
+
+
+</ui:composition>

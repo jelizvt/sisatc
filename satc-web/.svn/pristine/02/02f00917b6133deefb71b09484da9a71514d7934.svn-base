@@ -1,0 +1,695 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 4.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<HEAD>
+		<title>Declaración Jurada de Alcabala </title>
+		
+		<STYLE type="text/css">TD.Fila { FONT-SIZE: 5px; FONT-FAMILY: Arial }
+	BODY { FONT-SIZE: 8px; FONT-FAMILY: Arial }
+	.P { PADDING-RIGHT: 4px; PADDING-LEFT: 4px; CURSOR: hand }
+	.T { BORDER-RIGHT: #336699 1px solid; PADDING-RIGHT: 3px; BORDER-TOP: #336699 1px solid; PADDING-LEFT: 3px; BORDER-LEFT: #336699 1px solid; CURSOR: hand; BORDER-BOTTOM: #336699 1px solid; BACKGROUND-COLOR: #e9f2f8 }
+	
+	
+.tableHeadCss{
+border-right: solid 1px #C0C0C0;
+padding: 2px 2px 2px 2px;
+text-align: center;
+font-size: 11px;
+font-family: Arial,Verdana,sans-serif;
+white-space: nowrap;
+background-color: #EAF0F8;
+}
+.tableBodyCss{
+padding-right: 6px;
+font-size: 12px;
+color: #000;
+font-family: Arial,Verdana,sans-serif;
+text-align: right;
+}	
+#datosCalculoAfecto td{
+border-right: solid 1px #C0C0C0;
+border-bottom: solid 1px #C0C0C0;
+}
+#datosCalculoNoAfecto td{
+border-right: solid 1px #C0C0C0;
+border-bottom: solid 1px #C0C0C0;
+}
+#datosRelacionados td{
+border-right: solid 1px #C0C0C0;
+border-bottom: solid 1px #C0C0C0;
+}
+	
+		</STYLE>
+		<script language="javascript">
+			function irPagina(valor){
+				document.form1.hidProceso.value=valor;
+				document.form1.submit();  
+			}		
+			function ejecutarImpresion(){
+				window.print();
+			}
+			
+			function imprimir(){
+				document.getElementById("Cabecera").style.display="none";
+				ejecutarImpresion();
+				document.getElementById("Cabecera").style.display="";			
+			}			
+		</script>
+	</HEAD>
+	
+	<body>	
+		<form name="form1" id="form1">
+		<div id="Cabecera">
+			<table border="0" align="center">
+				<tr>
+					<td><input type="button" value="Imprimir"
+						onclick="imprimir();" /></td>
+				</tr>
+			</table>
+		</div>
+
+		<input name="hidProceso" id="hidProceso" type="hidden" size="1" />
+		<div id="divMensaje"></div>
+		<div id="divCuerpo">
+			<table id="tblTitulo" cellSpacing="10" cellPadding="10" width="100%"
+				border="0">
+				<tbody>
+					<tr>
+						<td>
+							<table width="100%" border="0" cellpadding="2">
+								<tr>
+									<td align="center"><span id="lblMunicipioDes"
+										style="font-size: Small; font-weight: bold;">SERVICIO
+											DE ADMINISTRACION TRIBUTARIA DE CAJAMARCA</span></td>
+								</tr>
+								<tr>
+									<td align="center"><strong><span
+											id="lblDeclaracionJurada" style="font-size: Small;">
+												SATC - Liquidacón del Impuesto de Alcabala Nro. &nbps; <h:outputText
+													value="#{imprimirAlcabalaManaged.impAlcaDto.djAlcabalaId}" />
+										</span></strong></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table id="datosContribuyente" cellSpacing="1" cellPadding="0" width="100%" border="0">
+								<tr>
+									<td><P style="FONT-SIZE: 13px; FONT-FAMILY: Arial"
+											align="left">
+											<span id="Label4"><strong>DATOS DE CONTRIBUYENTE</strong></span>
+										</P></td>
+								</tr>
+								<tr>
+									<td>
+										<table style="FONT-SIZE: 12px; FONT-FAMILY: Arial"
+											cellSpacing="0" cellPadding="0" width="100%" border="0">
+											<tr>
+												<td width="10%"><span id="Label1"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Código </strong>
+												</span></td>
+												<td width="30%"><span id="Label1"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Apellidos y Nombres/ Razon Social </strong>
+												</span></td>
+												<td width="10%"><span id="Label2"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Tipo Doc.</strong>
+												</span></td>
+												<td width="15%"><span id="Label3"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Nro. de Doc.</strong>
+												</span></td>
+												<td width="40%"><span id="Label4"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Domicilio</strong>
+												</span></td>
+
+											</tr>
+											<tr>
+												<td><span id="contriId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.personaId}" /></span></td>
+												<td><span id="contriApeNomId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.apellidosNombres}" /></span></td>
+												<td><span id="contriTipoDocId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.tipoDocContribu}" /></span></td>
+												<td><span id="contriNroDocId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.nroDocContri}" /></span></td>
+												<td><span id="contriDomicilioId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.direcContri}" /></span></td>
+											</tr>
+
+										</table>
+									</td>
+								</tr>
+								<!--  SE CODIFICARA LOS  RELACIONADOS -->
+
+								<a4j:outputPanel
+									rendered="#{empty imprimirAlcabalaManaged.listRelacionados}">
+									<tr>
+										<td><h:outputText style="font-weight:bold; font-size: 13px; font-family: Arial"
+												value="SIN RELACIONADOS" /></td>
+									</tr>									
+								</a4j:outputPanel>
+
+
+								<a4j:outputPanel
+									rendered="#{not empty imprimirAlcabalaManaged.listRelacionados}">
+									<tr>
+										<td><h:outputText style="font-weight:bold; font-size: 13px; font-family: Arial"
+												value="RELACIONADOS" /></td>
+									</tr>
+									<tr>
+										<td>
+											<table id="datosRelacionados" width="100%" cellspacing="0">
+												<tr class="tableHeadCss">
+													<td align="center"  style="border-left: solid 1px #C0C0C0; border-top: solid 1px #C0C0C0;"><h:outputText
+															style="font-weight:bold" value="Item" /></td>
+													<td align="center" style="border-top: solid 1px #C0C0C0;"><h:outputText
+															style="font-weight:bold" value="Tipo Relación" /></td>
+													<td align="center" style="border-top: solid 1px #C0C0C0;"><h:outputText
+															style="font-weight:bold" value="Nombre/Razón Social" /></td>
+													<td align="center" style="border-top: solid 1px #C0C0C0;"><h:outputText
+															style="font-weight:bold" value="Tipo Documento" /></td>
+													<td align="center" style="border-top: solid 1px #C0C0C0;"><h:outputText
+															style="font-weight:bold" value="N° Documento" /></td>
+												</tr>
+												<ui:repeat
+													value="#{imprimirAlcabalaManaged.listRelacionados}"
+													var="record" varStatus="loop">
+													<tr class="tableBodyCss">
+														<td align="center" style="border-left: solid 1px #C0C0C0;">#{imprimirAlcabalaManaged.listRelacionados.indexOf(record)+1}</td>
+														<td align="center"><h:outputText
+																value="#{record.relacion}" /></td>
+														<td align="left"><h:outputText
+																value="#{record.nombres}" /></td>
+														<td align="center"><h:outputText
+																value="#{record.tipoDoc}" /></td>
+														<td align="center"><h:outputText
+																value="#{record.numeroDocuIdentidad}" /></td>
+													</tr>
+												</ui:repeat>
+											</table>
+										</td>
+									</tr>
+
+								</a4j:outputPanel>
+								<!-- TERMINA RELACIONADOS -->
+							</table>
+						</td>
+					</tr>
+
+					<tr>
+						<td>
+							<table id="datosPropiedad" cellSpacing="0" cellPadding="0" width="100%" border="0">
+								<tr>
+									<td colspan="2">										
+										<p>	<span id="Label4" style="FONT-SIZE: 13px; FONT-FAMILY: Arial; text-align:left;" ><strong>DATOS DE PROPIEDAD</strong></span> </p>										
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2"> 
+									<span id="Label1" style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial"> <strong>DJ Predial : </strong></span>									
+									<span id="Label1" style="FONT-SIZE: 12px; FONT-FAMILY: Arial">  <h:outputText value="#{imprimirAlcabalaManaged.impAlcaDto.djPredial}" /> </span>
+									</td>									
+								</tr>
+								<tr>
+									<td colspan="2">
+										<table style="FONT-SIZE: 12px; FONT-FAMILY: Arial"
+											cellSpacing="1" cellPadding="0" width="100%" border="0">
+											<tr>
+												<td width="12%"><span id="Label1"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Código Predio</strong>
+												</span></td>
+
+												<td width="18%"><span id="Label2"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Ubicación Propiedad</strong>
+												</span></td>
+
+												<td width="50%"><span id="Label3"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Dirección de Predio </strong>
+												</span></td>
+
+												<td width="20%"><span id="Label4"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Tipo de Predio</strong>
+												</span></td>
+											</tr>
+
+											<tr>
+												<td><span id="predioId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.predioId}" /></span></td>
+												<td><span id="ubicacionPropiedadId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.ubicacionPropiedad}" /></span></td>
+												<td><span id="direccionPredioId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.direccionPredio}" /></span></td>
+												<td><span id="tipoPredioId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.tipoPredio}" /></span></td>
+											</tr>
+
+											<tr>
+												<td width="10%"><span id="Label5"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Porc. Prop.</strong>
+												</span></td>
+
+												<td width="25%"><span id="Label6"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Notaría</strong>
+												</span></td>
+
+												<td width="50%"><span id="Label7"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Tipo de Transferencia</strong>
+												</span></td>
+
+												<td width="20%"><span id="Label8"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial">
+														<strong>Condición de Prop.</strong>
+												</span></td>
+
+											</tr>
+
+
+											<tr>
+												<td><span id="porcPropiedadId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.porPropiedad}" /></span></td>
+												<td><span id="notariaId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.notaria}" /></span></td>
+												<td><span id="transferenciaId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.tipoTransferencia}" /></span></td>
+												<td><span id="condPropiedadId"> <h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.condicionPropiedad}" /></span></td>
+
+											</tr>
+
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>	
+					<tr>
+						<td>
+							<table id="datosTransferente" cellSpacing="1" cellPadding="0" width="100%" border="0">
+								<tr>
+									<td>
+										<P style="FONT-SIZE: 13px; FONT-FAMILY: Arial" align="left">
+											<span id="Label4"> <strong>DATOS DE
+													TRANSFERENTE</strong>
+											</span>
+										</P>
+									</td>
+								</tr>
+								<tr>
+									<td width="20%">
+										<table>
+											<tr>
+												<td><span id="Label18"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial"><strong>Fecha
+															de Transferencia : </strong></span> <span id="fechaTransferenciaid"
+													style="FONT-SIZE: 12px; FONT-FAMILY: Arial"><h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.sFechaTransferencia}" /></span>
+												</td>
+												<td align="right"><span id="Label19"
+													style="font-weight: bold; FONT-SIZE: 12px; FONT-FAMILY: Arial"><strong>Fecha
+															de Declaración : </strong></span> <span id="fechaDeclaracionid"
+													style="FONT-SIZE: 12px; FONT-FAMILY: Arial"><h:outputText
+															value="#{imprimirAlcabalaManaged.impAlcaDto.sFechaDeclaracion}" /></span>
+												</td>
+											</tr>
+										</table>
+
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<table style="FONT-SIZE: 12px; FONT-FAMILY: Arial"
+											cellSpacing="0" cellPadding="0" width="100%" border="0">
+
+											<tr>
+
+												<td colspan="2" align="center"><rich:dataTable
+														id="tblTransferente" align="center"
+														value="#{imprimirAlcabalaManaged.lstTransferentes}"
+														var="record" width="700px" sortMode="single"
+														selectionMode="single" enableContextMenu="false"
+														noDataLabel="Noexisten transferentes">
+
+
+														<rich:column width="200px">
+															<f:facet name="header">Nombre Transferente</f:facet>
+															<h:outputText
+																value="#{record.nombresCompletos} #{record.razonSocial}" />
+														</rich:column>
+
+														<rich:column width="60px">
+															<f:facet name="header">Tipo Doc.</f:facet>
+															<h:outputText value="#{record.tipoDocIdentidad}" />
+														</rich:column>
+
+														<rich:column width="80px">
+															<f:facet name="header">Nro Documento</f:facet>
+															<h:outputText value="#{record.nroDocuIdentidad}" />
+														</rich:column>
+
+														<rich:column width="80px">
+															<f:facet name="header">Teléfono</f:facet>
+															<h:outputText value="#{record.telefono}" />
+														</rich:column>
+														<rich:column width="330px">
+															<f:facet name="header">Dirección</f:facet>
+															<h:outputText value="#{record.direccionCompleta}" />
+														</rich:column>
+													</rich:dataTable></td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<table id="documentosAnexos" cellSpacing="0" cellPadding="0" width="100%" border="0">
+								<tr>
+									<td>
+										<P style="FONT-SIZE: 13px; FONT-FAMILY: Arial" align="left">
+											<span id="Label4"> <strong>DOCUMENTOS ANEXOS</strong>
+											</span>
+										</P>
+									</td>
+								</tr>
+								<tr>
+									<td width="100%"></td>
+								</tr>
+
+								<tr>
+									<td>
+										<table style="FONT-SIZE: 12px; FONT-FAMILY: Arial"
+											cellSpacing="0" cellPadding="0" width="100%" border="0">
+											<tr>
+												<td align="center"><rich:dataTable id="tblAnexos2"
+														align="center"
+														value="#{imprimirAlcabalaManaged.lstAnexosMuestra}"
+														var="records" width="700px" sortMode="single"
+														selectionMode="single" enableContextMenu="false"
+														rendered="#{not empty imprimirAlcabalaManaged.lstAnexosMuestra}">
+
+
+														<rich:column width="40%">
+															<f:facet name="header">#{msg['gn.descripciondoc']}</f:facet>
+															<h:outputText value="#{records.descripcionDoc}" />
+														</rich:column>
+
+														<rich:column width="50%">
+															<f:facet name="header">#{msg['rv.glosa']}</f:facet>
+															<h:outputText value="#{records.glosaDoc}"
+																style="width: 100%" />
+														</rich:column>
+
+														<rich:column width="10%">
+															<f:facet name="header">#{msg['gn.docadjunto']}</f:facet>
+															<h:outputText value="#{records.nomDocAdjunto}" />
+														</rich:column>
+													</rich:dataTable> <h:outputText value="#{msg['rv.noexistenanexos']}"
+														rendered="#{empty imprimirAlcabalaManaged.lstAnexosMuestra}" />
+
+												</td>
+
+											</tr>
+
+
+										</table>
+									</td>
+
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td align="left"><span id="Label4"
+							style="FONT-SIZE: 13px; FONT-FAMILY: Arial"> <strong>CONDICIÓN
+									: <h:outputText
+										value=" #{imprimirAlcabalaManaged.impAlcaDto.etiquetaAfectoImpuesto}" />
+							</strong>
+						</span></td>
+					</tr>
+					<tr>
+						<td>
+							<table id="datosCalculo" cellSpacing="0" cellPadding="0" width="100%" border="0">
+								<tr>
+									<td align="left"><span id="Label4"
+										style="FONT-SIZE: 13px; FONT-FAMILY: Arial"> <strong>DATOS
+												DE CÁLCULO</strong>
+									</span></td>
+								</tr>
+								<tr>
+									<td width="100%"></td>
+								</tr>
+
+								<h:panelGroup id="id_panelNoAfecto"
+									rendered="#{imprimirAlcabalaManaged.impAlcaDto.inafectoImpuesto}">
+									<tr>
+										<td>
+											<table id="datosCalculoNoAfecto" style="FONT-SIZE: 12px; FONT-FAMILY: Arial"
+												cellSpacing="0" cellPadding="0" width="100%" border="0">
+												<tr class="tableHeadCss">
+													<td width="20%" style="border-left: solid 1px #C0C0C0; border-top: solid 1px #C0C0C0;"><span id="Label9">
+															<strong>Valor de Autovalúo </strong>
+													</span></td>
+
+													<td width="20%" style="border-top: solid 1px #C0C0C0;"><span id="Label10">
+															<strong>Valor de Transferencia</strong>
+													</span></td>
+
+													<td width="20%" style="border-top: solid 1px #C0C0C0;"><span id="Label11">
+															<strong>Moneda</strong>
+													</span></td>
+
+													<td width="20%" style="border-top: solid 1px #C0C0C0;"><span id="Label12">
+															<strong>Tipo de Cambio</strong>
+													</span></td>
+
+													<td width="20%" style="border-top: solid 1px #C0C0C0;"><span id="Label13">
+															<strong>Valor de Transferencia en Soles</strong>
+													</span></td>
+												</tr>
+
+												<tr class="tableBodyCss">
+													<td style="border-left: solid 1px #C0C0C0;"><span id="autovaluoId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.valorAutovaluo} " /></span></td>
+													<td><span id="valorTransferenciaId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.valorTransferencia}" /></span></td>
+													<td><span id="monedaId"><h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.tipoMoneda}" /></span></td>
+													<td><span id="tipoCambioId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.tipoCambio}" /></span></td>
+													<td><span id="valorTransferenciaSolesId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.valorTransferenciaSoles}" /></span></td>
+
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</h:panelGroup>
+
+								<h:panelGroup id="id_panelAfecto"
+									rendered="#{!imprimirAlcabalaManaged.impAlcaDto.inafectoImpuesto}">
+									<tr>
+										<td>
+											<table id="datosCalculoAfecto" width="100%">
+												<tr class="tableHeadCss">
+													<td width="20%"
+														style="border-left: solid 1px #C0C0C0; border-top: solid 1px #C0C0C0;">
+														<span id="Label9"> <strong>Valor de
+																Autovalúo</strong></span>
+													</td>
+
+													<td width="20%" style="border-top: solid 1px #C0C0C0;">
+														<span id="Label10"> <strong>Valor de
+																Transfer.</strong></span>
+													</td>
+
+													<td width="20%" style="border-top: solid 1px #C0C0C0;">
+														<span id="Label11"> <strong>Moneda</strong></span>
+													</td>
+
+													<td width="20%" style="border-top: solid 1px #C0C0C0;">
+														<span id="Label12"> <strong>Tipo de
+																Cambio</strong></span>
+													</td>
+
+													<td width="20%" style="border-top: solid 1px #C0C0C0;">
+														<span id="Label13"> <strong>Valor de
+																Transfer. en Soles</strong></span>
+													</td>
+												</tr>
+
+												<tr class="tableBodyCss">
+													<td style="border-left: solid 1px #C0C0C0;"><span
+														id="autovaluoId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.valorAutovaluo} " /></span></td>
+													<td><span id="valorTransferenciaId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.valorTransferencia}" /></span></td>
+													<td><span id="monedaId"><h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.tipoMoneda}" /></span></td>
+													<td><span id="tipoCambioId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.tipoCambio}" /></span></td>
+													<td><span id="valorTransferenciaSolesId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.valorTransferenciaSoles}" /></span></td>
+												</tr>
+
+												<tr class="tableHeadCss">
+													<td width="20%" style="border-left: solid 1px #C0C0C0;">
+														<span id="Label14"> <strong>Valor de
+																Autovalúo ajustado </strong></span>
+													</td>
+
+													<td width="20%"><span id="Label15"> <strong>Factor
+																de Ajuste </strong></span></td>
+
+													<td width="20%"><span id="Label16"> <strong>Ajuste</strong></span></td>
+
+													<td width="20%"><span id="Label17"> <strong>Nro.
+																de UIT de Deducción</strong></span></td>
+
+													<td width="20%"><span id="Label18"> <strong>Valor
+																UIT</strong></span></td>
+												</tr>
+
+												<tr class="tableBodyCss">
+													<td style="border-left: solid 1px #C0C0C0;"><span
+														id="autovaluoAjustadoId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.valorAutovaluoAjustado}" /></span></td>
+													<td><span id="factorAjusteId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.factorAjuste}" /></span></td>
+													<td><span id="ajuste"><h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.ajuste}" /></span></td>
+													<td><span id="nroUit"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.nroUitDeduc}" /></span></td>
+													<td><span id="valorUitId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.valorUIT}" /></span></td>
+
+												</tr>
+
+												<tr class="tableHeadCss">
+													<td width="20%" style="border-left: solid 1px #C0C0C0;">
+														<span id="Label19"> <strong>Mayor Valor
+																Comparado </strong></span>
+													</td>
+
+													<td width="20%"><span id="Label20"> <strong>Valor
+																Deducción </strong></span></td>
+
+													<td width="20%"><span id="Label21"> <strong>Base
+																imponible</strong></span></td>
+
+													<td width="20%"><span id="Label22"> <strong>Base
+																Exonerada </strong></span></td>
+
+													<td width="20%"><span id="Label23"> <strong>Base
+																Afecta</strong></span></td>
+
+												</tr>
+
+												<tr class="tableBodyCss">
+													<td style="border-left: solid 1px #C0C0C0;"><span
+														id="mayorValorCompaId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.mayorValorComparado}" /></span></td>
+													<td><span id="valorDeduccionId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.valorDeduccion}" /></span></td>
+													<td><span id="baseImpoId"><h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.baseImpo}" /></span></td>
+													<td><span id="baseExoneradaId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.baseExonerada}" /></span></td>
+													<td><span id="baseAfectaId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.baseAfecta}" /></span></td>
+
+												</tr>
+
+												<tr class="tableHeadCss">
+													<td width="20%" style="border-left: solid 1px #C0C0C0;">
+														<span id="Label24"> <strong>Tasa </strong></span>
+													</td>
+
+													<td width="20%"><span id="Label25"> <strong>Impuesto
+																a Pagar </strong></span></td>
+
+													<td width="20%"><span id="Label26"> <strong>Interés
+																Moratorio</strong></span></td>
+
+													<td colspan="2" width="40%" align="center"><span
+														id="Label27"> <strong>Total de la Deuda </strong></span></td>
+
+												</tr>
+
+												<tr class="tableBodyCss">
+													<td style="border-left: solid 1px #C0C0C0;"><span
+														id="tasaId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.tasa}" /></span></td>
+													<td><span id="impuestoPagarId"> <h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.impuestoPagar}" /></span></td>
+													<td><span id="interesMoraId"><h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.interesMora}" /></span></td>
+													<td colspan="2" align="center"><span id="totalPagarId">
+															<h:outputText
+																value="#{imprimirAlcabalaManaged.impAlcaDto.totalPagar}"
+																style="font-weight:bold; font-size:14px;" />
+													</span></td>
+
+												</tr>
+											</table>
+										</td>
+									</tr>
+								</h:panelGroup>
+							</table>
+						</td>
+					</tr>	
+				</tbody>
+			</table>
+		</div>
+		<BR />
+			<BR />
+			<BR />
+			<table cellSpacing="4" cellPadding="0" border="0" width="100%">
+				<TR><TD>&nbsp;&nbsp;</TD></TR>
+				<TR><TD>&nbsp;&nbsp;</TD></TR>
+				<TR><TD align="center">&nbsp;-----------------------------------------------------------------------------------------	</TD></TR>
+				<TR><TD>&nbsp;&nbsp;</TD></TR>
+				<TR><TD align="center"><span id="lblContribuyente" class="clsLetraPreliminar" style="font-weight:bold;FONT-SIZE: 12px; FONT-FAMILY: Arial">
+					<h:outputText value="#{imprimirAlcabalaManaged.impAlcaDto.apellidosNombres}" /></span></TD></TR>
+				<TR><TD>&nbsp;&nbsp;</TD></TR>
+				<tr>
+						<td colspan="5" width="50%" align="left">
+							<span id="Label27" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Registrado por : </strong></span>
+							<span id="registrador" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText value="#{imprimirAlcabalaManaged.impAlcaDto.usuario}" /></span>
+							<br/>
+							<span id="Label28" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Fecha de Registro : </strong></span>
+							<span id="fechadeclaracion" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText value="#{imprimirAlcabalaManaged.impAlcaDto.fechaDeclaracion}" /></span>
+						</td>
+						<td colspan="5" width="50%" align="right">
+							<span id="Label27" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Emitido por : </strong></span>
+							<span id="emisor" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText value="#{imprimirAlcabalaManaged.usuarioActual}" /></span>
+							<br/>
+							<span id="Label28" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Fecha de Emision : </strong></span>
+							<span id="fechaActualid" style="font-weight:bold;FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText value="#{imprimirAlcabalaManaged.fechaActual}" /></span>
+						</td>							
+				</tr>	
+			</table>			
+	</form>
+	
+	</body>
+</html>
+	

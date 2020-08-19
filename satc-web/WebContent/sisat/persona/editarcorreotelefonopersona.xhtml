@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+
+
+
+	<h:form id="formRegistroPersona">
+
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<style type="text/css">
+.extdt-empty-cell {
+	width: 0;
+}
+
+th.extdt-empty-cell {
+	width: 0;
+}
+/* Disables resizing */
+.extdt-hsep {
+	display: none;
+}
+</style>
+
+		<script type="text/javascript">
+	 function validaNroDocumento(nroDocumento){
+		 if(jQuery.trim(nroDocumento).length==8){
+				 return true;
+		 }
+		 return false;
+	 }
+	</script>
+
+
+		
+
+
+
+		<a4j:outputPanel id="id_panelprincipalregistropersona">
+			<table align="center" border="0" cellpadding="0" cellspacing="0"
+				width="100%">
+				<tr>
+					<td>
+						<table align="center" width="100%">
+
+							<tr>
+							
+													
+													
+													
+													
+								<td>
+									<table align="center" border="0" width="100%">
+										<tr>
+										
+										<td valign="top" align="right" style="width:50%;"><a4j:outputPanel>
+
+													<rich:panel id="id_consulta_reniec"
+														style="width:100%; height: 180px;" align="left">
+														<f:facet name="header">
+												Datos generales 
+											</f:facet>
+														<table width="100%" border="1" bordercolor="#E7E9EE"
+															style="border-collapse: collapse;">
+															<tbody>
+																
+																<tr>
+																	<td width="20px"><h:outputText value="Codigo: " />
+																	</td>
+																	<td width="92"><h:outputText style="color:#060B52"
+																			value="#{editarCorreoTelefonoPersonaManaged.persona.persona_id}" />
+																	</td>
+																</tr>
+																<tr>
+																	<td width="20px"><h:outputText
+																			value="Contribuyente: " /></td>
+																	<td width="92"><h:outputText style="color:#060B52"
+																			value="#{editarCorreoTelefonoPersonaManaged.persona.apellidos_nombres}" />
+																	</td>
+																</tr>
+																<tr>
+																	<td width="20px"><h:outputText
+																			value="Tipo de Contribuyente: " /></td>
+																	<td width="92"><h:outputText style="color:#060B52"
+																			value="#{editarCorreoTelefonoPersonaManaged.persona.tipo_persona}" />
+																	</td>
+																</tr>
+																<tr>
+																	<td width="20px"><h:outputText
+																			value="Tipo de Doc. Iden.:" /></td>
+																	<td width="92"><h:outputText style="color:#060B52"
+																			value="#{editarCorreoTelefonoPersonaManaged.persona.tipo_documento}" />
+																	</td>
+																</tr>
+																<tr>
+																	<td width="20px"><h:outputText
+																			value="Nro Doc. Iden.: " /></td>
+																	<td width="92"><h:outputText style="color:#060B52"
+																			value="#{editarCorreoTelefonoPersonaManaged.persona.nro_docu_identidad}" />
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+
+
+
+													</rich:panel>
+													</a4j:outputPanel>
+													
+													
+													</td>
+													
+													
+													
+											<td valign="top" align="left">
+												
+												
+												 <rich:panel style="width:100%;  height: 180px;"
+													id="id_datoscontribuyente">
+													<f:facet name="header">Datos a editar</f:facet>
+													<table border="0" width="350px">
+														<tr>
+
+															<td align="left" width="130px"><h:outputText
+																	value="Teléfono :" /> <span style="color: red;">*</span>
+															</td>
+															<td align="left" ><h:inputText
+																	id="id_telefono"
+																	 style="width:100%"
+																	value="#{editarCorreoTelefonoPersonaManaged.persona.telefono}"
+																	maxlength="12"
+																	requiredMessage="#{msg['mp.telefonoiningresar']}"
+																	onkeypress="return validaEnteroPositivo(event)" /></td>
+															
+														</tr>
+														<tr>
+
+															<td align="left" width="130px"><h:outputText
+																	value="Teléfono 2:" /></td>
+															<td align="left" ><h:inputText id="fax"  style="width:100%"
+																	maxlength="20"
+																	value="#{editarCorreoTelefonoPersonaManaged.persona.fax}"
+																	onkeypress="return validaEnteroPositivo(event)" /></td>
+															
+														</tr>
+														
+														
+														<tr>
+
+															<td align="left" width="130px"><h:outputText
+																	value="email  :" /></td>
+															<td align="left"><h:inputText id="id_email"
+																	maxlength="100" style="width:100%"
+																	value="#{editarCorreoTelefonoPersonaManaged.persona.email}"
+																	validatorMessage="email invalido">
+																	<rich:jQuery selector="#id_email" query="mask('em')"
+																		timing="onload" />
+																</h:inputText></td>
+															
+
+														</tr>
+														<!--  <tr>
+															<td align="left" width="130px"><h:outputText
+																	value="Twitter  :" /></td>
+															<td align="left"><h:inputText maxlength="50"
+																	style="width:100%"
+																	value="#{editarCorreoTelefonoPersonaManaged.persona.twitter}" />
+															</td>
+
+														</tr>
+														<tr>
+															<td align="left" width="130px"><h:outputText
+																	value="Facebook  :" /></td>
+															<td align="left"><h:inputText maxlength="100"
+																	style="width:100%"
+																	value="#{editarCorreoTelefonoPersonaManaged.persona.facebook}" />
+															</td>
+															
+														</tr>-->
+														
+
+														<tr>
+
+
+
+														</tr>
+
+
+
+
+													</table>
+
+
+
+												</rich:panel>
+
+
+
+												
+												
+												</td>
+
+											
+										</tr>
+
+
+									</table>
+								</td>
+							</tr>
+							<tr style="margin-top:20px;">
+								<td align="center"><a4j:commandButton
+										value="Guardar" style="width:150px;"
+										id="id_btnguardar" action="#{editarCorreoTelefonoPersonaManaged.guardar}"
+										reRender="panelinclude" status="ajaxStatus"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmaAC\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+									</a4j:commandButton> 
+									<a4j:commandButton value="Salir" style="width:150px;"	
+											action="#{editarCorreoTelefonoPersonaManaged.salir}" 
+											reRender="panelinclude" >
+										<f:setPropertyActionListener value="/sisat/persona/buscarpersona.xhtml" target="#{sessionManaged.page}" />
+									</a4j:commandButton>
+									
+									</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</a4j:outputPanel>
+	</h:form>
+
+
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	<rich:modalPanel id="panelconfirmaAC" autosized="true" width="300"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaAC" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+				<div style="text-align: center;">
+						<h:outputText id="succgdj" style="font-weight:bold;color:blue"
+							value="La actualización se realizó satisfactoriamente" />
+				</div>
+				<div style="text-align: center;     margin-top: 15px;">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						action="#{registroPersonaManaged.sendRedirectPrincipal}"
+						immediate="true" reRender="panelinclude">
+						<f:setPropertyActionListener
+							value="/sisat/persona/buscarpersona.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandButton>
+
+				</div>
+		</h:form>
+	</rich:modalPanel>
+
+	
+
+
+
+	
+
+
+	
+
+	
+
+	
+
+
+</ui:composition>
+
+
+

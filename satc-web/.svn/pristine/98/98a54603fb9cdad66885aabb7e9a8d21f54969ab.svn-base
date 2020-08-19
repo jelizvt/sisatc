@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+		<h:form id="id_formBuscarCarteraVehicular">
+			<rich:panel id="id_panelresultados">
+				<f:facet name="header">
+					<h:outputLabel value="#{msg['rv.lotecarteravehicular']}" />
+				</f:facet>
+				<rich:datascroller for="datosdetlotesrv" maxPages="10"></rich:datascroller>
+							<rich:extendedDataTable rows="10" id="datosdetlotesrv"
+								value="#{busquedaDetalleLoteCarteraVehicularManaged.lstloteDetalle}"
+								var="detalleloterv" width="100%" height="310px" selectionMode="single"
+								noDataLabel="No se Encontró Información" rowKeyVar="row"
+								enableContextMenu="false">
+						<!-- 
+										<rich:column width="3%" style="text-align:center;">
+					<rich:toolTip for="newlinka"
+						value="Historial de Rec por Expediente."></rich:toolTip>
+					<a4j:commandLink ajaxSingle="true" id="newlinka"
+						rendered="#{r.nroExpediente!=null}" status="ajaxStatus"
+						action="#{acumulacionExpedienteManaged.mostrar}"
+						oncomplete="#{rich:component('modalHistorial')}.hide();#{rich:component('modalHistorial')}.show();"
+						reRender="modalHistorial,panel">
+						<h:graphicImage value="/images/editable.jpg" style="border:0" />
+						<f:setPropertyActionListener value="#{r}"
+							target="#{acumulacionExpedienteManaged.findCcActoItem}" />
+					</a4j:commandLink>
+				</rich:column>
+						
+						 -->	
+						 
+						 
+						 
+						 <!-- 
+								<a4j:commandLink ajaxSingle="true" id="newlink3"
+									action="#{busquedaLoteCarteraVehicularManaged.edit}" status="ajaxStatus"
+									reRender="panelinclude">
+									<h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+								
+								<f:setPropertyActionListener value="#{loters}"
+									target="#{busquedaLoteCarteraVehicularManaged.findCcLoteItem}" id="r4253" />
+									
+								<f:setPropertyActionListener
+									value="/sisat/fiscalizacion/buscarcarteravehicular.xhtml"
+									target="#{sessionManaged.page}" />
+									
+									
+							</a4j:commandLink>						 
+						 
+						  -->
+						 
+						 							
+						<!-- Link de Eliminar -->		
+						<rich:column style="text-align:center" id="x2" width="3%">
+							<f:facet name="header">Editaaa</f:facet>
+							<rich:toolTip for="newlinka" value="Descargar."></rich:toolTip>
+							 <a4j:commandLink
+							 		ajaxSingle="true" 
+							 		id="newlinka"
+							 		action="#{busquedaLoteCarteraVehicularManaged.edit}" 
+									reRender="modalConfDescargar"
+									oncomplete="#{rich:component('modalConfDescargar')}.hide();#{rich:component('modalConfDescargar')}.show();">							 																	 
+							<h:graphicImage value="/images/modal/delete.gif" style="border:0" /> 
+							</a4j:commandLink>													                 		                 																					
+						</rich:column>								
+						<!-- Fin link Eliminar -->		
+								
+								
+								<rich:column id="idcampo1" width="5%" filterBy="#{detalleloterv.codigo}"
+									style="text-align:center">
+									<f:facet name="header">Item</f:facet>
+									<h:outputText value="#{detalleloterv.codigo}" />
+								</rich:column>
+								
+								<rich:column id="idcampo2" width="5%" filterBy="#{detalleloterv.personaId}"
+									style="text-align:center">
+									<f:facet name="header">Código</f:facet>
+									<h:outputText value="#{detalleloterv.personaId}" />
+								</rich:column>
+								
+								<rich:column id="idcampo3" width="25%" filterBy="#{detalleloterv.propietario}"
+									style="text-align:center">
+									<f:facet name="header">Nombre/Razón Social</f:facet>
+									<div align="left">
+										<h:outputText value="#{detalleloterv.propietario}"/>
+									</div>
+								</rich:column>
+								<rich:column id="idcampo4" width="5%" filterBy="#{detalleloterv.nroDocumentoIdentidad}"
+									style="text-align:center">
+									<f:facet name="header">Nro. Doc.</f:facet>
+									<h:outputText value="#{detalleloterv.nroDocumentoIdentidad}" />
+								</rich:column>
+								<rich:column id="idcampo5" width="5%" filterBy="#{detalleloterv.placa}"
+									style="text-align:center">
+									<f:facet name="header">Placa</f:facet>
+									<h:outputText value="#{detalleloterv.placa}" />
+								</rich:column>
+								<rich:column id="idcampo6" width="5%" filterBy="#{detalleloterv.placaAntigua}"
+									style="text-align:center">
+									<f:facet name="header">Placa Ant.</f:facet>
+									<h:outputText value="#{detalleloterv.placaAntigua}" />
+								</rich:column>
+									<rich:column id="idcampo7" width="5%" filterBy="#{detalleloterv.annoAfectacion}"
+									style="text-align:center">
+									<f:facet name="header">Año Afec.</f:facet>
+									<h:outputText value="#{detalleloterv.annoAfectacion}" />
+								</rich:column>
+								
+								<rich:column id="idcampo8" width="5%" filterBy="#{detalleloterv.annoFabricacion}"
+									style="text-align:center">
+									<f:facet name="header">Año Fabr.</f:facet>
+									<h:outputText value="#{detalleloterv.annoFabricacion}" />
+								</rich:column>
+							
+								<rich:column id="idcampo9" width="10%" filterBy="#{detalleloterv.marcaDescripcion}"
+									style="text-align:center">
+									<f:facet name="header">Marca</f:facet>
+									<h:outputText value="#{detalleloterv.marcaDescripcion}" />
+								</rich:column>
+								<rich:column id="idcampo10" width="20%" filterBy="#{detalleloterv.modeloDescripcion}"
+									style="text-align:center">
+									<f:facet name="header">Modelo</f:facet>
+									<div align="left">
+									<h:outputText value="#{detalleloterv.modeloDescripcion}" />
+									</div>
+								</rich:column>
+									<rich:column id="idcampo11" width="5%" filterBy="#{detalleloterv.estadoDescripcion}"
+									style="text-align:center">
+									<f:facet name="header">Estado</f:facet>
+									<h:outputText value="#{detalleloterv.estadoDescripcion}" />
+								</rich:column>
+									<rich:column id="idcampo12" width="5%" filterBy="#{detalleloterv.djvehicularNro}"
+									style="text-align:center">
+									<f:facet name="header">Nro. DJ</f:facet>
+									<h:outputText value="#{detalleloterv.djvehicularNro}" />
+								</rich:column>
+
+			</rich:extendedDataTable>
+			</rich:panel>
+		</h:form>
+
+
+
+
+		
+<!-- Panel de Confirmación de eliminación -->
+	<rich:modalPanel id="modalConfDescargar" width="950" autosized="true"
+		top="110" styleClass="sisatModalPanel">
+		<f:facet name="header">Confirmación de Descarga</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalConfDescargar" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:panel id="p0100">
+				<h:panelGrid>
+					<table>
+						<tr>
+							<td>
+								<h:outputText id="tdCodigoContribuyente" value="Código de Contribuyente :" />
+							</td>					
+						</tr>
+						<tr>
+							<td>
+								<h:outputText id="tdNombreContribuyente" value="Nombre o Razón Social :" />
+							</td>
+						</tr>
+					</table>
+				
+				</h:panelGrid>
+			</rich:panel>
+		
+		</h:form>
+	</rich:modalPanel>
+		
+		
+		<!-- 
+		<h:form id="panel">
+			<rich:panel id="p01">
+				<table border="0" width="800px">
+					<tr>
+						<td align="left" width="100px"><h:outputText
+								id="tdDescripcion" value="Contribuyente :" /></td>
+						<td width="400px"><h:panelGrid columns="2">
+								<h:outputText id="tdNombre" style="font-weight:bold;"
+									value="#{acumulacionExpedienteManaged.findCcActoItem.personaId ==null? acumulacionExpedienteManaged.findCcActoAgrupadoItem.personaId:acumulacionExpedienteManaged.findCcActoItem.personaId} - #{acumulacionExpedienteManaged.findCcActoItem.apellidosNombres==null?acumulacionExpedienteManaged.findCcActoAgrupadoItem.apellidosNombres:acumulacionExpedienteManaged.findCcActoItem.apellidosNombres}" />
+							</h:panelGrid></td>
+						<td align="left" width="100px"><h:outputText id="succ2"
+								value="Nro. de Expediente :" /></td>
+						<td width="150px"><h:panelGrid columns="2">
+								<h:outputText id="succ3" style="font-weight:bold;"
+									value="#{acumulacionExpedienteManaged.findCcActoItem.nroExpediente==null? acumulacionExpedienteManaged.findCcActoAgrupadoItem.nroExpediente:acumulacionExpedienteManaged.findCcActoItem.nroExpediente}" />
+							</h:panelGrid></td>
+					</tr>
+					<tr>
+						<td align="left" width="100px"><h:outputText
+								value="Tipo REC :" /></td>
+						<td width="140px"><rich:comboBox defaultLabel="Seleccione"
+								enableManualInput="false" width="400"
+								value="#{acumulacionExpedienteManaged.cmbTipoRec}"
+								required="true"
+								requiredMessage="Porfavor seleccione un Tipo de REC."
+								id="id_tiporelacion"
+								binding="#{acumulacionExpedienteManaged.cmbNoTipoRec}"
+								valueChangeListener="#{acumulacionExpedienteManaged.loadTipoRecById}">
+								<f:selectItems
+									value="#{acumulacionExpedienteManaged.listaTipoRec}" />
+							</rich:comboBox></td>
+						<td align="left" width="100px"><a4j:commandButton
+								value="Ver Deudas Detenidas" ajaxSingle="true" id="newlinkgb2"
+								status="ajaxStatus"
+								action="#{acumulacionExpedienteManaged.verDeudasDetenidas}"
+								oncomplete="#{rich:component('panelQuitarDetencionPagoDeuda')}.hide();#{rich:component('panelQuitarDetencionPagoDeuda')}.show();"
+								reRender="panelQuitarDetencionPagoDeuda">
+							</a4j:commandButton></td>
+						<td width="100px"></td>
+					</tr>
+				</table>
+			</rich:panel>
+			<h:panelGrid id="pnlGenerar" columns="3" align="center">
+				<a4j:commandButton value="Generar REC" style="width:100px;"
+					id="cmdRecIndividual"
+					rendered="#{acumulacionExpedienteManaged.disableBtnGeneraRec==false}"
+					action="#{acumulacionExpedienteManaged.generarRec}"
+					oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+					reRender="pnlGenerar,ccHistoricoRec" status="ajaxStatus" />
+			</h:panelGrid>
+			<rich:extendedDataTable id="ccHistoricoRec"
+				value="#{acumulacionExpedienteManaged.historico}" var="h" rows="8"
+				selectionMode="single" width="1020px" height="280px"
+				noDataLabel="No se encontró registros" enableContextMenu="false"
+				rowKeyVar="idx">
+				<rich:column id="idcampo1" width="29%"
+					filterBy="#{h.descripcionRec}" style="text-align:left">
+					<f:facet name="header">TIPO DE EJECUCIÓN COACTIVA</f:facet>
+					<h:outputText value="#{h.descripcionRec}" />
+				</rich:column>
+				<rich:column id="idcampo2" width="13%" filterBy="#{h.fechaRegistro}"
+					style="text-align:center">
+					<f:facet name="header">FECHA EMISION</f:facet>
+					<h:outputText value="#{h.fechaEmision}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss a" timeZone="EST" />
+					</h:outputText>
+					<a4j:commandLink value="Fecha Emision" ajaxSingle="true"
+						id="newlnkx3" rendered="#{h.fechaEmision==null}"
+						status="ajaxStatus"
+						oncomplete="#{rich:component('modalEmisionRec')}.hide();#{rich:component('modalEmisionRec')}.show();"
+						reRender="frmIngresaFechaEmision">
+						<f:setPropertyActionListener value="#{h}" id="cml1"
+							target="#{acumulacionExpedienteManaged.findCcRecs}" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="idcampo3" width="13%"
+					filterBy="#{h.fechaNotificacion}" style="text-align:center">
+					<f:facet name="header">FECHA NOTIFICACION</f:facet>
+					<a4j:commandLink ajaxSingle="true" id="idInsertNotif"
+						status="ajaxStatus"
+						action="#{acumulacionExpedienteManaged.notificar}"
+						oncomplete="#{rich:component('modalNotificacionRec')}.hide();#{rich:component('modalNotificacionRec')}.show();">
+						<h:outputText value="#{h.fechaNotificacion}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss a" timeZone="EST" />
+						</h:outputText>
+						<f:setPropertyActionListener value="#{h}"
+							target="#{acumulacionExpedienteManaged.findCcRecs}" />
+						<rich:toolTip for="idInsertNotif" direction="top-left"> Actualizar Notificación Bajo Responsibilidad.</rich:toolTip>
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="idcampo4" width="9%" filterBy="#{h.nombreUsuario}"
+					style="text-align:center">
+					<f:facet name="header">INGRESÓ NOTIF.</f:facet>
+					<h:outputText value="#{h.usuarioNotificacion}" />
+				</rich:column>
+				<rich:column id="idcampo5" width="13%" filterBy="#{h.nroExpediente}"
+					style="text-align:center">
+					<f:facet name="header">NRO. EXPEDIENTE</f:facet>
+					<h:outputText value="#{h.nroExpediente}" />
+				</rich:column>
+				<rich:column id="idcampo6" width="9%" filterBy="#{h.nombreUsuario}"
+					style="text-align:center">
+					<f:facet name="header">GENERADO POR</f:facet>
+					<h:outputText value="#{h.nombreUsuario}" />
+				</rich:column>
+				<rich:column id="idcampo7" width="6%" style="text-align:center">
+
+					<a4j:commandLink value="Notificar" ajaxSingle="true" id="newlink9"
+						rendered="#{h.fechaNotificacion==null}" status="ajaxStatus"
+						action="#{acumulacionExpedienteManaged.notificar}"
+						oncomplete="#{rich:component('modalNotificacionRec')}.hide();#{rich:component('modalNotificacionRec')}.show();"
+						reRender="frmNotificar,pnlGenerar">
+						<f:setPropertyActionListener value="#{h}" id="al2"
+							target="#{acumulacionExpedienteManaged.findCcRecs}" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="idcampo8" width="5%" style="text-align:center">
+					<a4j:commandLink value="Costas" ajaxSingle="true" id="newlinkb"
+						status="ajaxStatus" rendered="#{h.fechaNotificacion!=null }"
+						action="#{acumulacionExpedienteManaged.verCostas}"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'modalCostas\');': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="modalCostas,formobligacion,panelconcepto,panelsubconcepto,panelObligaGeneradas">
+						<f:setPropertyActionListener value="#{h}" id="al3"
+							target="#{acumulacionExpedienteManaged.findCcRecs}" />
+						<rich:toolTip for="newlinkb" direction="top-left">Podra generar Costas al dia siguiente de la Fecha de Notificacion.</rich:toolTip>
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column width="3%" style="text-align:center">
+					<f:facet name="header"></f:facet>
+					<h:commandLink id="newlink22"
+						action="#{acumulacionExpedienteManaged.imprimirRecxTipo}"
+						immediate="true">
+						<h:graphicImage id="img1" value="/images/modal/pdf.png"
+							style="border:0" />
+						<f:setPropertyActionListener value="#{h}" id="al1"
+							target="#{acumulacionExpedienteManaged.findCcRecs}" />
+						<rich:toolTip for="newlink22" direction="top-left"> Descargar Rec en Pdf.</rich:toolTip>
+					</h:commandLink>
+				</rich:column>
+			</rich:extendedDataTable>
+		</h:form>
+
+ -->
+
+
+	
+
+<!-- Fin panel de confirmación -->		
+		
+</ui:composition>
+

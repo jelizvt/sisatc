@@ -1,0 +1,955 @@
+package com.sat.sisat.descargo.dao;
+
+import java.math.BigDecimal;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import com.sat.sisat.caja.dto.DeudaDTO;
+import com.sat.sisat.caja.dto.ReciboPagoDetalleDTO;
+import com.sat.sisat.common.dao.GeneralDao;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.common.util.SATParameterFactory;
+import com.sat.sisat.descargo.dto.ReciboPagoDescargo;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.papeleta.dto.FindPapeletas;
+import com.sat.sisat.persistence.entity.CdDescargo;
+import com.sat.sisat.persistence.entity.CjReciboPago;
+import com.sat.sisat.tramitedocumentario.dto.BusquedaExpedienteDTO;
+import com.sat.sisat.tramitedocumentario.dto.ItemBandejaEntradaDTO;
+
+public class DescargoDao extends GeneralDao {
+
+	/**
+	 * Obtiene toda la cuenta conrriente de un contribuyente.
+	 * 
+	 * @param personaId
+	 *            Identificador del contribuyente.
+	 * @return Lista de deudas de un contribuyente.
+	 * @throws SisatException
+	 *             Ocurre si hay un problema en el procedimiento almacenado
+	 *             stp_cj_buscardeuda
+	 */
+	public static String filPlacaCb;//para obtener el valor de placa y proceder realizar filtro
+		
+	public List<DeudaDTO> obtenerTodaDeuda(int personaId) throws SisatException {
+
+		List<DeudaDTO> lista = new ArrayList<DeudaDTO>();
+
+		try {
+
+			String SQL = "sp_estado_cuenta_deuda ?";
+
+			PreparedStatement pst = connect().prepareStatement(SQL);
+
+			pst.setInt(1, personaId);
+
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				DeudaDTO item = new DeudaDTO();
+
+				item.setPersonaId(rs.getInt("persona_id"));
+				item.setDeudaId(rs.getInt("deuda_id"));
+				item.setDeterminacionId(rs.getInt("determinacion_id"));
+				item.setAnioDeuda(rs.getInt("anio"));
+				item.setConcepto(rs.getString("tributo"));
+				item.setSubconcepto(rs.getString("tributo"));
+				item.setDescripcion(rs.getString("descripcion"));
+				item.setNumCuota(rs.getInt("cuota"));
+				item.setInsoluto(rs.getBigDecimal("insoluto"));
+				item.setDerechoEmi(rs.getBigDecimal("derecho_emision"));
+				item.setReajuste(rs.getBigDecimal("reajuste"));
+				item.setInteres(rs.getBigDecimal("interes"));
+				item.setFechaRegistro(rs.getDate("fecha_registro"));
+				item.setNroCuotas(rs.getInt("nro_cuotas"));
+
+				// TOTAL DEUDA
+				item.setTotalDeuda(rs.getBigDecimal("insoluto")
+						.add(rs.getBigDecimal("derecho_emision"))
+						.add(rs.getBigDecimal("reajuste"))
+						.add(rs.getBigDecimal("interes")));
+
+				// añadir a la lista de DeudaDTO
+				lista.add(item);
+			}
+		} catch (Exception ex) {
+			String msg = "No se ha podido recuperar la deuda. ".concat(ex
+					.getMessage());
+			throw new SisatException(msg);
+		}
+		return lista;
+	}
+
+	public List<DeudaDTO> obtenerTodaDeudaConFecha(int personaId,
+			Date fechaCompensacion) throws SisatException {
+
+		List<DeudaDTO> lista = new ArrayList<DeudaDTO>();
+
+		try {
+
+			String SQL = "sp_estado_cuenta_deuda_con_fecha ?,?";
+
+			PreparedStatement pst = connect().prepareStatement(SQL);
+
+			pst.setInt(1, personaId);
+			pst.setDate(2, new java.sql.Date(fechaCompensacion.getTime()));
+
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				DeudaDTO item = new DeudaDTO();
+
+				item.setPersonaId(rs.getInt("persona_id"));
+				item.setDeudaId(rs.getInt("deuda_id"));
+				item.setDeterminacionId(rs.getInt("determinacion_id"));
+				item.setAnioDeuda(rs.getInt("anio"));
+				item.setConcepto(rs.getString("tributo"));
+				item.setSubconcepto(rs.getString("tributo"));
+				item.setDescripcion(rs.getString("descripcion"));
+				item.setNumCuota(rs.getInt("cuota"));
+				item.setInsoluto(rs.getBigDecimal("insoluto"));
+				item.setDerechoEmi(rs.getBigDecimal("derecho_emision"));
+				item.setReajuste(rs.getBigDecimal("reajuste"));
+				item.setInteres(rs.getBigDecimal("interes"));
+				item.setFechaRegistro(rs.getDate("fecha_registro"));
+				item.setNroCuotas(rs.getInt("nro_cuotas"));
+
+				// TOTAL DEUDA
+				item.setTotalDeuda(rs.getBigDecimal("insoluto")
+						.add(rs.getBigDecimal("derecho_emision"))
+						.add(rs.getBigDecimal("reajuste"))
+						.add(rs.getBigDecimal("interes")));
+
+				// añadir a la lista de DeudaDTO
+				lista.add(item);
+			}
+		} catch (Exception ex) {
+			String msg = "No se ha podido recuperar la deuda. ".concat(ex
+					.getMessage());
+			throw new SisatException(msg);
+		}
+		return lista;
+	}
+
+	public List<DeudaDTO> obtenerTodaDeudaPapeletas(Integer personaId,
+			Integer papeletaId) throws SisatException {
+		
+		List<DeudaDTO> lista = new ArrayList<DeudaDTO>();
+		String newFiltroCb="";
+		try {
+			// basura: No es basura sirve para mostrar datos de busqueda en descargo de papeletas
+			StringBuilder SQL = new StringBuilder();
+			SQL.append(" select d.persona_id,d.deuda_id,d.determinacion_id,d.anno_deuda anio,d.concepto_id tributo,d.subconcepto_id,t.nro_documento as descripcion, ");
+			SQL.append(" d.nro_cuota cuota,d.insoluto,d.derecho_emision,d.reajuste,0 interes, d.fecha_registro fecha_registro , t.nro_cuotas, p.placa, gnper.apellidos_nombres as infractor ");
+			SQL.append(" from dbo.cd_deuda d ");
+			//INICIO -=cramirez=-
+			SQL.append(" LEFT JOIN descargo_deuda_temp ddt ON (ddt.deuda_id = d.deuda_id and ddt.estado != 0) ");
+			//FIN -=cramirez=-
+			SQL.append(" inner join dbo.dt_determinacion t on (t.determinacion_id=d.determinacion_id and t.estado='1' and t.concepto_id=4) ");
+			SQL.append(" inner join dbo.pa_papeleta p on (p.papeleta_id=t.djreferencia_id and t.concepto_id=4) ");
+			SQL.append(" inner join dbo.gn_persona gnper on (gnper.persona_id=d.persona_id) ");
+			
+			//para nuevos criterios de busqueda en descargo de papeletas
+			if (papeletaId==0 && personaId==0){
+				SQL.append(" where p.estado IN ('3','1') and p.placa=? AND (ddt.estado IS NULL or ddt.estado = 0) ");
+				newFiltroCb = filPlacaCb;
+			}
+			else if (papeletaId==0){
+				SQL.append(" where p.estado IN ('3','1') and (ddt.estado IS NULL or ddt.estado = 0) and p.persona_infractor_id=? ");
+				newFiltroCb = Integer.toString(personaId);				
+			}
+			else if (personaId==0){
+				SQL.append(" where p.estado IN ('3','1') and (ddt.estado IS NULL or ddt.estado = 0) and p.papeleta_id=? ");
+				newFiltroCb = Integer.toString(papeletaId);
+			}
+			else if (personaId>0 && papeletaId>0){
+				//SQL.append(" where p.estado IN ('3','1') and p.papeleta_id=? and p.persona_infractor_id=? ");
+				//pst.setInt(1, papeletaId);
+				//pst.setInt(2, personaId);	
+				SQL.append(" where p.estado IN ('3','1') and (ddt.estado IS NULL or ddt.estado = 0) and p.persona_infractor_id=? ");
+				newFiltroCb = Integer.toString(personaId);
+			} 
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+
+			//pst.setInt(1, papeletaId);
+			//pst.setInt(2, personaId);
+			pst.setString(1, newFiltroCb);
+			
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				DeudaDTO item = new DeudaDTO();
+
+				item.setPersonaId(rs.getInt("persona_id"));
+				item.setDeudaId(rs.getInt("deuda_id"));
+				item.setDeterminacionId(rs.getInt("determinacion_id"));
+				item.setAnioDeuda(rs.getInt("anio"));
+				item.setConcepto(rs.getString("tributo"));
+				item.setSubconcepto(rs.getString("tributo"));
+				item.setDescripcion(rs.getString("descripcion"));
+				item.setNumCuota(rs.getInt("cuota"));
+				item.setInsoluto(rs.getBigDecimal("insoluto"));
+				item.setDerechoEmi(rs.getBigDecimal("derecho_emision"));
+				item.setReajuste(rs.getBigDecimal("reajuste"));
+				item.setInteres(rs.getBigDecimal("interes"));
+				item.setFechaRegistro(rs.getDate("fecha_registro"));
+				item.setNroCuotas(rs.getInt("nro_cuotas"));
+				// TOTAL DEUDA
+				item.setTotalDeuda(rs.getBigDecimal("insoluto"));
+				//mostrar placa e infractor
+				item.setPlacaPar(rs.getString("placa"));
+				item.setInfractorPar(rs.getString("infractor"));
+
+				lista.add(item);
+			}
+		} catch (Exception ex) {
+			String msg = "No se ha podido recuperar la deuda";
+			System.out.println(msg + ex);
+			throw new SisatException(msg);
+		}
+		return lista;
+	}
+
+	/**
+	 * Obtiene toda la cuenta conrriente de un contribuyente.
+	 * 
+	 * @param cajeroId
+	 *            Identificador del usuario del sistema (cajero) que hace la
+	 *            consulta.
+	 * @param personaId
+	 *            Identificador del contribuyente.
+	 * @param fechaConsulta
+	 *            Fecha de consulta.
+	 * @return Lista de deudas de un contribuyente.
+	 * @throws SisatException
+	 *             Ocurre si hay un problema en el procedimiento almacenado
+	 *             stp_cj_buscardeuda
+	 */
+	
+	public void descargarDeuda(CdDescargo cdDescargo, String deudaAEliminar,Date fechaCompensacion, Integer persona_transferencia_id , String expedientesIds, 
+			String descargarDeudas, List<ReciboPagoDescargo> recibos) throws SisatException {
+		try {
+				
+            	System.out.println(expedientesIds);
+            	System.out.println(deudaAEliminar);
+				if(cdDescargo.getTipoDescargo() == 1 ||  cdDescargo.getTipoDescargo() == 3){
+					String sql = "[usp_descargo_deuda] ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?";
+		            CallableStatement pst = connect().prepareCall(sql.toString());
+		            pst.setString(1, deudaAEliminar);
+		            pst.setInt(2, cdDescargo.getTipoDocumentoId());
+		            pst.setString(3, cdDescargo.getObservacion());
+		            pst.setBigDecimal(4, cdDescargo.getTotalDescargado());
+		            pst.setString(5, cdDescargo.getNroDocumento());
+		            pst.setDate(6, DateUtil.dateToSqlDate(cdDescargo.getFechaDocumento()));
+		            pst.setDate(7, DateUtil.dateToSqlDate(fechaCompensacion));
+		            pst.setInt(8, cdDescargo.getUsuarioId());
+		            pst.setInt(9, cdDescargo.getPersonaId()); 
+		            pst.setInt(10, cdDescargo.getTipoDescargo()); 
+		            pst.setString(11, cdDescargo.getTerminal());
+		            pst.setInt(12, 0); 
+		            pst.setString(13, expedientesIds);
+		            pst.setString(14, descargarDeudas);
+		            pst.registerOutParameter(15, java.sql.Types.INTEGER);
+		            pst.execute();
+					
+		            System.out.println(pst.getInt(15));
+				}else{
+					String sql = "[usp_descargo_deuda] ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?";
+		            CallableStatement pst = connect().prepareCall(sql.toString());
+		            pst.setString(1, deudaAEliminar);
+		            pst.setInt(2, cdDescargo.getTipoDocumentoId());
+		            pst.setString(3, cdDescargo.getObservacion());
+		            pst.setBigDecimal(4, cdDescargo.getTotalDescargado());
+		            pst.setString(5, cdDescargo.getNroDocumento());
+		            pst.setDate(6, DateUtil.dateToSqlDate(cdDescargo.getFechaDocumento()));
+		            pst.setDate(7, DateUtil.dateToSqlDate(fechaCompensacion));
+		            pst.setInt(8, cdDescargo.getUsuarioId());
+		            pst.setInt(9, cdDescargo.getPersonaId()); 
+		            pst.setInt(10, cdDescargo.getTipoDescargo()); 
+		            pst.setString(11, cdDescargo.getTerminal());
+		            pst.setInt(12, persona_transferencia_id); 
+		            pst.setString(13, expedientesIds);
+		            pst.setString(14, descargarDeudas);
+		            pst.registerOutParameter(15, java.sql.Types.INTEGER);
+		            pst.execute();
+		            
+		            System.out.println(pst.getInt(15));
+		            int loteDescargoId = pst.getInt(15) ; 
+		            
+		            for(ReciboPagoDescargo rec: recibos){
+		    			if(rec.getSelect()) {
+		    				String sql1 = "[usp_descargo_recibo] ?,?,?,?,?,?,?,?,?,?,?,?";
+				            CallableStatement pst1 = connect().prepareCall(sql1.toString());
+				            pst1.setInt(1, loteDescargoId);
+				            pst1.setInt(2, rec.getReciboId());
+				            pst1.setString(3, rec.getNroRecibo());
+				            pst1.setDate(4, DateUtil.dateToSqlDate(rec.getFechaRecibo()));
+				            pst1.setBigDecimal(5, rec.getMontoCobrado());
+				            pst1.setBigDecimal(6,rec.getMontoACobrar());
+				            pst1.setString(7, rec.getTipoRecibo());
+				            pst1.setBoolean(8, rec.getSelectAll());
+				            pst1.setBigDecimal(9, rec.getSelectTotal()); 
+				            pst1.setString(10, rec.getIdDeudasSelect()); 
+				            pst1.setInt(11, cdDescargo.getUsuarioId());
+				            pst1.setString(12, cdDescargo.getTerminal()); 
+				            pst1.execute();
+		    			}
+		    		}		            
+				}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Error al registrar el descargo : " + e.getMessage() );
+			System.out.println(": " + e) ;
+		}
+	}
+
+	/** FALTA USAR TRASACCIONES */
+	public void descargarDeuda(CdDescargo cdDescargo, int deudaAEliminar)
+			throws SisatException {
+		try {
+			// System.out.println("ELIMACION de deuda :" + deudaAEliminar);
+			// Eliminacion de Deuda
+			switch (cdDescargo.getTipoDescargo()) {
+			case Constante.TIPO_DESCARGO_DESCARGO: {
+				StringBuilder SQL = new StringBuilder(" UPDATE ").append(
+						SATParameterFactory.getDBNameScheme()).append(
+						".cd_deuda SET ");
+				SQL.append(" estado = '").append(Constante.ESTADO_DESCARGADO)
+						.append("', ");
+				SQL.append(" fecha_actualizacion = GETDATE(), ");
+				SQL.append(" usuario_id = ").append(cdDescargo.getUsuarioId())
+						.append(", ");
+				SQL.append(" terminal = '").append(cdDescargo.getTerminal())
+						.append("' ");
+				SQL.append(" WHERE deuda_id = ").append(deudaAEliminar);
+
+				PreparedStatement pst = connect().prepareStatement(
+						SQL.toString());
+				pst.executeUpdate();
+
+				break;
+			}
+			case Constante.TIPO_DESCARGO_PRESCRIPCION: {
+				StringBuilder SQL = new StringBuilder(" UPDATE ").append(
+						SATParameterFactory.getDBNameScheme()).append(
+						".cd_deuda SET ");
+				SQL.append(" estado = '").append(Constante.ESTADO_PRESCRITO)
+						.append("', ");
+				SQL.append(" fecha_actualizacion = GETDATE(), ");
+				SQL.append(" usuario_id = ").append(cdDescargo.getUsuarioId())
+						.append(", ");
+				SQL.append(" terminal = '").append(cdDescargo.getTerminal())
+						.append("' ");
+				SQL.append(" WHERE deuda_id = ").append(deudaAEliminar);
+
+				PreparedStatement pst = connect().prepareStatement(
+						SQL.toString());
+				pst.executeUpdate();
+				break;
+			}
+			case Constante.TIPO_DESCARGO_COMPENSACION: {
+				StringBuilder SQL = new StringBuilder(" UPDATE ").append(
+						SATParameterFactory.getDBNameScheme()).append(
+						".cd_deuda SET ");
+				SQL.append(" estado = '").append(Constante.ESTADO_COMPESADO)
+						.append("', ");
+				SQL.append(" fecha_actualizacion = GETDATE(), ");
+				SQL.append(" usuario_id = ").append(cdDescargo.getUsuarioId())
+						.append(", ");
+				SQL.append(" terminal = '").append(cdDescargo.getTerminal())
+						.append("' ");
+				SQL.append(" WHERE deuda_id = ").append(deudaAEliminar);
+
+				PreparedStatement pst = connect().prepareStatement(
+						SQL.toString());
+				pst.executeUpdate();
+				break;
+			}
+			default: {
+				StringBuilder SQL = new StringBuilder(" UPDATE ").append(
+						SATParameterFactory.getDBNameScheme()).append(
+						".cd_deuda SET ");
+				SQL.append(" estado = '").append(Constante.ESTADO_ELIMINADO)
+						.append("', ");
+				SQL.append(" fecha_actualizacion = GETDATE(), ");
+				SQL.append(" usuario_id = ").append(cdDescargo.getUsuarioId())
+						.append(", ");
+				SQL.append(" terminal = '").append(cdDescargo.getTerminal())
+						.append("' ");
+				SQL.append(" WHERE deuda_id = ").append(deudaAEliminar);
+
+				PreparedStatement pst = connect().prepareStatement(
+						SQL.toString());
+				pst.executeUpdate();
+				break;
+			}
+			}
+
+			// Registro de Eliminacion
+			em.merge(cdDescargo);
+
+		} catch (Exception ex) {
+			String msg = "No se ha podido eliminar las deudas. ".concat(ex
+					.getMessage());
+			throw new SisatException(msg);
+		}
+
+	}
+
+	public void rectificarDeuda(CdDescargo cdDescargo, DeudaDTO deudaARectificar)
+			throws SisatException {
+		try {
+			// System.out.println("RECTIFICACION :" +
+			// deudaARectificar.getDeterminacionId());
+			// RECTIFICACION de Deuda
+			BigDecimal numCoutas = new BigDecimal(
+					deudaARectificar.getNumCuota());
+			BigDecimal nuevoInsolutoDeterminacion = deudaARectificar
+					.getInsoluto();
+			BigDecimal nuevoInsolutoDeuda = nuevoInsolutoDeterminacion.divide(
+					numCoutas, 2, BigDecimal.ROUND_HALF_UP);
+
+			// DETERMINACION
+			StringBuilder SQLDet = new StringBuilder(" UPDATE ").append(
+					SATParameterFactory.getDBNameScheme()).append(
+					".dt_determinacion SET ");
+			SQLDet.append(" impuesto = ").append(nuevoInsolutoDeterminacion);
+			SQLDet.append(" ,nro_documento = '")
+					.append(Constante.ESTADO_RECTIFICADO).append("' ");
+			;
+			SQLDet.append(" ,fecha_actualizacion = GETDATE() ");
+			SQLDet.append(" ,usuario_id = ").append(
+					deudaARectificar.getUsuarioId());
+			SQLDet.append(" ,terminal = '")
+					.append(deudaARectificar.getTerminal()).append("' ");
+			SQLDet.append(" WHERE determinacion_id = ").append(
+					deudaARectificar.getDeterminacionId());
+
+			PreparedStatement pstDet = connect().prepareStatement(
+					SQLDet.toString());
+			pstDet.executeUpdate();
+
+			// DEUDA - NO SE PUEDE CAMBIAR EL ESTADO PORQUE SE COBRARA ESTA
+			// DEUDA
+			StringBuilder SQLDeuda = new StringBuilder(" UPDATE ").append(
+					SATParameterFactory.getDBNameScheme()).append(
+					".cd_deuda SET ");
+			SQLDeuda.append(" insoluto = ").append(nuevoInsolutoDeuda);
+			SQLDeuda.append(" ,nro_documento = ").append(
+					Integer.parseInt(Constante.ESTADO_RECTIFICADO));
+			SQLDeuda.append(" ,total_deuda = ").append(nuevoInsolutoDeuda);
+			SQLDeuda.append(" ,fecha_actualizacion = GETDATE() ");
+			SQLDeuda.append(" ,usuario_id = ").append(
+					deudaARectificar.getUsuarioId());
+			SQLDeuda.append(" ,terminal = '")
+					.append(deudaARectificar.getTerminal()).append("' ");
+			SQLDeuda.append(" WHERE determinacion_id = ").append(
+					deudaARectificar.getDeterminacionId());
+
+			PreparedStatement pst = connect().prepareStatement(
+					SQLDeuda.toString());
+			pst.executeUpdate();
+
+			// Registro de Rectificacion
+			em.merge(cdDescargo);
+
+			// System.out.println("FIN DE RECTIFICACION :" +
+			// deudaARectificar.getDeterminacionId());
+
+		} catch (Exception ex) {
+			String msg = "No se ha podido rectificar la deuda. ".concat(ex
+					.getMessage());
+			throw new SisatException(msg);
+		}
+
+	}
+
+	public Integer actualizarEstadoPapeleta(Integer papeletaId, String estado)
+			throws Exception {
+		Integer result = Constante.RESULT_PENDING;
+		try {
+			StringBuffer SQL = new StringBuffer();
+			SQL.append(" UPDATE ").append(Constante.schemadb)
+					.append(".pa_papeleta SET estado = ? WHERE papeleta_id=? ");
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setString(1, estado);
+			pst.setInt(2, papeletaId);
+			result = pst.executeUpdate();
+		} catch (Exception e) {
+			throw (e);
+		}
+		return result;
+	}
+	
+	public Integer actualizarPuntosEnProcesoYFirmesPapeleta(Integer papeletaId)
+			throws Exception {
+		Integer result = Constante.RESULT_PENDING;
+		try {
+			StringBuffer SQL = new StringBuffer();
+			SQL.append(" UPDATE ").append(Constante.schemadb)
+					.append(".pa_incidencia set puntos = 0, puntos_firmes = 0 where papeleta_id = ? and estado = 1");
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());			
+			pst.setInt(1, papeletaId);
+			result = pst.executeUpdate();
+		} catch (Exception e) {
+			throw (e);
+		}
+		return result;
+	}
+
+	/**
+	 * Obtiene toda la cuenta conrriente de un contribuyente.
+	 * 
+	 * @param cajeroId
+	 *            Identificador del usuario del sistema (cajero) que hace la
+	 *            consulta.
+	 * @param personaId
+	 *            Identificador del contribuyente.
+	 * @param fechaConsulta
+	 *            Fecha de consulta.
+	 * @return Lista de deudas de un contribuyente.
+	 * @throws SisatException
+	 *             Ocurre si hay un problema en el procedimiento almacenado
+	 *             stp_cj_buscardeuda
+	 */
+	public void modificarDeudas(int deudaId, BigDecimal insolutoCancelado,
+			BigDecimal derechoEmisionCancelado, BigDecimal totalDeudaCancelada,
+			int usuarioId) throws SisatException {
+
+		try {
+			// System.out.println("Se modificara en la bd de deudas:"+ deudaId
+			// );
+
+			String SQL = "UPDATE " + SATParameterFactory.getDBNameScheme()
+					+ ".cd_deuda SET usuario_id = " + usuarioId
+					+ ", fecha_actualizacion = GETDATE()"
+					+ " insoluto_cancelado = " + insolutoCancelado
+					+ " derecho_emision_cancelado = " + derechoEmisionCancelado
+					+ " total_cancelado = " + totalDeudaCancelada
+					+ " where deuda_id = " + deudaId;
+			PreparedStatement pst = connect().prepareStatement(SQL);
+			pst.executeUpdate();
+
+		} catch (Exception ex) {
+			String msg = "No se ha podido modificar la cuenta deuda. "
+					.concat(ex.getMessage());
+			throw new SisatException(msg);
+		}
+	}
+
+	public List<FindPapeletas> buscarPapeletasCriteria(
+			FindPapeletas findPapeleta) throws Exception {
+		// ORIGEN M:MASIVO / I:INDIVIDUAL
+		// ESTADO 0:INACTIVO(PENDIENTE DE VERIFICACION) 1:ACTIVO 3:PAGADO
+		// (DESCARGO) 9:ELIMINADO
+		List<FindPapeletas> list = new ArrayList<FindPapeletas>();
+		StringBuffer stBuffer = new StringBuffer();
+		stBuffer.append(" select TOP 500 p.nro_papeleta, p.fecha_infraccion, peri.persona_id infractorId,  gnperi.apellidos_nombres infractor, ");
+		stBuffer.append(" gnperp.apellidos_nombres propietario,  p.placa,   i.descripcion_corta infraccion , ");
+		stBuffer.append(" p.papeleta_id,   p.origen,  r.numero_resolucion, s.descripcion estado_resolucion, p.monto_multa, p.estado, p.num_licencia, ");
+		stBuffer.append(" td.descrpcion_corta desc_tipo_documento, peri.nro_doc_identidad  ");
+		stBuffer.append(" from ").append(Constante.schemadb)
+				.append(".pa_papeleta p  ");
+		stBuffer.append(" inner join ")
+				.append(Constante.schemadb)
+				.append(".pa_infraccion i on (p.infraccion_id = i.infraccion_id ) ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".pa_persona peri on (p.persona_infractor_id = peri.persona_id ) ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".gn_persona gnperi on (gnperi.persona_id=p.persona_infractor_id) ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".pa_persona perp on (p.persona_propietario_id = perp.persona_id )   ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".gn_persona gnperp on (gnperp.persona_id=p.persona_propietario_id) ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".mp_tipo_docu_identidad td on (td.tipo_doc_identidad_id=peri.tipo_doc_identidad) ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".pa_resolucion_papeleta r on(r.papeleta_id=p.papeleta_id)   ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".pa_estado_resol s on (s.estado_resol_id=r.estado_resolucion_id) ");
+		stBuffer.append(" where p.estado NOT IN ('9')  and p.infraccion_id!="
+				+ Constante.INFRACCION_DOSAJE_ETILICO);
+
+		//se agrego para nuevos criterios de busqueda
+		if (findPapeleta.getInfractorCbf() != null
+				&& !findPapeleta.getInfractorCbf().isEmpty()) {
+			stBuffer.append(" and peri.persona_id = ? ");
+		}
+		else if (findPapeleta.getPlacaCbf() != null
+				&& !findPapeleta.getPlacaCbf().isEmpty()) {
+			stBuffer.append(" and p.placa = ? ");
+		}
+		else if (findPapeleta.getNumPapeleta() != null
+				&& !findPapeleta.getNumPapeleta().isEmpty()) {
+			stBuffer.append(" and p.nro_papeleta = ? ");
+		}
+		stBuffer.append("order by p.estado ");
+		
+		int contador = 0;
+		try {
+			PreparedStatement pstm = connect().prepareStatement(
+					stBuffer.toString());
+			//Se agrega para validar nuevos criterios de busqueda: placa, infractor, papeleta
+			if (findPapeleta.getInfractorCbf() != null
+					&& !findPapeleta.getInfractorCbf().isEmpty()) {
+				pstm.setString(++contador, findPapeleta.getInfractorCbf());
+				contador=0;
+			}
+			else if (findPapeleta.getPlacaCbf() != null
+					&& !findPapeleta.getPlacaCbf().isEmpty()) {
+				filPlacaCb=findPapeleta.getPlacaCbf();				
+				pstm.setString(++contador, findPapeleta.getPlacaCbf());
+				contador=0;
+				
+			}
+			else if (findPapeleta.getNumPapeleta() != null
+					&& !findPapeleta.getNumPapeleta().isEmpty()) {
+				pstm.setString(++contador, findPapeleta.getNumPapeleta());
+				contador=0;
+			}
+			ResultSet rs = pstm.executeQuery();
+
+			while (rs.next()) {
+				FindPapeletas obj = new FindPapeletas();
+				obj.setNumPapeleta(rs.getString("nro_papeleta"));
+				obj.setFechaInfraccion(rs.getTimestamp("fecha_infraccion"));
+				obj.setInfractorId(rs.getInt("infractorId"));
+				obj.setInfractor(rs.getString("infractor"));
+				obj.setPropietario(rs.getString("propietario"));
+				obj.setPlaca(rs.getString("placa"));
+				obj.setInfraccion(rs.getString("infraccion"));
+				obj.setPapeletaId(rs.getInt("papeleta_id"));
+				obj.setOrigen(rs.getString("origen"));
+				obj.setNumOficio(rs.getString("numero_resolucion"));
+				obj.setEstadoDesc(rs.getString("estado_resolucion"));
+				obj.setMontoMulta(rs.getDouble("monto_multa"));
+				obj.setEstadoPapeleta(rs.getString("estado"));
+				obj.setEstado(rs.getString("estado"));
+				obj.setNumeroLicencia(rs.getString("num_licencia"));
+				obj.setDescTipoDocumento(rs.getString("desc_tipo_documento"));
+				obj.setNumeroDocumento(rs.getString("nro_doc_identidad"));
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+
+		return list;
+	}
+
+	public List<FindPapeletas> buscarPapeletasCriteriaDE(
+			FindPapeletas findPapeleta) throws Exception {
+		// ORIGEN M:MASIVO / I:INDIVIDUAL
+		// ESTADO 0:INACTIVO(PENDIENTE DE VERIFICACION) 1:ACTIVO 3:PAGADO
+		// (DESCARGO) 9:ELIMINADO
+		List<FindPapeletas> list = new ArrayList<FindPapeletas>();
+		StringBuffer stBuffer = new StringBuffer();
+		stBuffer.append(" select TOP 500 p.nro_papeleta, p.fecha_infraccion, peri.persona_id infractorId,  gnperi.apellidos_nombres infractor, ");
+		stBuffer.append(" gnperp.apellidos_nombres propietario,  p.placa,   i.descripcion_corta infraccion , ");
+		stBuffer.append(" p.papeleta_id,   p.origen,  r.numero_resolucion, s.descripcion estado_resolucion, p.monto_multa, p.estado, p.num_licencia, ");
+		stBuffer.append(" td.descrpcion_corta desc_tipo_documento, peri.nro_doc_identidad  ");
+		stBuffer.append(" from ").append(Constante.schemadb)
+				.append(".pa_papeleta p  ");
+		stBuffer.append(" inner join ")
+				.append(Constante.schemadb)
+				.append(".pa_infraccion i on (p.infraccion_id = i.infraccion_id ) ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".pa_persona peri on (p.persona_infractor_id = peri.persona_id ) ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".gn_persona gnperi on (gnperi.persona_id=p.persona_infractor_id) ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".pa_persona perp on (p.persona_propietario_id = perp.persona_id )   ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".gn_persona gnperp on (gnperp.persona_id=p.persona_propietario_id) ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".mp_tipo_docu_identidad td on (td.tipo_doc_identidad_id=peri.tipo_doc_identidad) ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".pa_resolucion_papeleta r on(r.papeleta_id=p.papeleta_id)   ");
+		stBuffer.append(" left join ")
+				.append(Constante.schemadb)
+				.append(".pa_estado_resol s on (s.estado_resol_id=r.estado_resolucion_id) ");
+		stBuffer.append(" where p.estado NOT IN ('9') and p.infraccion_id="
+				+ Constante.INFRACCION_DOSAJE_ETILICO);
+
+		if (findPapeleta.getNumPapeleta() != null
+				&& !findPapeleta.getNumPapeleta().isEmpty()) {
+			stBuffer.append(" and p.nro_papeleta = ? ");
+		}
+		stBuffer.append(" order by p.papeleta_id ");
+
+		int contador = 0;
+		try {
+			PreparedStatement pstm = connect().prepareStatement(
+					stBuffer.toString());
+			if (findPapeleta.getNumPapeleta() != null
+					&& !findPapeleta.getNumPapeleta().isEmpty()) {
+				pstm.setString(++contador, findPapeleta.getNumPapeleta());
+			}
+			ResultSet rs = pstm.executeQuery();
+
+			while (rs.next()) {
+				FindPapeletas obj = new FindPapeletas();
+				obj.setNumPapeleta(rs.getString("nro_papeleta"));
+				obj.setFechaInfraccion(rs.getTimestamp("fecha_infraccion"));
+				obj.setInfractorId(rs.getInt("infractorId"));
+				obj.setInfractor(rs.getString("infractor"));
+				obj.setPropietario(rs.getString("propietario"));
+				obj.setPlaca(rs.getString("placa"));
+				obj.setInfraccion(rs.getString("infraccion"));
+				obj.setPapeletaId(rs.getInt("papeleta_id"));
+				obj.setOrigen(rs.getString("origen"));
+				obj.setNumOficio(rs.getString("numero_resolucion"));
+				obj.setEstadoDesc(rs.getString("estado_resolucion"));
+				obj.setMontoMulta(rs.getDouble("monto_multa"));
+				obj.setEstadoPapeleta(rs.getString("estado"));
+				obj.setEstado(rs.getString("estado"));
+				obj.setNumeroLicencia(rs.getString("num_licencia"));
+				obj.setDescTipoDocumento(rs.getString("desc_tipo_documento"));
+				obj.setNumeroDocumento(rs.getString("nro_doc_identidad"));
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+
+		return list;
+	}
+
+	public List<DeudaDTO> obtenerTodaDeudaConFiltro(Integer personaId, Date fechaCompensacion, Integer anioDeuda, 
+			Integer subConceptoId, Integer nroCuota) throws SisatException {
+		List<DeudaDTO> lista = new ArrayList<DeudaDTO>();
+
+		try {
+
+			String SQL = "sp_estado_cuenta_deuda_con_filtro ?,?,?,?,?";
+
+			PreparedStatement pst = connect().prepareStatement(SQL);
+
+			pst.setInt(1, personaId);
+			pst.setDate(2, new java.sql.Date(fechaCompensacion.getTime()));
+			if(anioDeuda != null && anioDeuda.intValue()>0){
+				pst.setInt(3, anioDeuda);
+			}else{
+				pst.setNull(3, Types.INTEGER);
+			}			
+			if (subConceptoId != null && subConceptoId.intValue()>0) {
+				pst.setInt(4, subConceptoId);
+			} else {
+				pst.setNull(4, Types.INTEGER);
+			}
+			if (nroCuota != null) {
+				pst.setInt(5, nroCuota);
+			} else {
+				pst.setNull(5, Types.INTEGER);
+			}
+
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				DeudaDTO item = new DeudaDTO();
+
+				item.setPersonaId(rs.getInt("persona_id"));
+				item.setDeudaId(rs.getInt("deuda_id"));
+				item.setDeterminacionId(rs.getInt("determinacion_id"));
+				item.setAnioDeuda(rs.getInt("anio"));
+				item.setConcepto(rs.getString("tributo"));
+				item.setSubconcepto(rs.getString("tributo"));
+				item.setDescripcion(rs.getString("descripcion"));
+				item.setNumCuota(rs.getInt("cuota"));
+				item.setInsoluto(rs.getBigDecimal("insoluto"));
+				item.setDerechoEmi(rs.getBigDecimal("derecho_emision"));
+				item.setReajuste(rs.getBigDecimal("reajuste"));
+				item.setInteres(rs.getBigDecimal("interes"));
+				item.setFechaRegistro(rs.getDate("fecha_registro"));
+				item.setNroCuotas(rs.getInt("nro_cuotas"));
+				// TOTAL DEUDA
+				item.setTotalDeuda(rs.getBigDecimal("insoluto")
+						.add(rs.getBigDecimal("derecho_emision"))
+						.add(rs.getBigDecimal("reajuste"))
+						.add(rs.getBigDecimal("interes")));
+
+				// añadir a la lista de DeudaDTO
+				lista.add(item);
+			}
+		} catch (Exception ex) {
+			String msg = "No se ha podido recuperar la deuda. ".concat(ex
+					.getMessage());
+			throw new SisatException(msg);
+		}
+		return lista;
+	}
+	
+	
+	// -=CRAMIREZ=-
+	public List<ItemBandejaEntradaDTO> obtenerExpedientesContibuyente(int persona_id, String tipos_tramite )
+			throws SisatException {
+
+		List<ItemBandejaEntradaDTO> listItemBandejaEntrada = new ArrayList<ItemBandejaEntradaDTO>();
+
+		String q = "exec stp_td_obtener_expedientes_contribuyente ?,?"; 
+		PreparedStatement pstm;
+		try {
+			pstm = connect().prepareStatement(q);
+			
+			pstm.setInt(1, persona_id);
+			pstm.setString(2, tipos_tramite);		
+			
+			ResultSet rs = pstm.executeQuery();
+			
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+			Date fechaPresentacion = null;
+			
+			while (rs.next()) {
+				ItemBandejaEntradaDTO item = new ItemBandejaEntradaDTO();
+				
+				/** Para obtener el anio actual de la fecha de presentacion y concatenar luego en Expedente generico*/
+				fechaPresentacion = new Date(rs.getTimestamp("fecha_presentacion").getTime());
+								
+				item.setExpedienteId(rs.getInt("expediente_id"));
+				item.setNroExpedienteGenerico(rs.getString("nro_expediente_generico")+'-'+dateFormat.format(fechaPresentacion));
+				item.setCodExpediente(rs.getString("nro_expediente"));
+				item.setNroExpedienteAnterior(rs.getString("nro_expediente_anterior"));
+				item.setProcedimientoId(rs.getInt("procedimiento_id"));
+				item.setProcedimientoAsString(rs.getString("procedimiento_desc"));				
+				item.setTipoTramite(rs.getString("tipo_tramite"));
+				item.setReferenciaOrDocumentoTramiteAsString(rs.getString("referencia_docu_tramite"));
+				item.setEstado(rs.getInt("estado"));
+				item.setFechaRecepcion(new Date(rs.getTimestamp("fecha_presentacion").getTime()));
+				item.setNombreContribuyente(rs.getString("nombres_apellidos_final"));
+				if(rs.getTimestamp("fecha_asignacion") != null){
+					item.setFechaAsignacion(new Date(rs.getTimestamp("fecha_asignacion").getTime()));
+				}else{
+					item.setFechaAsignacion(null);
+				}
+				
+				item.setArea(rs.getString("unidad_as_string"));
+				item.setEstadoExpediente(rs.getInt("estado_expediente"));
+				item.setSituacionExpediente(rs.getInt("situacion_expediente"));
+				item.setUsuarioAsString(rs.getString("usuario_as_string"));
+				item.setUsuarioRegistrador(rs.getString("nombre_usuario"));
+				
+				item.setFlagDescargo(rs.getInt("flag_descargo"));
+				
+				listItemBandejaEntrada.add(item);
+			}
+
+		} catch (SQLException e) {
+			throw new SisatException(e.getMessage());
+		}
+
+		return listItemBandejaEntrada;
+	}
+	
+	public ArrayList<ReciboPagoDescargo> obtenerRecibosPagoDescargo(int personaId) throws Exception{
+    	ArrayList<ReciboPagoDescargo> lista = new ArrayList<ReciboPagoDescargo>();
+    	String q = "exec usp_get_recibos_descargo ?"; 
+		PreparedStatement pstm;
+		
+	    try {
+	    	pstm = connect().prepareStatement(q);
+			pstm.setInt(1, personaId);		
+			
+			ResultSet rs = pstm.executeQuery();
+			
+	    	while(rs.next()){
+	    		ReciboPagoDescargo obj= new ReciboPagoDescargo();
+	    		obj.setReciboId(rs.getInt("recibo_id"));
+	    		obj.setNroRecibo(rs.getString("nro_recibo"));
+	    		obj.setFechaRecibo(rs.getTimestamp("fecha_recibo"));
+	    		obj.setMontoCobrado(rs.getBigDecimal("monto_cobrado"));
+	    		obj.setMontoACobrar(rs.getBigDecimal("monto_a_cobrar"));
+	    		obj.setEstado(rs.getString("estado"));
+	    		obj.setTipoRecibo(rs.getString("tipo_recibo"));
+	    		obj.setSelectTotal(rs.getBigDecimal("monto_descargo"));
+	    		obj.setTipoDescargo(rs.getInt("tipo_descargo"));
+	    		lista.add(obj);    		
+	    	}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    
+	    return lista;
+    
+    }
+	
+	public ArrayList<ReciboPagoDetalleDTO> obtenerDeudasRecibo(int reciboId) throws Exception{
+    	ArrayList<ReciboPagoDetalleDTO> lista = new ArrayList<ReciboPagoDetalleDTO>();
+    	String q = "exec stp_cj_obtener_detalle_recibo_descargo ?"; 
+		PreparedStatement pstm;
+		
+	    try {
+	    	pstm = connect().prepareStatement(q);
+			pstm.setInt(1, reciboId);		
+			
+			ResultSet rs = pstm.executeQuery();
+			
+			while (rs.next()) {
+				ReciboPagoDetalleDTO re = new ReciboPagoDetalleDTO();
+				re.setDeudaId(rs.getInt("deuda_id"));
+				re.setConcepto(rs.getString("concepto"));			
+				re.setMonto(rs.getBigDecimal("monto"));
+				re.setReajuste(rs.getBigDecimal("reajuste"));
+				re.setInteres(rs.getBigDecimal("interes"));
+				re.setEmision(rs.getBigDecimal("emision"));
+				re.setTotal(rs.getBigDecimal("total"));
+				re.setAnio(rs.getString("anno_deuda"));
+				re.setReferencia(rs.getString("referencia"));
+				re.setCuota(rs.getString("nro_cuota")); 
+				re.setEstado(rs.getBoolean("estado"));
+				lista.add(re);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    
+	    return lista;
+    
+    }
+	
+	public int validaNumeroDocumento(String nroDocumento) throws SisatException {
+		int respuesta = 1;
+		try {
+			String sql = "[usp_valida_numero_documento_descargo] ?,?";
+            CallableStatement pst = connect().prepareCall(sql.toString());
+            pst.setString(1, nroDocumento);
+            pst.registerOutParameter(2, java.sql.Types.INTEGER);
+            pst.execute();
+		
+            respuesta = pst.getInt(2) ; 
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Error al registrar el descargo : " + e.getMessage() );
+			System.out.println(": " + e) ;
+		}
+		
+		return respuesta;
+	}
+
+}

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+	<h:form id="formRegistroNotificacionLotes">
+		<a4j:outputPanel id='outputregistrooficio'>
+		 <rich:panel style="width:100%;" id="outpanelcarga"> 	
+			<f:facet name="header">		
+				Notificar Acto/Rec Masivos
+			</f:facet>
+				<table width="100%" border="0" cellpadding="4" cellspacing="4">
+					<tr>
+						<td align="left" width="120px">
+							<h:outputLabel value="Nombre de Archivo :" />
+							<span style="color: red;">*</span>
+						</td>
+						<td width="200px">
+							<h:inputText binding="#{notificarLoteOrdinarioManaged.txtarchivo}" 
+							 size="50" maxlength="50" style="width:100%" styleClass="textUpperCase" converter="uppeCaseConverter"/>
+						</td>
+						
+						<td>
+							<a4j:commandButton value="Cargar Lote De Notificaciones"
+								style="width:300px;"
+								action="#{notificarLoteOrdinarioManaged.procesarcarga}"
+								oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								reRender="datosResultados,formRegistroNotificacionLotes" status="ajaxStatus"	/>
+						</td>
+						
+					</tr>
+				</table>
+				
+				<rich:dataTable  style="width:100%;" id="datosResultados" value="#{notificarLoteOrdinarioManaged.records}" rendered="#{notificarLoteOrdinarioManaged.mostraResultados}" var="record" 
+						rowKeyVar="row">
+					<rich:column id="x0" style="text-align:center;width:10%"  >
+		                <f:facet name="header">Nro Lote</f:facet>
+		                 <h:commandLink  ajaxSingle="true" id="newlink" value="#{record.masivaNotificacionId}" action="#{notificarLoteOrdinarioManaged.detalle}"
+		                    reRender="datosResultadosdetalle,formRegistroNotificacionLotes" >
+		            		 <f:setPropertyActionListener value="#{record}" target="#{notificarLoteOrdinarioManaged.currentItem}" id="rcurr1"/>
+		                </h:commandLink>
+		            </rich:column>
+					<rich:column id="x1" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Archivo</f:facet>
+		                <h:outputText value="#{record.archivo}"/>
+		            </rich:column>
+		            <rich:column id="x2" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Rec(s)</f:facet>
+		                <h:outputText value="#{record.cantRec}"/>
+		            </rich:column>
+		            <rich:column id="x3" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Valor(res)</f:facet>
+		                <h:outputText value="#{record.cantActos}"/>
+		            </rich:column>
+		             <rich:column id="x4" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Errores</f:facet>
+		                <h:outputText value="#{record.cantError}"/>
+		            </rich:column>
+		            <rich:column id="x5" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Estado</f:facet>
+		                <h:graphicImage value="#{(record.cantError>0)?'/images/modal/warning.png':'/images/modal/success.png'}" height="25px" width="25px" style="border:0" />
+		            </rich:column>
+		            
+		            <rich:column id="x6" style="text-align:center;width:20%" >
+		            	<f:facet name = "header">Revisar Archivo</f:facet>
+		                <h:commandLink  ajaxSingle="true" id="newlink33" action="#{notificarLoteOrdinarioManaged.descargaError}" >
+		            		 <h:graphicImage value="/images/modal/excel.png" height="20px" width="20px" style="border:0" />
+		            		 <f:setPropertyActionListener value="#{record}" target="#{notificarLoteOrdinarioManaged.currentItem}" id="rcurr"/>
+		                </h:commandLink>
+			        </rich:column>
+				</rich:dataTable>
+				</rich:panel>
+				
+				<rich:panel style="width:100%;" id="datosResultadosdetalle" rendered="#{notificarLoteOrdinarioManaged.mostraDetalle}"  > 	
+				<f:facet name="header">		
+					Detalle Notificar Acto/Rec Masivos
+				</f:facet>
+					<rich:dataTable  style="width:100%;" id="datosResultadosdet" value="#{notificarLoteOrdinarioManaged.recordsItemNotificacion}" var="item" 
+						rowKeyVar="row">
+					<rich:column id="x7" style="text-align:center;width:2%"  >
+		                <f:facet name="header">Corr.</f:facet>
+		                <h:outputText value="#{item.correlativo}"/>
+		            </rich:column>
+					<rich:column id="x8" style="text-align:center;width:7%" >
+		                <f:facet name="header"  >Acto/Rec</f:facet>
+		                <h:outputText value="#{item.nroActo}"  rendered="#{item.actoId!=0}" />
+		                <h:outputText value="#{item.nroRec}"  rendered="#{item.recId!=0}" />
+		            </rich:column>
+		            <rich:column id="x9" style="text-align:center;width:6%" >
+		                <f:facet name="header"  >Fecha Notif.</f:facet>
+		                <h:outputText value="#{item.fechaNotificacion}"/>
+		            </rich:column>
+		            <rich:column id="x10" style="text-align:center;width:15%" >
+		                <f:facet name="header"  > Notificador</f:facet>
+		                <h:outputText value="#{item.notificador}"/>
+		            </rich:column>
+		            <rich:column id="x11" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Motivo Notif.</f:facet>
+		                <h:outputText value="#{item.motivoNotificacion}"/>
+		            </rich:column>
+		             <rich:column id="x12" style="text-align:center;width:6%" >
+		                <f:facet name="header"  >Errores</f:facet>
+		                <h:outputText value="#{item.errorCode}"/>
+		            </rich:column>
+		              <rich:column id="x13" style="text-align:center;width:20%" >
+		                <f:facet name="header"  >Errores</f:facet>
+		                <h:outputText value="#{item.errorMessage}"/>
+		            </rich:column>
+		           <rich:column id="x14" style="text-align:center;width:6%" >
+		                <f:facet name="header"  >Estado</f:facet>
+		                <h:graphicImage value="#{(item.errorCode>0)?'/images/modal/warning.png':'/images/modal/success.png'}" height="25px" width="25px" style="border:0" />
+		            </rich:column>
+				</rich:dataTable>
+		</rich:panel>
+		
+	</a4j:outputPanel>		 			
+	</h:form>
+	
+	
+</ui:composition>

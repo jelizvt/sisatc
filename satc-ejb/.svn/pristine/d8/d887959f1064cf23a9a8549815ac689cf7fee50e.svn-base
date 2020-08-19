@@ -1,0 +1,163 @@
+package com.sat.sisat.cobranzacoactiva.dto;
+
+import java.io.Serializable;
+import java.util.Date;
+
+import com.sat.sisat.common.dto.BaseDTO;
+import com.sat.sisat.common.util.Constante;
+
+
+public class ExpedienteCoactivo extends BaseDTO implements Serializable {
+	
+	private Integer expedienteId=Constante.RESULT_PENDING;
+	private String nroExpediente;
+	private double totalDeuda;
+	private String apellidosNombresPersona;
+	private String direccion;
+	private String exigibilidad;
+	private Integer personaId;
+	private Integer carteraId;
+	private Integer prospectoId;
+	private Integer annoExpediente;
+	private Integer annoRec;
+	private String fechaNotificacion;
+	private String fechaExpediente;
+	private String nroRec;
+	private String fechaRec;
+	private String situacion;
+	private Integer recId;
+	private String apellidosNombresNotificador;
+	private String formaNotificacion;
+	private Integer notificacionId;
+	private String usuario;
+	
+	
+
+	public String getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(String usuario) {
+		this.usuario = usuario;
+	}
+	public String getFechaExpediente() {
+		return fechaExpediente;
+	}
+	public void setFechaExpediente(String fechaExpediente) {
+		this.fechaExpediente = fechaExpediente;
+	}
+	public String getApellidosNombresNotificador() {
+		return apellidosNombresNotificador;
+	}
+	public void setApellidosNombresNotificador(String apellidosNombresNotificador) {
+		this.apellidosNombresNotificador = apellidosNombresNotificador;
+	}
+	public String getFormaNotificacion() {
+		return formaNotificacion;
+	}
+	public void setFormaNotificacion(String formaNotificacion) {
+		this.formaNotificacion = formaNotificacion;
+	}
+	public Integer getNotificacionId() {
+		return notificacionId;
+	}
+	public void setNotificacionId(Integer notificacionId) {
+		this.notificacionId = notificacionId;
+	}
+	public Integer getRecId() {
+		return recId;
+	}
+	public void setRecId(Integer recId) {
+		this.recId = recId;
+	}
+	
+	public String getFechaRec() {
+		return fechaRec;
+	}
+	public void setFechaRec(String fechaRec) {
+		this.fechaRec = fechaRec;
+	}
+	public String getNroRec() {
+		return nroRec;
+	}
+	public void setNroRec(String nroRec) {
+		this.nroRec = nroRec;
+	}
+	public String getSituacion() {
+		return situacion;
+	}
+	public void setSituacion(String situacion) {
+		this.situacion = situacion;
+	}
+	public String getFechaNotificacion() {
+		return fechaNotificacion;
+	}
+	public void setFechaNotificacion(String fechaNotificacion) {
+		this.fechaNotificacion = fechaNotificacion;
+	}
+	public Integer getAnnoExpediente() {
+		return annoExpediente;
+	}
+	public void setAnnoExpediente(Integer annoExpediente) {
+		this.annoExpediente = annoExpediente;
+	}
+	public Integer getAnnoRec() {
+		return annoRec;
+	}
+	public void setAnnoRec(Integer annoRec) {
+		this.annoRec = annoRec;
+	}
+	public Integer getProspectoId() {
+		return prospectoId;
+	}
+	public void setProspectoId(Integer prospectoId) {
+		this.prospectoId = prospectoId;
+	}
+	public Integer getExpedienteId() {
+		return expedienteId;
+	}
+	public void setExpedienteId(Integer expedienteId) {
+		this.expedienteId = expedienteId;
+	}
+	public String getNroExpediente() {
+		return nroExpediente;
+	}
+	public void setNroExpediente(String nroExpediente) {
+		this.nroExpediente = nroExpediente;
+	}
+	public String getApellidosNombresPersona() {
+		return apellidosNombresPersona;
+	}
+	public void setApellidosNombresPersona(String apellidosNombresPersona) {
+		this.apellidosNombresPersona = apellidosNombresPersona;
+	}
+	public Integer getPersonaId() {
+		return personaId;
+	}
+	public void setPersonaId(Integer personaId) {
+		this.personaId = personaId;
+	}
+	public Integer getCarteraId() {
+		return carteraId;
+	}
+	public void setCarteraId(Integer carteraId) {
+		this.carteraId = carteraId;
+	}
+	public String getExigibilidad() {
+		return exigibilidad;
+	}
+	public void setExigibilidad(String exigibilidad) {
+		this.exigibilidad = exigibilidad;
+	}
+	public double getTotalDeuda() {
+		return totalDeuda;
+	}
+	public void setTotalDeuda(double totalDeuda) {
+		this.totalDeuda = totalDeuda;
+	}
+	public String getDireccion() {
+		return direccion;
+	}
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+}

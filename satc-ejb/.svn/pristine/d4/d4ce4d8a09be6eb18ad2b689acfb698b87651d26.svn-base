@@ -1,0 +1,259 @@
+package com.sat.sisat.papeleta.business;
+
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.ejb.Remote;
+
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.papeleta.dto.CargaLoteDTO;
+import com.sat.sisat.papeleta.dto.ConsultaPapeletaDTO;
+import com.sat.sisat.papeleta.dto.FindPapeletas;
+import com.sat.sisat.papeleta.dto.GridDetalleLote;
+import com.sat.sisat.papeleta.dto.RecordPapeletaDTO;
+import com.sat.sisat.papeleta.dto.ResultadoCargaLoteDTO;
+import com.sat.sisat.papeleta.dto.UbicacionFiscalDTO;
+import com.sat.sisat.papeletas.dto.PapeletaDTO;
+import com.sat.sisat.papeletas.dto.ResolucionDTO;
+import com.sat.sisat.persistence.entity.GnLugar;
+import com.sat.sisat.persistence.entity.GnPersona;
+import com.sat.sisat.persistence.entity.GnSector;
+import com.sat.sisat.persistence.entity.GnTipoAgrupamiento;
+import com.sat.sisat.persistence.entity.GnTipoDenoUrbana;
+import com.sat.sisat.persistence.entity.GnTipoEdificacion;
+import com.sat.sisat.persistence.entity.GnTipoIngreso;
+import com.sat.sisat.persistence.entity.GnTipoInterior;
+import com.sat.sisat.persistence.entity.GnTipoVia;
+import com.sat.sisat.persistence.entity.GnVia;
+import com.sat.sisat.persistence.entity.MpClaseLicencia;
+import com.sat.sisat.persistence.entity.MpDireccion;
+import com.sat.sisat.persistence.entity.MpPersona;
+import com.sat.sisat.persistence.entity.MpTipoDocuIdentidad;
+import com.sat.sisat.persistence.entity.PaCargaDetalleLote;
+import com.sat.sisat.persistence.entity.PaCargaLote;
+import com.sat.sisat.persistence.entity.PaDireccion;
+import com.sat.sisat.persistence.entity.PaDocuAnexo;
+import com.sat.sisat.persistence.entity.PaIncidencia;
+import com.sat.sisat.persistence.entity.PaInfraccion;
+import com.sat.sisat.persistence.entity.PaLey;
+import com.sat.sisat.persistence.entity.PaMedioProbatorio;
+import com.sat.sisat.persistence.entity.PaNivelGravedad;
+import com.sat.sisat.persistence.entity.PaPapeleta;
+import com.sat.sisat.persistence.entity.PaPersona;
+import com.sat.sisat.persistence.entity.PaResolucion;
+import com.sat.sisat.persistence.entity.RvMarca;
+import com.sat.sisat.persistence.entity.RvModeloVehiculo;
+import com.sat.sisat.persistence.entity.RvVehiculo;
+import com.sat.sisat.predial.dto.FindPersona;
+import com.sat.sisat.vehicular.dto.BuscarPersonaDTO;
+
+@Remote
+public interface PapeletaBoRemote {
+	
+	public Integer papeletaDeterminada(Integer papeletaId) throws Exception;
+
+	public List<GnSector> getAllGnSector() throws Exception;
+
+	public List<PaLey> getAllLeyInfracciones() throws Exception;
+
+	public List<FindPapeletas> buscarPapeletasCriteria(
+			FindPapeletas findPapeleta) throws Exception;
+
+	public List<PaInfraccion> getAllInfracciones(PaInfraccion infraccion,
+			String fechaInfraccionTramos) throws Exception;
+
+	public List<MpTipoDocuIdentidad> getAllMpTipoDocumento() throws Exception;
+
+	public List<BuscarPersonaDTO> buscaPersona(MpPersona persona)
+			throws Exception;
+
+	public List<RvModeloVehiculo> getAllRvModeloVehiculo() throws Exception;
+
+	public List<GnTipoEdificacion> getAllGnTipoEdificacion() throws Exception;
+
+	public List<GnTipoIngreso> getAllGnTipoIngreso() throws Exception;
+
+	public List<GnTipoInterior> getAllGnTipoInterior() throws Exception;
+
+	public List<GnTipoAgrupamiento> getAllGnTipoAgrupamiento() throws Exception;
+
+	public List<GnTipoVia> getAllGnTipoVia() throws Exception;
+
+	public int getNextMpDireccionId() throws Exception;
+
+	public int getNextMpPersonaDomicilioId() throws Exception;
+
+	public int generarNuevoLote() throws Exception;
+
+	public int getNextPapeleta() throws Exception;
+
+	public int guardarAdjuntoPapeleta(PaDocuAnexo docAdjunto) throws Exception;
+
+	public ArrayList<FindPersona> getFindPersona() throws Exception;
+
+	public BigDecimal obtenerUIT(Integer anio) throws Exception;
+
+	public PaInfraccion buscarInfraccion(PaInfraccion infraccion)
+			throws Exception;
+
+	public List<MpClaseLicencia> getAllMpClaseLicencia() throws Exception;
+
+	public List<RvMarca> getAllRvMarcaVehiculo() throws Exception;
+
+	public List<PaMedioProbatorio> getAllMedioProbatorio() throws Exception;
+
+	public List<PaNivelGravedad> getAllNivelGravedad(PaInfraccion infraccion)
+			throws Exception;
+
+	public List<MpPersona> listarPersonasxDni(String numeroDocumento)
+			throws Exception;
+
+	public MpPersona findPersona(int personaId) throws Exception;
+
+	public RvVehiculo buscarVehiculo(String nroPlaca) throws Exception;
+
+	public List<Object> getAllPaMedioProbatorio() throws Exception;
+
+	public Integer guardarPaDocuAnexo(PaDocuAnexo paDocuAnexo) throws Exception;
+
+	public Integer guardarPapeleta(PaPapeleta papeleta) throws Exception;
+
+	public PaPapeleta getPapeleta(Integer PapeletaId) throws Exception;
+
+	// Correccion de flag es infractor a la tabla pa_direccion
+	public BuscarPersonaDTO getPersonaPapeleta(Integer personaId,
+			Integer papeletaId, String esInfractor) throws Exception;
+
+	public ArrayList<PaDocuAnexo> getAllAdjuntoPapeleta(Integer papeletaId)
+			throws Exception;
+
+	public List<CargaLoteDTO> buscarLotes(PaCargaLote lote) throws Exception;
+
+	public List<GridDetalleLote> buscarPapeletas(Integer cargaLotesId,
+			String operacion) throws Exception;
+
+	public Integer generarResolucion() throws Exception;
+
+	public ArrayList<ResolucionDTO> listarResolucion(Integer resolucionId)
+			throws Exception;
+
+	public ArrayList<PaCargaDetalleLote> getAllPaCargaDetalleLoteError(
+			Integer cargaLotesId) throws Exception;
+
+	public Integer savePersona(GnPersona persona) throws Exception;
+
+	// public Integer registrarPaPersona(Integer personaId)throws Exception;
+
+	public Integer guardarPaPersona(PaPersona paPersona,BuscarPersonaDTO paPersonaOriginal,String terminal,Integer uduarioId) throws Exception;
+
+	public int guardarAdjuntoPapeleta(Integer papeletaId,
+			ArrayList<PaDocuAnexo> lDocAnexo) throws Exception;
+
+	public PaPapeleta getPaPapeletaByNumeroPapeleta(String numeroPapeleta,
+			Integer papeletaId, Integer anioInfraccion) throws Exception;
+
+	public PaPapeleta getPaPapeletaByNumeroPapeleta1(String numeroPapeleta,
+			Integer papeletaId) throws Exception;
+
+	public Integer guardarPaCargaLote(PaCargaLote cargaLote) throws Exception;
+
+	public Integer iniciarProcesoCargaLote(String directorio,
+			String nombreArchivo, Integer cargaLoteId) throws Exception;
+
+	public ArrayList<ResultadoCargaLoteDTO> listaErrorCargaDetalleToles(
+			Integer cargaLotesId, Integer procesoCargaId) throws Exception;
+
+	// public Integer actualizaPaPersona(Integer personaId)throws Exception;
+
+	public PaResolucion getPaResolucion(Integer resolucionId) throws Exception;
+
+	public ArrayList<PaResolucion> getAllPaResolucion() throws Exception;
+
+	public MpDireccion getMpDireccion(Integer personaId) throws Exception;
+
+	public MpPersona getMpPersona(Integer personaId) throws Exception;
+
+	public PaCargaLote getPaCargaLoteByNumeroOficio(String numOficio,
+			Integer cargaLoteId) throws Exception;
+
+	public Integer getPuntosAcum(Integer personaId, Timestamp fechaInfraccion,
+			Integer periodo) throws Exception;
+
+	public PaInfraccion getPaInfraccion(Integer infraccionId) throws Exception;
+
+	public Integer guardarPaIncidencia(PaIncidencia paIncidenciaNueva,
+			PaIncidencia incidenciaAntigua) throws Exception;
+
+	public List<GnVia> getAllGnVia(Integer tipoViaId) throws Exception;
+
+	public List<GnLugar> getAllGnLugar(Integer viaId) throws Exception;
+
+	public String getDireccionCompleta(PaDireccion direccion,
+			HashMap<Integer, String> mapIGnTipoVia,
+			HashMap<Integer, String> mapIGnVia) throws Exception;
+
+	public PaDireccion getPaDireccion(Integer personaId) throws Exception;
+
+	public ArrayList<PapeletaDTO> listarPapeletas(Integer cargaLotesId)
+			throws Exception;
+
+	public void guardarPaDocuAnexo(ArrayList<PapeletaDTO> lista)
+			throws Exception;
+
+	public PaIncidencia getIncidencia(Integer InfractorId,
+			Integer InfraccionId, Integer PapeletaId) throws Exception;
+
+	public Integer getReincidencia(PaIncidencia incidenciaId,
+			Integer personaId, Integer infraccionId, Timestamp fechaInfraccion,
+			Integer periodo) throws Exception;
+
+	public ArrayList<RecordPapeletaDTO> getRecordVehiculo(String placa)
+			throws Exception;
+
+	public ArrayList<RecordPapeletaDTO> getAllRecordVehiculo(String placa)
+			throws Exception;
+
+	public ArrayList<RecordPapeletaDTO> getRecordInfractor(
+			Integer tipoDocumento, String nroDocumento, String nroLicencia,
+			Integer propietarioId, Integer infractorId) throws Exception;
+
+	public Integer guardarPaDireccion(PaDireccion direccion) throws Exception;
+
+	public UbicacionFiscalDTO getUbicacionFiscal(Integer personaId)
+			throws Exception;
+
+	public void eliminarEstadoPaDireccion(Integer papeletaId) throws Exception;
+
+	public void cambiarEstadoPapeleta(Integer papeletaId) throws Exception;
+
+	public BuscarPersonaDTO getInfractorByDocumento(Integer tipoDocumento,
+			String nroDocumentoIdentidad) throws Exception;
+
+	public BuscarPersonaDTO getInfractorByNroLicencia(String nroLicencia)
+			throws Exception;
+
+	public BuscarPersonaDTO getInfractorById(Integer personaId)
+			throws Exception;
+
+	public ArrayList<RecordPapeletaDTO> getAllRecordInfractor(
+			Integer tipoDocumento, String nroDocumento, String nroLicencia,
+			Integer propietarioId, Integer infractorId) throws Exception;
+
+	public List<ConsultaPapeletaDTO> consultarPapeletas(String nroPapeleta,
+			Date fechaInicio, Date fechaFin) throws SisatException;
+
+	public Integer guardarPaIncidenciaDE(PaIncidencia paIncidencia)
+			throws Exception;
+
+	public boolean getInfractorContribuyente(Integer personaId)
+			throws Exception;
+
+	public List<ConsultaPapeletaDTO>consultarPapeletaDescargo(String nroPapeleta,Date fechaInicio, Date fechaFin)throws Exception;
+	
+	public BigDecimal obtenerSancionInfraccion(Integer infraccionId, Integer incidencia) throws Exception;
+}

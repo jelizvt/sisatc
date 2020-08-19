@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<div style="max-height: 430px; overflow: auto;">
+		<h:form id="formCajaBonoCajam">
+
+			<div style="padding: 5px; margin-top: 5px;">
+				<table cellpadding="5">
+					<tr>
+						<td width="150px">Código de contribuyente:<span
+							style="color: red;">*</span></td>
+						<td><h:inputText value="#{cajaPersonaManaged.persona_id}"
+								id="txt1" size="6" maxlength="9" style="width:81px">
+									<a4j:support id="id_supportlstconcepto2" event="onchange"
+									BypassUpdates="false" ajaxSingle="true"  />
+								
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText></td>
+
+					</tr>
+					<tr>
+						<td width="150px">Periodo:<span style="color: red;">*</span></td>
+						<td><h:inputText value="#{cajaPersonaManaged.periodo}"
+								id="txt2" size="6" maxlength="9" style="width:81px">
+								<a4j:support id="id_supportlstconcepto" event="onchange"
+									BypassUpdates="false" ajaxSingle="true" />
+								<rich:ajaxValidator event="onblur" />
+							</h:inputText></td>
+
+					</tr>
+
+				</table>
+			</div>
+
+		</h:form>
+
+		<h:form id="frmResumenCobrar">
+			<div style="padding: 10px; margin-bottom: 10px;" align="center">
+				<a4j:commandButton id="btnGuardarBono" value="Guardar"
+					action="#{cajaPersonaManaged.validaCodigoPersona}"
+					reRender="txt1,txt2" status="ajaxStatus" style="width: 80px;" 
+					
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')':'Richfaces.hideModalPanel(\'modalBono\');Richfaces.hideModalPanel(\'mpResCobrarDeu\');'}"
+					onclick="Richfaces.hideModalPanel('modalBono')"
+					>
+				</a4j:commandButton>
+				<a4j:commandButton value="Cancelar"
+					action="#{cajaCobranzaPapeletaManaged.liberarContribuyente}"
+					ajaxSingle="true" 
+					oncomplete="Richfaces.hideModalPanel('modalBono')"
+					style="width: 80px; margin-left: 4px;">
+				</a4j:commandButton>
+					
+			</div>
+		</h:form>
+	</div>
+
+	<rich:modalPanel id="mpResCobrarDeu" width="250" height="120">
+		<f:facet name="header">
+			<h:outputText value="Resultado" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideMpResCobDeu"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpResCobrarDeu"
+					attachTo="hideMpResCobDeu" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton value="Aceptar" status="ajaxStatus"
+					rendered="#{cajaPersonaManaged.correct}"
+					onclick="Richfaces.hideModalPanel('mpResCobrarDeu');Richfaces.hideModalPanel('modalBono')"
+					
+					></a4j:commandButton>
+				<a4j:commandButton value="Aceptar" status="ajaxStatus"
+					rendered="#{!cajaPersonaManaged.correct}"
+					onclick="Richfaces.hideModalPanel('mpResCobrarDeu')"></a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

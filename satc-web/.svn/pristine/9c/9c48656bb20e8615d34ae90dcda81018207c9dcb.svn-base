@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+                
+                xmlns:p="http://java.sun.com/jsf/html">
+
+	<style type="text/css">
+#frmAgenciaUsuario .extdt-content {
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#frmAgenciaUsuario .extdt-innerdiv {
+	overflow-x: auto !important;
+	overflow-y: hidden;
+	position: static;
+}
+
+#frmAgenciaUsuario .extdt-outerdiv {
+	position: static;
+}
+</style>
+
+	<h:form prependId="false" >
+		<table width="49%" cellpadding="10"
+			style="background-color: #F3F2F2; border: 1px solid #C0C0C0; float: left;">
+			<tbody>
+				<tr>
+					<td>
+						<h:panelGroup>
+						<fieldset style="background-color: #FFFFFF;">
+							<legend
+								style="padding-bottom: 2px; width: 140px; background-image: url('#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.images.TabGradientB/DATB/eAH79Onz673zmQAYMwUh.jsf')">
+								<h:outputLabel value="Perfiles"
+									style="padding-left: 30px;" />
+							</legend>
+							
+							<rich:extendedDataTable id="tblRoles"
+								value="#{administrarPerfilesManaged.listPerfiles}" var="record" width="100%"
+								height="600px" sortMode="single" selectionMode="single"
+								selection="#{administrarPerfilesManaged.simpleSelectedPerfil}"
+								noDataLabel="#{msg['gn.noexistendatos']}" 
+								enableContextMenu="false">
+
+								<a4j:support id="rowSelectionRol"
+									action="#{administrarPerfilesManaged.selectPerfilTable}"
+									event="onclick" reRender="tblFechaAcc, tblRoles" />
+
+								<rich:column width="20%">
+									<f:facet name="header">Código</f:facet>
+									<h:outputText value="#{record.perfilId}" />
+								</rich:column>
+								<rich:column width="60%" style="text-align: center;">
+									<f:facet name="header">Nombre</f:facet>
+									<h:outputText value="#{record.nombre}" />
+								</rich:column>
+								
+								<rich:column width="20%" style="text-align: center;">
+									<f:facet name="header">
+											<a4j:commandButton value="Nuevo"
+												action="#{administrarPerfilesManaged.nuevoPerfil}"
+												oncomplete="Richfaces.showModalPanel('mdlNuevoPerfil'), jQuery('#txtNamePerfil').focus()"
+												title="Crear nuevo perfil" 
+												reRender="mdlNuevoPerfil">
+											</a4j:commandButton>
+									</f:facet>
+										
+									<span style="#{record.estado ? 'background-color: #6cff00;' : ''}"> <h:selectBooleanCheckbox
+											value="#{record.estado}" />
+											
+									</span>
+								</rich:column>
+								
+								
+								
+							</rich:extendedDataTable>
+						</fieldset>
+						</h:panelGroup>
+						 <h:panelGroup rendered="false">
+							
+						</h:panelGroup>
+					</td>
+					
+					
+					
+				</tr>
+			</tbody>
+		</table>
+		
+		
+		
+		<table width="49%" cellpadding="10"
+			style="background-color: #F3F2F2; border: 1px solid #C0C0C0; float: right;">
+			<tbody>
+				<tr>
+					
+					<td><h:panelGroup>
+							<fieldset style="background-color: #FFFFFF;">
+								<legend
+									style="padding-bottom: 2px; width: 140px; background-image: url('#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.images.TabGradientB/DATB/eAH79Onz673zmQAYMwUh.jsf')">
+									<h:outputLabel value="Permisos"
+										style="padding-left: 30px;" />
+								</legend>
+								<rich:extendedDataTable id="tblFechaAcc"
+									value="#{administrarPerfilesManaged.listPermisosPerfiles}" var="record"
+									width="100%" height="600px" sortMode="single"
+									selectionMode="single"
+									noDataLabel="#{msg['gn.noexistendatos']}"
+									enableContextMenu="false"
+									rowKeyVar="rowInd">
+									<rich:column width="18%">
+										<f:facet name="header">Menú</f:facet>
+										<h:outputText value="#{record.menu}">
+											<f:convertDateTime locale="#{msg['param.localedate']}"
+												pattern="#{msg['param.datetimepattern']}"
+												timeZone="#{aplicationManaged.timeZone}" />
+										</h:outputText>
+									</rich:column>
+									<rich:column width="35%">
+										<f:facet name="header">Submenú</f:facet>
+										<h:outputText value="#{record.submenu}">
+											<f:convertDateTime locale="#{msg['param.localedate']}"
+												pattern="#{msg['param.datetimepattern']}"
+												timeZone="#{aplicationManaged.timeZone}" />
+										</h:outputText>
+									</rich:column>
+									
+									<rich:column width="17%">
+										<f:facet name="header">Tipo Permiso</f:facet>
+										<h:outputText value="#{record.nivelAcceso}">
+											<f:convertDateTime locale="#{msg['param.localedate']}"
+												pattern="#{msg['param.datetimepattern']}"
+												timeZone="#{aplicationManaged.timeZone}" />
+										</h:outputText>
+									</rich:column>
+									
+									<rich:column width="20%">
+										<f:facet name="header">Tipo Menú</f:facet>
+										<h:outputText value="#{record.tipo}">
+											<f:convertDateTime locale="#{msg['param.localedate']}"
+												pattern="#{msg['param.datetimepattern']}"
+												timeZone="#{aplicationManaged.timeZone}" />
+										</h:outputText>
+									</rich:column>
+									
+									<rich:column width="10%" style="text-align: center;">
+										<f:facet name="header">
+											<a4j:commandButton value="Nuevo"
+												action="#{administrarPerfilesManaged.nuevoPermisoUsuario}"
+												oncomplete="Richfaces.showModalPanel('mdlPermisoPerfil')"
+												disabled="#{administrarPerfilesManaged.flagRegistrarPermisoPerfil}"
+												title="Crear nuevo permiso" 
+												reRender="mdlPermisoPerfil">
+											</a4j:commandButton>
+										</f:facet>
+										<a4j:commandButton action="#{administrarPerfilesManaged.elimiarPermisoPerfil(record.perfilSubmenuId)}"
+											
+											image="/images/extorno_icon.jpg" title="Eliminar"
+											reRender="tblFechaAcc">
+											<f:param name="rowIndexUser" value="#{rowInd}" />
+										</a4j:commandButton>
+									</rich:column>
+									
+									
+									
+									
+								</rich:extendedDataTable>
+							</fieldset>
+						</h:panelGroup> <h:panelGroup rendered="false">
+							
+						</h:panelGroup></td>
+					
+				</tr>
+			</tbody>
+		</table>
+		
+		
+	</h:form>
+
+	<h:form prependId="false" width="50%">
+		
+	</h:form>
+	
+	
+	
+	<rich:modalPanel id="mdlPermisoPerfil" autosized="true" width="350"
+		style="height:100%">
+		<f:facet name="header">
+			<h:outputText value="Nuevo permios del perfil : #{administrarPerfilesManaged.selectPerfil.nombre}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpiUsuario"
+					styleClass="hidelink" />
+				<rich:componentControl for="mdlPermisoPerfil" attachTo="gpiUsuario"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<table>
+				<tbody>
+				
+					<tr >
+						<td>Tipo:<span style="color: red;"> *</span></td>
+						<td>
+							<rich:comboBox width="250px" defaultLabel="Selecccione"
+								value="#{administrarPerfilesManaged.tipoMenuValue}"
+								id="tipo"
+								binding="#{administrarPerfilesManaged.cmbtipodocumento}"
+								immediate="true"
+								valueChangeListener="#{administrarPerfilesManaged.cambiarTipoMenu}"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="id_lsttipo"
+									value="#{administrarPerfilesManaged.listcmbTipoMenu}" />
+								<a4j:support id="id_supportlsttipo"
+									reRender="menuTipo, tblaAgregarPermiso, menuSubmenu" event="onchange" BypassUpdates="false"
+									ajaxSingle="true" />
+							</rich:comboBox>
+							
+								
+				        </td>
+					</tr>
+					
+					<tr >
+						<td style="padding-top: 10px;">Menús:<span style="color: red;"> *</span></td>
+						<td style="padding-top: 10px;">
+							<rich:comboBox width="250px" defaultLabel="Selecccione"
+								value="#{administrarPerfilesManaged.menuValue}"
+								id="menuTipo"
+								binding="#{administrarPerfilesManaged.cmbMenu}"
+								immediate="true"
+								valueChangeListener="#{administrarPerfilesManaged.cambiarMenu}"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="id_lstmenu"
+									value="#{administrarPerfilesManaged.listcmbMenu}" />
+								<a4j:support id="id_supportlstmenu"
+									reRender="menuSubmenu, tblaAgregarPermiso" event="onchange" BypassUpdates="false"
+									ajaxSingle="true" />
+							</rich:comboBox>	
+						</td>
+					</tr>
+					
+					<tr>
+						<td style="padding-top: 10px;">SubMenú:<span style="color: red;"> *</span></td>
+						<td style="padding-top: 10px;">
+							<rich:comboBox width="250px" defaultLabel="Selecccione"
+								value="#{administrarPerfilesManaged.submenuValue}"
+								id="menuSubmenu"
+								binding="#{administrarPerfilesManaged.cmbSubmenu}"
+								immediate="true"
+								valueChangeListener="#{administrarPerfilesManaged.cambiarSubmenu}"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="id_lstsubmenu"
+									value="#{administrarPerfilesManaged.listcmbSubmenu}" />
+								<a4j:support id="id_supportlstsubmenu"
+									reRender="tblaAgregarPermiso" event="onchange" BypassUpdates="false"
+									ajaxSingle="true" />
+							</rich:comboBox>	
+						</td>
+					</tr>
+				</tbody>
+				
+				
+				<!--  <tfoot>
+					<tr align="center">
+						<td colspan="2">
+							<a4j:commandButton value="Guardar"
+								oncomplete="Richfaces.showModalPanel('mdlWarnSaveUser')"
+								style="width: 100px;">
+							</a4j:commandButton> 
+							<a4j:commandButton
+								value="Cancelar"
+								onclick="Richfaces.hideModalPanel('mdlPermisoPerfil')"
+								style="width: 100px; margin-left: 2px;">
+							</a4j:commandButton></td>
+					</tr>
+				</tfoot> -->
+			</table>
+			
+			
+		</h:form>
+		
+		<h:form prependId="false">
+			<table width="100%" cellpadding="0"
+				style="background-color: #F3F2F2; border: 1px solid #C0C0C0; margin-top: 15px;">
+				<tbody>
+					<tr>
+						<td>
+							<fieldset style="background-color: #FFFFFF;">
+								<legend
+									style="padding-bottom: 2px; width: 140px; background-image: url('#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.images.TabGradientB/DATB/eAH79Onz673zmQAYMwUh.jsf')">
+									<h:outputLabel value="Permisos"
+										style="padding-left: 30px;" />
+								</legend>
+								<rich:extendedDataTable id="tblaAgregarPermiso"
+									value="#{administrarPerfilesManaged.listPermisosPorSubmenu}" var="record" width="100%"
+									height="150px" sortMode="single" selectionMode="single"
+									selection="#{administrarPerfilesManaged.simpleSelectedPermisoPerfil}"
+									noDataLabel="#{msg['gn.noexistendatos']}" 
+									enableContextMenu="false"
+									style="height">
+	
+									   <a4j:support id="rowSelectionRol1"
+										action="#{administrarPerfilesManaged.selecionarPermisoPerfil}"
+										event="onclick"  /> 
+	
+									<rich:column width="20%">
+										<f:facet name="header">Código</f:facet>
+										<h:outputText value="#{record.itemId}" />
+									</rich:column>
+									<rich:column width="60%" style="text-align: center;">
+										<f:facet name="header">Nombre</f:facet>
+										<h:outputText value="#{record.descripcion}" />
+									</rich:column>
+									
+									<rich:column width="20%" style="text-align: center;">
+										<f:facet name="header">Habilitado </f:facet>
+										<span style="#{record.habilitado ? 'background-color: #6cff00;' : ''}"> 
+											<h:selectBooleanCheckbox value="#{record.habilitado}" />	
+										</span>
+									</rich:column>
+									
+									
+									
+								</rich:extendedDataTable>
+							</fieldset>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			
+			<div style= "     text-align: center; margin-top: 15px;">
+					<a4j:commandButton value="Guardar"
+						action="#{administrarPerfilesManaged.guardarPermisosPerfil}"
+						oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''};#{administrarPerfilesManaged.saveCorrectoPermisoPerfil ? 'Richfaces.hideModalPanel(\'mdlPermisoPerfil\')' : ''}"
+						reRender="tblFechaAcc"
+						style="width: 100px;">
+					</a4j:commandButton> 
+					<a4j:commandButton
+						value="Cancelar"
+						onclick="Richfaces.hideModalPanel('mdlPermisoPerfil')"
+						style="width: 100px; margin-left: 2px;">
+					</a4j:commandButton>
+			</div>
+		</h:form>
+		
+		
+		
+	</rich:modalPanel>
+	
+	
+	<rich:modalPanel id="mdlNuevoPerfil" autosized="true" width="350"
+		style="height:100%">
+		<f:facet name="header">
+			<h:outputText value="Nuevo Perfil" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpiNuevoPerfil"
+					styleClass="hidelink" />
+				<rich:componentControl for="mdlPermisoPerfil" attachTo="gpiUsuario"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<table>
+				<tbody>
+				
+					<tr>
+						<td>
+							Nombre Perfil:
+							<span style="color: red;"> *</span>
+						</td>
+						<td>
+							<h:inputText id="txtNamePerfil"
+								value="#{administrarPerfilesManaged.nuevoNombrePerfil}"
+								styleClass="textUpperCase" converter="uppeCaseConverter" style="width: 230px;" />
+						</td>
+					</tr>
+					
+					
+					
+				</tbody>
+			</table>
+			
+			<div style= "     text-align: center; margin-top: 15px;">
+				<a4j:commandButton value="Guardar"
+					action="#{administrarPerfilesManaged.guardarPerfil}"
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''};#{administrarPerfilesManaged.saveCorrectoPerfil ? 'Richfaces.hideModalPanel(\'mdlNuevoPerfil\')' : ''}"
+					reRender="tblRoles"
+					style="width: 100px;">
+				</a4j:commandButton> 
+				<a4j:commandButton
+					value="Cancelar"
+					onclick="Richfaces.hideModalPanel('mdlNuevoPerfil')"
+					style="width: 100px; margin-left: 2px;">
+				</a4j:commandButton>
+			
+			</div>
+			
+		</h:form>
+		
+		
+		
+	</rich:modalPanel>
+
+
+	
+
+	<rich:modalPanel id="mdlWarnSaveUser" autosized="true" width="320"
+		height="110">
+		<f:facet name="header">
+			<h:outputText value="Advertencia" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpiWarnSaveUser"
+					styleClass="hidelink" />
+				<rich:componentControl for="mdlWarnSaveUser"
+					attachTo="gpiWarnSaveUser" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<p style="color: #fdb05d; font-weight: bold;">Los datos que
+				intenta guardar no podrán modificarse a excepción del estado.</p>
+			<p style="color: #fdb05d; font-weight: bold;">Confirme si ¿Esta
+				seguro?</p>
+			<div style="text-align: center;">
+				<a4j:commandButton value="Aceptar"
+					action="#{usuarioManaged.guardarUsuario}"
+					onclick="Richfaces.hideModalPanel('mdlWarnSaveUser')"
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''};#{usuarioManaged.saveCorrecto ? 'Richfaces.hideModalPanel(\'mdlUsuario\')' : ''}"
+					reRender="tblUsers,tblRoles" style="width: 80px;"></a4j:commandButton>
+				<a4j:commandButton value="Cancelar" immediate="true"
+					onclick="Richfaces.hideModalPanel('mdlWarnSaveUser')"
+					style="width: 80px;"></a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+
+	<script type="text/javascript">
+		//<![CDATA[
+		function iniciarCalendar(){
+			var radios = $('tblAgenCajero').getElementsBySelector("input[type='radio']");
+			var arregloRb = $A(radios);
+			var i = 0;
+			arregloRb.each(function(itemRb){
+				var id = 'tblAgenCajero:n:' + i;
+				var allCalen = $(id).getElementsByClassName("rich-calendar-input");
+				var arregloCal = $A(allCalen);
+				arregloCal.each(function(itemCal){
+					if(itemCal.value == null || itemCal.value == ''){
+						itemCal.disable();
+						var idSplit = itemCal.id.split('InputDate');
+						var idImg = new String(idSplit[0]);
+						idImg = idImg + 'PopupButton';
+						$(idImg).setAttribute('src','#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.DisabledCalendarIcon/DATB/eAHbWurFMOs5AAnQAvY_.jsf');
+					}else{
+						itemRb.checked = 'checked';
+						$('txtAgenCajeroId').value=itemRb.value;
+						throw $break;
+					}
+				});
+				i++;
+			});
+		}
+		function radioButton(radio) {
+			var radios = $('tblAgenCajero').getElementsBySelector("input[type='radio']");
+			var allCalen = $('tblAgenCajero').getElementsByClassName("rich-calendar-input");
+			var arreglo = $A(allCalen);
+			arreglo.each(function(item) {
+				item.disable();
+				item.value='';
+				var idSplit = item.id.split('InputDate');
+				var idImg = new String(idSplit[0]);
+				idImg = idImg + 'PopupButton';
+				$(idImg).setAttribute('src','#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.DisabledCalendarIcon/DATB/eAHbWurFMOs5AAnQAvY_.jsf');		
+			});
+			for (var i = 0; i < radios.length; i++){
+				if(radios[i].value == radio.value){
+					// active this
+					var calen = $('tblAgenCajero').getElementsBySelector("input[type='radio']")[i].parentElement.parentElement.parentElement.getElementsByClassName('rich-calendar-input');
+					for(var x = 0; x < calen.length; x++){
+						calen[x].enable();
+						var idSplit = calen[x].id.split('InputDate');
+						var idImg = new String(idSplit[0]);
+						idImg = idImg + 'PopupButton';
+						$(idImg).setAttribute('src','#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.CalendarIcon/DATB/eAHbWurFMOs5AAnQAvY_.jsf');
+					}
+				}
+			}
+			$('txtAgenCajeroId').value=radio.value;
+    	}
+		//]]>
+	</script>
+</ui:composition>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns="http://java.sun.com/xml/ns/javaee" 
+		xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+		id="WebApp_ID" version="3.0">
+
+		<display-name>satc</display-name>
+		 
+		  
+		<context-param>
+			<param-name>javax.faces.PROJECT_STAGE</param-name>
+			<param-value>Production</param-value>
+		</context-param>
+		<!-- == -->
+		<context-param>
+			<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+			<param-value>true</param-value>
+		</context-param>
+	
+		<context-param>
+			<param-name>
+				javax.faces.DATETIMECONVERTER_DEFAULT_TIMEZONE_IS_SYSTEM_TIMEZONE</param-name>
+			<param-value> true </param-value>
+		</context-param>
+		<!-- == -->
+		<context-param>
+			<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+			<param-value>.xhtml</param-value>
+		</context-param>
+
+		<context-param>
+			<param-name>
+				javax.faces.DISABLE_FACELET_JSF_VIEWHANDLER
+			</param-name>
+			<param-value>true</param-value>
+		</context-param>
+
+		<context-param>
+			<param-name>
+				facelets.RECREATE_VALUE_EXPRESSION_ON_BUILD_BEFORE_RESTORE
+			</param-name>
+			<param-value>false</param-value>
+		</context-param>
+
+		<context-param>
+			<param-name>facelets.VIEW_MAPPINGS</param-name>
+			<param-value>*.xhtml</param-value>
+		</context-param>
+		<context-param> 
+			<param-name>org.richfaces.CONTROL_SKINNING</param-name>
+			<param-value>enable</param-value>
+		</context-param>
+		
+		<context-param>
+			<param-name>facelets.SKIP_COMMENTS</param-name>
+			<param-value>true</param-value>
+		</context-param> 
+		
+		<context-param>
+			<param-name>org.richfaces.SKIN</param-name>
+			<param-value>#{skinBean.skin}</param-value>
+		</context-param> 
+		<!-- == -->
+		<!-- <context-param>
+			<param-name>primefaces.THEME</param-name>
+			<param-value>delta</param-value>
+		</context-param> -->	
+		<!-- == -->
+		
+		<context-param>
+			<param-name>org.ajax4jsf.VIEW_HANDLERS</param-name>
+			<param-value>
+				com.sun.facelets.FaceletViewHandler
+			</param-value>
+		</context-param>
+
+		<filter>
+			<display-name>Ajax4jsf Filter</display-name>
+			<filter-name>ajax4jsf</filter-name>
+			<filter-class>org.ajax4jsf.Filter</filter-class>
+			<init-param>
+				<param-name>maxRequestSize</param-name>
+				<param-value>5242880</param-value>
+			</init-param>
+		</filter>
+
+		<filter-mapping>
+			<filter-name>ajax4jsf</filter-name>
+			<servlet-name>Faces Servlet</servlet-name>
+			<dispatcher>REQUEST</dispatcher>
+			<dispatcher>FORWARD</dispatcher>
+			<dispatcher>INCLUDE</dispatcher>
+		</filter-mapping>
+		
+		<!-- == -->
+		
+		<!-- == -->
+	
+
+		<!-- Filter for get information -->
+		<filter>
+			<filter-name>SecurityFilter</filter-name>
+			<filter-class>
+				com.sat.sisat.common.security.filter.SecurityFilter
+			</filter-class>
+		</filter>
+
+		<filter-mapping>
+			<filter-name>SecurityFilter</filter-name>
+			<url-pattern>/sisat/inicio.jsf</url-pattern>
+			<url-pattern>/sisat/principal.jsf</url-pattern>
+		</filter-mapping>
+
+		<!-- JSF -->
+		<listener>
+		    <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+		</listener>
+		<servlet>
+			<servlet-name>Faces Servlet</servlet-name>
+			<servlet-class>
+				javax.faces.webapp.FacesServlet
+			</servlet-class>
+			<load-on-startup>1</load-on-startup>
+		</servlet>
+
+		<servlet-mapping>
+			<servlet-name>Faces Servlet</servlet-name>
+			<url-pattern>*.jsf</url-pattern>
+		</servlet-mapping> 
+		
+		<servlet-mapping>
+			<servlet-name>Faces Servlet</servlet-name>
+			<url-pattern>*.xhtml</url-pattern>
+		</servlet-mapping>
+		
+		
+	
+		<!-- Security config -->
+		<login-config>
+			<auth-method>FORM</auth-method>
+			<realm-name>SISAT_REALM</realm-name>
+			<form-login-config>
+				<form-login-page>/login.jsf</form-login-page>
+				<form-error-page>
+					/login.jsf?auth-error=true
+				</form-error-page>
+			</form-login-config>
+		</login-config>
+
+		<security-constraint>
+			<web-resource-collection>
+				<web-resource-name>sisat restricted</web-resource-name>
+				<url-pattern>/sisat/*</url-pattern>
+				<http-method>GET</http-method>
+				<http-method>POST</http-method>
+			</web-resource-collection>
+			 <auth-constraint>
+				<role-name>R1</role-name>
+				<role-name>R2</role-name>
+				<role-name>R3</role-name>
+				<role-name>R4</role-name>
+				<role-name>R5</role-name>
+				<role-name>R6</role-name>
+				<role-name>R7</role-name>
+				<role-name>R8</role-name>
+				<role-name>R9</role-name>
+				<role-name>R10</role-name>
+				<role-name>R11</role-name>
+				<role-name>R13</role-name>
+			</auth-constraint> 
+		</security-constraint> 
+
+		<error-page>
+			<error-code>403</error-code>
+			<location>/index.jsp</location>
+		</error-page>
+
+		<error-page>
+			<exception-type>
+				javax.faces.application.ViewExpiredException
+			</exception-type>
+			<location>/index.jsp</location>
+		</error-page>
+
+		<session-config>
+			<session-timeout>30</session-timeout>
+		</session-config>
+
+		<welcome-file-list>
+			<welcome-file>index.jsp</welcome-file>
+		</welcome-file-list>
+
+	</web-app>

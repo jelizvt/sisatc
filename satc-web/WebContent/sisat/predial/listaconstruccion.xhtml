@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:a4j="http://richfaces.org/a4j"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+     	<rich:dataTable id="id_tabladatosconstruccion" value="#{registroPredioManaged.records}" var="record" rows="10" width="100%"
+												rowKeyVar="row">
+				<f:facet name="header">
+					<rich:columnGroup>
+						<rich:column rowspan="2">
+	                        <h:outputText value="Item"/>
+	                    </rich:column>
+	                    <rich:column rowspan="2">
+	                    	<h:outputText value="Tipo Nivel"/>
+	                    </rich:column>
+	                    <rich:column rowspan="2">
+	                    	<h:outputText value="Nro Nivel"/>
+	                    </rich:column>
+	                    <rich:column rowspan="2">
+	                    	<h:outputText value="Area Construccion"/>
+	                    </rich:column>
+	                    <rich:column rowspan="2">
+	                    	<h:outputText value="Area Comun Constr."/>
+	                    </rich:column>
+	                    <rich:column rowspan="2">
+	                    	<h:outputText value="Material"/>
+	                    </rich:column>
+	                    <rich:column rowspan="2">
+	                    	<h:outputText value="Estado Conserv."/>
+	                    </rich:column>
+	                    <rich:column rowspan="2">
+	                    	<h:outputText value="Depreciacion"/>
+	                    </rich:column>
+	                    <rich:column colspan="8">
+	                    	<h:outputText value="Construccion"/>
+	                    </rich:column>
+	                    <rich:column  breakBefore="true">
+	                    	<h:outputText value="MC"/>
+	                    </rich:column>
+	                    <rich:column>
+	                    	<h:outputText value="T"/>
+	                    </rich:column>
+	                    <rich:column>
+	                    	<h:outputText value="P"/>
+	                    </rich:column>
+	                    <rich:column>
+	                    	<h:outputText value="PV"/>
+	                    </rich:column>
+	                    <rich:column>
+	                    	<h:outputText value="R"/>
+	                    </rich:column>
+	                    <rich:column>
+	                    	<h:outputText value="B"/>
+	                    </rich:column>
+	                    <rich:column>
+	                    	<h:outputText value="I"/>
+	                    </rich:column>
+	                     <rich:column>
+	                    	<h:outputText value=""/>
+	                    </rich:column>
+		            </rich:columnGroup>
+				</f:facet>
+			  	<rich:column>
+                   	<h:outputText value="#{record.item}"/>
+                   </rich:column>
+                   <rich:column >
+                       <h:outputText value="#{record.dentiponivel}" />
+                   </rich:column>
+                   <rich:column >
+                       <h:outputText value="#{record.nroNivel}"/>
+                   </rich:column>
+                   <rich:column >
+                   	<h:outputText value="#{record.areaConstruccion}"/>
+                   </rich:column>
+                   <rich:column >
+                   	<h:outputText value="#{record.areaComunConstruccion}"/>
+                   </rich:column>
+                   <rich:column >
+                   	<h:outputText value="#{record.denmatpredominante}"/>
+                   </rich:column>
+                   <rich:column >
+                   	<h:outputText value="#{record.denestadoconservacion}"/>
+                   </rich:column>
+                   <rich:column >
+                   	<h:outputText value="#{record.dentipodepreciacion}"/>
+                   </rich:column>
+                   <rich:column >
+                   	<h:outputText value="#{record.denmuros}"/>
+                   </rich:column>
+                   <rich:column >
+                   	<h:outputText value="#{record.dentecho}"/>
+                   </rich:column>
+                    <rich:column>
+                   	<h:outputText value="#{record.denpisos}"/>
+                   </rich:column>
+                   <rich:column >
+                   	<h:outputText value="#{record.denpuertas}"/>
+                   </rich:column>
+                   <rich:column  >
+                   	<h:outputText value="#{record.denrevestimiento}"/>
+                   </rich:column>
+                   <rich:column>
+                   	<h:outputText value="#{record.denbannos}"/>
+                   </rich:column>
+                   <rich:column>
+                   	<h:outputText value="#{record.denelectrico}"/>
+                   </rich:column>
+                   
+                   
+                   <rich:column width="10px">
+	            	<a4j:commandLink reRender="panelConstruccion" ajaxSingle="true" id="editlinksucursal" action="#{registroPredioManaged.editarConstruccion}" oncomplete="#{rich:component('panelConstruccion')}.show()">
+	                     <h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+	                     <f:setPropertyActionListener value="#{record}" target="#{registroPredioManaged.currentItem}" id="r42"/>
+	                </a4j:commandLink>
+	                
+		        </rich:column>
+       </rich:dataTable>
+</h:panelGrid>
+
+

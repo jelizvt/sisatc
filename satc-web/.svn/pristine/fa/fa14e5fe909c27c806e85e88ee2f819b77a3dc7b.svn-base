@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form>
+		<rich:panel>
+		<f:facet name="header">Carpeta de Trabajo</f:facet>
+		<h:outputLabel value="Monto Minimo" /><h:outputText value="#{carteraDetalleManaged.ccCarteraDeuda.montoMinimo}" />
+		<h:outputLabel value="Monto Máximo" /><h:outputText value="#{carteraDetalleManaged.ccCarteraDeuda.montoMaximo}" />		
+		</rich:panel>
+		<rich:panel>
+			<rich:dataTable value="#{carteraDetalleManaged.listCarteraItemDTOs}" var="item">
+				<rich:column>
+					<f:facet name="header">Cod. Persona</f:facet>
+					<h:outputText value="#{item.personaId}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Año Deuda</f:facet>
+					<h:outputText value="#{item.anhoDeuda}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Insoluto</f:facet>
+					<h:outputText value="#{item.insoluto}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Reajuste</f:facet>
+					<h:outputText value="#{item.reajuste}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Intereses</f:facet>
+					<h:outputText value="#{item.intereses}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Total Deuda</f:facet>
+					<h:outputText value="#{item.totalDeuda}" />
+				</rich:column>
+				<rich:column>
+					<f:facet name="header">Total Cancelado</f:facet>
+					<h:outputText value="#{item.totalCancelado}" />
+				</rich:column>							
+			</rich:dataTable>	
+		</rich:panel>
+	</h:form>
+</ui:composition>

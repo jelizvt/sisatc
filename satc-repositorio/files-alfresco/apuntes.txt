@@ -1,0 +1,5 @@
+El archivo satcModel.xml debe ser subido al espacio company_home/diccionario_datos/modelos
+El archivo web-client-config-custom.xml debe ser subido al espacio company_home/Extensión de cliente Web
+
+Luego ir a la direccion http://localhost:8181/alfresco/faces/jsp/admin/webclientconfig-console.jsp
+y en el campo command ingresar el comando: reload 

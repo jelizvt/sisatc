@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+
+	<h:form id="formConsultaReniec">
+
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<style type="text/css">
+.extdt-empty-cell {
+	width: 0;
+}
+
+th.extdt-empty-cell {
+	width: 0;
+}
+/* Disables resizing */
+.extdt-hsep {
+	display: none;
+}
+</style>
+
+		<script type="text/javascript">
+	 function validaNroDocumento(nroDocumento){
+		 if(jQuery.trim(nroDocumento).length==8){
+				 return true;
+		 }
+		 return false;
+	 }
+	</script>
+		<a4j:outputPanel id="id_panelConsultaReniec">
+
+
+			<rich:panel style="width:100%;" header="Consulta RENIEC">
+
+				<table>
+					<tr>
+						<td><h:outputText value="Ingrese Nº DNI." /></td>
+
+						<td><h:inputText id="dni"
+								value="#{consultaReniecManaged.dniConsulta}" /></td>
+
+						<td><a4j:commandLink id="id_busquedareniec"
+								status="ajaxStatus" action="#{consultaReniecManaged.consultaWSDirecto()}"
+								reRender="id_resultado"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');return false;return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+
+								<h:graphicImage width="90" height="30"
+									value="/images/modal/botonreniec.jpg" style="border:0" />
+
+								<rich:toolTip for="id_busquedareniec"
+									value="CONSULTA RENIEC EN LÍNEA" />
+
+
+							</a4j:commandLink>
+						</td>
+					</tr>
+				</table>
+
+			</rich:panel>
+			
+			<rich:panel id="id_resultado"
+							style="width:100%;height:100%">
+							<f:facet name="header">Resultado de la Búsqueda</f:facet>
+
+
+							<table width="800px" border="1" bordercolor="#CED0D5"
+								style="border-collapse: collapse;">
+								
+								
+								<tbody>
+									<tr>
+										<td width="20%" rowspan="7"><h:graphicImage 
+												value="#{consultaReniecManaged.rutaImagen}"
+												alt="No se encontró Foto"></h:graphicImage></td>
+												
+										<td style="color: white" width="20%" bgcolor="#30416C">Apellido Paterno:</td>
+										<td width="50%"><h:inputText
+												style="width:90%;height:25px;color:#060B52" disabled="true"
+												value="#{consultaReniecManaged.resultadoConsulta.datosPersona.apPrimer}" />
+										</td>
+									</tr>
+									
+									
+									<tr>
+										<td bgcolor="#30416C" style="color: white">Apellido
+											Materno:</td>
+										<td><h:inputText
+												style="width:90%;height:25px;color:#060B52" disabled="true"
+												value="#{consultaReniecManaged.resultadoConsulta.datosPersona.apSegundo}" />
+										</td>
+									</tr>
+									<tr>
+										<td bgcolor="#30416C" style="color: white">Nombres:</td>
+										<td><h:inputText
+												style="width:90%;height:25px;color:#060B52" disabled="true"
+												value="#{consultaReniecManaged.resultadoConsulta.datosPersona.prenombres}" />
+										</td>
+									</tr>
+									<tr>
+										<td bgcolor="#30416C" style="color: white">Dirección:</td>
+										<td><h:inputText
+												style="width:90%;height:25px;color:#060B52" disabled="true"
+												value="#{consultaReniecManaged.resultadoConsulta.datosPersona.direccion}" />
+										</td>
+									</tr>
+									<tr>
+										<td bgcolor="#30416C" style="color: white">Ubigeo:</td>
+										<td><h:inputText
+												style="width:90%;height:25px;color:#060B52" disabled="true"
+												value="#{consultaReniecManaged.resultadoConsulta.datosPersona.ubigeo}" />
+										</td>
+									</tr>
+									<tr>
+										<td bgcolor="#30416C" style="color: white">Estado Civil:</td>
+										<td><h:inputText
+												style="width:90%;height:25px;color:#060B52" disabled="true"
+												value="#{consultaReniecManaged.resultadoConsulta.datosPersona.estadoCivil}" />
+										</td>
+									</tr>
+									<tr>
+										<td bgcolor="#30416C" style="color: white">Observación:</td>
+										<td><h:inputText
+												style="width:90%;height:25px;color:#060B52" disabled="true"
+												value="#{consultaReniecManaged.resultadoConsulta.datosPersona.restriccion}" />
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+
+
+
+
+
+
+
+						</rich:panel>
+
+
+
+			
+		</a4j:outputPanel>
+	</h:form>
+
+
+
+
+
+
+	<!-- panelRegistroDireccion -->
+
+
+</ui:composition>
+
+
+

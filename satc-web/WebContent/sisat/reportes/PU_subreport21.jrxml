@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PU_subreport2" language="groovy" pageWidth="555" pageHeight="150" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.6620000000000017"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="area_terreno" class="java.math.BigDecimal"/>
+	<parameter name="area_terreno_comun" class="java.math.BigDecimal"/>
+	<parameter name="arancel" class="java.lang.String">
+		<defaultValueExpression><![CDATA[5]]></defaultValueExpression>
+	</parameter>
+	<parameter name="valor_total_construccion" class="java.lang.String">
+		<defaultValueExpression><![CDATA[5]]></defaultValueExpression>
+	</parameter>
+	<parameter name="valor_otras_instalaciones" class="java.lang.String"/>
+	<parameter name="valor_total_terreno" class="java.lang.String"/>
+	<parameter name="valor_autovaluo" class="java.lang.String"/>
+	<parameter name="determinacion_id" class="java.lang.Integer"/>
+	<parameter name="deter_predio_id" class="java.lang.Integer"/>
+	<parameter name="anio" class="java.lang.Integer"/>
+	<parameter name="estado" class="java.lang.String"/>
+	<parameter name="djreferencia_id" class="java.lang.String"/>
+	<parameter name="dj_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[with movimiento as (SELECT orden = 1,ROW_NUMBER() OVER(order by djc.nro_nivel) Item,tn.descripcion_corta tipo_nivel
+,djc.nro_nivel nivel,djc.seccion seccion,djc.anno_construccion,mp.descripcion_corta Material_predominante ,ec.descripcion estado_concervacion
+,	   SUBSTRING(dbo.getValorConstruccion($P{anio},1,djc.muros),1,2)+' '+SUBSTRING(dbo.getValorConstruccion($P{anio},2,djc.techo),1,2)+' '+
+			   SUBSTRING(dbo.getValorConstruccion($P{anio},3,djc.pisos),1,2)+' '+SUBSTRING(dbo.getValorConstruccion($P{anio},4,djc.puertas),1,2)+' '+
+		   SUBSTRING(dbo.getValorConstruccion($P{anio},5,djc.revestimientos),1,2)+' '+SUBSTRING(dbo.getValorConstruccion($P{anio},6,djc.bannos),1,2)+' '+
+			   SUBSTRING(dbo.getValorConstruccion($P{anio},7,djc.electricos),1,2)   Categorias,
+			   dc.valor_unitario,dc.valor_incremento incremento
+			  ,dc.porc_depreciacion,convert(varchar(50),convert(money,dc.valor_depreciacion),1) valor_depreciacion,convert(varchar(50),convert(money,dc.valor_unitario_depre),1) valor_unitario_depre,djc.area_construccion,dc.valor_area_comun,convert(varchar(50),convert(money,dc.valor_construccion),1) valor_construccion,djc.clasi_depreciacion_id
+			 from dt_determinacion_construccion dc
+			 inner join dt_determinacion_predio dp on (dp.deter_predio_id=dc.deter_predio_id
+and dp.estado=1
+)
+			 inner join rp_djconstruccion djc on (djc.construccion_id=dc.construccion_id and djc.estado=1)
+			 inner join rp_tipo_nivel tn on (tn.tipo_nivel_id=djc.tipo_nivel_id  and tn.estado=1)
+			 inner join rj_estado_conservacion ec on (ec.conservacion_id=djc.conservacion_id and ec.estado=1)
+			 inner join rp_material_predominante mp on (mp.mat_predominante_id=djc.mat_predominante_id and 				 mp.estado=1)
+			 inner join rp_tipo_depreciacion tdep on (tdep.tipo_depreciacion_id=djc.clasi_depreciacion_id and 				 tdep.estado=1)
+			 where dc.estado=1 and
+			dp.determinacion_id=$P{determinacion_id}
+			and dp.deter_predio_id=$P{deter_predio_id}
+			 ),
+tabla1 as (select top (case when (select COUNT(*) from movimiento)=0 then 1 else 0 end) orden =2,0 item
+,'' tipo_nivel,'' nivel,'' seccion,'' anno_construccion
+,'' Material_predominante ,'' estado_concervacion
+,'' Categorias,0 valor_unitario,0 incremento,0 porc_depreciacion
+,''valor_depreciacion,'' valor_unitario_depre,0 area_construccion,0 valor_area_comun,'' valor_construccion,'' clasi_depreciacion_id
+)
+select * from movimiento
+union all
+select * from tabla1
+order by orden]]>
+	</queryString>
+	<field name="orden" class="java.lang.Integer"/>
+	<field name="Item" class="java.lang.Long"/>
+	<field name="tipo_nivel" class="java.lang.String"/>
+	<field name="nivel" class="java.lang.Integer"/>
+	<field name="seccion" class="java.lang.String"/>
+	<field name="anno_construccion" class="java.lang.Integer"/>
+	<field name="Material_predominante" class="java.lang.String"/>
+	<field name="estado_concervacion" class="java.lang.String"/>
+	<field name="Categorias" class="java.lang.String"/>
+	<field name="valor_unitario" class="java.math.BigDecimal"/>
+	<field name="incremento" class="java.math.BigDecimal"/>
+	<field name="porc_depreciacion" class="java.math.BigDecimal"/>
+	<field name="valor_depreciacion" class="java.lang.String"/>
+	<field name="valor_unitario_depre" class="java.lang.String"/>
+	<field name="area_construccion" class="java.math.BigDecimal"/>
+	<field name="valor_area_comun" class="java.math.BigDecimal"/>
+	<field name="valor_construccion" class="java.lang.String"/>
+	<field name="clasi_depreciacion_id" class="java.lang.Integer"/>
+	<variable name="variable1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{area_construccion}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double( 0.0 )]]></initialValueExpression>
+	</variable>
+	<variable name="areanoafecta" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$V{areanoafecta}]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
+	<group name="columnFooter2">
+		<groupExpression><![CDATA[$F{orden}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="11">
+				<subreport>
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="554" height="11"/>
+					<subreportParameter name="anio">
+						<subreportParameterExpression><![CDATA[$P{anio}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="djreferencia_id">
+						<subreportParameterExpression><![CDATA[$P{djreferencia_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<returnValue subreportVariable="areanoafecta" toVariable="areanoafecta"/>
+					<subreportExpression><![CDATA["PU_subreport21_otras_inst_anioactual.jasper"]]></subreportExpression>
+				</subreport>
+				<line>
+					<reportElement x="0" y="0" width="555" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.25" lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="1" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="16" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Item]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="83" y="0" width="28" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Año]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="135" y="0" width="25" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Mat. Pred.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="0" width="25" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Clasif. Depre.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="159" y="0" width="27" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Est. Cons.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="185" y="0" width="71" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Categorias]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="0" width="30" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Valor Unitario(m2)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="0" width="38" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Incremento (5%)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="322" y="0" width="26" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[% Depre]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="0" width="44" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Monto Depreciado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="0" width="45" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Valor Unit. Depreciado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="434" y="0" width="35" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Area Construida]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="469" y="0" width="40" height="18" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Area Común Construida]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="509" y="0" width="45" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Valor de Construcción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="54" y="0" width="30" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Tipo Nivel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="0" width="25" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Secc.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="0" width="16" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Nivel]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField>
+				<reportElement x="83" y="0" width="28" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{anno_construccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="135" y="0" width="25" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Material_predominante}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="54" y="0" width="30" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_nivel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="159" y="0" width="27" height="10"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado_concervacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="188" y="0" width="68" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Categorias}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="255" y="0" width="30" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_unitario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="284" y="0" width="38" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{incremento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="322" y="0" width="26" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{porc_depreciacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="347" y="0" width="44" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_depreciacion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="0" width="45" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_unitario_depre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="0" width="35" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{area_construccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="469" y="0" width="40" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_area_comun}==null ? '' : $F{valor_area_comun}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="509" y="0" width="46" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_construccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="0" width="25" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{clasi_depreciacion_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="30" y="0" width="25" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{seccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="16" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Item}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="15" y="0" width="16" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nivel}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="49" splitType="Stretch">
+			<textField>
+				<reportElement mode="Transparent" x="260" y="15" width="48" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{arancel}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="5" width="78" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Area de Terreno]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="78" y="5" width="48" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{area_terreno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="178" y="5" width="82" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Area Común del Terreno]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="260" y="5" width="48" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{area_terreno_comun}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="178" y="15" width="82" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Arancel]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="6" width="108" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Total de la Construcción:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="17" width="108" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Otras Instalaciones:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="28" width="108" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Total Terreno:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="377" y="39" width="108" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor de Autovalúo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="484" y="6" width="71" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{valor_total_construccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="17" width="71" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{valor_otras_instalaciones}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="28" width="71" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{valor_total_terreno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="484" y="39" width="71" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{valor_autovaluo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="15" width="78" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Area Construida Afecta]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="78" y="15" width="48" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{variable1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="78" y="24" width="48" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{areanoafecta}.equals( null )?0.0:$V{areanoafecta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="25" width="78" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Area Const. No Afecta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="178" y="25" width="82" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Area Total Construida]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="260" y="25" width="48" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{areanoafecta}.equals( null )?$V{variable1}:$V{variable1}.add($V{areanoafecta})]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<summary>
+		<band height="15" splitType="Stretch">
+			<subreport>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="554" height="15"/>
+				<subreportParameter name="dj_id">
+					<subreportParameterExpression><![CDATA[$P{dj_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["subreportPU.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

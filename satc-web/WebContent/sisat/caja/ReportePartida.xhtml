@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+     
+    <h:form id="formListaOperacion">
+<rich:panel id="id_listadoPredioconDeuda">
+     <f:facet name="header">
+					DETALLE REPORTE DE PARTIDA
+				</f:facet>
+     <table style="border:0;width: 100% " >  
+			<tr>
+				<td>
+			 		<table style="border:0;width: 100% ">
+							<tr>
+								<td><h:outputText value="Fecha inicio de operación:" /></td>    
+								<td><rich:calendar value="#{reportePartidaManaged.fecha_Inicio}" datePattern="#{msg['param.datepattern']}" id="id_fechainicio"  tabindex="1" enableManualInput="true"/></td>
+								
+								<td><h:outputText value="Fecha Fin de operación:" /></td>
+								<td><rich:calendar value="#{reportePartidaManaged.fecha_Fin}" datePattern="#{msg['param.datepattern']}" id="id_fechafin"  tabindex="2" enableManualInput="true"/></td>
+								
+								<td style="vertical-align: right">
+								<a4j:commandButton status="ajaxStatus"  value="Buscar"  actionListener="#{reportePartidaManaged.buscar}" style="width:100px;" reRender="id_tableReporte" tabindex="3"/></td>
+							</tr>    
+					</table>
+				</td>
+			</tr>
+	   </table>
+	   
+	  <rich:panel  id="lstRecibo" >
+				<f:facet name="header">		
+						Detalle de Operación 
+				</f:facet>
+				<table width="100%">  
+						<tr>     
+							<td colspan="4">  
+							<rich:extendedDataTable  id="id_tableReporte" value="#{reportePartidaManaged.records}" var="record" width="100%" height="250px" selectedClass="dataTableSelectedRow"
+							 		sortMode="single" selectionMode="single" rowKeyVar="row">
+									 <rich:column width="15%" id="r01">
+							                		<f:facet name="header">Nro partida</f:facet>
+							                		<div style="text-align: center">
+							                		<h:outputText value="#{record.nroPartida}" />
+							                		</div>
+							         </rich:column>
+							         <rich:column width="15%" id="r02">
+							               			<f:facet name="header">Descripcion</f:facet>
+							               			<h:outputText value="#{record.descripcion}" />
+							         </rich:column>
+							          <rich:column width="15%" id="r03">
+							               			<f:facet name="header">Periodo</f:facet>
+							               			<div style="text-align: center">
+							               			<h:outputText value="#{record.periodo}" />
+							               			</div>
+							         </rich:column>
+							          <rich:column width="15%" id="r04">
+							               			<f:facet name="header">Monto</f:facet>
+							               			<div style="text-align: right">
+							               			<h:outputText value="#{record.monto}" />
+							               			</div>
+							         </rich:column>
+							          <rich:column width="20%" id="r05">
+							               			<f:facet name="header">Descuento</f:facet>
+							               			<div style="text-align: right">
+							               			<h:outputText value="#{record.descuento}" />
+							               			</div>
+							         </rich:column>
+							          <rich:column width="20%" id="r06">
+							               			<f:facet name="header">Monto Neto</f:facet>
+							               			<div style="text-align: right">
+							               			<h:outputText value="#{record.montoNeto}" />
+							               			</div>
+							         </rich:column>
+							         
+							 	</rich:extendedDataTable>
+						    </td>
+						</tr>
+					<tr>
+						<td style="vertical-align: right">
+									<a4j:commandButton status="ajaxStatus"  value="Salir" style="width:100px;" action="#{reportePartidaManaged.salir}" reRender="panelinclude" accesskey="b" tabindex="4"/>
+						</td>
+					</tr>
+			 </table>
+	</rich:panel>       
+</rich:panel>
+	 </h:form>
+</html>
+

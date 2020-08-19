@@ -1,0 +1,913 @@
+/*
+} * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sat.sisat.papeleta.business;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.ejb.Stateful;
+
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.papeleta.dao.PapeletaBusinessDao;
+import com.sat.sisat.papeleta.dto.CargaLoteDTO;
+import com.sat.sisat.papeleta.dto.ConsultaPapeletaDTO;
+import com.sat.sisat.papeleta.dto.FindPapeletas;
+import com.sat.sisat.papeleta.dto.GridDetalleLote;
+import com.sat.sisat.papeleta.dto.RecordPapeletaDTO;
+import com.sat.sisat.papeleta.dto.ResultadoCargaLoteDTO;
+import com.sat.sisat.papeleta.dto.UbicacionFiscalDTO;
+import com.sat.sisat.papeletas.dto.PapeletaDTO;
+import com.sat.sisat.papeletas.dto.ResolucionDTO;
+import com.sat.sisat.persistence.entity.GnLugar;
+import com.sat.sisat.persistence.entity.GnPersona;
+import com.sat.sisat.persistence.entity.GnSector;
+import com.sat.sisat.persistence.entity.GnTipoAgrupamiento;
+import com.sat.sisat.persistence.entity.GnTipoEdificacion;
+import com.sat.sisat.persistence.entity.GnTipoIngreso;
+import com.sat.sisat.persistence.entity.GnTipoInterior;
+import com.sat.sisat.persistence.entity.GnTipoVia;
+import com.sat.sisat.persistence.entity.GnVia;
+import com.sat.sisat.persistence.entity.MpClaseLicencia;
+import com.sat.sisat.persistence.entity.MpDireccion;
+import com.sat.sisat.persistence.entity.MpPersona;
+import com.sat.sisat.persistence.entity.MpTipoDocuIdentidad;
+import com.sat.sisat.persistence.entity.PaCargaDetalleLote;
+import com.sat.sisat.persistence.entity.PaCargaLote;
+import com.sat.sisat.persistence.entity.PaDireccion;
+import com.sat.sisat.persistence.entity.PaDocuAnexo;
+import com.sat.sisat.persistence.entity.PaIncidencia;
+import com.sat.sisat.persistence.entity.PaInfraccion;
+import com.sat.sisat.persistence.entity.PaLey;
+import com.sat.sisat.persistence.entity.PaMedioProbatorio;
+import com.sat.sisat.persistence.entity.PaNivelGravedad;
+import com.sat.sisat.persistence.entity.PaPapeleta;
+import com.sat.sisat.persistence.entity.PaPapeletaHistorico;
+import com.sat.sisat.persistence.entity.PaPersona;
+import com.sat.sisat.persistence.entity.PaResolucion;
+import com.sat.sisat.persistence.entity.PaResolucionPapeleta;
+import com.sat.sisat.persistence.entity.RvMarca;
+import com.sat.sisat.persistence.entity.RvModeloVehiculo;
+import com.sat.sisat.persistence.entity.RvVehiculo;
+import com.sat.sisat.predial.business.BaseBusiness;
+import com.sat.sisat.predial.dto.FindPersona;
+import com.sat.sisat.vehicular.dto.BuscarPersonaDTO;
+
+@Stateful
+public class PapeletaBo extends BaseBusiness implements PapeletaBoRemote{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5943512080460023163L;
+	private PapeletaBusinessDao service;
+	
+    public PapeletaBusinessDao getService() {
+    	return this.service;
+	}
+
+    @PostConstruct
+    public void initialize(){
+    	this.service=new PapeletaBusinessDao();
+    	setDataManager(this.service);
+    }
+    
+    @PreDestroy
+    public void destroy(){
+    }
+    
+    
+    public Integer papeletaDeterminada(Integer papeletaId) throws Exception
+    {
+    	return getService().papeletaDeterminada(papeletaId);
+    }
+    
+    public  List<GnSector> getAllGnSector() throws Exception{
+    	return getService().getAllGnSector();
+    }
+
+	public  List<PaLey> getAllLeyInfracciones() throws Exception{
+		return getService().getAllLeyInfracciones();
+	}
+
+	public  List<FindPapeletas> buscarPapeletasCriteria(FindPapeletas findPapeleta) throws Exception{
+		return getService().buscarPapeletasCriteria(findPapeleta);
+	}
+
+	public  List<MpTipoDocuIdentidad> getAllMpTipoDocumento()
+			throws Exception{
+		return getService().getAllMpTipoDocumento();
+	}
+
+	public  List<BuscarPersonaDTO> buscaPersona(MpPersona persona)
+			throws Exception{
+		return getService().buscaPersona(persona);
+	}
+
+	public  List<RvModeloVehiculo> getAllRvModeloVehiculo()
+			throws Exception{
+		return getService().getAllRvModeloVehiculo();
+	}
+
+	public  List<GnTipoEdificacion> getAllGnTipoEdificacion()
+			throws Exception{
+		return getService().getAllGnTipoEdificacion();
+	}
+
+	public  List<GnTipoIngreso> getAllGnTipoIngreso() throws Exception{
+		return getService().getAllGnTipoIngreso();
+	}
+
+	public  List<GnTipoInterior> getAllGnTipoInterior()
+			throws Exception{
+		return getService().getAllGnTipoInterior();
+	}
+
+	public  List<GnTipoAgrupamiento> getAllGnTipoAgrupamiento()
+			throws Exception{
+		return getService().getAllGnTipoAgrupamiento();
+	}
+
+	public  List<GnTipoVia> getAllGnTipoVia() throws Exception{
+		return getService().getAllGnTipoVia();
+	}
+
+	public  int getNextMpDireccionId() throws Exception{
+		return getService().getNextMpDireccionId();
+	}
+
+	public  int getNextMpPersonaDomicilioId() throws Exception{
+		return getService().getNextMpPersonaDomicilioId();
+	}
+
+	public  List<CargaLoteDTO> buscarLotes(PaCargaLote lote)throws Exception{
+		return getService().buscarLotes(lote);
+	}
+
+	public  int generarNuevoLote() throws Exception{
+		return getService().generarNuevoLote();
+	}
+
+	public  int getNextPapeleta() throws Exception{
+		return getService().getNextPapeleta();
+	}
+
+	public  ArrayList<FindPersona> getFindPersona() throws Exception{
+		return getService().getFindPersona();
+	}
+
+	public  BigDecimal obtenerUIT(Integer anio) throws Exception{
+		return getService().obtenerUIT(anio);
+	}
+
+	public  PaInfraccion buscarInfraccion(PaInfraccion infraccion)
+			throws Exception{
+		return getService().buscarInfraccion(infraccion);
+	}
+
+	public  List<MpClaseLicencia> getAllMpClaseLicencia()
+			throws Exception{
+		return getService().getAllMpClaseLicencia();
+	}
+
+	public  List<RvMarca> getAllRvMarcaVehiculo() throws Exception{
+		return getService().getAllRvMarcaVehiculo();
+	}
+
+	public  List<PaMedioProbatorio> getAllMedioProbatorio()
+			throws Exception{
+		return getService().getAllMedioProbatorio();
+	}
+
+	public  List<PaNivelGravedad> getAllNivelGravedad(
+			PaInfraccion infraccion) throws Exception{
+		return getService().getAllNivelGravedad(infraccion);
+	}
+
+	public  List<MpPersona> listarPersonasxDni(String numeroDocumento)
+			throws Exception{
+		return getService().listarPersonasxDni(numeroDocumento);
+	}
+
+	public  MpPersona findPersona(int personaId) throws Exception{
+		return getService().findPersona(personaId);
+	}
+
+	public RvVehiculo buscarVehiculo(String nroPlaca)throws Exception{
+		Map<String, Object> parameters=new HashMap<String, Object>();
+		parameters.put("p_placa", nroPlaca);
+		List<Object> lVehiculo=getService().findByNamedQuery("findRvVehiculoByPlaca", parameters);
+		if(lVehiculo!=null&&lVehiculo.size()>0){
+			return (RvVehiculo)lVehiculo.get(0);
+		}
+		return null;
+	}
+	
+	public List<Object> getAllPaMedioProbatorio()throws Exception{
+		return getService().findByNamedQuery("getAllPaMedioProbatorio");
+	}
+	
+	public Integer guardarPaDocuAnexo(PaDocuAnexo paDocuAnexo)throws Exception{
+		Integer result=Constante.RESULT_PENDING;
+		if(paDocuAnexo!=null){
+			Integer Id=getService().ObtenerCorrelativoTabla("pa_docu_anexo", 1);
+			paDocuAnexo.setDocuAnexoId(Id);
+			getService().create(paDocuAnexo);
+			result=Constante.RESULT_SUCCESS;
+		}
+		return result;
+	}
+	
+	public List<Object> getAllPaDocuAnexo(int papeletaId)throws Exception{
+		Map<String, Object> parameters=new HashMap<String, Object>();
+		parameters.put("p_papeleta_id", papeletaId);
+		return getService().findByNamedQuery("getAllPaDocuAnexo", parameters);
+	}
+
+	public Integer guardarPapeleta(PaPapeleta papeleta) throws Exception {
+		Integer result = Constante.RESULT_PENDING;
+		/*
+		 *  correccion de los campos de auditoria papeletas
+		 *	papeleta.setTerminal(getUser().getTerminal());
+		 *	papeleta.setUsuarioId(getUser().getUsuarioId());
+		*/
+		/**
+		 * Verificando si se realiza un registro por primera vez de una papeleta o si se trata de una actualizacion
+		 * */
+		if (papeleta.getPapeletaId() == Constante.RESULT_PENDING) {
+			/** Primer registro*/
+			Integer Id = getService().ObtenerCorrelativoTabla("pa_papeleta", 1);
+			/*
+			 *  correccion de los campos de auditoria papeletas*/
+			papeleta.setTerminal(getUser().getTerminal());
+			papeleta.setUsuarioId(getUser().getUsuarioId());
+			
+			papeleta.setPapeletaId(Id);
+			papeleta.setCodAnterior(Id);
+			papeleta.setFechaRegistro(DateUtil.getCurrentDate());
+			getService().create(papeleta);
+			
+			result = Id;
+		} else {
+			/** Actualizacion*/			
+			papeleta.setFechaActualizacion(DateUtil.getCurrentDate());
+			getService().update(papeleta);
+			result = papeleta.getPapeletaId();
+		}
+
+		if (result > Constante.RESULT_PENDING) {
+			guardarPaPapeletaHistorico(papeleta);
+		}
+		return result;
+	}
+
+	public  Integer compara(PaPapeletaHistorico historico,PaPapeleta papeleta)throws Exception{
+			Integer result=Constante.RESULT_SUCCESS;
+			if(historico.getInfraccionId()!=null&&historico.getInfraccionId().compareTo(papeleta.getInfraccionId())!=0){
+				result=Constante.RESULT_FAILED;
+			}
+			if(historico.getNroPapeleta()!=null&&!historico.getNroPapeleta().equals(papeleta.getNroPapeleta())){
+				result=Constante.RESULT_FAILED;
+			}
+			
+			if(historico.getPlaca()!=null&&!historico.getPlaca().equals(papeleta.getPlaca())){
+				result=Constante.RESULT_FAILED;
+			}
+			/*if(historico.getPersonaInfractorId()!=papeleta.getPersonaInfractorId()){
+				result=Constante.RESULT_FAILED;
+			}
+			if(historico.getNumLicencia()!=papeleta.getNumLicencia()){
+				result=Constante.RESULT_FAILED;
+			}*/
+			if(historico.getFechaInfraccion()!=null&&!historico.getFechaInfraccion().equals(papeleta.getFechaInfraccion())){
+				result=Constante.RESULT_FAILED;
+			}
+			return result;
+	}
+	
+	private Integer guardarPaPapeletaHistorico(PaPapeleta papeleta)throws Exception{
+		Integer Id=Constante.RESULT_PENDING;
+		if(papeleta!=null){
+			//Id=getService().ObtenerCorrelativoTabla("pa_papeleta_historico", 1);
+			PaPapeletaHistorico historico=new PaPapeletaHistorico(); 
+			//historico.setPapeletaHistoricoId(Id);
+			historico.setPapeletaId(papeleta.getPapeletaId());
+			historico.setNroPapeleta(papeleta.getNroPapeleta());
+			historico.setPersonaInfractorId(papeleta.getPersonaInfractorId());
+			historico.setPersonaPropietarioId(papeleta.getPersonaPropietarioId());
+			historico.setInfraccionId(papeleta.getInfraccionId());
+			historico.setLeyId(papeleta.getLeyId());
+			historico.setVehiculoPapeletaId(papeleta.getVehiculoPapeletaId());
+			historico.setFechaInfraccion(papeleta.getFechaInfraccion());
+			historico.setHoraInfraccion(papeleta.getHoraInfraccion());
+			historico.setMontoMulta(papeleta.getMontoMulta());
+			historico.setSinLicencia(papeleta.getSinLicencia());
+			historico.setNumLicencia(papeleta.getNumLicencia());
+			historico.setOrigen(papeleta.getOrigen());
+			historico.setEstado(papeleta.getEstado());
+			historico.setUsuarioId(getUser().getUsuarioId());
+			historico.setFechaRegistro(DateUtil.getCurrentDate());
+			historico.setTerminal(getUser().getTerminal());
+			historico.setClaseLicenciaId(papeleta.getClaseLicenciaId());
+			historico.setPlaca(papeleta.getPlaca());
+			historico.setNroTarjetaPropiedad(papeleta.getNroTarjetaPropiedad());
+			historico.setGlosa(papeleta.getGlosa());
+			getService().create(historico);
+		}
+		return Id;
+	}
+	
+	
+	public PaPapeleta getPapeleta(Integer PapeletaId)throws Exception{
+		return getService().find(PapeletaId, PaPapeleta.class);		
+	}
+	
+	//Correccion de flag es infractor a la tabla pa_direccion
+	public BuscarPersonaDTO getPersonaPapeleta(Integer personaId,Integer papeletaId,String esInfractor)throws Exception{
+		return getService().getPersonaPapeleta(personaId,papeletaId,esInfractor);
+	}
+	
+	public  int guardarAdjuntoPapeleta(PaDocuAnexo docAnexo)throws Exception{
+		Integer result=Constante.RESULT_PENDING;
+		if(docAnexo.getDocuAnexoId()==Constante.RESULT_PENDING){
+			Integer Id=getService().ObtenerCorrelativoTabla("pa_docu_anexo", 1);
+			docAnexo.setDocuAnexoId(Id);
+			getService().create(docAnexo);
+			result=Id;
+		}else{
+			getService().update(docAnexo);
+			result=docAnexo.getDocuAnexoId();
+		}
+		return result;
+	}
+	
+	
+	public ArrayList<PaDocuAnexo> getAllAdjuntoPapeleta(Integer papeletaId)throws Exception{
+		return getService().getAllPaDocuAnexo(papeletaId);
+	}
+	
+	public List<GridDetalleLote> buscarPapeletas(Integer cargaLotesId,String operacion)throws Exception{
+		return getService().buscarPapeletas(cargaLotesId, operacion);
+	}
+
+	public  List<PaInfraccion> getAllInfracciones(PaInfraccion infraccion,String fechaInfraccionTramos) throws Exception{
+		return getService().getAllInfracciones(infraccion,fechaInfraccionTramos);
+	}
+	
+	public Integer generarResolucion() throws Exception{
+		Integer resolucionId=getService().ObtenerCorrelativoTabla("pa_resolucion", 1);
+		getService().generarResolucion(resolucionId);
+		return resolucionId;
+	}
+	
+	public ArrayList<ResolucionDTO> listarResolucion(Integer resolucionId) throws Exception{
+		return getService().listarResolucion(resolucionId);
+	}
+	public ArrayList<PaCargaDetalleLote> getAllPaCargaDetalleLoteError(Integer cargaLotesId)throws Exception{
+		Map<String, Object> parameters=new HashMap<String, Object>();
+		parameters.put("p_carga_lote_id", cargaLotesId);
+		return (ArrayList<PaCargaDetalleLote>)(List)getService().findByNamedQuery("getAllPaCargaDetalleLoteByCargaLoteId", parameters);
+	}
+	
+	
+	/**
+	 * GnPersona 	PaPersona	
+	 * no existe	no existe
+	 * no existe	existe X
+	 * existe		no existe 
+	 * existe		existe
+	 * @param persona
+	 * @return
+	 * @throws Exception
+	 */
+	public Integer guardarPaPersona(PaPersona paPersona)throws Exception{
+		GnPersona gnPersona=getService().find(paPersona.getPersonaId(), GnPersona.class);
+		if(gnPersona==null){
+			if(paPersona.getPersonaId()==Constante.RESULT_PENDING){
+				Integer Id=getService().ObtenerCorrelativoTabla("gn_persona", 1);
+				gnPersona=getGnPersona(paPersona);
+				gnPersona.setPersonaId(Id);
+				gnPersona.setUsuarioId(getUser().getUsuarioId());
+				gnPersona.setFechaRegistro(DateUtil.getCurrentDate());
+				gnPersona.setTerminalRegistro(getUser().getTerminal());
+				getService().create(gnPersona);
+				//--
+				paPersona.setPersonaId(Id);
+				paPersona.setUsuarioId(getUser().getUsuarioId());
+				paPersona.setFechaRegistro(DateUtil.getCurrentDate());
+				paPersona.setTerminalRegistro(getUser().getTerminal());
+				paPersona.setTipoDocumentoIdentidad(paPersona.getTipoDocumentoId());
+				getService().create(paPersona);	
+			}else{
+				Integer Id=paPersona.getPersonaId();
+				gnPersona=getGnPersona(paPersona);
+				gnPersona.setPersonaId(Id);
+				gnPersona.setUsuarioId(getUser().getUsuarioId());
+				gnPersona.setFechaRegistro(DateUtil.getCurrentDate());
+				gnPersona.setTerminalRegistro(getUser().getTerminal());
+				getService().create(gnPersona);
+				//--
+				paPersona.setPersonaId(Id);
+				paPersona.setUsuarioId(getUser().getUsuarioId());
+				paPersona.setFechaRegistro(DateUtil.getCurrentDate());
+				paPersona.setTerminalRegistro(getUser().getTerminal());
+				paPersona.setTipoDocumentoIdentidad(paPersona.getTipoDocumentoId());
+				getService().update(paPersona);
+			}
+		}else{
+			if(paPersona.getPersonaId()==Constante.RESULT_PENDING){
+				Integer Id=gnPersona.getPersonaId();
+				gnPersona=getGnPersona(paPersona);
+				gnPersona.setPersonaId(Id);
+				gnPersona.setUsuarioId(getUser().getUsuarioId());
+				gnPersona.setFechaRegistro(DateUtil.getCurrentDate());
+				gnPersona.setTerminalRegistro(getUser().getTerminal());
+				getService().update(gnPersona);
+				//--
+				paPersona.setPersonaId(Id);
+				paPersona.setUsuarioId(getUser().getUsuarioId());
+				paPersona.setFechaRegistro(DateUtil.getCurrentDate());
+				paPersona.setTerminalRegistro(getUser().getTerminal());
+				paPersona.setTipoDocumentoIdentidad(paPersona.getTipoDocumentoId());
+				getService().create(paPersona);	
+			}else{
+				Integer Id=gnPersona.getPersonaId();
+				gnPersona=getGnPersona(paPersona);
+				gnPersona.setPersonaId(Id);
+				gnPersona.setUsuarioId(getUser().getUsuarioId());
+				gnPersona.setFechaRegistro(DateUtil.getCurrentDate());
+				gnPersona.setTerminalRegistro(getUser().getTerminal());
+				getService().update(gnPersona);
+				//--
+				paPersona.setPersonaId(Id);
+				paPersona.setUsuarioId(getUser().getUsuarioId());
+				paPersona.setFechaRegistro(DateUtil.getCurrentDate());
+				paPersona.setTerminalRegistro(getUser().getTerminal());
+				paPersona.setTipoDocumentoIdentidad(paPersona.getTipoDocumentoId());
+				getService().update(paPersona);	
+			}
+		}
+		return gnPersona.getPersonaId();
+	}
+	
+	public GnPersona getGnPersona(PaPersona persona){
+		GnPersona gnPersona=new GnPersona();
+		gnPersona.setPersonaId(persona.getPersonaId());
+		gnPersona.setTipoDocumentoId(persona.getTipoDocumentoId());
+		gnPersona.setNroDocIdentidad(persona.getNroDocIdentidad());
+		if(persona.getTipoDocumentoId()==Constante.TIPO_DOCUMENTO_RUC_ID){
+			gnPersona.setRazonSocial(persona.getRazonSocial());	
+		}else{
+			gnPersona.setPrimerNombre(persona.getPrimerNombre());
+			gnPersona.setSegundoNombre(persona.getSegundoNombre());
+			gnPersona.setApePaterno(persona.getApePaterno());
+			gnPersona.setApeMaterno(persona.getApeMaterno());
+			gnPersona.setApellidosNombres(persona.getApePaterno()+" "+persona.getApeMaterno()+", "+persona.getPrimerNombre()+(persona.getSegundoNombre()!=null?" "+persona.getSegundoNombre():""));	
+		}
+		gnPersona.setEstado(persona.getEstado());
+		return gnPersona;
+	}
+	
+	/*
+	public Integer actualizaPaPersona(Integer personaId)throws Exception{
+		Integer result=Constante.RESULT_PENDING;
+		if(getService().existPaPersona(personaId)){
+			GnPersona persona=getService().find(personaId, GnPersona.class);
+			if(persona!=null){
+				PaPersona paPersona=new PaPersona();
+				paPersona.setPersonaId(persona.getPersonaId());
+				paPersona.setTipoDocumentoId(persona.getTipoDocumentoId());
+				paPersona.setNroDocIdentidad(persona.getNroDocIdentidad());
+				paPersona.setPrimerNombre(persona.getPrimerNombre());
+				paPersona.setSegundoNombre(persona.getSegundoNombre());
+				paPersona.setApePaterno(persona.getApePaterno());
+				paPersona.setApeMaterno(persona.getApeMaterno());
+				
+				paPersona.setUsuarioId(getUser().getUsuarioId());
+				paPersona.setEstado(Constante.ESTADO_ACTIVO);
+				paPersona.setFechaRegistro(DateUtil.getCurrentDate());
+				paPersona.setTerminalRegistro(getUser().getTerminal());
+				
+				getService().update(paPersona);
+				
+				result=Constante.RESULT_SUCCESS;
+			}else{
+				result=Constante.RESULT_FAILED;
+			}
+		}else{
+			result=registrarPaPersona(personaId);
+		}
+		return result;
+	}
+	
+	public Integer registrarPaPersona(Integer personaId)throws Exception{
+		Integer result=Constante.RESULT_PENDING;
+		if(!getService().existPaPersona(personaId)){
+			GnPersona persona=getService().find(personaId, GnPersona.class);
+			if(persona!=null){
+				PaPersona paPersona=new PaPersona();
+				paPersona.setPersonaId(persona.getPersonaId());
+				paPersona.setTipoDocumentoId(persona.getTipoDocumentoId());
+				paPersona.setNroDocIdentidad(persona.getNroDocIdentidad());
+				paPersona.setPrimerNombre(persona.getPrimerNombre());
+				paPersona.setSegundoNombre(persona.getSegundoNombre());
+				paPersona.setApePaterno(persona.getApePaterno());
+				paPersona.setApeMaterno(persona.getApeMaterno());
+				paPersona.setEstado(Constante.ESTADO_ACTIVO);
+				
+				paPersona.setUsuarioId(getUser().getUsuarioId());
+				paPersona.setFechaRegistro(DateUtil.getCurrentDate());
+				paPersona.setTerminalRegistro(getUser().getTerminal());
+				
+				getService().create(paPersona);
+				
+				result=Constante.RESULT_SUCCESS;
+			}else{
+				result=Constante.RESULT_FAILED;
+			}
+		}else{
+			result=Constante.RESULT_SUCCESS;
+		}
+		return result;
+	}
+	*/
+	
+	/**
+	 * Guardar y Actualizar GnPersona
+	 */
+	public Integer savePersona(GnPersona persona) throws Exception{
+		Integer result=Constante.RESULT_PENDING;
+		if(!getService().existGnPersona(persona.getPersonaId(),persona.getTipoDocumentoId(), persona.getNroDocIdentidad())){
+			if(persona.getPersonaId()==Constante.RESULT_PENDING){
+				Integer Id=getService().ObtenerCorrelativoTabla("gn_persona", 1);
+				persona.setPersonaId(Id);
+				persona.setUsuarioId(getUser().getUsuarioId());
+				persona.setFechaRegistro(DateUtil.getCurrentDate());
+				persona.setTerminalRegistro(getUser().getTerminal());
+				getService().create(persona);
+				result=Id;
+			}else{
+				persona.setUsuarioId(getUser().getUsuarioId());
+				persona.setFechaRegistro(DateUtil.getCurrentDate());
+				persona.setTerminalRegistro(getUser().getTerminal());
+				getService().update(persona);
+				result=persona.getPersonaId();
+			}
+		}else{
+			result=Constante.RESULT_PENDING;
+		}
+		return result;
+	}
+	
+	public PaPapeleta getPaPapeletaByNumeroPapeleta(String numeroPapeleta,Integer papeletaId,Integer anioInfraccion)throws Exception{
+		Map<String, Object> parameters=new HashMap<String, Object>();
+		parameters.put("p_nro_papeleta", numeroPapeleta);
+		parameters.put("p_papeleta_id", papeletaId);
+		parameters.put("p_anio_infraccion",anioInfraccion);
+		List<Object> lPapeleta=getService().findByNamedQuery("findPaPapeletaByNroPapeleta", parameters);
+		if(lPapeleta!=null&&lPapeleta.size()>0){
+			return (PaPapeleta)lPapeleta.get(0);
+		}
+		return null;
+	}
+	
+	public PaPapeleta getPaPapeletaByNumeroPapeleta1(String numeroPapeleta,Integer papeletaId)throws Exception{
+		Map<String, Object> parameters=new HashMap<String, Object>();
+		parameters.put("p_nro_papeleta", numeroPapeleta);
+		parameters.put("p_papeleta_id", papeletaId);
+		List<Object> lPapeleta=getService().findByNamedQuery("findPaPapeletaByNroPapeleta1", parameters);
+		if(lPapeleta!=null&&lPapeleta.size()>0){
+			return (PaPapeleta)lPapeleta.get(0);
+		}
+		return null;
+	}
+	
+	public PaCargaLote getPaCargaLoteByNumeroOficio(String numOficio,Integer cargaLoteId)throws Exception{
+		Map<String, Object> parameters=new HashMap<String, Object>();
+		parameters.put("p_num_oficio", numOficio);
+		parameters.put("p_carga_lotes_id", cargaLoteId);
+		List<Object> lista=getService().findByNamedQuery("findPaCargaLoteByNumeroOficio", parameters);
+		if(lista!=null&&lista.size()>0){
+			return (PaCargaLote)lista.get(0);
+		}
+		return null;
+	}
+	
+	public Integer guardarPaCargaLote(PaCargaLote cargaLote)throws Exception{
+		Integer result=Constante.RESULT_PENDING;
+		if(cargaLote.getCargaLotesId()==Constante.RESULT_PENDING){
+			Integer Id=getService().ObtenerCorrelativoTabla("pa_carga_lotes", 1);
+			cargaLote.setCargaLotesId(Id);
+			cargaLote.setUsuarioId(getUser().getUsuarioId());
+			cargaLote.setFechaRegistro(DateUtil.getCurrentDate());
+			cargaLote.setTerminal(getUser().getTerminal());
+			getService().create(cargaLote);
+			result=Id;
+		}else{
+			cargaLote.setUsuarioId(getUser().getUsuarioId());
+			cargaLote.setFechaRegistro(DateUtil.getCurrentDate());
+			cargaLote.setTerminal(getUser().getTerminal());
+			getService().update(cargaLote);
+			result=cargaLote.getCargaLotesId();
+		}
+		return result;
+	}
+	
+	public  Integer iniciarProcesoCargaLote(String directorio,String nombreArchivo,Integer cargaLoteId)throws Exception{
+		Integer procesoCargaId=getService().ObtenerCorrelativoTabla("process_id", 1);
+		getService().iniciarProcesoCargaLote(directorio, nombreArchivo, cargaLoteId,procesoCargaId);
+		return procesoCargaId;
+	}
+	
+	public ArrayList<ResultadoCargaLoteDTO> listaErrorCargaDetalleToles(Integer cargaLotesId,Integer procesoCargaId)throws Exception{
+		return getService().cantidadErrorCargaDetalleToles(cargaLotesId, procesoCargaId);
+	}
+
+	public PaResolucion getPaResolucion(Integer resolucionId)throws Exception{
+		return getService().find(resolucionId, PaResolucion.class);
+	}
+	public ArrayList<PaResolucion> getAllPaResolucion()throws Exception{
+		return (ArrayList<PaResolucion>)(List)getService().findByNamedQuery("findPaResolucion");
+	}
+	
+	public ArrayList<PaResolucionPapeleta> getAllPaResolucionPapeleta(Integer resolucionId)throws Exception{
+		Map<String, Object> parameters=new HashMap<String, Object>();
+		parameters.put("p_resolucion_id", resolucionId);
+		return (ArrayList<PaResolucionPapeleta>)(List)getService().findByNamedQuery("findPaResolucionPapeletaByResolucionId",parameters);
+	}
+	
+	public MpDireccion getMpDireccion(Integer personaId)throws Exception{
+		Map<String, Object> parameters=new HashMap<String, Object>();
+		parameters.put("p_persona_id", personaId);
+		List<Object> lista=getService().findByNamedQuery("findMpDireccionByPersonaId", parameters);
+		if(lista!=null&&lista.size()>0){
+			return (MpDireccion)lista.get(0);
+		}
+		return null;
+	}
+	public MpPersona getMpPersona(Integer personaId)throws Exception{
+		return getService().find(personaId, MpPersona.class);
+	}
+	
+	public Integer getReincidencia(PaIncidencia incidenciaId,
+			Integer personaId,
+			Integer infraccionId,
+			Timestamp fechaInfraccion,
+			Integer periodo) throws Exception {
+		return getService().getReincidencia(incidenciaId.getIncidenciaId(),
+				personaId,
+				infraccionId,
+				fechaInfraccion,
+				periodo);
+	}
+	
+	public Integer getPuntosAcum(Integer personaId,Timestamp fechaInfraccion,Integer periodo)throws Exception{
+		
+		return getService().getPuntosAcum(personaId,fechaInfraccion, periodo);
+	}
+	
+	public PaInfraccion getPaInfraccion(Integer infraccionId)throws Exception{
+		return getService().find(infraccionId, PaInfraccion.class);
+	}
+	
+	public Integer guardarPaIncidencia(PaIncidencia paIncidenciaNueva, PaIncidencia incidenciaAntigua) throws Exception {
+		
+		Integer result = Constante.RESULT_PENDING;
+		try{
+//		int incidenciaId = incidencia.getIncidenciaId();
+		Integer idIncidencia = getService().ObtenerCorrelativoTabla("pa_incidencia", 1);
+		// insertamos una nueva incidencia
+//		PaIncidencia incidencia1 = new PaIncidencia();
+//		incidencia1.setIncidenciaId(Id);
+//		incidencia1.setPersonaId(incidencia.getPersonaId());
+//		incidencia1.setInfraccionId(incidencia.getInfraccionId());
+//		incidencia1.setFechaInfraccion(incidencia.getFechaInfraccion());
+//		incidencia1.setPuntosAcum(incidencia.getPuntosAcum());
+//		incidencia1.setEstado(incidencia.getEstado());
+//		incidencia1.setMontoMulta(incidencia.getMontoMulta());
+//		incidencia1.setReincidente(incidencia.getReincidente());
+//		incidencia1.setPapeletaId(incidencia.getPapeletaId());
+//		incidencia1.setPuntos(incidencia.getPuntos());
+		
+//		/** seteando los puntos firmes */
+//		incidencia1.setPuntosFirmes(incidencia.getPuntosFirmes());
+//		/** seteando el flag firme si es que la papeleta es firme */
+//		incidencia1.setFlagFirme(incidencia.getFlagFirme());
+//		
+//		incidencia1.setMontoInfraccion(incidencia.getMontoInfraccion());
+		 paIncidenciaNueva.setIncidenciaId(idIncidencia);
+		
+//		incidencia1.setUsuarioId(getUser().getUsuarioId());
+//		incidencia1.setFechaRegistro(DateUtil.getCurrentDate());
+//		incidencia1.setTerminal(getUser().getTerminal());
+		 
+		 paIncidenciaNueva.setUsuarioId(getUser().getUsuarioId());
+		 paIncidenciaNueva.setFechaRegistro(DateUtil.getCurrentDate());
+		 paIncidenciaNueva.setTerminal(getUser().getTerminal());
+
+		 
+		// cc:
+		getService().create(paIncidenciaNueva);
+//		result = idIncidencia;
+		if (incidenciaAntigua.getIncidenciaId() > 0) {
+
+			// modificamos la incidencia anterior
+//			incidenciaAntigua.setIncidenciaId(incidenciaId);
+			incidenciaAntigua.setEstado("9");
+			incidenciaAntigua.setUsuarioId(getUser().getUsuarioId());
+			incidenciaAntigua.setFechaRegistro(DateUtil.getCurrentDate());
+			incidenciaAntigua.setTerminal(getUser().getTerminal());
+			getService().update(incidenciaAntigua);
+			//incidencia.getIncidenciaId();
+		}
+		result = idIncidencia;	
+			
+		}catch(RuntimeException ex){
+			throw new SisatException(ex.getMessage());
+		}
+		return result;
+	}
+	
+	public Integer guardarPaIncidenciaDE(PaIncidencia paIncidencia) throws Exception {
+		try {						
+			
+			Integer incidenciaId = getService().ObtenerCorrelativoTabla("pa_incidencia", 1);			
+			paIncidencia.setIncidenciaId(incidenciaId);
+			paIncidencia.setEstado("1");
+			paIncidencia.setUsuarioId(this.getUser().getUsuarioId());
+			paIncidencia.setTerminal(this.getUser().getTerminal());
+			paIncidencia.setFechaRegistro(DateUtil.getCurrentDate());
+
+			this.em.persist(paIncidencia);
+		} catch (RuntimeException ex) {
+			throw new SisatException(ex.getMessage());
+		}
+		return paIncidencia.getIncidenciaId();
+	}
+	
+	public List<GnVia> getAllGnVia(Integer tipoViaId)throws Exception{
+		Map<String, Object> parameters=new HashMap<String, Object>();
+		parameters.put("p_tipo_via_id", tipoViaId);
+		return (ArrayList<GnVia>)(List)getService().findByNamedQuery("getAllGnViaByTipoViaId",parameters);
+	}
+	public List<GnLugar> getAllGnLugar(Integer viaId)throws Exception{
+		return getService().getAllGnLugar(viaId);
+	}
+	
+	public String getDireccionCompleta(PaDireccion direccion,HashMap<Integer,String> mapIGnTipoVia,HashMap<Integer,String> mapIGnVia)throws Exception{
+		String direccionCompleta="";
+		if(direccion.getTipoViaId()!=null&&direccion.getTipoViaId()>Constante.RESULT_PENDING
+				&&direccion.getViaId()!=null&&direccion.getViaId()>Constante.RESULT_PENDING){
+			direccionCompleta=getService().concatenarDomicilio(direccion, mapIGnTipoVia, mapIGnVia);
+		}
+		return direccionCompleta;
+	}
+	
+	public void eliminarEstadoPaDireccion(Integer papeletaId)throws Exception{
+		getService().actualizarEstadoPaDireccion(papeletaId,Constante.ESTADO_ELIMINADO);
+	}
+	
+	public void cambiarEstadoPapeleta(Integer papeletaId)throws Exception{
+		getService().actualizarEstadoPapeleta(papeletaId,Constante.ESTADO_PAPELETA_CANCELADO);
+	}
+	
+	public Integer guardarPaDireccion(PaDireccion direccion)throws Exception{
+		Integer direccionId=Constante.RESULT_PENDING;
+		if(direccion.getDireccionId()==Constante.RESULT_PENDING){
+			Integer Id=getService().ObtenerCorrelativoTabla("pa_direccion", 1);
+			direccion.setDireccionId(Id);
+			direccion.setUsuarioId(getUser().getUsuarioId());
+			direccion.setTerminal(getUser().getTerminal());
+			direccion.setFechaRegistro(DateUtil.getCurrentDate());
+			getService().create(direccion);
+			direccionId=Id;
+		}else{
+			direccion.setUsuarioId(getUser().getUsuarioId());
+			direccion.setTerminal(getUser().getTerminal());
+			direccion.setFechaRegistro(DateUtil.getCurrentDate());
+			getService().update(direccion);
+			direccionId=direccion.getDireccionId();
+		}
+		return direccionId;
+	}
+	
+	public PaDireccion getPaDireccion(Integer personaId)throws Exception{
+		return getService().getPaDireccion(personaId);
+	}
+	
+	public ArrayList<PapeletaDTO> listarPapeletas(Integer cargaLotesId)throws Exception{
+		return getService().listarPapeletas(cargaLotesId);
+	}
+	
+	public void guardarPaDocuAnexo(ArrayList<PapeletaDTO> lista)throws Exception{
+		Iterator<PapeletaDTO> it=lista.iterator();
+		while(it.hasNext()){
+			PapeletaDTO obj=it.next();
+			if(obj.getEstado()>Constante.RESULT_PENDING){
+				Integer Id=getService().ObtenerCorrelativoTabla("pa_docu_anexo", 1);
+				PaDocuAnexo docuAnexo=new PaDocuAnexo();
+				docuAnexo.setDocuAnexoId(Id);
+				docuAnexo.setEstado(Constante.ESTADO_ACTIVO);
+				docuAnexo.setFechaActualizacion(DateUtil.getCurrentDate());
+				docuAnexo.setFechaRegistro(DateUtil.getCurrentDate());
+				docuAnexo.setNumeroDocumento(obj.getNroPapeleta());
+				docuAnexo.setReferencia(obj.getFileName());
+				docuAnexo.setTerminal(getUser().getTerminal());
+				docuAnexo.setTipoDocumento("PAPELETA");
+				docuAnexo.setTipoDocumentoId(1);
+				docuAnexo.setPapeletaId(obj.getPapeletaId());
+				docuAnexo.setUsuarioId(getUser().getUsuarioId());
+				getService().create(docuAnexo);	
+			}
+		}
+	}
+	
+	public  int guardarAdjuntoPapeleta(Integer papeletaId,ArrayList<PaDocuAnexo> lDocAnexo)throws Exception{
+		Integer deleted=getService().eliminarDocAnexo(papeletaId);
+		Iterator<PaDocuAnexo> it=lDocAnexo.iterator();
+		while(it.hasNext()){
+			Integer Id=getService().ObtenerCorrelativoTabla("pa_docu_anexo", 1);
+			PaDocuAnexo anexo=it.next();
+			anexo.setDocuAnexoId(Id);
+			anexo.setPapeletaId(papeletaId);
+			anexo.setUsuarioId(getUser().getUsuarioId());
+			anexo.setTerminal(getUser().getTerminal());
+			anexo.setFechaRegistro(DateUtil.getCurrentDate());
+			anexo.setEstado(Constante.ESTADO_ACTIVO);
+			getService().create(anexo);
+		}
+		return Constante.RESULT_SUCCESS;
+	}
+	
+	public PaIncidencia getIncidencia(Integer InfractorId,Integer InfraccionId,Integer PapeletaId)throws Exception{
+		Map<String, Object> parameters=new HashMap<String, Object>();
+		parameters.put("p_infractor_id", InfractorId);
+		parameters.put("p_infraccion_id", InfraccionId);
+		parameters.put("p_papeleta_id", PapeletaId);
+		List<Object> lista=getService().findByNamedQuery("getPaIncidenciaByInfraccionId", parameters);
+		if(lista!=null&&lista.size()>0){
+			return (PaIncidencia)lista.get(0);
+		}
+		return null;
+	}
+	/*datos del infractor : inicio*/
+	public BuscarPersonaDTO getInfractorByDocumento(Integer tipoDocumento,String nroDocumentoIdentidad)throws Exception{
+		return getService().getInfractorByDocumento(tipoDocumento,nroDocumentoIdentidad);
+	}
+	public BuscarPersonaDTO getInfractorByNroLicencia(String nroLicencia)throws Exception{
+		return getService().getInfractorByLicencia(nroLicencia);
+	}
+	public BuscarPersonaDTO getInfractorById(Integer personaId)throws Exception{
+		return getService().getInfractorByPersonaId(personaId);
+	}
+	
+	/*datos del infractor : fin*/
+	public ArrayList<RecordPapeletaDTO> getRecordVehiculo(String placa)throws Exception{
+		return getService().getRecordVehiculo(placa);
+	}
+	
+	public ArrayList<RecordPapeletaDTO> getAllRecordVehiculo(String placa)throws Exception{
+		return getService().getAllRecordVehiculo(placa);
+	}
+	
+	public ArrayList<RecordPapeletaDTO> getRecordInfractor(Integer tipoDocumento,String nroDocumento,String nroLicencia,Integer propietarioId,Integer infractorId)throws Exception{
+		return getService().getRecordInfractor(tipoDocumento, nroDocumento, nroLicencia, propietarioId, infractorId);
+	}
+	
+	public ArrayList<RecordPapeletaDTO> getAllRecordInfractor(Integer tipoDocumento,String nroDocumento,String nroLicencia,Integer propietarioId,Integer infractorId)throws Exception{
+		return getService().getAllRecordInfractor(tipoDocumento, nroDocumento, nroLicencia, propietarioId, infractorId);
+	}
+	
+	public UbicacionFiscalDTO getUbicacionFiscal(Integer personaId)throws Exception{
+		return getService().getUbicacionFiscal(personaId);
+	}
+	
+	public List<ConsultaPapeletaDTO> consultarPapeletas(String nroPapeleta, Date fechaInicio, Date fechaFin)throws SisatException{
+		return getService().consultarPapeletas(nroPapeleta, fechaInicio, fechaFin);
+	}	
+	
+	public boolean getInfractorContribuyente(Integer personaId)throws Exception{
+		return getService().getInfractorContribuyente(personaId);
+	}
+
+	public List<ConsultaPapeletaDTO> consultarPapeletaDescargo(String nroPapeleta,Date fechaInicio, Date fechaFin)throws Exception{
+		return getService().consultarPapeletaDescargo(nroPapeleta,fechaInicio,fechaFin);
+		
+	}
+	
+	public  BigDecimal obtenerSancionInfraccion(Integer infraccionId, Integer incidencia) throws Exception{
+		return getService().obtenerSancionInfraccion(infraccionId,incidencia);
+	}
+
+}

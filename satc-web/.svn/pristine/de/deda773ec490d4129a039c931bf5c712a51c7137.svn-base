@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+
+	<h:form id="formGestionExpediente">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+		<rich:hotKey key="return"
+			handler="#{rich:element('btnBuscar')}.click()"
+			selector="#formGestionExpediente" />
+
+
+
+		<h:panelGrid columns="1" style="width:100%;" cellpadding="0"
+			cellspacing="0">
+			<rich:panel>
+				<f:facet name="header">
+		        	Búsqueda de Expedientes 	
+		        </f:facet>
+
+				<h:panelGrid columns="6">
+
+					<h:outputText for="txtLotExigible" value="Nro Cartera: " />
+					<h:inputText id="txtLotExigible"
+						value="#{generacionREC.nroCartera}" />
+
+					<h:outputText for="txtNroExpediente" value="Nro. Expediente" />
+					<h:inputText id="txtNroExpediente"
+						value="#{generacionREC.nroExpediente}" />
+
+					<h:outputText for="txtNumeroPapeleta" value="Nro Papeleta" />
+					<h:inputText id="txtNumeroPapeleta"
+						value="#{generacionREC.nroPapeleta}" />
+
+					<h:outputText for="txtPlaca" value="Placa" />
+					<h:inputText id="txtPlaca"
+						value="#{generacionREC.placa}" />
+
+					<h:outputText for="txtCodContribuyente"
+						value="Código de Contribuyente" />
+					<h:inputText id="txtCodContribuyente"
+						value="#{generacionREC.contribuyenteId}" />
+
+					<a4j:commandButton id="btnBuscar" value="Buscar"
+						style="width:100px" action="#{generacionREC.buscar()}"
+						reRender="id_busquedaexp" status="ajaxStatus" />
+
+				</h:panelGrid>
+
+			</rich:panel>
+
+
+
+
+			<rich:panel header="Seleccione Expedientes">
+
+				<h:panelGrid id="id_busquedaexp" columns="2" cellpadding="0"
+					cellspacing="0">
+
+					<rich:extendedDataTable id="edtExpedientes"
+						value="#{generacionREC.records}" width="950px"
+						height="200px" sortMode="single" selectionMode="single"
+						enableContextMenu="false" var="record" rowKeyVar="row">
+
+
+						<rich:column style="text-align:center" width="50px">
+							<f:facet name="header">Agergar</f:facet>
+							<h:selectBooleanCheckbox value="#{record.seleccion}">
+							</h:selectBooleanCheckbox>
+
+						</rich:column>
+
+
+						<rich:column style="text-align:center" width="30px">
+							<f:facet name="header">Item</f:facet>
+							<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+						</rich:column>
+
+						<rich:column style="text-align:center" width="55px">
+							<f:facet name="header">Cartera</f:facet>
+							<h:outputText value="#{record.carteraId}" />
+						</rich:column>
+
+						<rich:column style="text-align:center" width="150px">
+							<f:facet name="header">Expediente</f:facet>
+							<h:outputText value="#{record.nroExpediente}" />
+						</rich:column>
+
+						<rich:column style="text-align:center" width="70px">
+							<f:facet name="header">ID Persona</f:facet>
+							<h:outputText value="#{record.personaId}" />
+						</rich:column>
+
+						<rich:column style="text-align:left" width="190px">
+							<f:facet name="header">Obligado</f:facet>
+							<h:outputText value="#{record.apellidosNombresPersona}" />
+						</rich:column>
+
+
+						<rich:column style="text-align:center" width="50px">
+							<f:facet name="header">Últ. REC</f:facet>
+							<h:outputText value="#{record.nroRec}" />
+						</rich:column>
+
+						<rich:column style="text-align:center" width="80px">
+							<f:facet name="header">Fecha REC</f:facet>
+							<h:outputText value="#{record.fechaemision}" />
+						</rich:column>
+
+						<rich:column style="text-align:left" width="120px">
+							<f:facet name="header">Tipo REC</f:facet>
+							<h:outputText value="#{record.tipoREC}" />
+						</rich:column>
+
+						<rich:column style="text-align:center" width="120px">
+							<f:facet name="header">Fecha Not. REC</f:facet>
+							<h:outputText value="#{record.fechaNotificacion}" />
+						</rich:column>
+
+					</rich:extendedDataTable>
+
+
+
+					<h:panelGrid columns="1" 
+						cellpadding="1">
+
+						<rich:panel header="Datos de Generación">
+							<h:panelGrid columns="2">
+
+								<h:outputText value="Tributo" />
+
+								<h:selectOneMenu value="#{generacionREC.conceptoID}"
+									style="width:200px;" requiredMessage="Seleccione Tributo">
+									<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+									<f:selectItems value="#{generacionREC.tributos}"
+										var="item" itemLabel="#{item.descripcion}"
+										itemValue="#{item.id}"></f:selectItems>
+								</h:selectOneMenu>
+
+
+
+								<h:outputText value="Tipo de REC:" />
+
+								<h:selectOneMenu value="#{generacionREC.tipoRecId}"
+									style="width:200px;"
+									requiredMessage="Seleccione el tipo de REC">
+									<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+									<f:selectItems value="#{generacionREC.listaTipoRec}"
+										var="item"
+										itemLabel="#{item.tipoRecId.toString().concat(' ').concat(item.descripcionTipoRec)}"
+										itemValue="#{item.tipoRecId}"></f:selectItems>
+								</h:selectOneMenu>
+
+								<h:outputText value="Ejecutor" />
+
+								<h:selectOneMenu value="#{generacionREC.ejecutorID}"
+									style="width:200px;"
+									requiredMessage="Seleccione Ejecutor Coactivo">
+									<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+									<f:selectItems value="#{generacionREC.ejecutores}"
+										var="item" itemLabel="#{item.descripcion}"
+										itemValue="#{item.id}"></f:selectItems>
+								</h:selectOneMenu>
+
+								<h:outputText value="Auxiliar" />
+
+								<h:selectOneMenu value="#{generacionREC.auxiliarID}"
+									style="width:200px;"
+									requiredMessage="Seleccione Auxiliar Coactivo">
+									<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+									<f:selectItems value="#{generacionREC.auxiliares}"
+										var="item" itemLabel="#{item.descripcion}"
+										itemValue="#{item.id}"></f:selectItems>
+								</h:selectOneMenu>
+
+							</h:panelGrid>
+
+						</rich:panel>
+
+						<rich:panel>
+
+							<h:panelGrid>
+								<a4j:commandButton style="width:80px" value="Select All"									
+									actionListener="#{generacionREC.seleccionarAll}"
+									reRender="id_busquedaexp"></a4j:commandButton>
+								<a4j:commandButton style="width:80px" value="UnSelect ALL"
+									actionListener="#{generacionREC.unseleccionarAll}"
+									reRender="id_busquedaexp"></a4j:commandButton>
+
+								<a4j:commandButton style="width:80px" value="Agregar"
+									actionListener="#{generacionREC.agregarSelected()}"
+									reRender="id_generarrec"></a4j:commandButton>
+							</h:panelGrid>
+						</rich:panel>
+
+					</h:panelGrid>
+
+
+				</h:panelGrid>
+
+
+			</rich:panel>
+
+
+		</h:panelGrid>
+
+
+
+
+		<rich:panel header="Generar REC">
+
+			<h:panelGrid id="id_generarrec" columns="2" cellpadding="0"
+				cellspacing="1">
+
+				<rich:extendedDataTable
+					value="#{generacionREC.recordsgenerarREC}" width="950px"
+					height="200px" sortMode="single" selectionMode="single"
+					enableContextMenu="false" var="record" rowKeyVar="row">
+
+
+					<rich:column style="text-align:center" width="30px">
+						<f:facet name="header">Quitar</f:facet>
+
+						<a4j:commandLink id="id_quitarexpediente" ajaxSingle="true"
+							action="#{generacionREC.quitarSeleccion}"
+							reRender="id_generarrec">
+							<h:graphicImage width="20px" height="20px"
+								value="/images/quitar.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{record}"
+								target="#{generacionREC.expediente}" />
+
+							<rich:toolTip for="id_quitarexpediente"
+								value="QUITAR DE SELECCIÓN	" />
+
+
+						</a4j:commandLink>
+
+
+
+					</rich:column>
+
+
+					<rich:column style="text-align:center" width="30px">
+						<f:facet name="header">Item</f:facet>
+						<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+					</rich:column>
+
+					<rich:column style="text-align:center" width="55px">
+						<f:facet name="header">Cartera</f:facet>
+						<h:outputText value="#{record.carteraId}" />
+					</rich:column>
+
+					<rich:column style="text-align:center" width="150px">
+						<f:facet name="header">Expediente</f:facet>
+						<h:outputText value="#{record.nroExpediente}" />
+					</rich:column>
+
+					<rich:column style="text-align:center" width="70px">
+						<f:facet name="header">ID Persona</f:facet>
+						<h:outputText value="#{record.personaId}" />
+					</rich:column>
+
+					<rich:column style="text-align:left" width="190px">
+						<f:facet name="header">Obligado</f:facet>
+						<h:outputText value="#{record.apellidosNombresPersona}" />
+					</rich:column>
+
+
+					<rich:column style="text-align:center" width="50px">
+						<f:facet name="header">Últ. REC</f:facet>
+						<h:outputText value="#{record.nroRec}" />
+					</rich:column>
+
+					<rich:column style="text-align:center" width="80px">
+						<f:facet name="header">Fecha REC</f:facet>
+						<h:outputText value="#{record.fechaemision}" />
+					</rich:column>
+
+					<rich:column style="text-align:left" width="120px">
+						<f:facet name="header">Tipo REC</f:facet>
+						<h:outputText value="#{record.tipoREC}" />
+					</rich:column>
+
+					<rich:column style="text-align:center" width="120px">
+						<f:facet name="header">Fecha Not. REC</f:facet>
+						<h:outputText value="#{record.fechaNotificacion}" />
+					</rich:column>
+
+
+				</rich:extendedDataTable>
+
+
+				<rich:panel>
+
+
+
+					<h:panelGrid cellpadding="">
+						<a4j:commandButton style="width:80px" value="Limpiar"
+							actionListener="#{generacionREC.limpiarseleccion}"
+							reRender="id_generarrec"></a4j:commandButton>
+
+
+
+						<a4j:commandButton style="width:80px" value="Validar"
+							actionListener="#{generacionREC.seleccionarAll}"
+							reRender="id_busquedaexp"></a4j:commandButton>
+
+						<a4j:commandButton value="Generar" style="width:80px" 
+							action="#{generacionREC.registraAsignacionRecMasivo()}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpAsignarRecMasivo\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							status="ajaxStatus"
+							reRender="edtExpedientes,pgEventosGestion,cmEventos,edtCostasGastos,pgButtonGenerarRec" />
+
+
+					</h:panelGrid>
+
+				</rich:panel>
+
+			</h:panelGrid>
+
+
+		</rich:panel>
+
+
+
+	</h:form>
+
+
+
+
+
+
+
+
+</ui:composition>

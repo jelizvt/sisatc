@@ -1,0 +1,62 @@
+package com.sat.sisat.util.exception;
+// -=CRAMIREZ=-
+import java.io.Serializable;
+
+public class ConstantMenuDTO implements Serializable{
+	private static final long serialVersionUID = 1L; 
+	
+	private int TRIBUTOS_TRIBUTOS;
+	private int VER_DATOS_GENERALES;
+	private int EDITAR_DATOS_GENERALES;
+	private int IMPRIMIR_DECLARACION;
+	private int CARTERA_VALORES_TRIB;
+	private int CARTERA_VALORES_NO_TRIB;
+	private int CONSULTA_DE_VEHICULOS;
+	
+	public int getCONSULTA_DE_VEHICULOS() {
+		return CONSULTA_DE_VEHICULOS;
+	}
+	public void setCONSULTA_DE_VEHICULOS(int cONSULTA_DE_VEHICULOS) {
+		CONSULTA_DE_VEHICULOS = cONSULTA_DE_VEHICULOS;
+	}
+	public int getTRIBUTOS_TRIBUTOS() {
+		return TRIBUTOS_TRIBUTOS;
+	}
+	public void setTRIBUTOS_TRIBUTOS(int tRIBUTOS_TRIBUTOS) {
+		TRIBUTOS_TRIBUTOS = tRIBUTOS_TRIBUTOS;
+	}
+	public int getVER_DATOS_GENERALES() {
+		return VER_DATOS_GENERALES;
+	}
+	public void setVER_DATOS_GENERALES(int vER_DATOS_GENERALES) {
+		VER_DATOS_GENERALES = vER_DATOS_GENERALES;
+	}
+	public int getEDITAR_DATOS_GENERALES() {
+		return EDITAR_DATOS_GENERALES;
+	}
+	public void setEDITAR_DATOS_GENERALES(int eDITAR_DATOS_GENERALES) {
+		EDITAR_DATOS_GENERALES = eDITAR_DATOS_GENERALES;
+	}
+	public int getIMPRIMIR_DECLARACION() {
+		return IMPRIMIR_DECLARACION;
+	}
+	public void setIMPRIMIR_DECLARACION(int iMPRIMIR_DECLARACION) {
+		IMPRIMIR_DECLARACION = iMPRIMIR_DECLARACION;
+	}
+	public int getCARTERA_VALORES_TRIB() {
+		return CARTERA_VALORES_TRIB;
+	}
+	public void setCARTERA_VALORES_TRIB(int cARTERA_VALORES_TRIB) {
+		CARTERA_VALORES_TRIB = cARTERA_VALORES_TRIB;
+	}
+	public int getCARTERA_VALORES_NO_TRIB() {
+		return CARTERA_VALORES_NO_TRIB;
+	}
+	public void setCARTERA_VALORES_NO_TRIB(int cARTERA_VALORES_NO_TRIB) {
+		CARTERA_VALORES_NO_TRIB = cARTERA_VALORES_NO_TRIB;
+	}
+	
+	
+	
+
+}

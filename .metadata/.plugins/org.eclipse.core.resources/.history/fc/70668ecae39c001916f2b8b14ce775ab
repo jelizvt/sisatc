@@ -1,0 +1,612 @@
+package com.sat.sisat.estadocuenta.dao;
+
+import java.math.BigDecimal;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.persistence.Query;
+
+import com.sat.sisat.caja.dto.CjGenerico;
+import com.sat.sisat.caja.dto.DeudaDTO;
+import com.sat.sisat.common.dao.GeneralDao;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.estadocuenta.dto.CrConstanciaNoAdeudo;
+import com.sat.sisat.estadocuenta.dto.CrConstanciaNoAdeudoDTO;
+import com.sat.sisat.estadocuenta.dto.CrGeneralDTO;
+import com.sat.sisat.estadocuenta.dto.CrSubConceptoDTO;
+import com.sat.sisat.estadocuenta.dto.ReciboPago;
+import com.sat.sisat.persistence.entity.CjReciboPago;
+import com.sat.sisat.persistence.entity.GnSubconcepto;
+import com.sat.sisat.persistence.entity.GnSubconceptoPK;
+import com.sat.sisat.persistence.entity.MpTipoPersona;
+
+
+
+public class EstadoCuentaDao extends GeneralDao {
+
+	public ArrayList<CjGenerico> obtenerDeuda(int personaId,
+			String ListaConcepto,String ListaSubConcepto, String ListaPredio, String ListaVehiculo,
+			String ListaPapeletas, String ListaCuota, String ListaYear,
+			Timestamp FechaInteres,boolean mostrarDeuda,boolean detallado) {
+		CjGenerico item = null;
+		ArrayList<CjGenerico> lista = new ArrayList<CjGenerico>();
+		try {
+			String storeProcedure="";
+			String sql="";
+			if(mostrarDeuda==false && detallado==false)
+				storeProcedure="stpEC_sel_BuscarEstadoCuentaAgrupado";
+			if(mostrarDeuda==true && detallado==false)
+				storeProcedure="stpEC_sel_BuscarEstadoCuentaDeudaAgrupado";
+			if(mostrarDeuda==false && detallado==true)
+				storeProcedure="stpEC_sel_BuscarEstadoCuenta";
+			if(mostrarDeuda==true && detallado==true)
+				storeProcedure="stpEC_sel_BuscarEstadoCuentaDeuda";
+				 sql = storeProcedure+ " ?,?,?,?,?,?,?,?,?";
+				
+			PreparedStatement pst = connect().prepareStatement(sql.toString());
+			pst.setInt(1, personaId);
+			pst.setString(2, ListaConcepto);
+			pst.setString(3, ListaSubConcepto);
+			pst.setString(4, ListaYear);
+			pst.setString(5, ListaCuota);
+			pst.setString(6, ListaPredio);
+			pst.setString(7, ListaVehiculo);
+			pst.setString(8, ListaPapeletas);
+			//pst.setString(9, ListaUsos);
+			pst.setTimestamp(9, FechaInteres);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				item = new CjGenerico();
+				String cuotas = rs.getString("cuotas");
+				String vencimientos = rs.getString("Vencimientos");
+				if (rs.getString("observacion") != null) {
+					item.setObservacion(rs.getString("observacion"));
+				}
+				item.setPeriodo(rs.getString("anno_deuda"));
+				item.setListaConcepto(rs.getString("SubConcepto"));
+				item.setListaCuota(cuotas);
+				item.setListaVencimientos(vencimientos);
+				item.setInsoluto(rs.getBigDecimal("insoluto"));
+				item.setReajuste(rs.getBigDecimal("reajuste"));
+				item.setDerechoEmision(rs.getBigDecimal("derecho_emision"));
+				item.setInteresCapitalizado(rs.getBigDecimal("interes_capitalizado"));
+				item.setInteresSimple(rs.getBigDecimal("interes_simple"));
+				item.setInteres(rs.getBigDecimal("interes"));
+				item.setSubTotal(rs.getBigDecimal("total_deuda"));
+				item.setSubconceptoId(rs.getInt("subconceptoId"));
+				item.setDescuento(rs.getBigDecimal("descuento"));
+				item.setTotalCancelado(rs.getBigDecimal("total_cancelado"));
+				item.setFlagControlyCobranza(rs.getString("cc"));
+				item.setFlagFraccionamiento(rs.getString("flag_fr"));
+				item.setFlagResolucion(rs.getString("flag_res"));
+				item.setFlagTramiteDocumetario(rs.getString("flag_td"));
+				item.setStoreProcedure(storeProcedure);
+				//item.setUso(rs.getString("uso"));
+				item.setFisca(rs.getString("fisca"));
+				item.setEstadoDeudaId(rs.getInt("estado_deuda_id"));
+				item.setEstadoDeudaDescripcion(rs.getString("estado_deuda_descripcion"));
+				item.setAnnoDocumento(rs.getInt("anno_documento"));
+				item.setNroDocumentoId(rs.getInt("nro_documento_id"));
+				lista.add(item);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lista;
+
+	}
+
+	public ArrayList<CjGenerico> obtenerSubConceptoTodos(int personaId,int mostrarDeuda) {
+		CjGenerico item = null;
+		ArrayList<CjGenerico> lista = new ArrayList<CjGenerico>();
+		Query q=null;
+		try {
+			String sql = "stpEC_sel_SubConcepto ?,?";
+			PreparedStatement pst = connect().prepareStatement(sql.toString());
+			pst.setInt(1, personaId);
+			pst.setInt(2, mostrarDeuda);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				item = new CjGenerico();
+				item.setSubconceptoId(rs.getInt("subconcepto_id"));
+				item.setSubconceptoDes(rs.getString("descripcion"));
+				item.setConceptoId(rs.getInt("concepto_id"));
+				lista.add(item);
+			}
+			/*q  = em.createNativeQuery(sql);
+			q.setParameter(1, personaId);
+			q.setParameter(2,mostrarDeuda);
+			List<Object[]> lista1 = q.getResultList();
+			for(Object[] o:lista1) {
+				item = new CjGenerico();
+				item.setSubconceptoId((Integer)o[0]);
+				item.setSubconceptoDes((String)o[1]);
+				item.setConceptoId((Integer)o[2]);
+				lista.add(item);
+				
+			}*/
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+
+	public ArrayList<CjGenerico> obtenerNroCuotasTodos(int personaId,int mostrarDeuda) {
+		CjGenerico item = null;
+		ArrayList<CjGenerico> lista = new ArrayList<CjGenerico>();
+		try {
+			String sql = "stpEC_sel_NroCuota ?,?";
+			PreparedStatement pst = connect().prepareStatement(sql.toString());
+			pst.setInt(1, personaId);
+			pst.setInt(2, mostrarDeuda);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+
+				item = new CjGenerico();
+				item.setCodigo(rs.getInt("Cuota"));
+				item.setDescripcion(rs.getString("Cuota"));
+				lista.add(item);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+
+	public ArrayList<CjGenerico> obtenerAnyoTodos(int personaId,int mostrarDeuda) {
+		CjGenerico item = null;
+		ArrayList<CjGenerico> lista = new ArrayList<CjGenerico>();
+		try {
+			String sql = "stpEC_sel_NroAnyo ?,?";
+			PreparedStatement pst = connect().prepareStatement(sql.toString());
+			pst.setInt(1, personaId);
+			pst.setInt(2, mostrarDeuda);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				item = new CjGenerico();
+				item.setCodigo(rs.getInt("Anyo"));
+				item.setDescripcion(rs.getString("Anyo"));
+				lista.add(item);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+
+	public ArrayList<CjGenerico> obtenerVehiculoTodos(int personaId,int mostrarDeuda) {
+		CjGenerico item = null;
+		ArrayList<CjGenerico> lista = new ArrayList<CjGenerico>();
+		try {
+			String sql = "stpEC_sel_Vehiculos ?,?";
+			PreparedStatement pst = connect().prepareStatement(sql.toString());
+			pst.setInt(1, personaId);
+			pst.setInt(2, mostrarDeuda);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				item = new CjGenerico();
+			//	item.setDjVehicular(rs.getInt("djvehicular_id"));
+				item.setVehiculoId(rs.getInt("vehiculo_id"));
+				item.setPlaca(rs.getString("placa"));
+				item.setCategoria(rs.getString("categoria_des"));
+				item.setMarca(rs.getString("marca_des"));
+				item.setModelo(rs.getString("modelo_des"));
+				lista.add(item);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+
+	public ArrayList<CjGenerico> obtenerPredioTodos(int personaId,int mostrarDeuda) {
+		CjGenerico item = null;
+		ArrayList<CjGenerico> lista = new ArrayList<CjGenerico>();
+		try {
+			String sql = "stpEC_sel_Predios ?,?";
+			PreparedStatement pst = connect().prepareStatement(sql.toString());
+			pst.setInt(1, personaId);
+			pst.setInt(2, mostrarDeuda);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				item = new CjGenerico();
+				item.setDjId(rs.getInt("dj_id"));
+				item.setPredioId(rs.getInt("predio_id"));
+				item.setDireccion(rs.getString("direccion_completa"));
+				lista.add(item);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+	
+	public ArrayList<CjGenerico> obtenerPapeletaResumen(int personaId,
+			String nroPapeleta,int mostrarDeuda) {
+		CjGenerico item = null;
+		ArrayList<CjGenerico> lista = new ArrayList<CjGenerico>();
+		try {
+			String sql = "stpEC_Obtener_Papeleta ?,?,?";
+			PreparedStatement pst = connect().prepareStatement(sql.toString());
+			pst.setInt(1, personaId);
+			if (nroPapeleta != "")
+				pst.setString(2, nroPapeleta);
+			else
+				pst.setNull(2, java.sql.Types.NULL);
+			pst.setInt(3, mostrarDeuda);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				item = new CjGenerico();
+				item.setPapeletaId(rs.getInt("papeleta_id"));
+				item.setNroPapeleta(rs.getString("nro_papeleta"));
+				item.setPlaca(rs.getString("placa"));
+				item.setFechaIntraccion(rs.getTimestamp("fecha_infraccion"));
+				item.setDescuento(rs.getBigDecimal("tasadcto"));
+				item.setInfractorDes(rs.getString("infractor_des"));
+				lista.add(item);
+			}
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return lista;
+	}
+	
+	public ArrayList<CjGenerico> obtenerTipoUsos(int personaId,int mostrarDeuda) {
+		CjGenerico item = null;
+		ArrayList<CjGenerico> lista = new ArrayList<CjGenerico>();
+		try {
+			String sql = "stpEC_sel_TipoUsos ?,?";
+			PreparedStatement pst = connect().prepareStatement(sql.toString());
+			pst.setInt(1, personaId);
+			pst.setInt(2, mostrarDeuda);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				item = new CjGenerico();
+				item.setCodigo(rs.getInt("uso"));
+				item.setDescripcion(rs.getString("descripcion"));
+				lista.add(item);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+	
+    /**
+     * ITANTAMANGO
+     * @param personaId
+     * @param nroRecibo
+     * @param fechaCancIni
+     * @param fechaCancFin
+     * @return
+     */
+    public ArrayList<CjReciboPago> obtenerRecibosPago(int personaId, String nroRecibo ,Date fechaCancIni, Date fechaCancFin) throws Exception{
+    	ArrayList<CjReciboPago> lista = new ArrayList<CjReciboPago>();
+		
+    try {
+    	StringBuffer SQL= new StringBuffer();
+    	SQL.append("select rp.recibo_id , rp.nro_recibo, rp.fecha_recibo, rp.monto_cobrado, rp.monto_a_cobrar, rp.estado, rp.tipo_recibo ");
+    	SQL.append("from ").append(Constante.schemadb).append(".cj_recibo_pago rp ");
+    	//SQL.append("LEFT JOIN "+ SATParameterFactory.getDBNameScheme() + ".descargo_recibos_temp d ON d.recibo_id = rp.recibo_id ");
+    	//SQL.append("left join dbo.descargo_recibos_temp d on d.recibo_id = rp.recibo_id");
+    	SQL.append("where rp.persona_id=? and rp.estado in (1,9,5,8) ");
+    	
+    	if(nroRecibo!=null&&nroRecibo.trim().length()>0){
+    		SQL.append("and rp.nro_recibo=? ");
+    	}
+    	if(fechaCancIni!=null){
+    		SQL.append("and rp.fecha_recibo>=? ");
+    	}
+    	if(fechaCancFin!=null){
+    		SQL.append("and rp.fecha_recibo<=? ");
+    	}
+    	
+    	SQL.append("order by rp.fecha_recibo desc ");
+    	
+    	int cont=1;
+    	PreparedStatement pst=connect().prepareStatement(SQL.toString());
+    	pst.setInt(cont++, personaId);
+    	if(nroRecibo!=null&&nroRecibo.trim().length()>0){
+    	pst.setInt(cont++, Integer.parseInt(nroRecibo));
+    	}
+    	if(fechaCancIni!=null){
+        	pst.setTimestamp(cont++, new Timestamp(fechaCancIni.getTime()));
+    	}
+    	if(fechaCancFin!=null){
+			String fechaF = new SimpleDateFormat("dd/MM/yyyy").format(fechaCancFin);
+			String [] dataTemp = fechaF.split("/");
+			Calendar c = Calendar.getInstance();
+			c.set(Integer.parseInt(dataTemp[2]), Integer.parseInt(dataTemp[1])- 1, Integer.parseInt(dataTemp[0]));
+			c.add(Calendar.DAY_OF_MONTH, 1);
+			fechaCancFin=c.getTime();
+			pst.setTimestamp(cont++, new Timestamp((fechaCancFin).getTime()));
+    	}
+    	ResultSet rs=pst.executeQuery();
+    	while(rs.next()){
+    		CjReciboPago obj= new CjReciboPago();
+    		obj.setReciboId(rs.getInt("recibo_id"));
+    		obj.setNroRecibo(rs.getString("nro_recibo"));
+    		obj.setFechaRecibo(rs.getTimestamp("fecha_recibo"));
+    		obj.setMontoCobrado(rs.getBigDecimal("monto_cobrado"));
+    		obj.setMontoACobrar(rs.getBigDecimal("monto_a_cobrar"));
+    		obj.setEstado(rs.getString("estado"));
+    		obj.setTipoRecibo(rs.getString("tipo_recibo"));
+    		
+    		lista.add(obj);    		
+    	}
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+    
+    return lista;
+    
+    }
+    
+    public int obtenerDeudas(int personaId)throws Exception{
+    	int salida = 0;
+		try {
+			CallableStatement cs = connect().prepareCall("{call stpEC_sel_Deudas (?)}");
+			cs.setInt(1, personaId);
+			ResultSet rs = cs.executeQuery();
+			while (rs.next()) {
+				salida = rs.getInt(1);
+			}
+		} catch (Exception ex) {
+			// TODO: Controller exception
+			System.out.println("ERROR: " + ex);
+		}
+		return salida;    	
+    }
+    
+    //-= CRAMIREZ =-
+    
+    public ArrayList<ReciboPago> obtenerRecibosPagoNew(int personaId, String nroRecibo ,Date fechaCancIni, Date fechaCancFin) throws Exception{
+    	ArrayList<ReciboPago> lista = new ArrayList<ReciboPago>();
+    	
+    
+    try {
+    	
+    	String sql = "usp_get_recibos_contribuyente ?,?,?,?";
+		PreparedStatement pst = connect().prepareStatement(sql.toString());
+		pst.setInt(1, personaId);
+		pst.setString(2, nroRecibo);
+		pst.setDate(3, (java.sql.Date) fechaCancIni);
+		pst.setDate(4, (java.sql.Date) fechaCancFin);
+		ResultSet rs = pst.executeQuery();
+		
+    	while(rs.next()){
+    		ReciboPago obj= new ReciboPago();
+    		obj.setReciboId(rs.getInt("recibo_id"));
+    		obj.setNroRecibo(rs.getString("nro_recibo"));
+    		obj.setFechaRecibo(rs.getTimestamp("fecha_recibo"));
+    		obj.setMontoCobrado(rs.getBigDecimal("monto_cobrado"));
+    		obj.setMontoACobrar(rs.getBigDecimal("monto_a_cobrar"));
+    		obj.setEstado(rs.getString("estado"));
+    		obj.setTipoRecibo(rs.getString("tipo_recibo"));
+    		obj.setMontoDescargo(rs.getBigDecimal("monto_descargo"));
+    		obj.setEstadoConstancia(rs.getBoolean("estado_constancia"));
+    		
+    		lista.add(obj);    		
+    	}
+		
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+    
+    return lista;
+    
+    }
+    
+    public List<CrConstanciaNoAdeudoDTO> obtenerReciboConstancia(Integer usuarioId)throws Exception{
+		List<CrConstanciaNoAdeudoDTO> lista=new LinkedList<CrConstanciaNoAdeudoDTO>();
+		try{
+			
+			String SQL = new String("stp_cr_obtener_pago_constancia ?");
+
+			PreparedStatement pst=connect().prepareStatement(SQL.toString());
+			pst.setInt(1, usuarioId);
+			ResultSet rs=pst.executeQuery();
+			
+			while(rs.next()){
+				CrConstanciaNoAdeudoDTO obj=new CrConstanciaNoAdeudoDTO(); 
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setReciboId(rs.getInt("recibo_id"));
+				obj.setNumeroRecibo(rs.getString("nro_recibo"));
+				obj.setMontoRecibo(rs.getBigDecimal("monto_a_cobrar"));
+				obj.setUsuarioId(rs.getInt("usuario_id"));
+				obj.setUsuarioRecibo(rs.getString("nombre_usuario"));
+				obj.setFechaRecibo(rs.getTimestamp("fecha_recibo"));
+				obj.setAperturaId(rs.getInt("nro_recibo"));
+				
+				lista.add(obj);
+			}
+		}catch(Exception e){
+			throw(e);
+		}
+		return lista;
+	}
+    
+    
+    public List<CrSubConceptoDTO> obtenerSubConcepto(Integer personaId)throws Exception{
+		List<CrSubConceptoDTO> lista=new LinkedList<CrSubConceptoDTO>();
+		try{
+			
+			String SQL = new String("stp_cr_obtener_subconcepto ?");
+
+			PreparedStatement pst=connect().prepareStatement(SQL.toString());
+			pst.setInt(1, personaId);
+			ResultSet rs=pst.executeQuery();
+			
+			while(rs.next()){
+				CrSubConceptoDTO obj=new CrSubConceptoDTO(); 
+				
+				obj.setId(rs.getInt("subconcepto_id"));
+				obj.setDescripcion(rs.getString("descripcion"));
+				obj.setAbreviacion(rs.getString("etiqueta"));
+				
+				lista.add(obj);
+			}
+		}catch(Exception e){
+			throw(e);
+		}
+		return lista;
+	}
+    
+    public List<CrGeneralDTO> obtenerAnio(Integer personaId)throws Exception{
+		List<CrGeneralDTO> lista=new LinkedList<CrGeneralDTO>();
+		try{
+			
+			String SQL = "stp_cr_obtener_anno ?";
+
+			PreparedStatement pst=connect().prepareStatement(SQL.toString());
+			pst.setInt(1, personaId);
+			ResultSet rs=pst.executeQuery();
+			
+			while(rs.next()){
+				CrGeneralDTO obj=new CrGeneralDTO(); 
+				obj.setId(rs.getInt("id"));
+				obj.setDescripcion(rs.getString("anno"));
+				lista.add(obj);
+			}
+		}catch(Exception e){
+			throw(e);
+		}
+		return lista;
+	}
+    
+    public List<CrGeneralDTO> obtenerCuota(Integer personaId)throws Exception{
+		List<CrGeneralDTO> lista=new LinkedList<CrGeneralDTO>();
+		try{
+			
+			String SQL = "stp_cr_obtener_cuota ?";
+
+			PreparedStatement pst=connect().prepareStatement(SQL.toString());
+			pst.setInt(1, personaId);
+			ResultSet rs=pst.executeQuery();
+			
+			while(rs.next()){
+				CrGeneralDTO obj=new CrGeneralDTO(); 
+				obj.setId(rs.getInt("id"));
+				obj.setDescripcion(rs.getString("cuota"));
+				lista.add(obj);
+			}
+		}catch(Exception e){
+			throw(e);
+		}
+		return lista;
+	}
+    
+    public List<CrGeneralDTO> obtenerPropiedad(Integer personaId)throws Exception{
+		List<CrGeneralDTO> lista=new LinkedList<CrGeneralDTO>();
+		try{
+			
+			String SQL = "stp_cr_obtener_inmueble ?";
+
+			PreparedStatement pst=connect().prepareStatement(SQL.toString());
+			pst.setInt(1, personaId);
+			ResultSet rs=pst.executeQuery();
+			
+			while(rs.next()){
+				CrGeneralDTO obj=new CrGeneralDTO(); 
+				obj.setId(rs.getInt("id"));
+				obj.setDescripcion(rs.getString("descripcion"));
+				lista.add(obj);
+			}
+		}catch(Exception e){
+			throw(e);
+		}
+		return lista;
+	}
+    public List<DeudaDTO> obtenerDeuda(Integer personaId,String subconceptoId,String anio,String cuota,String predio)throws Exception{
+		List<DeudaDTO> lista=new LinkedList<DeudaDTO>();
+		try{
+			
+			String SQL = "stp_cr_obtener_estadocuenta ?,?,?,?,?";
+
+			PreparedStatement pst=connect().prepareStatement(SQL.toString());
+			pst.setInt(1, personaId);
+			pst.setString(2, subconceptoId);
+			pst.setString(3, anio);
+			pst.setString(4, cuota);
+			pst.setString(5, predio);
+			ResultSet rs=pst.executeQuery();
+			
+			while(rs.next()){
+				DeudaDTO obj=new DeudaDTO(); 
+				obj.setAnioDeuda(rs.getInt("anio"));
+				obj.setSubconcepto(rs.getString("tributo"));
+				obj.setDescripcion(rs.getString("predioPlaca"));
+				obj.setNumPapeleta(rs.getString("cuotas"));
+				obj.setInsoluto(rs.getBigDecimal("insoluto"));
+				obj.setDerechoEmi(rs.getBigDecimal("emision"));
+				obj.setReajuste(rs.getBigDecimal("Reajuste"));
+				obj.setInteres(rs.getBigDecimal("interes"));
+				
+				lista.add(obj);
+			}
+		}catch(Exception e){
+			throw(e);
+		}
+		return lista;
+	}
+    
+    public Integer actualizarConstancia(Integer personaId,String anio,String subconceptoId,String referencia,Integer usuarioId,String terminal)throws Exception{
+		Integer result=Constante.RESULT_PENDING;
+		try {
+			String SQL = "{call dbo.stp_cr_actualizar_constancia(?,?,?,?,?,?)}";
+			CallableStatement cs = connect().prepareCall(SQL.toString());
+			cs.setInt(1, personaId);
+			cs.setString(2, anio);
+			//cs.setInt(3, conceptoId);
+			cs.setString(3, subconceptoId);
+			cs.setString(4, referencia);
+			cs.setInt(5, usuarioId);
+			cs.setString(6, terminal);
+			cs.executeUpdate();
+			result=Constante.RESULT_SUCCESS;
+		} catch (Exception e) {
+			throw (e);
+		}
+		return result;		
+	}
+    
+    public List<CrConstanciaNoAdeudoDTO> obtenerConstancia(Integer reciboId,Integer personaId)throws Exception{
+    	List<CrConstanciaNoAdeudoDTO> lista=new LinkedList<CrConstanciaNoAdeudoDTO>();
+		try{
+			
+			String SQL = "stp_cr_obtener_constancia ?,?";
+
+			PreparedStatement pst=connect().prepareStatement(SQL.toString());
+			pst.setInt(1, reciboId);
+			pst.setInt(2, personaId);
+			ResultSet rs=pst.executeQuery();
+			
+			while(rs.next()){
+				CrConstanciaNoAdeudoDTO obj=new CrConstanciaNoAdeudoDTO(); 
+				obj.setConstanciaId(rs.getInt("constancia_id"));
+				obj.setNumeroConstancia(rs.getString("nro_constancia"));
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setNombrePersona(rs.getString("apellidos_nombres"));
+				obj.setAnno(rs.getString("anno"));
+				obj.setReciboId(rs.getInt("recibo_id"));
+				obj.setNumeroRecibo(rs.getString("nro_recibo"));
+				obj.setUsuarioRecibo(rs.getString("nombre_usuario"));
+				lista.add(obj);
+			}
+		}catch(Exception e){
+			throw(e);
+		}
+		return lista;
+    }
+   
+}

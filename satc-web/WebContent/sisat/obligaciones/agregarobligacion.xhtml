@@ -1,0 +1,1148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form id="formobligacion" >
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	<a4j:loadScript src="/js/sisat.js"/>
+
+		
+		<rich:panel>  
+		<f:facet name="header"><h:outputText value="Información del Acto Administrativo" /> </f:facet>
+
+<style type="">
+.collabel {
+	width: 100px;
+}
+
+.collabel1 {
+	width: 70px;
+}
+
+.colfield {
+	width: 120px;
+}
+
+.col-factor-multi1{
+	width: 40px;
+}
+.col-factor-multi2 {
+	width: 60px;
+}
+.col-factor-multi3 {
+	width: 6px;
+}
+.col-factor-multi4{
+	width: 35px;
+}
+.col-factor-multi5 {
+	width: 6px;
+}
+.col-factor-multi6 {
+	width: 120px;
+}
+
+.panelselectmontoautomanualcol1 {
+	width: 180px;
+}
+
+.p2col1 {
+	width: 55px;
+}
+
+.p2col2 {
+	width: 90px;
+}
+
+.row {
+	vertical-align: top;
+}
+
+.row2 {
+	height: 35px;
+}
+
+.rich-fileupload-name {
+	width: 100%;
+	height: 20px;
+	padding: 2px 10px 2px 10px;
+}
+
+.rich-fileupload-toolbar-decor {
+	border-bottom: 1px solid;
+	border-top: 1px solid;
+	border-left: 1px solid;
+	padding: 0px;
+	background-color: #F0F0F0;
+	border-bottom-color: silver;
+	border-top-color: white;
+	border-left-color: white;
+	width: 100%;
+}
+
+.panelsubconceptocol1 {
+	width: 85px
+}
+
+.panelsubconceptocol2 {
+	width: 210px
+}
+
+.panelrefereciacol2 {
+	width: 300px
+}
+
+.textoMontoTotal {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.panelcomboscol1 {
+	width: 150px;
+	vertical-align: top;
+	text-align: right;
+}
+
+.panelcomboscol2 {
+	width: 310px;
+	vertical-align: top;
+	text-align: right;
+}
+
+.panelcomboscol3 {
+	width: 800px;
+	padding-left: 5px;
+}
+
+.panelinputanhocol1 {
+	width: 95px;
+	text-align: left;
+	padding-left: 5px;
+}
+
+.panelinputanhocol2 {
+	width: 50px;
+	text-align: right;
+}
+
+.panelinputanhocol3 {
+	width: 303px;
+	text-align: right;
+}
+.rowclasspanelinputanho {
+	height: 40px;
+}
+
+.panelbusquedavehiprediocol1 {
+	width: 50px;
+	padding-left: 10px;
+}
+
+.panelbusquedavehiprediocol2 {
+	width: 120px;
+}
+
+.panelbusquedavehiprediocol3 {
+	width: 20px;
+}
+
+.coldialogconfirm {
+	text-align: center;
+}
+
+.coldialogbutton1 {
+	text-align: right;
+}
+
+.coldialogbutton2 {
+	text-align: left;
+}
+.requiredField{
+	color: red;
+}
+
+
+.row-odd{
+	background-color: #F2F2F2;
+}
+
+.row-even{
+	background-color: #FFFFFF;
+}
+
+</style>
+
+
+			<h:panelGrid id="panel0">
+
+				<h:panelGrid id="panelcabecera" cellpadding="0" cellspacing="0" columns="1">
+					<h:panelGrid id="panelinputanho" columns="3" cellpadding="0"
+						cellspacing="0"
+						columnClasses="panelinputanhocol1, panelinputanhocol2,panelinputanhocol3"
+						rowClasses="rowclasspanelinputanho">
+						<h:outputLabel value="#{msg['obl.labelAnhoAfectacion']}"
+							for="inputanhoafectacion" />
+						<h:panelGroup id="panelanhoafectacion">
+							<h:inputText id="inputanhoafectacion" immediate="true"
+								value="#{obligacionManaged.obligacionDTO.annoAfectacion}"
+								tabindex="1" onkeypress="return validaEnteroPositivo(event)"
+								size="3" maxlength="4" style="text-align:right"
+								styleClass="test"
+								requiredMessage="#{msg['obl.requiredAnhoAfectacion']}"
+								validatorMessage="#{msg['obl.validatorAnhoAfectacion']}"
+								converterMessage="#{msg['obl.converterAnhoAfectacion']}">
+								<f:validateLength minimum="4" maximum="4" />
+								<a4j:support ajaxSingle="true" bypassUpdates="false"
+									event="onkeyup" reRender="panelcabecera,  paneldetalle"
+									oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};" 
+									action="#{obligacionManaged.changeListenerAnnoAfectacion}" status="ajaxStatus" requestDelay="800"></a4j:support>
+							</h:inputText>
+							<rich:jQuery id="maskedo0020" selector=".test"
+								query="mask('#{msg['obl.maskAnho']}')" timing="onload" />							
+						</h:panelGroup>
+<!-- 						<h:outputLink value="#" id="link">Ver Deudas Detenidas<rich:componentControl -->
+<!-- 									for="panelQuitarDetencionPagoDeuda" attachTo="link" operation="show" event="onclick" /> -->
+<!-- 							</h:outputLink> -->
+					</h:panelGrid>
+
+
+					<!-- Seccion de combobox -->
+
+					<h:panelGrid id="panelcombos" columns="3" cellpadding="0"
+						cellspacing="0"
+						columnClasses="panelcomboscol1, panelcomboscol2, panelcomboscol3">
+
+						<h:panelGrid id="panelconcepto" columns="2"
+							columnClasses="p2col1, p2col2">
+
+							<h:outputLabel value="#{msg['obl.labelConcepto']} " for="cmbconcepto" />
+							<rich:comboBox id="cmbconcepto"
+								valueChangeListener="#{obligacionManaged.changeListenerValueCmbConcepto}"
+								onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+								value="#{obligacionManaged.cmbConcepto}"								
+								defaultLabel="#{msg['obl.defaultLabelCmbConcepto']}"
+								tabindex="2"
+								width="120" enableManualInput="false" >
+								<f:selectItems value="#{obligacionManaged.listItemConcepto}"></f:selectItems>
+								<a4j:support
+									reRender="panelinputanho, panelsubconcepto, panelsubconceptodescripcion,  paneldetalle"
+									event="onchange" bypassUpdates="false" ajaxSingle="true"
+									oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+									status="ajaxStatus">
+								</a4j:support>
+							</rich:comboBox>
+
+						</h:panelGrid>
+
+						<h:panelGrid id="panelsubconcepto" columns="2"
+							columnClasses="panelsubconceptocol1, panelsubconceptocol2">
+
+							<h:outputLabel value="#{msg['obl.labelSubConcepto']} " for="cmbsubconcepto" />
+							<rich:comboBox id="cmbsubconcepto"
+								value="#{obligacionManaged.cmbSubConcepto}"
+								valueChangeListener="#{obligacionManaged.changeListenerSubConcepto}"
+								defaultLabel="#{msg['obl.defaultLabelCmbSubConcepto']}" width="210"
+								disabled="#{!obligacionManaged.flagValido}"
+								 tabindex="3" 
+								 onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+								 >
+								<f:selectItems
+									value="#{obligacionManaged.listSubConceptoDTOItems}" />
+								<a4j:support
+									reRender="paneldetalle, panelsubconceptodescripcion"
+									event="onchange" bypassUpdates="false" ajaxSingle="true" ></a4j:support>
+							</rich:comboBox>
+
+						</h:panelGrid>
+
+						<h:panelGrid id="panelsubconceptodescripcion">
+							<h:outputText
+								value="#{msg['obl.descripcionSubConcepto']} #{obligacionManaged.subConceptoDTO.descripcion}"
+								rendered="#{not empty obligacionManaged.subConceptoDTO}" />
+						</h:panelGrid>
+					</h:panelGrid>
+
+				</h:panelGrid>
+
+				<rich:separator height="1" lineType="solid" width="100%" />
+				<h:panelGrid id="paneldetalle" cellpadding="0" cellspacing="0">
+					<h:panelGrid cellpadding="0" cellspacing="0"
+						rendered="#{obligacionManaged.flagViewDetalle}">					
+
+						<!--******************************************** Panel para Costas   ******************************-->
+
+						<h:panelGrid id="panelCostas"
+							rendered="#{obligacionManaged.cmbConcepto == 'COSTAS' and obligacionManaged.subConceptoDTO != null}"
+							rowClasses="row2" cellpadding="0" cellspacing="0">
+
+							<h:panelGrid id="panelselectmontoautomanual" columns="3"
+								columnClasses="panelselectmontoautomanualcol1">
+								<h:selectOneRadio id="selectOneRadioCosta"
+									value="#{obligacionManaged.modoGastoMonto}"
+									valueChangeListener="#{obligacionManaged.changeListenerSelectOneRadioCosta}"
+									tabindex="4">
+									<f:selectItem itemLabel="#{msg['obl.labelSelectOneRadioAutomatico']}" itemValue="1" />
+									<f:selectItem itemLabel="#{msg['obl.labelSelectOneRadioManual']}" itemValue="0" />
+									<a4j:support reRender="panelMonto" event="onchange"
+										bypassUpdates="false" ajaxSingle="true"></a4j:support>
+								</h:selectOneRadio>
+
+								<h:panelGrid id="panelMonto" columns="6"
+									columnClasses="col-factor-multi1, col-factor-multi2, col-factor-multi3, col-factor-multi4, col-factor-multi5, col-factor-multi6">
+									<h:outputLabel value="#{msg['obl.labelMonto']}"
+										for="inputmontotasacostas">
+										<span class="requiredField">*</span>
+									</h:outputLabel>
+									<h:inputText id="inputmontotasacostas"
+										value="#{obligacionManaged.obligacionDTO.tasa}" tabindex="5"
+										readonly="#{obligacionManaged.modoGastoMonto == 1}"
+										onkeypress="return validaEnteroPositivo2(event)" maxlength="8"
+										style="text-align:right;padding-right: 4px;" requiredMessage="#{msg['obl.requiredMonto']}"
+										size="6" required="true" valueChangeListener="#{obligacionManaged.changeListenerInputIdTasa}" >
+										<a4j:support ajaxSingle="true" event="onkeyup" reRender="panelMonto" focus="inputmontotasacostas" requestDelay="700"></a4j:support>
+									</h:inputText>	
+									<h:outputText value="x" /> 	
+									<h:inputText id="inputIdFactor"  value="#{obligacionManaged.factor}" valueChangeListener="#{obligacionManaged.changeListenerInputIdFactor}" onkeypress="return validaEnteroPositivo2(event)" maxlength="3" style="text-align:center" size="1">
+										<a4j:support ajaxSingle="true" event="onkeyup" reRender="panelMonto" focus="inputIdFactor" requestDelay="600"></a4j:support>																				
+									</h:inputText>
+									<h:outputText value="=" /> 	
+									<h:inputText value="#{obligacionManaged.obligacionDTO.monto}" readonly="true" style="text-align:right;padding-right: 4px;" size="6" maxlength="8">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="#{msg['param.localecurrency']}"/>
+									</h:inputText>	
+								</h:panelGrid>
+								<!-- <h:panelGrid columns="2"  >
+									<h:outputLabel value="#{msg['obl.labelReferenciaRec']} "
+										for="inputreferenciareccostas">
+										<span class="requiredField">*</span>
+									</h:outputLabel>
+									<h:panelGroup>
+										<h:inputText id="inputreferenciareccostas"
+											value="#{obligacionManaged.obligacionDTO.referenciaREC}"
+											requiredMessage="#{msg['obl.requiredReferenciaRec']}" required="true"
+											size="17" maxlength="16" styleClass="prueba" tabindex="6"
+											style="text-align:center">
+											<f:validator validatorId="nroValorValidator" />
+										</h:inputText>
+										<rich:jQuery id="maskedo0021" selector=".prueba"
+											query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+									</h:panelGroup>
+								</h:panelGrid> -->
+							</h:panelGrid>
+
+							<h:panelGrid columns="4"
+								columnClasses="collabel, colfield, collabel1, colfield"
+								rowClasses="row2">
+								<h:outputLabel value="#{msg['obl.labelFechaLiquidacion']}"
+									for="calendarfechaliquidacioncostas">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<h:panelGroup>
+									<rich:calendar id="calendarfechaliquidacioncostas"
+										value="#{obligacionManaged.obligacionDTO.fechaEmision}"
+										locale="#{msg['param.localedate']}" inputClass="maskDate"
+										datePattern="#{msg['param.datepattern']}"
+										enableManualInput="true"
+										requiredMessage="#{msg['obl.requiredFechaEmision']}" inputSize="10"
+										converterMessage="#{msg['obl.converterFecha']}"
+										required="true" tabindex="6"  inputStyle="text-align:center" >
+										<!-- <a4j:support event="onchanged" ajaxSingle="true"
+											bypassUpdates="false"
+											reRender="panelgroupcalendarvencimientocostas"
+											action="#{obligacionManaged.changeListenerFechaEmisionCostas}" 
+											oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};" />
+										 <a4j:support event="oninputblur" ajaxSingle="true"
+											bypassUpdates="false"
+											reRender="panelgroupcalendarvencimientocostas"
+											action="#{obligacionManaged.changeListenerFechaEmisionCostas}" 
+											oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};" /> -->	
+									</rich:calendar>
+									<rich:jQuery id="maskedo004" selector=".maskDate"
+										query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+								</h:panelGroup>
+
+								<!-- <h:outputLabel value="#{msg['obl.labelFechaVencimiento']}"
+									for="calendarfechavencimientocostas">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<h:panelGroup id="panelgroupcalendarvencimientocostas">
+									<script type="text/javascript">					
+							        														
+								        function disablementFunction1(day){
+								        	
+									        fechaemisioncostas = #{rich:component('calendarfechaemisioncostas')}.getSelectedDate();
+									        								           
+								            if (fechaemisioncostas==undefined){
+								            	fechaemisioncostas = day.date.getDate;								                
+								            }
+								            if (fechaemisioncostas.getTime() - day.date.getTime() &lt; 0) return true; else return false;  
+								        }        
+								    </script>
+									<rich:calendar id="calendarfechavencimientocostas"
+										value="#{obligacionManaged.obligacionDTO.fechaVencimiento}"
+										locale="#{msg['param.localedate']}" inputClass="maskDate"
+										datePattern="#{msg['param.datepattern']}"
+										enableManualInput="true" tabindex="7"
+										requiredMessage="#{msg['obl.requiredFechaVencimiento']}"
+										inputSize="10" required="true"
+										isDayEnabled="disablementFunction1"
+										converterMessage="#{msg['obl.converterFecha']}"
+										disabled="#{obligacionManaged.obligacionDTO.fechaEmision==null}" inputStyle="text-align:center">
+										<f:validator validatorId="fechaVencimientoValidator" />
+									</rich:calendar>
+									<rich:jQuery id="maskedo005" selector=".maskDate"
+										query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+								</h:panelGroup>
+								 -->
+							</h:panelGrid>
+
+						</h:panelGrid>
+
+						<!--*********************** Panel para Espectaculos Publicos No Deportivos EPND *******************-->
+
+						<h:panelGrid id="panelEPND"
+							rendered="#{obligacionManaged.cmbConcepto == 'EPND' and obligacionManaged.subConceptoDTO != null}"
+							columns="8"
+							columnClasses="collabel1, colfield, collabel, colfield, collabel, colfield, collabel, colfield"
+							rowClasses="row2">
+
+							<h:outputLabel value="#{msg['obl.labelFechaVencimiento']} "
+								for="calendarfechavencimientoepnd" ><span class="requiredField">*</span></h:outputLabel>
+							<h:panelGroup>
+								<rich:calendar id="calendarfechavencimientoepnd"
+									value="#{obligacionManaged.obligacionDTO.fechaVencimiento}"
+									locale="#{msg['param.localedate']}" inputClass="maskDate"
+									datePattern="#{msg['param.datepattern']}"
+									enableManualInput="true"
+									requiredMessage="#{msg['obl.requiredFechaVencimiento']}"
+									converterMessage="#{msg['obl.converterFecha']}"
+									inputSize="10" required="true" tabindex="4" inputStyle="text-align:center"></rich:calendar>
+								<rich:jQuery id="maskedo006" selector=".maskDate"
+									query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+							</h:panelGroup>
+
+							<h:outputLabel value="#{msg['obl.labelBaseImponible']} "
+								for="inputbaseimponibleepnd" ><span class="requiredField">*</span></h:outputLabel>
+							<h:inputText id="inputbaseimponibleepnd"
+								value="#{obligacionManaged.obligacionDTO.baseImponible}"
+								valueChangeListener="#{obligacionManaged.changeListenerInputBaseImponibleEPND}"
+								onkeypress="return validaEnteroPositivo2(event)"
+								style="text-align:right" required="true"
+								requiredMessage="#{msg['obl.requiredBaseImponible']}" size="15" maxlength="16"
+								tabindex="5">
+
+								<a4j:support reRender="inputimpuestoepnd" event="onchange"
+									bypassUpdates="false" ajaxSingle="true"></a4j:support>
+
+							</h:inputText>
+
+							<h:outputLabel value="#{msg['obl.labelTasa']} " for="cmbtasaepnd" ><span class="requiredField">*</span></h:outputLabel>
+							<rich:comboBox id="cmbtasaepnd"
+								value="#{obligacionManaged.cmbTasa}" defaultLabel="#{msg['obl.defaultLabelCmbTasa']}"
+								valueChangeListener="#{obligacionManaged.changeListenerCmbTasaEPND}"
+								required="true" requiredMessage="#{msg['obl.requiredTasa']}"
+								width="100" tabindex="6"
+								onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+								>
+								<f:selectItem itemLabel="1" itemValue="5%" />
+								<f:selectItem itemLabel="2" itemValue="10%" />
+								<f:selectItem itemLabel="3" itemValue="15%" />
+
+								<a4j:support reRender="inputimpuestoepnd" event="onchange"
+									bypassUpdates="false" ajaxSingle="true"></a4j:support>
+							</rich:comboBox>
+
+
+							<h:outputLabel value="#{msg['obl.labelImpuesto']} " for="inputimpuestoepnd" ><span class="requiredField">*</span></h:outputLabel>
+							<h:inputText id="inputimpuestoepnd"
+								value="#{obligacionManaged.obligacionDTO.monto}" readonly="true" maxlength="16"
+								style="text-align:right" required="true" size="15">
+								<f:convertNumber locale="#{msg['param.localecurrency']}"
+									pattern="#0.00" />
+							</h:inputText>
+
+						</h:panelGrid>
+
+						<!--*********************** Panel para GASTOS*******************-->
+
+						<h:panelGrid id="panelGastos"
+							rendered="#{obligacionManaged.cmbConcepto == 'GASTOS' and obligacionManaged.subConceptoDTO != null}"
+							columns="4"
+							columnClasses="collabel1, colfield, collabel1, colfield"
+							rowClasses="row2">
+
+
+							<h:outputLabel value="#{msg['obl.labelMonto']} "
+								for="inputmontogastos">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<h:inputText id="inputmontogastos" value="#{obligacionManaged.obligacionDTO.tasa}"
+									 valueChangeListener="#{obligacionManaged.changeListenerInputIdTasa}"
+									onkeypress="return validaEnteroPositivo2(event)" style="text-align:right" required="true" maxlength="8"
+									requiredMessage="#{msg['obl.requiredMonto']}" size="6" tabindex="4" >
+									<a4j:support ajaxSingle="true" event="onkeyup" reRender="panelGastos" focus="inputmontogastos" requestDelay="600"></a4j:support>
+									</h:inputText>
+								<h:outputText value="x" />	
+								<h:inputText id="inputIdFactorGastos" value="#{obligacionManaged.factor}"
+									valueChangeListener="#{obligacionManaged.changeListenerInputIdFactor}"
+									onkeypress="return validaEnteroPositivo2(event)" maxlength="3" style="text-align:center" size="1">
+									<a4j:support ajaxSingle="true" event="onkeyup" reRender="panelGastos" focus="inputIdFactorGastos" requestDelay="600"></a4j:support>
+								</h:inputText>
+								<h:outputText value="=" />
+								<h:inputText value="#{obligacionManaged.obligacionDTO.monto}" readonly="true"
+									style="text-align:right;padding-right: 4px;" size="6" maxlength="8">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="#{msg['param.localecurrency']}" />
+								</h:inputText>
+							</h:panelGroup>
+							<h:outputLabel value="#{msg['obl.labelFechaLiquidacion']} "
+								for="calendarfechaliquidaciongastos">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<rich:calendar id="calendarfechaliquidaciongastos"
+									value="#{obligacionManaged.obligacionDTO.fechaLiquidacion}"
+									enableManualInput="true" inputClass="maskDate"
+									locale="#{msg['param.localedate']}"
+									datePattern="#{msg['param.datepattern']}"
+									requiredMessage="#{msg['obl.requiredFechaLiquidacion']}" required="true"
+									converterMessage="#{msg['obl.converterFecha']}"
+									inputSize="10" tabindex="5" inputStyle="text-align:center">
+
+								</rich:calendar>
+								<rich:jQuery id="maskedo001" selector=".maskDate"
+									query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+							</h:panelGroup>
+
+
+							<!-- <h:outputLabel value="#{msg['obl.labelReferenciaRec']} "
+								for="inputreferenciarecgastos">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<h:inputText id="inputreferenciarecgastos"
+									value="#{obligacionManaged.obligacionDTO.referenciaREC}"
+									requiredMessage="#{msg['obl.requiredReferenciaRec']}" required="true"
+									size="17" maxlength="16" styleClass="prueba" tabindex="6" style="text-align:center">
+									<f:validator validatorId="nroValorValidator" />
+								</h:inputText>
+								<rich:jQuery id="maskedo0011" selector=".prueba"
+									query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+							</h:panelGroup> -->
+
+						</h:panelGrid>
+
+						<!--*********************** Panel para MULTAS DRTPE *******************-->
+
+						<h:panelGrid id="panelMULTASDRTPE"
+							rendered="#{obligacionManaged.cmbConcepto == 'MULTAS DRTPE' and obligacionManaged.subConceptoDTO != null}"
+							columns="4"
+							columnClasses="collabel1, colfield, collabel1, colfield"
+							rowClasses="row2">
+
+
+							<h:outputLabel value="#{msg['obl.labelMonto']} "
+								for="inputmontogastos">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+<!-- 								<h:inputText id="inputmontomultasdrtpe" value="#{obligacionManaged.obligacionDTO.tasa}" -->
+<!-- 									 valueChangeListener="#{obligacionManaged.changeListenerInputIdTasa}" -->
+<!-- 									onkeypress="return validaEnteroPositivo2(event)" style="text-align:right" required="true" maxlength="8" -->
+<!-- 									requiredMessage="#{msg['obl.requiredMonto']}" size="6" tabindex="4" > -->
+<!-- 									<a4j:support ajaxSingle="true" event="onkeyup" reRender="panelGastos" focus="inputmontogastos" requestDelay="600"></a4j:support> -->
+<!-- 									</h:inputText> -->
+<!-- 								<h:outputText value="x" />	 -->
+<!-- 								<h:inputText id="inputIdFactorGastos" value="#{obligacionManaged.factor}" -->
+<!-- 									valueChangeListener="#{obligacionManaged.changeListenerInputIdFactor}" -->
+<!-- 									onkeypress="return validaEnteroPositivo2(event)" maxlength="3" style="text-align:center" size="1"> -->
+<!-- 									<a4j:support ajaxSingle="true" event="onkeyup" reRender="panelGastos" focus="inputIdFactorGastos" requestDelay="600"></a4j:support> -->
+<!-- 								</h:inputText> -->
+<!-- 								<h:outputText value="=" /> -->
+								<h:inputText value="#{obligacionManaged.obligacionDTO.monto}" 
+									style="text-align:right;padding-right: 4px;" size="6" maxlength="8">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="#{msg['param.localecurrency']}" />
+								</h:inputText>
+							</h:panelGroup>
+							<h:outputLabel value="#{msg['obl.labelFechaLiquidacion']} "
+								for="calendarfechaliquidaciongastos">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<rich:calendar id="calendarfechaliquidacionmultadrtpe"
+									value="#{obligacionManaged.obligacionDTO.fechaLiquidacion}"
+									enableManualInput="true" inputClass="maskDate"
+									locale="#{msg['param.localedate']}"
+									datePattern="#{msg['param.datepattern']}"
+									requiredMessage="#{msg['obl.requiredFechaLiquidacion']}" required="true"
+									converterMessage="#{msg['obl.converterFecha']}"
+									inputSize="10" tabindex="5" inputStyle="text-align:center">
+								</rich:calendar>
+								<rich:jQuery id="maskedo3" selector=".maskDate"
+										query="mask('99/99/9999')" timing="onload" />								
+							</h:panelGroup>
+
+
+							<!-- <h:outputLabel value="#{msg['obl.labelReferenciaRec']} "
+								for="inputreferenciarecgastos">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<h:inputText id="inputreferenciarecgastos"
+									value="#{obligacionManaged.obligacionDTO.referenciaREC}"
+									requiredMessage="#{msg['obl.requiredReferenciaRec']}" required="true"
+									size="17" maxlength="16" styleClass="prueba" tabindex="6" style="text-align:center">
+									<f:validator validatorId="nroValorValidator" />
+								</h:inputText>
+								<rich:jQuery id="maskedo0011" selector=".prueba"
+									query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+							</h:panelGroup> -->
+
+						</h:panelGrid>
+
+						<!--*********************** Panel para MULTAS MPC *******************-->
+
+						<h:panelGrid id="panelMULTASMPC"
+							rendered="#{obligacionManaged.cmbConcepto == 'MULTAS MPC' and obligacionManaged.subConceptoDTO != null}"
+							columns="4"
+							columnClasses="collabel1, colfield, collabel1, colfield"
+							rowClasses="row2">
+
+							<h:outputLabel value="#{msg['obl.labelMonto']} "
+								for="inputmontompc">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<h:inputText value="#{obligacionManaged.obligacionDTO.monto}" 
+									style="text-align:right;padding-right: 4px;" size="6" maxlength="8">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="#{msg['param.localecurrency']}" />
+								</h:inputText>
+							</h:panelGroup>
+							<h:outputLabel value="#{msg['obl.labelFechaLiquidacion']} "
+								for="calendarfechaliquidacionmultampc">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<rich:calendar id="calendarfechaliquidacionmultampc"
+									value="#{obligacionManaged.obligacionDTO.fechaLiquidacion}"
+									enableManualInput="true" inputClass="maskDate"
+									locale="#{msg['param.localedate']}"
+									datePattern="#{msg['param.datepattern']}"
+									requiredMessage="#{msg['obl.requiredFechaLiquidacion']}" required="true"
+									converterMessage="#{msg['obl.converterFecha']}"
+									inputSize="10" tabindex="5" inputStyle="text-align:center">
+								</rich:calendar>
+								<rich:jQuery id="maskedpmc" selector=".maskDate"
+										query="mask('99/99/9999')" timing="onload" />								
+							</h:panelGroup>
+
+						</h:panelGrid>
+						
+						<!--*********************** Panel para MULTAS DRTC *******************-->
+
+						<h:panelGrid id="panelMULTASDRTC"
+							rendered="#{obligacionManaged.cmbConcepto == 'MULTAS DRTC' and obligacionManaged.subConceptoDTO != null}"
+							columns="4"
+							columnClasses="collabel1, colfield, collabel1, colfield"
+							rowClasses="row2">
+
+							<h:outputLabel value="#{msg['obl.labelMonto']} ">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<h:inputText value="#{obligacionManaged.obligacionDTO.monto}" 
+									style="text-align:right;padding-right: 4px;" size="6" maxlength="8">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="#{msg['param.localecurrency']}" />
+								</h:inputText>
+							</h:panelGroup>
+							<h:outputLabel value="#{msg['obl.labelFechaLiquidacion']} "
+								for="calendarfechaliquidacionmultadrtc">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<rich:calendar id="calendarfechaliquidacionmultadrtc"
+									value="#{obligacionManaged.obligacionDTO.fechaLiquidacion}"
+									enableManualInput="true" inputClass="maskDate"
+									locale="#{msg['param.localedate']}"
+									datePattern="#{msg['param.datepattern']}"
+									requiredMessage="#{msg['obl.requiredFechaLiquidacion']}" required="true"
+									converterMessage="#{msg['obl.converterFecha']}"
+									inputSize="10" tabindex="5" inputStyle="text-align:center">
+								</rich:calendar>
+								<rich:jQuery id="maskeddrtc" selector=".maskDate"
+										query="mask('99/99/9999')" timing="onload" />								
+							</h:panelGroup>
+
+						</h:panelGrid>
+						
+						<h:panelGrid id="panelButtons">
+							<a4j:commandButton action="#{obligacionManaged.agregar}"
+								value="#{msg['obl.labelAgregar']}" style="width:100px;"
+								reRender="panelGridData, panelButtonAceptar, panel0"
+								oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+								tabindex="10">
+							</a4j:commandButton>
+						</h:panelGrid>
+
+					</h:panelGrid>
+				</h:panelGrid>
+				
+				
+
+			</h:panelGrid>	
+
+		</rich:panel>
+	</h:form>	
+
+	<h:form>
+	<rich:panel id="panelGridData">
+
+			<rich:extendedDataTable id="grid"
+				value="#{obligacionManaged.listObligacionDTOs}" var="item" rows="5"
+				height="180px" rowKeyVar="row" selectionMode="single"
+				selection="#{obligacionManaged.selectObligacionDTO}">
+				<f:facet name="header">#{msg['obl.headerObligacionesAgregadas']}</f:facet>
+
+
+				<rich:column width="30px">
+					<f:facet name="header">#{msg['obl.extDataLblColQuit']}</f:facet>
+
+					<a4j:commandLink ajaxSingle="true" id="newlink3"
+						onclick="#{rich:component('panelpregunta')}.show();return false">
+						<h:graphicImage value="/images/modal/delete.gif" style="border:0"
+							id="xm11" />
+					</a4j:commandLink>
+				</rich:column>
+
+				<rich:column width="100px">
+					<f:facet name="header">#{msg['obl.extDataLblColConcepto']}</f:facet>
+
+					<h:outputText value="#{item.conceptoDescripcion}" />
+				</rich:column>
+				<rich:column width="240px">
+					<f:facet name="header">#{msg['obl.extDataLblColSubConcepto']}</f:facet>
+
+					<h:outputText value="#{item.subConceptoDescripcion}" />
+				</rich:column>
+				<rich:column width="140px">
+					<f:facet name="header">#{msg['obl.extDataLblColFecEmision']}</f:facet>
+
+					<h:outputText value="#{item.fechaEmision}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							locale="#{msg['param.localedate']}" />
+					</h:outputText>
+
+				</rich:column>
+				<rich:column width="140px">
+					<f:facet name="header">#{msg['obl.extDataLblColFecVencimiento']}</f:facet>
+
+					<h:outputText value="#{item.fechaVencimiento}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							locale="#{msg['param.localedate']}" />
+					</h:outputText>
+
+				</rich:column>
+				<rich:column width="140px">
+					<f:facet name="header">#{msg['obl.extDataLblColFecInfraccion']}</f:facet>
+
+					<h:outputText value="#{item.fechaInfraccion}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							locale="#{msg['param.localedate']}" />
+					</h:outputText>
+
+				</rich:column>
+				<rich:column width="140px">
+					<f:facet name="header">#{msg['obl.extDataLblColFecLiquidacion']}</f:facet>
+
+					<h:outputText value="#{item.fechaLiquidacion}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							locale="#{msg['param.localedate']}" />
+					</h:outputText>
+
+				</rich:column>
+				<rich:column width="80px" style="text-align:right">
+					<f:facet name="header">#{msg['obl.extDataLblColMonto']}</f:facet>
+
+					<h:outputText value="#{item.monto}">
+						<f:convertNumber locale="#{msg['param.localecurrency']}"
+							pattern="#0.00" />
+					</h:outputText>
+				</rich:column>
+
+			</rich:extendedDataTable>
+			<rich:datascroller id="tableDataScroller" align="center" for="grid" renderIfSinglePage="false" status="ajaxStatus" /> 
+		<br/>
+		
+		<h:outputText value="#{msg['obl.labelMontoTotal']} " styleClass="textoMontoTotal"/><h:outputText value="#{obligacionManaged.montoTotal}" styleClass="textoMontoTotal">
+			<f:convertNumber locale="#{msg['param.localecurrency']}"
+							currencySymbol="S/." type="currency"/>
+		</h:outputText>
+	
+	</rich:panel>
+
+		<center>
+			<rich:panel id="panelButtonAceptar">
+				<a4j:commandButton value="Generar" 
+					action="#{obligacionManaged.guardarItemsObligacion}"
+					rendered="#{not empty obligacionManaged.listObligacionDTOs}"
+					reRender="panelGridData, panel0, panelButtonAceptar"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'modalGeneracionSatisfactoria\');': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+					status="ajaxStatus"  style="width:100px;" />
+			</rich:panel>
+		</center>
+
+
+		<!-- ***************** INICIO MODAL PANELS ********************* -->
+
+		<rich:modalPanel id="modalPanelVerVehiculos" width="1100" height="430">
+			<f:facet name="header">
+			<h:outputText value="#{msg['obl.headerModalListadoVehi']}" />			
+			</f:facet>
+
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink2" />
+					<rich:componentControl for="modalPanelVerVehiculos"
+						attachTo="hidelink2" operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<div align="center">
+				<h3>
+					<h:outputText value="#{msg['obl.labelVehiculos']}" />
+				</h3>
+			</div>
+
+			<rich:extendedDataTable id="tblListaDJVehicular"
+				value="#{obligacionManaged.listVehicularDTOs}" var="record"
+				width="100%" height="250px" sortMode="single" selectionMode="single"
+				noDataLabel="No existen vehiculos" enableContextMenu="false">
+
+				<rich:column id="x1" width="40px" style="text-align: center;">
+					<f:facet name="header">Selec</f:facet>
+
+					<a4j:commandLink ajaxSingle="true"
+						oncomplete="#{rich:component('modalPanelVerVehiculos')}.hide();"
+						reRender="panelRefenciaObligacion">
+						<h:graphicImage value="/images/ver2.png" style="border: 0px;" />
+						<f:setPropertyActionListener
+							target="#{obligacionManaged.obligacionDTO.codigoPlacaReferencia}"
+							value="#{record.placa}" />
+						<f:setPropertyActionListener
+							target="#{obligacionManaged.obligacionDTO.djReferencia}"
+							value="#{record.djVehicularId}" />
+					</a4j:commandLink>
+				</rich:column>
+
+				<rich:column width="70px;">
+					<f:facet name="header">#{msg['rv.placa']}</f:facet>
+					<h:outputText value="#{record.placa}" />
+
+				</rich:column>
+
+				<rich:column width="100">
+					<f:facet name="header">#{msg['rv.nromotor']}</f:facet>
+					<h:outputText value="#{record.nroMotor}" />
+				</rich:column>
+
+				<rich:column width="200">
+					<f:facet name="header">#{msg['rv.categoria']}</f:facet>
+					<h:outputText value="#{record.categoria}" />
+				</rich:column>
+
+				<rich:column width="150">
+					<f:facet name="header">#{msg['rv.marca']}</f:facet>
+					<h:outputText value="#{record.marca}" />
+				</rich:column>
+
+				<rich:column width="210">
+					<f:facet name="header">#{msg['rv.modelo']}</f:facet>
+					<h:outputText value="#{record.modelo}" />
+				</rich:column>
+
+				<rich:column width="110">
+					<f:facet name="header">#{msg['rv.fechaadquisicion']}</f:facet>
+					<h:outputText value="#{record.fechaAdquisicion}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="80">
+					<f:facet name="header">#{msg['rv.fechaDJ']}</f:facet>
+					<h:outputText value="#{record.fecha}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="120">
+					<f:facet name="header">#{msg['gn.estado']}</f:facet>
+					<h:outputText value="#{msg['estado.activo']}"
+						rendered="#{record.estado==msg['param.rv.estadoactivo']}" />					
+					<h:outputText value="#{msg['estado.anulado']}"
+						rendered="#{record.estado==msg['param.rv.anulado']}" />
+				</rich:column>
+
+			</rich:extendedDataTable>
+
+		</rich:modalPanel>
+
+
+		<rich:modalPanel id="modalPanelPredios" width="660" height="430">
+			<f:facet name="header">
+			<h:outputText value="#{msg['obl.headerModalListadoPred']}" />			
+			</f:facet>
+
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink3" />
+					<rich:componentControl for="modalPanelPredios"
+						attachTo="hidelink3" operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<div align="center">
+				<h3>
+					<h:outputText value="#{msg['obl.labelPredios']}" />
+				</h3>
+			</div>
+
+			<rich:extendedDataTable 
+				id="datosConstruccion" value="#{obligacionManaged.listDjPredials}" var="recordPredial" width="635px" height="330px"
+				sortMode="single" selectionMode="single" enableContextMenu="false" 
+				rowKeyVar="row"	 >
+
+				<rich:column id="x14" width="30px">
+					<a4j:commandLink ajaxSingle="true"
+						oncomplete="#{rich:component('modalPanelPredios')}.hide();"
+						reRender="panelRefenciaObligacion">
+						<h:graphicImage value="/images/ver2.png" style="border: 0px;" />
+						<f:setPropertyActionListener
+							target="#{obligacionManaged.obligacionDTO.codigoPlacaReferencia}"
+							value="#{recordPredial.codigoPredio}" />
+						<f:setPropertyActionListener
+							target="#{obligacionManaged.obligacionDTO.djReferencia}"
+							value="#{recordPredial.djId}" />
+					</a4j:commandLink>
+				</rich:column>
+
+				<rich:column id="x8" width="95px" >
+	                <f:facet name="header">Codigo Predio</f:facet>
+	                <h:outputText value="#{recordPredial.codigoPredio}"/>
+	            </rich:column>
+
+				<rich:column id="x11" width="400px">
+					<f:facet name="header">#{msg['rp.direccion']}</f:facet>
+					<h:outputText value="#{recordPredial.direccionCompleta}" />
+				</rich:column>
+
+				<rich:column id="x7" width="110px">
+					<f:facet name="header">Tipo Predio</f:facet>
+					<h:outputText value="#{recordPredial.tipoPredio}" />
+				</rich:column>    
+		        
+   			</rich:extendedDataTable>
+
+		</rich:modalPanel>
+
+
+		<rich:modalPanel id="panelpregunta" autosized="true" width="300">
+
+			<f:facet name="header">
+				<h:outputText value="#{msg['obl.headerMPConfirm']}" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png" id="iconclosepanelpregunta"
+						styleClass="hidelink" />
+					<rich:componentControl for="panelpregunta" attachTo="iconclosepanelpregunta"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+
+			<h:panelGrid columns="1" columnClasses="coldialogconfirm"
+				width="100%">
+
+				<br />
+				<h:outputText id="succ" style="font-weight:bold;color:green"
+					value="#{msg['obl.messageMPConfirm']}" />
+				<br />
+
+				<h:panelGrid id="buttons" columns="2"
+					columnClasses="coldialogbutton1, coldialogbutton2" width="100%">
+
+					<a4j:commandButton value="#{msg['obl.MPConfirmLabelSi']}" style="width:100px;"
+						action="#{obligacionManaged.quitar}"
+						reRender="panelGridData, panelButtonAceptar"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'panelpregunta\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};     " />
+
+					<a4j:commandButton value="#{msg['obl.MPConfirmLabelNo']}" style="width:100px;"
+						onclick="#{rich:component('panelpregunta')}.hide();return false;" />
+
+				</h:panelGrid>
+
+			</h:panelGrid>
+
+		</rich:modalPanel>
+
+	</h:form>
+	
+	<rich:modalPanel id="panelIncompatibleType" autosized="true" width="300">
+
+		<f:facet name="header">
+			<h:outputText value="#{msg['obl.headerMPIncopatible']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconcloseincompatibletype"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelIncompatibleType" attachTo="iconcloseincompatibletype"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:panelGrid columns="1" columnClasses="coldialogconfirm" width="100%">
+			
+				<h:panelGrid columns="1" columnClasses="coldialogconfirm" width="100%">
+					<h:outputText id="incompatibletypemessage" style="font-weight:bold;color:green"
+						value="#{msg['obl.messageMPIncopatible']}" />
+				</h:panelGrid>
+			
+			<h:panelGrid columns="1" columnClasses="coldialogconfirm" width="100%">
+				<a4j:commandButton value="#{msg['obl.MPIncopatibleLabelAceptar']}" style="width:100px;"
+					onclick="#{rich:component('panelIncompatibleType')}.hide();return false;" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	
+	<rich:modalPanel id="modalGeneracionSatisfactoria" autosized="true" width="300">
+
+		<f:facet name="header">
+			<h:outputText value="#{msg['obl.headerMPIncopatible']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosegeneracionsatisfactoria"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalGeneracionSatisfactoria" attachTo="iconclosegeneracionsatisfactoria"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:panelGrid columns="1" columnClasses="coldialogconfirm" width="100%">
+			
+				<h:panelGrid columns="1" columnClasses="coldialogconfirm" width="100%">
+					<h:outputText  style="font-weight:bold;color:green"
+						value="Se ha generado satisfactoriamente las obligaciones. " />
+				</h:panelGrid>
+			
+<!-- 			<h:panelGrid columns="2" columnClasses="coldialogconfirm" width="100%"> -->
+<!-- 				<a4j:commandButton value="SI" style="width:100px;" -->
+<!-- 					onclick="#{rich:component('modalGeneracionSatisfactoria')}.hide();#{rich:component('panelQuitarDetencionPagoDeuda')}.show();return false;" /> -->
+<!-- 				<a4j:commandButton value="NO" style="width:100px;" -->
+<!-- 					onclick="#{rich:component('modalGeneracionSatisfactoria')}.hide();return false;" /> -->
+<!-- 			</h:panelGrid> -->
+		</h:panelGrid>
+	</rich:modalPanel>
+	
+
+
+
+	<h:form>
+		<rich:modalPanel id="panelQuitarDetencionPagoDeuda" width="850" height="450">
+			<f:facet name="header">
+				<h:outputText value="DEUDAS DETENIDAS PARA EL PAGO" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png" id="iconclosepanelQuitarDetencionPagoDeuda" styleClass="hidelink" />
+					<rich:componentControl for="panelQuitarDetencionPagoDeuda" attachTo="iconclosepanelQuitarDetencionPagoDeuda"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<div style="max-height:400px; overflow:auto;">
+			<h:panelGrid id="panelGridDetencionDeudas">
+				<rich:dataTable value="#{obligacionManaged.lstDetencionDeudaDTOs}" var="itemDetencion" rowClasses="row-even,row-odd">
+					<rich:column width="75px">
+						<f:facet name="header">Concepto</f:facet>
+						<div align="center">
+							<h:outputText value="#{itemDetencion.descripcionConcepto}" />
+						</div>
+					</rich:column>
+					<rich:column width="40px">
+						<f:facet name="header">Año</f:facet>
+						<div align="center">
+							<h:outputText value="#{itemDetencion.anho}" />
+						</div>
+					</rich:column>
+					<rich:column width="80px">
+						<f:facet name="header">Placa</f:facet>
+						<div align="center">
+							<h:outputText value="#{itemDetencion.placa}" rendered="#{itemDetencion.placa != null}"/>
+							<h:outputText value="--" rendered="#{itemDetencion.placa == null}"/>
+						</div>
+					</rich:column>
+					<rich:column width="90px">
+						<f:facet name="header">Nro. Papeleta</f:facet>
+						<div align="center">
+							<h:outputText value="#{itemDetencion.nroPapeleta}" rendered="#{itemDetencion.nroPapeleta != null}"/>
+							<h:outputText value="--" rendered="#{itemDetencion.nroPapeleta == null}"/>
+						</div>
+					</rich:column>
+					<rich:column width="115px">
+						<f:facet name="header">Fecha Detención</f:facet>
+						<div align="center">
+							<h:outputText value="#{itemDetencion.fechaDetencion}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+							</h:outputText>
+						</div>
+					</rich:column>
+					<rich:column width="115px">
+						<f:facet name="header">Fecha Actualización</f:facet>
+						<div align="center">
+							<h:outputText value="#{itemDetencion.fechaActualizacion}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+							</h:outputText>
+						</div>
+					</rich:column>
+					<rich:column width="115px">
+						<f:facet name="header">Usuario</f:facet>
+						<h:outputText value="#{itemDetencion.usuarioActualizacion}" />
+					</rich:column>
+					<rich:column width="75px">
+						<f:facet name="header">Estado</f:facet>
+						<div align="center">
+							<h:outputText value="#{itemDetencion.estado == 1?'Habilitado':(itemDetencion.estado == 2?'Dehabilitado':'--') }" />
+						</div>
+					</rich:column>
+					<rich:column>
+						<f:facet name="header"> Modif.</f:facet>
+						<div align="center">
+							<a4j:commandLink id="commandButtonDesactivar" ajaxSingle="true" rendered="#{itemDetencion.estado == 1}" status="ajaxStatus"
+								action="#{obligacionManaged.desactivarDetencion(itemDetencion.personaId,itemDetencion.conceptoId,itemDetencion.subConceptoId,itemDetencion.anho, itemDetencion.determinacionId)}"
+								reRender="panelGridDetencionDeudas" oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };" >
+								<h:graphicImage value="/images/bloqueado.gif" style="border:0;width: 25px;" id="xm11" />
+							</a4j:commandLink>							
+							<a4j:commandLink id="commandButtonActivar" ajaxSingle="true" rendered="#{itemDetencion.estado == 2}" status="ajaxStatus"
+								action="#{obligacionManaged.activarDetencion(itemDetencion.personaId,itemDetencion.conceptoId,itemDetencion.subConceptoId,itemDetencion.anho, itemDetencion.determinacionId)}"
+								reRender="panelGridDetencionDeudas" oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+								<h:graphicImage value="/images/desbloqueado.gif" style="border:0;width: 25px;" />
+							</a4j:commandLink>
+							<rich:toolTip for="commandButtonActivar" direction="top-left"> Click para activar bloqueo</rich:toolTip>
+							<rich:toolTip for="commandButtonDesactivar" direction="top-left"> Click para desactivar bloqueo</rich:toolTip>
+						</div>
+					</rich:column>
+				</rich:dataTable>
+			</h:panelGrid>
+		
+			</div>
+		</rich:modalPanel>
+	</h:form>
+</ui:composition>

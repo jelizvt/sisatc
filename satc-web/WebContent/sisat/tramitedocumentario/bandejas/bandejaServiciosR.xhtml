@@ -1,0 +1,2044 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<style type="">
+.datatablecol1 {
+	width: 40px;
+	text-align: center;
+}
+
+.datatablecol2 {
+	width: 100px;
+	text-align: center;
+}
+
+.datatablecol3 {
+	width: 99px;
+	text-align: center;
+}
+
+.datatablecol4 {
+	width: 350px;
+	text-align: left;
+}
+
+.datatablecol5 {
+	width: 80px;
+	text-align: center;
+}
+
+.datatablecol6 {
+	width: 120px;
+	text-align: center;
+}
+
+.datatablecol7 {
+	width: 150px;
+	text-align: center;
+}
+
+.footerTablacol1 {
+	text-align: left;
+	width: 50%;
+}
+
+.footerTablacol2 {
+	text-align: right;
+	width: 50%;
+}
+
+.col1 {
+	text-align: right;
+}
+
+.col2 {
+	width: 80px;
+	text-align: right;
+}
+
+.colField {
+	width: 200px;
+	text-align: left;
+}
+
+.colLabel {
+	width: 110px;
+	text-align: right;
+}
+
+.rich-panel-body-1 {
+	padding: 1px;
+}
+.top {
+    vertical-align: top;
+    
+}
+.info {
+    height: 202px;
+    overflow: auto;
+}
+</style>
+	<h:form id="idFormBusquedaExpediente">
+		<rich:hotKey key="return"
+			handler="#{rich:element('idCommandButtonFiltar')}.click()"
+			selector="#idFormBusquedaExpediente" />
+		<rich:panel id="idPanelBandejaEntrada">
+			<f:facet name="header">Bandeja de servicios - Terminalista</f:facet>
+			<h:panelGrid id="idPanelOpcionesBusqueda">
+				<h:panelGrid columns="3">
+<!-- 					<h:panelGrid columns="2" columnClasses="colLabel, colField"> -->
+<!-- 					<h:outputLabel value="Procedimiento" for="idSelectOneSubTipo"> -->
+<!-- 					 :</h:outputLabel> -->
+<!-- 						<h:selectOneMenu id="idSelectOneSubTipo" style="width:190px" -->
+<!-- 							value="#{r0egistroTramiteManaged.busquedaExpedienteDTO.procedimientoId}"> -->
+<!-- 							<f:selectItem itemLabel="Seleccione" noSelectionOption="true" /> -->
+<!-- 							<f:selectItems -->
+<!-- 								value="#{registroTramiteManaged.listProcedimientos.entrySet().toArray()}" -->
+<!-- 								var="iterProc" itemLabel="#{iterProc.key}" -->
+<!-- 								itemValue="#{iterProc.value}" /> -->
+<!-- 						</h:selectOneMenu> -->
+<!-- 					</h:panelGrid> -->
+<!-- 					<h:panelGrid columns="2" columnClasses="colLabel, colField"> -->
+<!-- 						<h:outputLabel value="Tramite" for="idSelectOneTramite"> -->
+<!-- 					 :</h:outputLabel> -->
+<!-- 						<h:selectOneMenu id="idSelectOneTramite" -->
+<!-- 							value="#{registroTramiteManaged.busquedaExpedienteDTO.tipoTramiteId}"> -->
+<!-- 							<f:selectItem itemLabel="Seleccione" noSelectionOption="true" /> -->
+<!-- 							<f:selectItems -->
+<!-- 								value="#{registroTramiteManaged.listTdTipoTramites}" var="item" -->
+<!-- 								itemLabel="#{item.descripcion}" -->
+<!-- 								itemValue="#{item.tipoTramiteId}"></f:selectItems> -->
+<!-- 						</h:selectOneMenu> -->
+<!-- 					</h:panelGrid> -->
+					<!-- <h:panelGrid columns="2" columnClasses="colLabel, colField">
+					<h:outputLabel value="Alegato" for="idSelectOneAlegato">
+					 :</h:outputLabel>
+					<h:selectOneMenu id="idSelectOneAlegato">
+						<f:selectItem itemLabel="Error en la determinación" itemValue="1" />
+						<f:selectItem itemLabel="Error en las características" itemValue="2" />
+						<f:selectItem itemLabel="Siniestro" itemValue="3" />
+						<f:selectItem itemLabel="Robo" itemValue="4" />
+						<f:selectItem itemLabel="Cuestiona normas arbitrios" itemValue="5" />
+					</h:selectOneMenu>
+				</h:panelGrid> -->
+					<!-- <h:panelGrid columns="2" columnClasses="colLabel, colField">
+					<h:outputLabel value="Codigo expediente" for="idInputCodigoExpediente"> :</h:outputLabel>
+					<h:inputText id="idInputCodigoExpediente" value="" />
+				</h:panelGrid> 
+				<h:panelGrid columns="2" columnClasses="colLabel, colField">
+					<h:outputLabel value="Lote" for="idInputLote"> :</h:outputLabel>
+					<h:inputText id="idInputLote" value="" />
+				</h:panelGrid> -->
+<!-- 					<h:panelGrid columns="2"> -->
+<!-- 						<h:outputLabel value="Documento Trámite" -->
+<!-- 							for="idSelectOneSubTipoBusqueda"> -->
+<!-- 							 :</h:outputLabel> -->
+<!-- 						<h:selectOneMenu id="idSelectOneSubTipoBusqueda" -->
+<!-- 							value="#{registroTramiteManaged.busquedaExpedienteDTO.documentoTramiteId}"> -->
+<!-- 							<f:selectItem itemLabel="Seleccione" noSelectionOption="true" /> -->
+<!-- 							<f:selectItems -->
+<!-- 								value="#{registroTramiteManaged.listTdDocumentoTramites}" -->
+<!-- 								var="it" itemLabel="#{it.descCorta}" -->
+<!-- 								itemValue="#{it.docuTramiteId}"></f:selectItems> -->
+<!-- 						</h:selectOneMenu> -->
+<!-- 					</h:panelGrid> -->
+				</h:panelGrid>
+				<h:panelGrid columns="5">
+					<h:panelGrid columns="2" columnClasses="colLabel, colField">
+						<h:outputLabel value="Codigo expediente"
+							for="idInputCodigoExpediente"> :</h:outputLabel>
+						<h:inputText id="idInputCodigoExpediente"
+							value="#{registroTramiteManaged.busquedaExpedienteDTO.nroExpediente}"
+							converter="uppeCaseConverter" styleClass="textUpperCase, formatoNroExp" />
+							<rich:jQuery id="maskedo3" selector=".formatoNroExp"
+								query="mask('99999999',{placeholder:'0'})" timing="onload" />
+					</h:panelGrid>
+<!-- 					<h:panelGrid columns="2"> -->
+<!-- 						<h:outputLabel value="Codigo Anterior Exp.: " /> -->
+<!-- 						<h:inputText -->
+<!-- 							value="#{registroTramiteManaged.busquedaExpedienteDTO.nroExpedienteAnterior}" -->
+<!-- 							converter="uppeCaseConverter" styleClass="textUpperCase" /> -->
+<!-- 					</h:panelGrid> -->
+					<!-- <h:panelGrid columns="2" columnClasses="colLabel, colField">
+					<h:outputLabel value="Lote" for="idInputLote"> :</h:outputLabel>
+					<h:inputText id="idInputLote" value="" />
+				</h:panelGrid>-->
+					<h:panelGrid columns="2" columnClasses="colLabel, colField">
+						<h:outputLabel value="Fecha Recepción" for="idInputFechaRecepcion"> :</h:outputLabel>
+						<rich:calendar id="idInputFechaRecepcion"
+							value="#{registroTramiteManaged.busquedaExpedienteDTO.fechaRecepcion}"
+							datePattern="dd/MM/yyyy" inputClass="maskDate"
+							inputStyle="width: 60px;padding-left: 5px;"
+							enableManualInput="true"></rich:calendar>
+						<rich:jQuery id="maskedo" selector=".maskDate"
+							query="mask('99/99/9999')" timing="onload" />
+					</h:panelGrid>
+					<h:panelGrid columns="2" columnClasses="colLabel, colField">
+						<h:outputLabel value="Estado" for="idSelectOneEstado"> :</h:outputLabel>
+						<h:selectOneMenu id="idSelectOneEstado"
+							value="#{registroTramiteManaged.busquedaExpedienteDTO.estadoExpediente}">
+							<f:selectItem itemLabel="Todos" noSelectionOption="true" itemValue="0" />							
+							<f:selectItems value="#{registroTramiteManaged.listEstadoExpedientes}" var="itEstado" itemLabel="#{itEstado.descripcion}" itemValue="#{itEstado.estadoExpedienteId}"></f:selectItems>
+						</h:selectOneMenu>
+					</h:panelGrid>
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Situación Expediente" for="idSelectOneSituacion"> :</h:outputLabel>
+						<h:selectOneMenu id="idSelectOneSituacion"
+							value="#{registroTramiteManaged.busquedaExpedienteDTO.situacionExpediente}">
+							<f:selectItem itemLabel="Todos" noSelectionOption="true" itemValue="0" />							
+							<f:selectItems value="#{registroTramiteManaged.listSituacionExpedientes}" var="itSituacion" itemLabel="#{itSituacion.descripcion}" itemValue="#{itSituacion.situacionExpedienteId}"></f:selectItems>
+						</h:selectOneMenu>
+					</h:panelGrid>
+				</h:panelGrid>
+				<h:panelGrid columns="">
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Nombre de Remitente " />
+						<h:inputText
+							value="#{registroTramiteManaged.busquedaExpedienteDTO.nombreContribuyente}"
+							converter="uppeCaseConverter" styleClass="textUpperCase" style="width:275px;">						
+						</h:inputText>
+					</h:panelGrid>					
+				</h:panelGrid>
+			</h:panelGrid>
+			<h:panelGrid columns="3" cellspacing="0" cellpadding="0">
+				<a4j:commandButton rendered="#{registroTramiteManaged.permisoAgregarRegistrar}" value="Nuevo"
+					action="#{registroTramiteManaged.prepararNuevoExpediente}"
+					reRender="idPanelRegistroExpediente" style="width:80px;"
+					onclick="SimpleTogglePanelManager.toggleOnClient(event,$$('div.uniqueClassName')[0].id);" 
+					disabled="#{(sessionManaged.rolUnidad eq 1) or (sessionManaged.rolUnidad eq 2)}">
+				</a4j:commandButton>
+				<a4j:commandButton rendered="#{registroTramiteManaged.permisoBuscar}" id="idCommandButtonFiltar" value="Buscar"
+					action="#{registroTramiteManaged.filtarServAdult}"
+					reRender="panelResultadoBusquedaExpedientes" style="width:80px;"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					status="ajaxStatus"></a4j:commandButton>
+				<a4j:commandButton value="Limpiar"
+					action="#{registroTramiteManaged.limpiar}"
+					reRender="idPanelOpcionesBusqueda" style="width:80px;"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"></a4j:commandButton>
+			</h:panelGrid>
+			<a4j:outputPanel id="panelResultadoBusquedaExpedientes">
+				<rich:simpleTogglePanel id="togglePanelResultados"
+					switchType="client"
+					label="Resultados #{registroTramiteManaged.listItemBandejaEntradaDTOsServAdult.size()} expedientes"
+					height="auto" styleClass="uniqueClassName" opened="true">
+					<rich:dataTable id="dataTableExpedientes"
+						value="#{registroTramiteManaged.listItemBandejaEntradaDTOsServAdult}"
+						var="item" rowKeyVar="rowIndex" rows="15"
+						rendered="#{not empty registroTramiteManaged.listItemBandejaEntradaDTOsServAdult}">
+						<h:column>
+							<div align="center">
+								<h:outputText value="#{rowIndex + 1}" />
+							</div>
+						</h:column>
+<!-- 						<h:column> -->
+<!-- 							<div align="center"> -->
+<!-- 								<a4j:commandLink  -->
+<!-- 									id="act_exp" rendered="#{(item.situacionExpediente ne 7) and  -->
+<!-- 															((sessionManaged.rolUnidad ne 2) and  -->
+<!-- 															(sessionManaged.rolUnidad ne 1)) and  -->
+<!-- 															registroTramiteManaged.permisoModificarActualizar}"> -->
+<!-- 									<h:graphicImage value="/images/editar2.png" style="border: 0px" -->
+<!-- 										alt="Editar" /> -->
+<!-- 									<a4j:support ajaxSingle="true" event="onclick" -->
+<!-- 										action="#{registroTramiteManaged.editarExpediente(item.expedienteId)}" -->
+<!-- 										reRender="idPanelRegistroExpediente" status="ajaxStatus" -->
+<!-- 										oncomplete="#{facesContext.maximumSeverity == null ? 'SimpleTogglePanelManager.toggleOnClient(event,$$(\'div.uniqueClassName\')[0].id);' : 'Richfaces.showModalPanel(\'mpErrors\');' };"></a4j:support> -->
+<!-- 								</a4j:commandLink> -->
+<!-- 								<rich:toolTip for="act_exp" value="Actualizar Expediente" /> -->
+<!-- 								<h:graphicImage value="/images/editar2_ds.png" -->
+<!-- 									style="border: 0px" rendered="#{(item.situacionExpediente eq 7)  or ((sessionManaged.rolUnidad eq 1) or (sessionManaged.rolUnidad eq 2))}" /> -->
+<!-- 							</div> -->
+<!-- 						</h:column> -->
+<!-- 						<h:column> -->
+<!-- 							<div align="center"> -->
+<!-- 								<a4j:commandLink  id="adj_exp"  -->
+<!-- 											rendered="#{(item.situacionExpediente eq 9) and  -->
+<!-- 											((sessionManaged.rolUnidad ne 2) and (sessionManaged.rolUnidad ne 1)) and  -->
+<!-- 											 registroTramiteManaged.permisoDigitalizar}"> -->
+<!-- 									<h:graphicImage value="/images/attach.png" style="border: 0px" -->
+<!-- 										alt="Adjuntar" width="16" height="16" /> -->
+<!-- 									<a4j:support ajaxSingle="true" event="onclick" -->
+<!-- 										action="#{registroTramiteManaged.seguimiento(item.expedienteId)}" -->
+<!-- 										reRender="idPanelAdjuntarExpediente" status="ajaxStatus" -->
+<!-- 										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'idPanelAdjuntarExpediente\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"></a4j:support> -->
+<!-- 								</a4j:commandLink> -->
+<!-- 								<rich:toolTip for="adj_exp" value="Digitalizar Expediente" /> -->
+<!-- 								<div style="opacity: 0.3;" > -->
+<!-- 									<h:graphicImage value="/images/attach.png" style="border: 0px" alt="Adjuntado"  -->
+<!-- 									width="16" height="16" rendered="#{(item.situacionExpediente ne 9)  or ((sessionManaged.rolUnidad eq 1) or (sessionManaged.rolUnidad eq 2))}" /> -->
+<!-- 								</div>	 -->
+<!-- 							</div> -->
+<!-- 						</h:column>						 -->
+						<h:column>
+							<f:facet name="header">Expediente</f:facet>
+							<div style=" width: 85px;" align="center">
+								<del><h:outputText value="#{item.nroExpedienteGenerico}"
+									id="expedienteIdAn" rendered="#{item.situacionExpediente eq 5}" style="color:#C70039" /></del>
+								<h:outputText value="#{item.nroExpedienteGenerico}"
+									id="expedienteIdAr" rendered="#{item.situacionExpediente eq 6}" style="color:#FFC300" />
+								<h:outputText value="#{item.nroExpedienteGenerico}"
+									id="expedienteIdRe" rendered="#{item.situacionExpediente eq 7}" style="color:#28AC23;" />
+								<h:outputText value="#{item.nroExpedienteGenerico}"
+									id="expedienteIdNo" rendered="#{item.situacionExpediente gt 7}" style="color:#000000" />								
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="Cod. Interno: #{item.codExpediente}" />
+										<h:outputText
+											value="Cod. Anterior: #{item.nroExpedienteAnterior}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>
+						<!--
+						<h:column>
+							<f:facet name="header">Proc.</f:facet>
+							<div style="width: 60px;" align="center">
+								<h:outputText value="#{item.procedimientoAsString}" />
+							</div>
+						</h:column>
+						-->
+						<h:column>
+							<f:facet name="header">Proviene de</f:facet>
+							<div style="width: 150px;" align="left">
+								<h:outputText value="#{item.nombreContribuyente}" />
+							</div>
+						</h:column>
+					<!-- <h:column>
+							<f:facet name="header">Firma</f:facet>
+							<div style="width: 150px;" align="left">
+								<h:outputText value="#{item.nombreContribuyente}" />
+							</div>
+						</h:column> -->	
+						<h:column>
+							<f:facet name="header">Tramite</f:facet>
+							<div style="width: 200px;" align="left">
+								<h:outputText value="#{item.tipoTramite}" />
+							</div>
+						</h:column>						
+						<h:column>
+							<f:facet name="header">Referencia / Documento Trámite</f:facet>
+							<div style="width: 230px;" align="left">
+								<h:outputText
+									value="#{item.referenciaOrDocumentoTramiteAsString}" />
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Área</f:facet>
+							<div style="width: 40px;" align="center">
+								<h:outputText value="#{item.area}" />
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Fecha Recepción</f:facet>
+							<div align="center">
+								<h:outputText value="#{item.fechaRecepcion}" id="fechaRecepcionId">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="#{msg['param.timezone']}" />	
+								</h:outputText>
+								<rich:toolTip for="fechaRecepcionId">
+									<h:panelGrid>
+										<h:outputText value="Registrado por: #{item.usuarioRegistrador}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Estado/Situación</f:facet>
+							<div align="center">
+								<h:outputText value="#{item.estadoExpedienteAsString} #{item.situacionExpedienteAsString}" />
+							</div>
+						</h:column>						
+						<h:column>
+							<f:facet name="header">Usuario</f:facet>
+							<div align="center">
+								<h:outputText value="#{item.usuarioAsString}" />
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Fecha Asignación</f:facet>
+							<div align="center">
+								<h:outputText value="#{item.fechaAsignacion}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="#{msg['param.timezone']}" />
+								</h:outputText>
+							</div>
+						</h:column>
+						<h:column>
+							<div align="center">
+								<a4j:commandLink  id="res_exp">
+									<h:graphicImage value="/images/check.gif" style="border: 0px"
+										alt="Seguimiento" width="25" height="16" />
+									<a4j:support ajaxSingle="true" event="onclick"
+										action="#{registroTramiteManaged.seguimiento(item.expedienteId)}"
+										reRender="panelRequisito" status="ajaxStatus"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelRequisito\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"></a4j:support>									
+								</a4j:commandLink>	
+								<rich:toolTip for="res_exp" value="Resolver Expediente" />	
+							</div>
+						</h:column>
+						
+							<h:column>
+							<div align="center">
+								<a4j:commandLink  id="pre_res_exp">
+									<h:graphicImage value="/images/VerDetalle.png" style="border: 0px"
+										alt="Seguimiento" width="25" height="16" />
+									<a4j:support ajaxSingle="true" event="onclick"
+										action="#{registroTramiteManaged.seguimiento(item.expedienteId)}"
+										reRender="panelRequisito" status="ajaxStatus"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelResolucion\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"></a4j:support>									
+								</a4j:commandLink>	
+								<rich:toolTip for="pre_res_exp" value="Resolución de expediente" />	
+							</div>
+						</h:column>
+						
+						<h:column>
+							<div align="center">
+								<a4j:commandLink  id="imp_res_exp">
+									<h:graphicImage value="/images/imprimir_determinacion.png" style="border: 0px"
+										alt="Seguimiento" width="25" height="16" />
+									<a4j:support ajaxSingle="true" event="onclick"
+										rendered="#{estadoCuentaManaged.esBuenContribuyente}" status="ajaxStatus"
+										action="#{estadoCuentaManaged.imprimirConstancia}" accesskey="c"></a4j:support>									
+								</a4j:commandLink>	
+								<rich:toolTip for="imp_res_exp" value="Imprimir resolución" />	
+							</div>
+						</h:column>		
+						<h:column>
+							<div align="center">
+								<a4j:commandLink  rendered="#{registroTramiteManaged.permisoSeguimiento}" id="seg_exp">
+									<h:graphicImage value="/images/insp_ocular.png" style="border: 0px"
+										alt="Seguimiento" width="25" height="16" />
+									<a4j:support ajaxSingle="true" event="onclick"
+										action="#{registroTramiteManaged.seguimiento(item.expedienteId)}"
+										reRender="panelseguimiento" status="ajaxStatus"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelseguimiento\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"></a4j:support>									
+								</a4j:commandLink>	
+								<rich:toolTip for="seg_exp" value="Seguimiento Expediente" />	
+							</div>
+						</h:column>	
+						<h:column>
+							<div align="center">
+								<a4j:commandLink id="mod_exp"  rendered="#{registroTramiteManaged.permisoHistoricoModificaciones}">
+									<h:graphicImage value="/images/ver2.png" style="border: 0px" 
+										alt="Historico" width="16" height="16" />
+									<a4j:support ajaxSingle="true" event="onclick"
+										action="#{registroTramiteManaged.mostrar(item.expedienteId)}"
+										reRender="panelactualizaciones" status="ajaxStatus"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelactualizaciones\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"></a4j:support>									
+								</a4j:commandLink>	
+								<rich:toolTip for="mod_exp" value="Historico de Modificaciones" />	
+							</div>
+						</h:column>											
+					</rich:dataTable>
+					<rich:datascroller id="tableDataScroller" align="center"
+						for="dataTableExpedientes" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+					<table  border="0" cellpadding="0" cellspacing="0" >
+						<tr><td colspan="8" height="5px"></td></tr>
+						<tr><td width="15px" bgcolor="#28AC23" ></td>
+							<td style="font-size: 0.9em;" >Resuelto</td>
+							<td width="8px"></td>
+							<td width="15px" bgcolor="#FFC300" ></td>
+							<td  style="font-size: 0.9em; " >Archivado</td>
+							<td width="8px"></td>
+							<td width="15px" bgcolor="#C70039" ></td>
+							<td  style="font-size: 0.9em" >Anulado</td></tr>
+					</table>
+				</rich:simpleTogglePanel>				
+			</a4j:outputPanel>
+		</rich:panel>
+	</h:form>
+	<h:form>
+		<rich:panel id="idPanelRegistroExpediente">
+			<rich:panel rendered="#{registroTramiteManaged.verFormRegistro}">
+				<f:facet name="header"> #{registroTramiteManaged.enEdicion ?'Edicion de Expediente ':'Registro de Expediente'} #{registroTramiteManaged.enEdicion ? registroTramiteManaged.tdExpediente.nroExpedienteGenerico:''}</f:facet>
+				<h:panelGrid>
+					<a4j:region>
+						<h:panelGrid columns="4" >
+							<h:outputLabel value="Procedimiento">
+								<span class="requiredField">*</span> :</h:outputLabel>
+							<rich:comboBox defaultLabel="Seleccione"
+								valueChangeListener="#{registroTramiteManaged.listenerValueChangeTipoProcedimiento}"							
+								value="#{registroTramiteManaged.procedimientoSeleccionado}">
+								<f:selectItems
+									value="#{registroTramiteManaged.listSelectItemProcedimientos}" />
+								<a4j:support ajaxSingle="true" event="onchange"
+									reRender="idPanelRegistroExpediente"
+									oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"></a4j:support>
+							</rich:comboBox>
+							<h:panelGrid columns="2" columnClasses="colLabel, colField">
+								<h:outputLabel value="Fecha Recepción" for="idInputFechaRecepcionRegistro">
+								<span class="requiredField"> *</span>:
+								</h:outputLabel>
+								<!--  disabled="#{registroTramiteManaged.disableFechaRecepcion}" -->
+								<rich:calendar id="idInputFechaRecepcionRegistro" 
+									value="#{registroTramiteManaged.tdExpediente.fechaPresentacion}"
+									datePattern="dd/MM/yyyy hh:mm a" inputClass="maskDate"
+									inputStyle="width: 110px;padding-left: 5px;"
+									enableManualInput="false" required="true" requiredMessage="Debe ingresar fecha de recepción">
+									<a4j:support ajaxSingle="true" event="onchanged"
+										action="#{registroTramiteManaged.correlativoAnterior}"
+										reRender="idCorrelativoActual" status="ajaxStatus"></a4j:support>									
+									</rich:calendar>
+							</h:panelGrid>
+							<h:panelGrid columns="1" id="idCorrelativoActual" rendered="#{not registroTramiteManaged.enEdicion}">
+								<h:outputLabel value="#{registroTramiteManaged.correlativoActual}" style="color: red;font-size: 16px"></h:outputLabel>
+							</h:panelGrid>
+						</h:panelGrid>
+						<h:panelGrid columns="4"
+							rendered="#{not registroTramiteManaged.vistaExpedienteSimple}">
+							<h:panelGrid columns="2">
+								<h:outputLabel value="Tramite" for="idSelectOneTramite">
+									<span class="requiredField">*</span> :</h:outputLabel>
+								<rich:comboBox id="idSelectOneTramite"
+									valueChangeListener="#{registroTramiteManaged.listenerValueChangeTipoTramite}"
+									enableManualInput="false" defaultLabel="Seleccione"
+									listWidth="480" width="250px" required="true"
+									requiredMessage="Seleccione un Tipo de Tramite"
+									value="#{registroTramiteManaged.tramiteSeleccionado}">
+									<f:selectItems
+										value="#{registroTramiteManaged.listSelectItemTdTipoTramite}"></f:selectItems>
+									<a4j:support ajaxSingle="true" event="onchange"
+										reRender="idPanelDocumentoTramite, idDataTableValores"
+										oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"></a4j:support>
+								</rich:comboBox>
+							</h:panelGrid>
+							<h:panelGrid columns="2">
+								<h:outputLabel value="Documento Trámite"
+									for="idSelectOneSubTipo">
+									<span class="requiredField">*</span> :</h:outputLabel>
+								<a4j:outputPanel id="idPanelDocumentoTramite">
+									<rich:comboBox id="idSelectOneSubTipo" listWidth="400"
+										defaultLabel="Seleccione"
+										valueChangeListener="#{registroTramiteManaged.listenerValueChangeDocumentoTramite}"
+										value="#{registroTramiteManaged.descDocumentoTramite}"
+										width="250px" required="true"
+										requiredMessage="Seleccione un Documento de Tramite">
+										<f:selectItems
+											value="#{registroTramiteManaged.listSelectItemTdDocumentoTramite}"></f:selectItems>
+										<a4j:support event="onchange" ajaxSingle="true"
+											reRender="idPanelRequisitos"
+											oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"></a4j:support>
+									</rich:comboBox>
+								</a4j:outputPanel>
+							</h:panelGrid>
+						</h:panelGrid>
+						<h:panelGrid columns="2"
+								rendered="#{registroTramiteManaged.vistaExpedienteSimple}">
+								<h:outputLabel value="Documento">
+									<span class="requiredField">*</span> :</h:outputLabel>
+								<h:inputTextarea
+									value="#{registroTramiteManaged.tdExpediente.referencia}"
+									rows="1" cols="146" required="true"
+									requiredMessage="Ingrese Tipo y Nro de Documento" />
+						</h:panelGrid>
+						<h:panelGrid columns="2"
+								rendered="#{registroTramiteManaged.vistaExpedienteSimple}">
+								<h:outputLabel value="Asunto">
+									<span class="requiredField">*</span>:</h:outputLabel>
+								<h:inputTextarea
+									value="#{registroTramiteManaged.tdExpediente.asunto}"
+									rows="2" cols="150" required="true"
+									requiredMessage="Ingrese un Asunto" />
+						</h:panelGrid>
+						<h:panelGrid columns="3" cellpadding="0" cellspacing="0">														
+							<h:panelGrid columns="2">
+								<h:outputLabel value="Nro de folios" for="idInputNroFolios">
+									<span class="requiredField">*</span> :</h:outputLabel>
+								<h:inputText id="idInputNroFolios"
+									value="#{registroTramiteManaged.tdExpediente.nroFolios}"
+									required="true"
+									requiredMessage="Ingrese el nro de folios del expediente"
+									size="5" style="width:40px;padding-left: 5px;" maxlength="5">
+									<f:validateLongRange minimum="1" maximum="500"></f:validateLongRange>
+								</h:inputText>
+							</h:panelGrid>
+							<h:panelGrid columns="2">
+								<h:outputLabel value="Codigo Anterior Exp.:" />
+								<h:inputText id="idNroExpedienteAnterior" value="#{registroTramiteManaged.tdExpediente.nroExpedienteAnterior}" />
+								<rich:toolTip for="idNroExpedienteAnterior" value="Campo necesario solo si el expediente a ingresar viene del sistema anterior"></rich:toolTip>
+							</h:panelGrid>
+							<h:panelGrid columns="3">
+								<h:outputLabel value="Número de documentos fedateados:" />
+								<span class="requiredField">*</span>
+								<h:inputText id="idInputNroDocFedateados"
+									value="#{registroTramiteManaged.tdExpediente.nroExpFedat}" required="true"
+								 	requiredMessage="Ingrese el nro de documentos fedateados"
+									size="5" style="width:40px;padding-left: 5px;" maxlength="5" /></h:panelGrid>
+						</h:panelGrid>
+					</a4j:region>
+					<rich:panel id="richPanelDataContribuyente" style="border:1">
+						<h:panelGrid>
+							<h:panelGrid columns="2">
+								<h:outputLabel value="PROVIENE DE :"							
+									style="font-weight: bold;" />										
+									<rich:comboBox defaultLabel="Seleccione"
+										valueChangeListener="#{registroTramiteManaged.listenerValueChangeTipoEntidad}">										
+										<f:selectItem itemValue="Persona Natural" />
+										<f:selectItem itemValue="Persona Juridica" />
+										<a4j:support ajaxSingle="true" event="onchange"
+											reRender="richPanelDataContribuyente, richPanelRepresentante"
+											oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"></a4j:support>
+									</rich:comboBox>
+							</h:panelGrid>
+											
+								<!--  
+							<h:outputLabel value="Datos Contribuyente"
+								style="font-weight: bold;" />
+								-->
+							<h:panelGrid columns="4">									  							
+								<h:outputLabel id="idPn" value="Apellidos y Nombres: " rendered="#{not registroTramiteManaged.vistaEntidad}" />								
+								<h:outputLabel id="idPj" value="Razón Social : " rendered="#{registroTramiteManaged.vistaEntidad}" />							
+								<h:inputText
+									value="#{registroTramiteManaged.contribuyente.apellidosNombres}"
+									rendered="#{registroTramiteManaged.contribuyente!=null}"
+									readonly="true" size="100" 
+									/>
+								<h:inputText value=""
+									rendered="#{registroTramiteManaged.contribuyente==null}"
+									size="100" />
+									
+								<a4j:commandButton
+									onclick="#{rich:component('modalPanelBuscarContribuyente')}.show()"
+									value="Buscar"></a4j:commandButton>
+								<a4j:commandButton value="Quitar" action="#{registroTramiteManaged.quitarContribuyente}" reRender="richPanelDataContribuyente" ajaxSingle="true" ></a4j:commandButton>	
+								
+								<h:inputHidden value="#{registroTramiteManaged.contribuyente.personaId}" 
+								required="#{registroTramiteManaged.tieneContribuyente}"
+								requiredMessage="Seleccione el contribuyente"/>
+							</h:panelGrid>
+						</h:panelGrid>
+						<h:panelGrid>
+							<h:panelGrid columns="2">
+								<h:outputLabel value="Domicilio: " />
+								<h:panelGrid columns="1">
+									<h:inputText size="145"
+										value="#{registroTramiteManaged.contribuyente.direccionCompleta}"
+										rendered="#{registroTramiteManaged.contribuyente.direccionCompleta != null}"
+										readonly="true" />
+								</h:panelGrid>
+							</h:panelGrid>
+						</h:panelGrid>
+						<!--  Para retener datos no es funcional 
+						<h:panelGrid columns="2">
+						<h:outputLabel value="Retener Datos?" />
+						<h:panelGrid columns="1">
+											<h:selectBooleanCheckbox
+												value="#{registroTramiteManaged.mantenerDataContribuyente}">
+												<a4j:support event="onchange" ajaxSingle="true"></a4j:support>
+											</h:selectBooleanCheckbox>
+						</h:panelGrid>
+						</h:panelGrid>
+						-->
+					</rich:panel>
+					<rich:panel id="richPanelRepresentante" style="border:1"
+						bodyClass="rich-panel-body-1">						
+						<!--  
+						<h:panelGrid columns="2" style="padding:0;">
+							<h:outputLabel value="Datos de Representante"
+								style="font-weight: bold;" />
+							
+							<h:selectBooleanCheckbox
+								value="#{registroTramiteManaged.verPanelRepresentante}">
+								<a4j:support event="onchange" ajaxSingle="true"
+									reRender="richPanelRepresentante"></a4j:support>
+							</h:selectBooleanCheckbox>	
+						</h:panelGrid>
+						-->
+						<a4j:outputPanel id="idOutputPanelRepresentante" rendered="#{registroTramiteManaged.vistaEntidad}">
+						<!--  
+							rendered="#{registroTramiteManaged.verPanelRepresentante}">
+							-->
+							<h:outputLabel value="Datos del Firmante :"							
+									style="font-weight: bold;" />
+							  
+							<div style="display: table;">
+								<div style="display: table-row;">
+									<div style="display: table-cell;">
+										<h:panelGrid columns="2">
+											<!--  
+											<h:outputLabel value="Copiar datos de contribuyente?" />
+											<h:selectBooleanCheckbox
+												value="#{registroTramiteManaged.copiarDesdeContribuyente}">
+												<a4j:support event="onchange" ajaxSingle="true"
+													action="#{registroTramiteManaged.copiaDataContribuyente}"
+													reRender="richPanelRepresentante"
+													oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+												</a4j:support>
+											</h:selectBooleanCheckbox>
+											-->
+											<h:outputLabel value="Retener Datos?" />
+											<h:selectBooleanCheckbox
+												value="#{registroTramiteManaged.mantenerDataRepresentante}">
+												<a4j:support event="onchange" ajaxSingle="true"></a4j:support>
+											</h:selectBooleanCheckbox>
+										</h:panelGrid>										
+									</div>
+								</div>
+							</div>
+							
+							<h:panelGrid columns="5">
+								<h:outputLabel value="Apellidos y Nombres"
+									for="idInputApellidosNombresRepresentante">
+									<span class="requiredField">*</span> :</h:outputLabel>
+								<h:inputText id="idInputApellidosNombresRepresentante" size="80"
+									value="#{registroTramiteManaged.tdRepresentante.apellidosNombres}"
+									rendered="#{registroTramiteManaged.tdRepresentante.apellidosNombres != null}"
+									required="#{registroTramiteManaged.tieneRepresentante}"
+									requiredMessage="Ingrese representante"
+									converter="uppeCaseConverter" styleClass="textUpperCase" />
+								<h:inputText id="idInputApellidosNombres" size="80"
+									value="#{registroTramiteManaged.tdRepresentante.apellidosNombres}"
+									rendered="#{registroTramiteManaged.tdRepresentante.apellidosNombres == null}"									
+									converter="uppeCaseConverter" styleClass="textUpperCase"
+									required="#{registroTramiteManaged.tieneRepresentante}"
+									requiredMessage="Seleccione representante" />
+								<h:outputLabel value="DNI" for="idInputDNI">
+									<!--  <span class="requiredField">*</span>--> :</h:outputLabel>
+								<h:inputText id="idInputDNIRepresentante" size="8" maxlength="8"
+									value="#{registroTramiteManaged.tdRepresentante.dni}"
+									rendered="#{registroTramiteManaged.tdRepresentante.dni != null}"
+									converter="uppeCaseConverter" styleClass="textUpperCase" />
+								<h:inputText id="idInputDNI" size="8" maxlength="8"
+									value="#{registroTramiteManaged.tdRepresentante.dni}"
+									rendered="#{registroTramiteManaged.tdRepresentante.dni == null}"
+									converter="uppeCaseConverter" styleClass="textUpperCase" />
+								<a4j:commandButton
+									onclick="#{rich:component('modalPanelBuscarRepresentante')}.show()"
+									value="Buscar"></a4j:commandButton>
+							</h:panelGrid>
+							<h:panelGrid columns="5">
+								<h:outputLabel value="Cargo">
+									<span class="requiredField">*</span> :</h:outputLabel>
+								<h:inputText size="50"
+									value="#{registroTramiteManaged.tdRepresentante.cargo}"
+									rendered="#{registroTramiteManaged.tdRepresentante.cargo != null}"
+									converter="uppeCaseConverter" styleClass="textUpperCase" />
+								<h:inputText size="50"
+									value="#{registroTramiteManaged.tdRepresentante.cargo}"
+									rendered="#{registroTramiteManaged.tdRepresentante.cargo == null}"
+									converter="uppeCaseConverter" styleClass="textUpperCase" />
+								<h:outputLabel value="Direccion">
+									<span class="requiredField">*</span> :</h:outputLabel>
+								<h:inputText size="100"
+									value="#{registroTramiteManaged.tdRepresentante.direccion}"
+									rendered="#{registroTramiteManaged.tdRepresentante.direccion != null}"
+									converter="uppeCaseConverter" styleClass="textUpperCase" />
+								<h:inputText size="100"
+									value="#{registroTramiteManaged.tdRepresentante.direccion}"
+									rendered="#{registroTramiteManaged.tdRepresentante.direccion == null}"
+									converter="uppeCaseConverter" styleClass="textUpperCase" />
+								<a4j:commandButton
+									onclick="#{rich:component('panelBuscarViaRepresentante')}.show()"
+									value="Buscar"></a4j:commandButton>
+							</h:panelGrid>
+						</a4j:outputPanel>
+					</rich:panel>
+					<a4j:region
+						rendered="#{not registroTramiteManaged.vistaExpedienteSimple}">
+						<rich:panel style="border:1">
+							<h:outputText value="Relacionados" style="font-weight: bold;" />
+							<rich:dataTable
+								value="#{registroTramiteManaged.listTdDataValors}"
+								var="itemValores" id="idDataTableValores" rowKeyVar="row"
+								columnsWidth="100px,200px,200px,100px">
+								<h:column>
+									<f:facet name="header">Edit</f:facet>
+									<div align="center">
+										<a4j:commandLink ajaxSingle="true" id="newlink3"
+											action="#{registroTramiteManaged.changeRowItemValores}"
+											reRender="idDataTableValores">
+											<h:graphicImage value="/images/modal/edit.gif"
+												style="border:0" id="xm11"
+												rendered="#{not itemValores.enEdicion}" title="Editar" />
+											<f:setPropertyActionListener
+												target="#{registroTramiteManaged.indexTblAnexo}"
+												value="#{row}" />
+										</a4j:commandLink>
+										<a4j:commandLink ajaxSingle="true" id="newlink4"
+											action="#{registroTramiteManaged.quitRowItemValor}"
+											reRender="idDataTableValores">
+											<h:graphicImage value="/images/modal/delete.gif"
+												style="border:0" id="xm13"
+												rendered="#{itemValores.enEdicion}" title="Quitar" />
+											<f:setPropertyActionListener
+												target="#{registroTramiteManaged.indexTblAnexo}"
+												value="#{row}" />
+										</a4j:commandLink>
+									</div>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Tipo Valor</f:facet>
+									<div align="center">
+										<h:selectOneMenu id="idSelectOneSubTipo"
+											value="#{itemValores.tipoValorId}"
+											readonly="#{not itemValores.enEdicion}"
+											disabled="#{not itemValores.enEdicion}">
+											<f:selectItems
+												value="#{registroTramiteManaged.listTdDocumentoTramites}"
+												var="it" itemLabel="#{it.descCorta}"
+												itemValue="#{it.docuTramiteId}"></f:selectItems>
+											<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+										</h:selectOneMenu>
+									</div>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Nro Valor</f:facet>
+									<div align="center">
+										<h:outputText value="#{itemValores.nroValor}"
+											rendered="#{not itemValores.enEdicion}" />
+										<h:inputText value="#{itemValores.nroValor}"
+											rendered="#{itemValores.enEdicion}" size="25"
+											converter="uppeCaseConverter" styleClass="textUpperCase" />
+									</div>
+								</h:column>
+								<h:column>
+									<div align="center">
+										<a4j:commandButton value="Agregar"
+											action="#{registroTramiteManaged.addItemValor}"
+											reRender="idDataTableValores"
+											rendered="#{itemValores.enEdicion}"
+											oncomplete="#{facesContext.maximumSeverity == null ? ' ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+											<f:setPropertyActionListener
+												target="#{registroTramiteManaged.indexTblAnexo}"
+												value="#{row}" />
+										</a4j:commandButton>
+									</div>
+								</h:column>
+							</rich:dataTable>
+							<h:panelGrid>
+								<a4j:commandLink ajaxSingle="true"
+									action="#{registroTramiteManaged.addRowDataValor}"
+									reRender="idDataTableValores">
+									<h:graphicImage value="/images/plus.gif" title="Agregar fila" />
+								</a4j:commandLink>
+							</h:panelGrid>
+						</rich:panel>
+					</a4j:region>
+					
+					<rich:panel id="idPanelRequisitos"
+						rendered="#{not registroTramiteManaged.vistaExpedienteSimple}">
+						<h:outputLabel value="Requisitos" style="font-weight: bold;" />
+						<h:dataTable
+							value="#{registroTramiteManaged.listTdRequisitoExpedientes}"
+							var="itemReq">
+							<h:column>
+								<div>
+									<h:selectBooleanCheckbox value="#{itemReq.flagPresentado}">
+										<a4j:support event="onchange" ajaxSingle="true" />
+									</h:selectBooleanCheckbox>
+								</div>
+							</h:column>
+							<h:column>
+								<div style="width: 430px;">
+									<h:outputText value=" #{itemReq.descripcionRequisito}" />
+								</div>
+							</h:column>
+							<h:column>
+								<div style="width: 170px;">
+									<h:outputText value="Glosa: " />
+									<h:inputText value="#{itemReq.glosa}" size="20" />
+								</div>
+							</h:column>
+						</h:dataTable>
+					</rich:panel>
+					<rich:panel>
+						<a4j:region>
+							<h:outputText value="Documentos Anexos"
+								style="font-weight: bold;display: inline-block;height: 25px" />
+							<rich:dataTable
+								value="#{registroTramiteManaged.listDocumentoAnexos}"
+								var="itemDocumentoAnexo" id="tblDocumentosAnexos"
+								rowKeyVar="row"
+								columnsWidth="30px,170px,180px,70px,110px,90px,90px,70px">
+								<h:column>
+									<f:facet name="header">Edit</f:facet>
+									<div align="center">
+										<a4j:commandLink ajaxSingle="true" id="newlink3"
+											action="#{registroTramiteManaged.changeRowItemDocumentoAnexo}"
+											reRender="tblDocumentosAnexos">
+											<h:graphicImage value="/images/modal/edit.gif"
+												style="border:0" id="xm11"
+												rendered="#{not itemDocumentoAnexo.enEdicion }"
+												title="Editar" />
+											<f:setPropertyActionListener
+												target="#{registroTramiteManaged.indexTblDocumentoAnexo}"
+												value="#{row}" />
+										</a4j:commandLink>
+										<a4j:commandLink ajaxSingle="true" id="newlink4"
+											action="#{registroTramiteManaged.quitRowItemDocumentoAnexo}"
+											reRender="tblDocumentosAnexos"
+											rendered="#{itemDocumentoAnexo.enEdicion }">
+											<h:graphicImage value="/images/modal/delete.gif"
+												style="border:0" id="xm13" title="Quitar" />
+											<f:setPropertyActionListener
+												target="#{registroTramiteManaged.indexTblDocumentoAnexo}"
+												value="#{row}" />
+										</a4j:commandLink>
+									</div>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Tipo Documento</f:facet>
+									<h:selectOneMenu value="#{itemDocumentoAnexo.tipoDocumentoId}"
+										style="word-wrap:break-word;width:100%;"
+										rendered="#{not itemDocumentoAnexo.enEdicion}"
+										disabled="true">
+										<f:selectItems
+											value="#{registroTramiteManaged.listGnTipoDocumentos}"
+											var="itTipoDoc" itemLabel="#{itTipoDoc.descripcion}"
+											itemValue="#{itTipoDoc.tipoDocumentoId}" />
+									</h:selectOneMenu>
+									<h:selectOneMenu value="#{itemDocumentoAnexo.tipoDocumentoId}"
+										style="word-wrap:break-word;width:100%;"
+										rendered="#{itemDocumentoAnexo.enEdicion}">
+										<f:selectItems
+											value="#{registroTramiteManaged.listGnTipoDocumentos}"
+											var="itTipoDoc" itemLabel="#{itTipoDoc.descripcion}"
+											itemValue="#{itTipoDoc.tipoDocumentoId}" />
+										<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+									</h:selectOneMenu>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Nro Documento</f:facet>
+									<div align="center">
+										<h:outputText value="#{itemDocumentoAnexo.nroDocumento}"
+											rendered="#{not itemDocumentoAnexo.enEdicion}" />
+										<h:inputText value="#{itemDocumentoAnexo.nroDocumento}"
+											rendered="#{itemDocumentoAnexo.enEdicion}"
+											converter="uppeCaseConverter" styleClass="textUpperCase"
+											size="25" maxlength="20" required="true"
+											requiredMessage="Ingrese un nro de documento"
+											style="padding-left: 5px;" />
+									</div>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Nro Folios</f:facet>
+									<div align="center">
+										<h:outputText value="#{itemDocumentoAnexo.nroFolio}"
+											rendered="#{not itemDocumentoAnexo.enEdicion}" />
+										<h:inputText value="#{itemDocumentoAnexo.nroFolio}"
+											rendered="#{itemDocumentoAnexo.enEdicion}"
+											converter="uppeCaseConverter" styleClass="textUpperCase"
+											size="5" maxlength="5" required="true"
+											requiredMessage="Ingrese el nro de folios"
+											style="padding-left: 5px;" />
+									</div>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Fecha Documento</f:facet>
+									<h:outputText value="#{itemDocumentoAnexo.fechaDocumento}"
+										rendered="#{itemDocumentoAnexo.estado == 1 }">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+											timeZone="#{msg['param.timezone']}" />
+									</h:outputText>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Unidad</f:facet>
+									<div align="center">
+										<h:outputText value="#{itemDocumentoAnexo.unidadAsString}" />
+									</div>
+								</h:column>
+								<h:column>
+									<f:facet name="header">Usuario</f:facet>
+									<div align="center">
+										<h:outputText value="#{itemDocumentoAnexo.usuarioAsString}"
+											rendered="#{itemDocumentoAnexo.estado == 1 }" />
+									</div>
+								</h:column>
+								<h:column>
+									<div align="center">
+										<a4j:commandButton value="Agregar"
+											action="#{registroTramiteManaged.addItemDocumentoAnexo}"
+											reRender="tblDocumentosAnexos"
+											rendered="#{itemDocumentoAnexo.enEdicion}"
+											oncomplete="#{facesContext.maximumSeverity == null ? ' ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+											<f:setPropertyActionListener
+												target="#{registroTramiteManaged.indexTblDocumentoAnexo}"
+												value="#{row}" />
+										</a4j:commandButton>
+									</div>
+								</h:column>
+								<!-- <h:column>
+								<f:facet name="header">Path Doc</f:facet>
+								<h:panelGroup id="idPanelGroupColPathDoc">
+									<h:panelGrid columns="3" columnClasses="col1GridFileUpload, col2GridFileUpload, col3GridFileUpload"
+										rendered="#{item.estado.value == 0}" cellpadding="0" cellspacing="0">
+										<a4j:commandButton onclick="$('#{rich:clientId('idArchivoFileUpload')}:file').click();" value="Examinar...">
+											<f:setPropertyActionListener target="#{expedienteManaged.indexTblAnexo}" value="#{row}"></f:setPropertyActionListener>
+										</a4j:commandButton>
+										<h:outputText value="Archivo: #{item.file.fileName}" rendered="#{item.file != null}" />
+										<h:outputText value="Archivo no adjuntado..." style="color:red;" rendered="#{item.file == null}" />
+									</h:panelGrid>
+									<h:panelGrid columns="1" rendered="#{item.estado.value == 1 or item.estado.value == 2}" cellpadding="0"
+										cellspacing="0">
+										<h:outputText value="Archivo: #{item.file.fileName}" rendered="#{item.file != null}" />
+									</h:panelGrid>
+								</h:panelGroup>
+								<div style="display: none;">
+									<rich:fileUpload id="idArchivoFileUpload" immediateUpload="true"
+										fileUploadListener="#{expedienteManaged.listenerArchivoFileUpload}"
+										onsizerejected="#{rich:component('panelSizeRejected')}.show();return false;">
+										<a4j:support id="onfileuploadcomplete" event="onfileuploadcomplete" reRender="tblAnexosExpediente"
+											immediate="true" />
+									</rich:fileUpload>
+								</div>
+							</h:column>
+							<h:column>
+								<div align="center">
+									<a4j:commandButton value="Descargar" rendered="#{item.estado.value == 2}" />
+									<a4j:commandButton value="Agregar" action="#{expedienteManaged.addItem}" reRender="tblAnexosExpediente"
+										rendered="#{item.estado.value == 0}">
+										<f:setPropertyActionListener target="#{expedienteManaged.indexTblAnexo}" value="#{row}" />
+									</a4j:commandButton>
+								</div>
+							</h:column>-->
+							</rich:dataTable>
+							<h:panelGrid>
+								<a4j:commandLink ajaxSingle="true"
+									action="#{registroTramiteManaged.addRowDataDocumentoAnexo}"
+									reRender="tblDocumentosAnexos"
+									oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+									<h:graphicImage value="/images/plus.gif" title="Agregar fila" />
+								</a4j:commandLink>
+							</h:panelGrid>
+						</a4j:region>
+					</rich:panel>
+
+					<rich:panel>
+						<h:outputLabel value="Observaciones: " style="font-weight: bold;" />
+						<h:panelGrid>
+							<h:inputTextarea value="#{registroTramiteManaged.tdExpediente.observacion}" cols="100" rows="3"  />
+						</h:panelGrid>
+					</rich:panel>
+					
+					<rich:panel>
+						<h:outputLabel value="Derivación" style="font-weight: bold;" />
+						<h:panelGrid columns="2">
+							<h:outputLabel value="Área" for="idSelectOneArea">:</h:outputLabel>
+							<h:selectOneMenu id="idSelectOneArea" style="width:210px"
+								value="#{registroTramiteManaged.tdExpediente.unidadId}">
+								<f:selectItems value="#{registroTramiteManaged.listGnUnidad}"
+									var="itUnidad" itemLabel="#{itUnidad.descripcion}"
+									itemValue="#{itUnidad.unidadId}" />
+							</h:selectOneMenu>
+						</h:panelGrid>
+						  
+						<h:panelGrid columns="2" rendered="#{registroTramiteManaged.enEdicion}">
+							<h:outputLabel value="Estado del Expediente" for="idSelectEstado">:</h:outputLabel>
+							<h:selectOneMenu id="idSelectEstadoEdi" style="width:190px"
+								value="#{registroTramiteManaged.tdExpediente.estadoExpediente}">
+								<f:selectItems value="#{registroTramiteManaged.listTdEstadoExpediente}"
+									var="itEstado" itemLabel="#{itEstado.descripcion}"
+									itemValue="#{itEstado.estadoExpedienteId}" />
+							</h:selectOneMenu>
+						</h:panelGrid>	
+						
+						<h:panelGrid columns="2" rendered="#{not registroTramiteManaged.enEdicion}">
+							<h:outputLabel value="Estado del Expediente" for="idSelectEstado">:</h:outputLabel>
+							<h:selectOneMenu id="idSelectEstadoRe" style="width:190px"
+								value="#{registroTramiteManaged.tdEstadoExpediente.estadoExpedienteId}">
+								<f:selectItems value="#{registroTramiteManaged.listTdEstadoExpediente}"
+									var="itEstado" itemLabel="#{itEstado.descripcion}"
+									itemValue="#{itEstado.estadoExpedienteId}" />
+							</h:selectOneMenu>
+						</h:panelGrid>	
+						
+						<h:panelGrid columns="3" rendered="#{registroTramiteManaged.enEdicion}">
+							<h:outputLabel value="Situación del Expediente" for="idSelectOneArea">:</h:outputLabel>
+							<h:selectOneMenu id="idSelectSituacion" style="width:190px"
+								value="#{registroTramiteManaged.tdExpediente.situacionExpediente}">
+								<f:selectItems value="#{registroTramiteManaged.listTdSituacionExpediente}"
+									var="itSituacion" itemLabel="#{itSituacion.descripcion}"
+									itemValue="#{itSituacion.situacionExpedienteId}" />
+							</h:selectOneMenu>
+						</h:panelGrid>
+																	
+					</rich:panel>
+				</h:panelGrid>
+
+				<div align="center" style="width: 950px;">		
+				<a4j:outputPanel rendered="#{not registroTramiteManaged.enEdicion}">
+						<a4j:commandButton value="Guardar Expediente"
+							action="#{registroTramiteManaged.guardarExpediente}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							reRender="idPanelRegistroExpediente,idPanelBandejaEntrada,idCorrelativoActual"
+							status="ajaxStatus"
+							rendered="#{not registroTramiteManaged.vistaExpedienteSimple}"
+							style="width:120px">
+						</a4j:commandButton>
+						<a4j:commandButton value="Guardar Expediente"
+							action="#{registroTramiteManaged.guardarExpedienteSimple}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							reRender="idPanelRegistroExpediente,idPanelBandejaEntrada,idCorrelativoActual"
+							status="ajaxStatus"
+							rendered="#{registroTramiteManaged.vistaExpedienteSimple}"
+							style="width:120px"></a4j:commandButton>
+					</a4j:outputPanel>
+					<a4j:outputPanel rendered="#{registroTramiteManaged.enEdicion}">
+						<a4j:commandButton value="Actualizar Expediente"
+							action="#{registroTramiteManaged.actualizarExpediente}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							reRender="idPanelRegistroExpediente,idPanelBandejaEntrada,idCorrelativoActual"
+							status="ajaxStatus"
+							rendered="#{not registroTramiteManaged.vistaExpedienteSimple}"
+							style="width:120px"></a4j:commandButton>
+						<a4j:commandButton value="Actualizar Expediente"
+							action="#{registroTramiteManaged.actualizarExpedienteSimple}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							reRender="idPanelRegistroExpediente,idPanelBandejaEntrada,idCorrelativoActual"
+							status="ajaxStatus"
+							rendered="#{registroTramiteManaged.vistaExpedienteSimple}"
+							style="width:120px"></a4j:commandButton>
+					</a4j:outputPanel>
+					<a4j:commandButton value="Cancelar"
+						action="#{registroTramiteManaged.cancelar}"
+						oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="idPanelRegistroExpediente,idPanelBandejaEntrada,idCorrelativoActual"
+						status="ajaxStatus" ajaxSingle="true" style="width:120px"></a4j:commandButton>
+				</div>
+
+			</rich:panel>
+		</rich:panel>
+	</h:form>
+	<!-- SECCION MODAL'S PANEL'S -->
+	<rich:modalPanel id="modalPanelBuscarContribuyente" moveable="true"
+		resizeable="true" minHeight="400" minWidth="850">
+		<f:facet name="header"> BUSCAR REMITENTE</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hidelinkBuscarContribuyente" styleClass="hidelink" />
+				<rich:componentControl for="modalPanelBuscarContribuyente"
+					attachTo="hidelinkBuscarContribuyente" operation="hide"
+					event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formBuscarContribuyente">
+			<ui:include
+				src="/sisat/tramitedocumentario/popup/buscarcontribuyente.xhtml">
+				<ui:param name="componentModalId"
+					value="modalPanelBuscarContribuyente"></ui:param>
+				<ui:param name="reRederIdComponent"
+					value="richPanelDataContribuyente"></ui:param>
+			</ui:include>
+		</h:form>
+	</rich:modalPanel>
+	
+		<!-- PARA INGRESAR NUEVO REMITENTE -->	
+		  
+		<rich:modalPanel id="modalPanelNuevoRemitente" moveable="true"
+		resizeable="true" minHeight="280" minWidth="850">
+		<f:facet name="header">INGRESAR NUEVO REMITENTE</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hidelinkNuevoRemitente" styleClass="hidelink" />
+				<rich:componentControl for="modalPanelNuevoRemitente"
+					attachTo="hidelinkNuevoRemitente" operation="hide"
+					event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formNuevoRemitente">
+			<ui:include
+				src="/sisat/tramitedocumentario/popup/registrarremitente.xhtml">
+				<!--  
+				<ui:param name="componentModalId1"
+					value="modalPanelNuevoRemitente"></ui:param>
+				<ui:param name="reRederIdComponent1"
+					value="richPanelDataRemitente"></ui:param>
+					-->
+			</ui:include>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="modalPanelBuscarRepresentante" moveable="true"
+		resizeable="true" minHeight="460" minWidth="840">
+		<f:facet name="header"> BUSCAR FIRMANTE</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hidelinkBuscarRepresentante" styleClass="hidelink" />
+				<rich:componentControl for="modalPanelBuscarRepresentante"
+					attachTo="hidelinkBuscarRepresentante" operation="hide"
+					event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formBuscarRepresentante">
+			<ui:include
+				src="/sisat/tramitedocumentario/popup/buscarpersona.xhtml">
+				<ui:param name="componentModalId"
+					value="modalPanelBuscarRepresentante"></ui:param>
+				<ui:param name="reRederIdComponent" value="richPanelRepresentante"></ui:param>
+			</ui:include>
+		</h:form>
+	</rich:modalPanel>
+	<rich:modalPanel id="panelBuscarViaRepresentante" moveable="true"
+		resizeable="false" minWidth="740" minHeight="400">
+		<f:facet name="header">BUSCAR DIRECCION</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink4sd"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelBuscarViaRepresentante"
+					attachTo="hidelink4sd" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formBuscarVia">
+			<h:panelGrid>
+				<!-- <a4j:include viewId="/sisat/persona/buscarvia.xhtml" /> -->
+				<ui:include
+					src="/sisat/tramitedocumentario/popup/buscarviapopup.xhtml">
+					<ui:param name="reRederIdComponent" value="richPanelRepresentante"></ui:param>
+					<ui:param name="componentModalId"
+						value="panelBuscarViaRepresentante"></ui:param>
+				</ui:include>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	<!-- PANEL SEGUIMIENTO EXPEDIENTE -->
+	<rich:modalPanel id="panelseguimiento" autosized="true" moveable="true" resizeable="false" minWidth="450" minHeight="250">
+		<f:facet name="header">SEGUIMIENTO DE EXPEDIENTE</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepanelseguimiento"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelseguimiento" attachTo="iconclosepanelseguimiento" 
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmSeguimiento">	
+			<rich:panel style="width:100%;"	id="id_seguimientoExpediente"> 	
+				
+				<table border="0">
+					<tr>
+						<td><a4j:commandButton id="cmdlnkseguimientoexp"
+								value="Imprimir Seguimiento"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.prueba2\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' }; ">
+							</a4j:commandButton> <h:commandLink id="linkId2" styleClass="prueba2" value="se"
+								style="display: none;"
+								action="#{reporteTramiteDocManaged.imprimirSeguimiento(registroTramiteManaged.idExpeDig)}" /> <rich:toolTip
+								for="cmdlnkseguimientoexp" value="Imprimir Hoja de Seguimiento" /></td>
+					</tr>
+				</table>
+				
+				<h:panelGrid columns="2">
+				<table border="0" width="100%" align="left">
+					<tr>
+						<td align="right" width="150px" height="17px" style="color: black; font-weight:bold; font-size:12px; ">							
+							Expediente : 
+						</td>		
+					</tr>	
+					<tr>
+						<td align="right" width="150px" height="17px" style="color: black; font-weight:bold; font-size:12px; ">							
+							Fecha de Presentación :
+						</td>	
+					</tr>				
+					<tr>
+						<td align="right" width="150px" height="17px" style="color: black; font-weight:bold; font-size:12px; ">							
+							Procedimiento :
+						</td>
+					</tr>					
+					<tr>
+						<td align="right" width="150px" height="17px" style="color: black; font-weight:bold; font-size:12px; ">							
+							Tramite :
+						</td>			
+					</tr>
+					<tr>
+						<td align="right" width="150px" height="17px" style="color: black; font-weight:bold; font-size:12px; ">							
+							Remite :
+						</td>			
+					</tr>
+					<tr>
+						<td align="right" width="150px" height="17px" style="color: black; font-weight:bold; font-size:12px; ">
+							Firma :
+						</td>			
+					</tr>
+					<tr>
+						<td align="right" width="150px" height="17px" style="color: black; font-weight:bold; font-size:12px; ">							
+							Cargo : 
+						</td>			
+					</tr>					
+					<tr>
+						<td align="right" width="150px" height="17px" style="color: black; font-weight:bold; font-size:12px; ">							
+							Documento :
+						</td>				
+					</tr>	
+					<tr>
+						<td align="right" width="150px" height="17px" style="color: black; font-weight:bold; font-size:12px; ">							
+							Asunto :
+						</td>				
+					</tr>				
+					<tr>
+						<td align="right" width="150px" height="17px" style="color: black; font-weight:bold; font-size:12px; ">							
+							Nro. Folios :
+						</td>		
+					</tr>
+				</table>
+				<rich:dataTable id="dataTableSeguimientoExpedientesc"
+						value="#{registroTramiteManaged.listItemSeguimientoExpedienteDTOs}"
+						var="exp" rowKeyVar="rowIndex" rows="1"
+						rendered="#{not empty registroTramiteManaged.listItemSeguimientoExpedienteDTOs}">					
+					
+					<rich:columnGroup>
+						 <rich:column>						 	
+		                    <h:outputText value="#{exp.expediente}"/>
+		                    <rich:toolTip>
+								<h:panelGrid>
+									<h:outputText value="Cod. Interno: #{exp.nroExpediente}" />
+									<h:outputText value="Fecha Registro: #{exp.fechaRegistro}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="#{msg['param.timezone']}" />
+									</h:outputText>	
+									<h:outputText value="Fecha Actualización: #{exp.fechaActualizacion}">
+										<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="#{msg['param.timezone']}" />
+									</h:outputText>
+									<h:outputText value="Actualizado Por: #{exp.usuarioDes}" />
+								</h:panelGrid>
+							</rich:toolTip>
+               			 </rich:column>
+					</rich:columnGroup>
+					<rich:columnGroup>						
+					</rich:columnGroup>
+					<rich:columnGroup>
+						<rich:column> 
+		                    <h:outputText value="#{exp.fechaPresentacion}">
+		                    	<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="#{msg['param.timezone']}" />
+		                    </h:outputText>		                    
+               			 </rich:column>
+					</rich:columnGroup>
+					<rich:columnGroup>
+						<rich:column> 
+		                    <h:outputText value="#{exp.procedimiento}"/>
+               			 </rich:column>
+					</rich:columnGroup>
+					<rich:columnGroup>
+						<rich:column> 
+		                    <h:outputText value="#{exp.tramite}"/>
+               			 </rich:column>
+					</rich:columnGroup>
+					<rich:columnGroup>
+						<rich:column> 
+		                    <h:outputText value="#{exp.remitente}"/>
+		                    <rich:toolTip>
+								<h:panelGrid>
+									<h:outputText value="Nro. Documento: #{exp.docRemite}" />	
+								</h:panelGrid>
+							</rich:toolTip>
+               			 </rich:column>
+					</rich:columnGroup>
+					<rich:columnGroup>
+						<rich:column> 
+		                    <h:outputText value="#{exp.firmante}"/>
+		                    <rich:toolTip>
+								<h:panelGrid>
+									<h:outputText value="Nro. Documento: #{exp.docFirma}" />									
+									<h:outputText value="Dirección: #{exp.direccion}" />
+								</h:panelGrid>
+							</rich:toolTip>
+               			 </rich:column>
+					</rich:columnGroup>
+					<rich:columnGroup>
+						<rich:column> 
+		                    <h:outputText value="#{exp.cargo}"/>
+               			 </rich:column>
+					</rich:columnGroup>
+					<rich:columnGroup>
+						<rich:column> 
+		                    <h:outputText value="#{exp.documento}"/>
+               			 </rich:column>
+					</rich:columnGroup>
+					<rich:columnGroup>
+						<rich:column> 
+		                    <h:outputText value="#{exp.asunto}"/>
+               			 </rich:column>
+					</rich:columnGroup>
+					<rich:columnGroup>
+						<rich:column> 
+		                    <h:outputText value="#{exp.nroFolios}"/>
+		                     <rich:toolTip>
+								<h:panelGrid>
+									<h:outputText value="Nro. Fedateados: #{exp.nroExpFedat}" />
+								</h:panelGrid>
+							</rich:toolTip>
+               			 </rich:column>
+					</rich:columnGroup>
+				</rich:dataTable>
+				</h:panelGrid>	
+			</rich:panel>			
+		</h:form>
+		<h:form id="frmSeguimientoDetalle">	
+			<rich:panel style="width:100%;"	id="id_seguimientoExpedienteDetalle"> 
+			
+			<rich:simpleTogglePanel id="togglePanelResultadosSegEx"
+					switchType="client"
+					label="Seguimiento del Expediente N° #{registroTramiteManaged.nroExpeGenerico}"
+					height="auto" styleClass="uniqueClassName" opened="true">	
+								
+				<rich:dataTable id="dataTableSeguimientoExpedientes"
+						value="#{registroTramiteManaged.listItemSeguimientoEntradaDTOs}"
+						var="item" rowKeyVar="rowIndex" rows="8"
+						rendered="#{not empty registroTramiteManaged.listItemSeguimientoEntradaDTOs}">
+						<h:column>
+							<div align="center">
+								<h:outputText value="#{rowIndex + 1}" />
+							</div>
+						</h:column>	
+						<h:column>
+							<f:facet name="header">Fecha</f:facet>
+							<div align="center">
+								<h:outputText value="#{item.fechaSeg}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="#{msg['param.timezone']}" />
+								</h:outputText>
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Estado / Situación</f:facet>
+							<div style="width: 105px;" align="left">
+								<h:outputText value="#{item.estadoExpediente} / #{item.situacionExpediente}" />
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Oficina Origen</f:facet>
+							<div style="width: 70px;" align="left">
+								<h:outputText value="#{item.oficinaOrigen}" />
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="#{item.oficinaOrigenDes}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>						
+						<h:column>
+							<f:facet name="header">Usuario Origen</f:facet>
+							<div style="width: 40px;" align="left">
+								<h:outputText value="#{item.usuarioOrigen}" />
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="#{item.usuarioOrigenDes}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Oficina Destino</f:facet>
+							<div style="width: 70px;" align="center">
+								<h:outputText value="#{item.oficinaDestino}" />
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="#{item.oficinaDestinoDes}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Usuario Destino</f:facet>
+							<div style="width: 40px;" align="center">
+								<h:outputText value="#{item.usuarioDestino}" />
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="#{item.usuarioDestinoDes}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>						
+						<h:column>
+							<f:facet name="header">Observación</f:facet>
+							<div style="width: 200px;" align="center">
+								<h:outputText value="#{item.obsevacionExpe}" />
+							</div>
+						</h:column>	
+						<h:column>
+							<f:facet name="header">Resultado</f:facet>
+							<div style="width: 200px;" align="center">
+								<h:outputText value="" />
+							</div>
+						</h:column>												
+					</rich:dataTable>
+					<rich:datascroller id="tableDataScroller" align="center"
+						for="dataTableSeguimientoExpedientes" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+				</rich:simpleTogglePanel>
+			</rich:panel>			
+			<a4j:commandButton value="Cerrar" style="width:100px;"
+						onclick="#{rich:component('panelseguimiento')}.hide();return false;" />						
+		</h:form>		
+	</rich:modalPanel>
+	<!-- PANEL ACTUALIZACIONES EXPEDIENTE -->
+	<rich:modalPanel id="panelactualizaciones" autosized="true" moveable="true" resizeable="false" minWidth="1050" minHeight="250">
+		<f:facet name="header">MODIFICACIONES REALIZADAS EN EXPEDIENTE</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepanelactualizacion"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelactualizaciones" attachTo="iconclosepanelactualizacion" 
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>		
+		<h:form id="frmActualizacionesExpediente">	
+			<rich:panel style="width:100%;"	id="id_actualizacionExpediente"> 
+			
+			<rich:simpleTogglePanel id="togglePanelResultadosActEx"
+					switchType="client"
+					label="Modificaciones del Expediente N° #{registroTramiteManaged.nroExpeGenerico}"
+					height="auto" styleClass="uniqueClassName" opened="true">
+				<rich:dataTable id="dataTableActualizacionesExpedientes"
+						value="#{registroTramiteManaged.listItemHistoricoEntradaDTOs}"
+						var="item" rowKeyVar="rowIndex" rows="10"
+						rendered="#{not empty registroTramiteManaged.listItemHistoricoEntradaDTOs}">
+						<h:column>
+							<div align="center">
+								<h:outputText value="#{rowIndex + 1}" />
+							</div>
+						</h:column>	
+						<h:column>
+							<f:facet name="header">Fecha Modif.</f:facet>
+							<div style="width: 58px;" align="center">
+								<h:outputText value="#{item.fechaMovimiento}" id="fechaRecepcionId">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+										timeZone="#{msg['param.timezone']}" />	
+								</h:outputText>
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Nro. Expediente</f:facet>
+							<div style="width: 80px;" align="left">
+								<h:outputText value="#{item.expediente}" />
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="Cod. Interno: #{item.nroExpediente}" />
+										<h:outputText value="Cod. Anterior: #{item.nroExpedienteAnterior}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>												
+						<h:column>
+							<f:facet name="header">Procedimiento</f:facet>
+							<div style="width: 60px;" align="left">
+								<h:outputText value="#{item.procedimiento}" />
+							</div>
+						</h:column>	
+						<h:column>
+							<f:facet name="header">Tramite</f:facet>
+							<div style="width: 70px;" align="left">
+								<h:outputText value="#{item.tramite}" />
+							</div>
+						</h:column>						
+						<h:column>
+							<f:facet name="header">Remite</f:facet>
+							<div style="width: 180px;" align="left">
+								<h:outputText value="#{item.remitente}" />
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="Doc. Identidad: #{item.docRemite}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>						 
+						<h:column>
+							<f:facet name="header">Firma</f:facet>
+							<div style="width: 180px;" align="left">
+								<h:outputText value="#{item.firmante}" />
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="Doc. Identidad: #{item.docFirma}" />
+									</h:panelGrid>
+								</rich:toolTip>
+							</div>
+						</h:column>		
+						<h:column>
+							<f:facet name="header">Área</f:facet>
+							<div style="width: 25px;" align="center">
+								<h:outputText value="#{item.descCorta}" />
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="#{item.areaDescripcion}" />
+									</h:panelGrid>
+								</rich:toolTip>							
+							</div>
+						</h:column>										
+						<h:column>
+							<f:facet name="header">Documento</f:facet>
+							<div style="width: 150px;" align="center">
+								<h:outputText value="#{item.referencia}" />	
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="Asunto: #{item.asunto}" />
+										<h:outputText value="Observación: #{item.observacion}" />
+									</h:panelGrid>
+								</rich:toolTip>									
+							</div>
+						</h:column>											
+						<h:column>
+							<f:facet name="header">Fecha Pres.</f:facet>
+							<div align="center">
+								<h:outputText value="#{item.fechaPresentacion}">
+									<f:convertDateTime pattern="dd/MM/yyyy"
+										timeZone="#{msg['param.timezone']}" />
+								</h:outputText>
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="Registro: #{item.fechaRegistro}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+												timeZone="#{msg['param.timezone']}" />
+										</h:outputText>
+										<h:outputText value="Actualización: #{item.fechaActualizacion}">
+											<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+												timeZone="#{msg['param.timezone']}" />
+										</h:outputText>
+									</h:panelGrid>
+								</rich:toolTip>		
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Fol.</f:facet>
+							<div style="width: 5px;" align="center">
+								<h:outputText value="#{item.nroFolios}" />
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="N° Fedateados: #{item.nroFedat}" />
+									</h:panelGrid>
+								</rich:toolTip>		
+							</div>
+						</h:column>
+						<h:column>
+							<f:facet name="header">Estado/Situación</f:facet>
+							<div style="width: 90px;" align="center">
+								<h:outputText value="#{item.estadoExpediente} / #{item.situacionExpediente}" />								
+							</div>
+						</h:column>	
+						<h:column>
+							<f:facet name="header">Usuario</f:facet>
+							<div style="width: 50px;" align="center">
+								<h:outputText value="#{item.usuario}" />
+								<rich:toolTip>
+									<h:panelGrid>
+										<h:outputText value="#{item.usuarioCompleto}" />
+									</h:panelGrid>
+								</rich:toolTip>	
+							</div>
+						</h:column>											
+					</rich:dataTable>
+					<rich:datascroller id="tableDataScroller" align="center"
+						for="dataTableActualizacionesExpedientes" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+				</rich:simpleTogglePanel>
+			</rich:panel>			
+			<a4j:commandButton value="Cerrar" style="width:100px;"
+						onclick="#{rich:component('panelactualizaciones')}.hide();return false;" />						
+		</h:form>	
+	</rich:modalPanel>
+	
+	<!-- PANEL DIGITALIZAR EXPEDIENTE -->
+	<rich:modalPanel id="idPanelAdjuntarExpediente" autosized="true" moveable="true" resizeable="false" minWidth="268" minHeight="290">
+		<f:facet name="header">DIGITALIZAR EXPEDIENTE N° #{registroTramiteManaged.nroExpeGenerico}</f:facet>	
+		 
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepaneldigitalizar"
+					styleClass="hidelink" />
+				<rich:componentControl for="idPanelAdjuntarExpediente" attachTo="iconclosepaneldigitalizar" 
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<div align="center" style="background-color: #FFFFFF;">
+		<br /> <br />		
+		<!-- Applet para escanear y enviar metadatos al expediente digitalizado a guardar -->		
+		<object classid="java:uk.co.mmscomputing.device.twain.applet.TwainAppletExample.class" 
+				codebase="/satc/sisat/tramitedocumentario/applet/"
+	            type="application/x-java-applet"
+	            archive="td.digitalizar.jar" 
+	            height="150" width="170" >
+	        <param name="archive" value="td.digitalizar.jar" />
+	        <param name="ubicacionArchivo" value="#{registroTramiteManaged.ubiArchivoExpeDig}" />
+			<param name="nombreArchivo" value="#{registroTramiteManaged.nomArchivoExpeDig}" />
+			<param name="usuarioDigitaliza" value="#{sessionManaged.usuarioLogIn.nombres}  #{sessionManaged.usuarioLogIn.apellidos}" />
+			<param name="expedienteGenerico" value="#{registroTramiteManaged.nroExpeGenerico}" />
+			<param name="documentoReferencia" value="#{registroTramiteManaged.refDocumentoExpe}" />
+			<param name="palabrasClave" value="Remite: #{registroTramiteManaged.remiteExp}  Firma: #{registroTramiteManaged.firmaExp}  Observacion: #{registroTramiteManaged.observacionExp}  Fecha Presentacion: #{registroTramiteManaged.fechaPresentacionExp}  Estado: #{registroTramiteManaged.estadoExp}  Tramite: #{registroTramiteManaged.tramiteExp}" />
+			<param name="asuntoExpediente" value="#{registroTramiteManaged.asuntoExp}" />
+		</object>
+		<br /> <br /> <br /> 		
+		<h:form id="idFormSituacionExpediente">		
+			<div align="center" style="background-color: #F5EEEE;">SITUACION DE EXPEDIENTE</div>
+			<div align="center" style="background-color: #FFFFFF;">
+									
+				<h:panelGrid columns="2" styleClass="buttons" columnClasses="col9">
+											
+					<a4j:commandLink value="Digitalizado" action="#{registroTramiteManaged.digitalizarExpediente(registroTramiteManaged.idExpeDig)}" 
+						reRender="idPanelBandejaEntrada,idCorrelativoActual"  styleClass="buttonRed"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'idPanelAdjuntarExpediente\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"						
+						status="ajaxStatus"  >
+					</a4j:commandLink>
+											
+					<a4j:commandLink value="Derivado" action="#{registroTramiteManaged.derivarExpediente(registroTramiteManaged.idExpeDig)}" 						
+						reRender="panelResultadoBusquedaExpedientes" styleClass="buttonRed"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'idPanelAdjuntarExpediente\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+						status="ajaxStatus" >
+					</a4j:commandLink>
+																
+				</h:panelGrid>
+									
+			</div>
+		</h:form>
+		</div>
+	</rich:modalPanel>
+	
+	
+	<!-- REQUISITOS EXP -->
+	
+		<rich:modalPanel id="panelRequisito" autosized="true" width="1000" height="250">
+			<f:facet name="header">
+				<h:outputText value="Requisitos de Beneficio Tributario" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink1" />
+					<rich:componentControl for="panelRequisito" attachTo="hidelink1"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+		<h:form>
+		<rich:panel id="idPanelFormulario">
+				<rich:panel id="a01">
+					<table border="0" width="100%" align="center">
+						<tr>
+							<td width="20%"><h:outputText value="Condición Especial :" /></td>
+							<td align="left" width="850px">
+								<rich:comboBox
+									id="id_cmbrequerimiento"
+									value="#{buscarBeneficioTributarioManaged.cmbValuetipocondicionespecial}"
+									valueChangeListener="#{buscarBeneficioTributarioManaged.loadTipoCondicion}"
+									defaultLabel="#{msg['obl.defaultLabelCmbSubConcepto']}"
+									width="220" tabindex="3"
+									onkeypress="return showListCbo(this,event);"
+									onblur="validaInputCbo(this)">
+									<f:selectItems
+										value="#{buscarBeneficioTributarioManaged.lsttipocondicionespecial}" />
+									<a4j:support reRender="idPanelFormulario"
+										event="onchange" bypassUpdates="false" ajaxSingle="true">
+									</a4j:support>
+								</rich:comboBox>
+							</td>
+						</tr>
+					</table>
+				</rich:panel>
+				<rich:panel id="id_panel_requisito"
+					style="width:99%; height: 400px;" align="left"
+				 rendered="#{buscarBeneficioTributarioManaged.isPensionista}">
+					<!-- 		<h:form id="formEditarRequisitos"> -->
+					<rich:datascroller for="tblDocSusnten" maxPages="10"></rich:datascroller>
+					<rich:extendedDataTable id="tblDocSusnten" rows="12"
+						value="#{buscarBeneficioTributarioManaged.lstRequisito}"
+						var="item" width="680px" height="350px">
+						<rich:column width="25">
+							<h:selectBooleanCheckbox value="#{item.selected}" />
+						</rich:column>
+						<rich:column width="460">
+							<f:facet name="header">
+								<h:outputLabel value="#{msg['gn.descripciondoc']}" />
+							</f:facet>
+							<h:outputText value="#{item.descripcion}" />
+						</rich:column>
+						<rich:column width="200">
+							<f:facet name="header">
+								<h:outputLabel value="#{msg['rv.glosa']}" />
+							</f:facet>
+							<h:inputText value="#{item.glosa}" styleClass="textUpperCase"
+								style="width: 180px">
+								<f:converter converterId="uppeCaseConverter" />
+							</h:inputText>
+						</rich:column>
+					</rich:extendedDataTable>
+					<h:panelGrid columns="5" columnClasses="classCenter">
+					<h:panelGroup>
+						<a4j:commandButton value="#{msg['gn.agregar']}" rendered="#{buscarBeneficioTributarioManaged.isNuevo}"
+							actionListener="#{buscarBeneficioTributarioManaged.agregarSustentoAdult}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelRequisito\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							reRender="panelRequisito,tblSustento">
+						</a4j:commandButton>
+						<a4j:commandButton value="#{msg['gn.actualizar']}" rendered="#{buscarBeneficioTributarioManaged.isEdicion}"
+							actionListener="#{buscarBeneficioTributarioManaged.actualizarSustento}"
+							oncomplete="Richfaces.showModalPanel('panelError')"
+							reRender="panelError">
+						</a4j:commandButton>
+<!-- 						<a4j:commandButton value="#{msg['gn.actualizar']}" rendered="#{buscarBeneficioTributarioManaged.isEdicion and buscarBeneficioTributarioManaged.isInspeccion==false}" -->
+<!-- 						<a4j:commandButton value="#{msg['gn.avisocreardeclaj']}" rendered="#{buscarBeneficioTributarioManaged.isEdicion and buscarBeneficioTributarioManaged.isInspeccion}" -->
+<!-- 							actionListener="#{buscarBeneficioTributarioManaged.actualizarSustento}" -->
+<!-- 							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelRequisito\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };" -->
+<!-- 							reRender="panelRequisito,tblSustento"> -->
+<!-- 						</a4j:commandButton> -->
+						<a4j:commandButton value="#{msg['gn.cancelar']}" immediate="true"
+							onclick="Richfaces.hideModalPanel('panelRequisito')"
+							style="margin-left:4px;">
+						</a4j:commandButton>
+						<h:commandButton value="Imp.Constancia"
+							id="btn_imprimirconstancia"
+							rendered="#{estadoCuentaManaged.esBuenContribuyente}"
+							style="width:100px;"
+							action="#{estadoCuentaManaged.imprimirConstancia}" accesskey="c" />
+						</h:panelGroup>
+<!-- 							<h:panelGroup id="id_panel_cerrar"> -->
+<!-- 								<a4j:commandButton value="#{msg['gn.cerrar']}" rendered="#{buscarBeneficioTributarioManaged.isCierre}" -->
+<!-- 									actionListener="#{buscarBeneficioTributarioManaged.actualizarRequerimiento}" -->
+									
+<!-- 									reRender="panelRequisito,tblSustento" -->
+<!-- 									style="margin-left:4px;"> -->
+<!-- 								</a4j:commandButton> -->
+<!-- 							</h:panelGroup> -->
+					</h:panelGrid>
+				</rich:panel>
+			</rich:panel>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelResolucion" autosized="true" width="1000" height="250">
+		<f:facet name="header">
+				<h:outputText value="Resolución de departamento" />
+			</f:facet>
+			<f:facet name="controls">
+			<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink1111" />
+					<rich:componentControl for="panelResolucion" attachTo="hidelink1111"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+		<h:form>
+			<rich:panel>
+				<table border="0">
+					<tr>
+						<td>
+							<h1>Resolución de Departamento</h1>
+						</td>
+					</tr>
+				</table>
+				<table border="0">
+					<tr>
+						<td>
+							<h2>N°</h2>
+						</td>
+						<td>
+							<h:inputText value="" />
+						</td>
+					</tr>
+				</table>
+				
+				<table border="0">
+					<tr>
+						<td>
+							<h3>(CÓDIGO) CONTRIBUYENTE:</h3>
+						</td>
+						<td>
+							<h:inputText value="" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h3>RECURRENTE:</h3>
+						</td>
+						<td>
+							<h:inputText value="" />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<h3>DNI:</h3>
+						</td>
+						<td>
+							<h:inputText value="" />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<h3>TELÉFONO:</h3>
+						</td>
+						<td>
+							<h:inputText value="" />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<h3>DOMICILIO FISCAL:</h3>
+						</td>
+						<td>
+							<h:inputText value="" />
+						</td>
+					</tr>
+					
+					<tr>
+						<td>
+							<h3>Cajamarca,</h3>
+						</td>
+						<td>
+							<h:inputText value="" />
+						</td>
+					</tr>
+					</table>
+					
+					<table>
+					<tr>
+						<td>
+							<h2>I. ANTEDEDENTE</h2>
+						</td>
+					</tr>
+					
+					<tr>			
+					<td>
+						El recurrente, presenta el expediente
+					</td>
+					<td>
+						<h:inputText value="" />
+					</td>
+					<td>
+						de fecha
+					</td>	
+					<td>
+						<h:inputText value="" />
+					</td>
+					<td>
+						, mediante el cual solicita el Beneficio Tributario
+					</td>
+					<td>
+						de Deducción de 50 UIT de la Base Imponible
+					</td>
+												
+					</tr>
+					
+					<tr>			
+						<td>
+							para el cálculo del Impuesto Predial 				
+						</td>
+						<td>
+							por tener la calidad de Pensionista, 
+						</td>
+						<td>
+							del predio
+						</td>
+						<td>
+							declarado bajo el código de contribuyente N° 
+						</td>
+						<td>
+						<h:inputText value="" />
+						</td>
+					</tr>
+					<tr>
+						<td>
+							; acreditando legitimidad para obrar 
+						</td>
+						<td>
+							mediante la presentación de copia
+						</td>
+						<td>
+							simple de
+						</td>
+						<td>
+							su Documento Nacional de identidad (folios 11);
+						</td>
+					</tr>	
+					
+				</table>
+				<table>
+					<tr>
+						<td>
+							<h2>II. CONSIDERAMOS</h2>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							El artículo 19º del T.U.O. de la Ley de Tributación Municipal, aprobado mediante Dec. Sup. Nº 156-2004-EF, establece:
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<textarea rows="" cols=""></textarea>;
+						</td>
+					</tr>
+				</table>
+				
+				<table>
+					<tr>
+						<td>
+							Se ha verificado la condición de pensionista del recurrente, a partir del 
+						</td>
+						<td>
+							<h:inputText value="" />,
+						</td>
+						<td>
+							 en mérito a la 
+						</td>
+						<td>
+							<h:inputText value="" />,
+						</td>
+					</tr>
+					<tr>
+						<td>
+						, emitida por la Oficina de Normalización Previsional, de fecha 18 de Setiembre de 1998; asimismo el recurrente percibe una pensión mensual de 
+						</td>
+						<td>
+							<h:inputText value="" />
+						</td>
+					</tr>
+				</table>
+				
+				
+				</rich:panel>
+		
+		</h:form>
+	
+	</rich:modalPanel>
+	
+	<!-- Beneficio -->
+	
+	<rich:modalPanel id="panelbeneficio" autosized="true" moveable="true" resizeable="false" minWidth="450" minHeight="250">
+		<f:facet name="header">BENEFICIO DEL EXPEDIENTE</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepanelbeneficio"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelbeneficio" attachTo="iconclosepanelbeneficio" 
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmBeneficio">	
+			<rich:panel style="width:100%;"	id="id_beneficioExpediente"> 	
+				
+				
+				
+			
+			</rich:panel>			
+		</h:form>
+			
+	</rich:modalPanel>					
+			
+</ui:composition>
+
+

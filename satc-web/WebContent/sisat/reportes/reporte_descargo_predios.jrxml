@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_descargo_predios" language="groovy" pageWidth="1540" pageHeight="840" orientation="Landscape" columnWidth="1540" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.357947691000003"/>
+	<property name="ireport.x" value="1872"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p_fecha_inicio" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_fecha_fin" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT     p.persona_id, mp_persona.apellidos_nombres, p.predio_id,
+max(ISNULL(CONVERT(char(10), p.fecha_descargo, 103),'')) AS fecha_descargo,
+mp_direccion.direccion_completa,
+max(p.fecha_registro)as fecha_registro
+FROM         rp_djpredial AS p INNER JOIN
+                      mp_persona ON p.persona_id = mp_persona.persona_id LEFT OUTER JOIN
+                      mp_direccion ON mp_persona.persona_id = mp_direccion.persona_id
+WHERE     (p.motivo_declaracion_id = 4) AND (p.estado = 1) AND (p.flag_dj_anno = 1)AND
+p.fecha_registro between $P{p_fecha_inicio} and $P{p_fecha_fin}
+GROUP BY p.persona_id, p.predio_id,mp_persona.apellidos_nombres, mp_direccion.direccion_completa
+ORDER BY p.persona_id]]>
+	</queryString>
+	<field name="persona_id" class="java.lang.Integer"/>
+	<field name="apellidos_nombres" class="java.lang.String"/>
+	<field name="predio_id" class="java.lang.Integer"/>
+	<field name="fecha_descargo" class="java.lang.String"/>
+	<field name="direccion_completa" class="java.lang.String"/>
+	<field name="fecha_registro" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20">
+			<staticText>
+				<reportElement x="125" y="0" width="241" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apellidos_Nombres]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="125" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Codigo_Contribuyente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="366" y="0" width="86" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código_Predio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="452" y="0" width="104" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha_Descargo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="556" y="0" width="457" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1013" y="0" width="103" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha_Registro]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="125" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{persona_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="0" width="241" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellidos_nombres}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="366" y="0" width="86" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{predio_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="452" y="0" width="104" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_descargo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="556" y="0" width="457" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion_completa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1013" y="0" width="103" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_registro}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="853" y="1" width="159" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL DE PREDIOS DESCARGADOS:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="1012" y="1" width="104" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

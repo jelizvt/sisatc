@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	
+    <h:form>
+		    <a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+			<a4j:loadScript src="/js/jquery.maskMoney.js" />
+			<script type="text/javascript">
+					var row;
+					function convertToUpper(oevent, othis) {
+						var temp = othis.value.toUpperCase();
+						othis.value = temp;
+					}
+					
+			</script>
+			
+	     <rich:panel  id="p01" >
+			<f:facet name="header">		
+				Datos del Recibo Extorno     
+			</f:facet>
+			<table style="border:0;width: 100% " >    
+			<tr>
+				<td>
+					<h:panelGroup id="pnlExtorno">
+						<table width="100%" cellpadding="3" cellspacing="3" border="0">
+						
+								<tr>  
+									<td align="left" width="150px"><div style="text-align: left"> 
+												<h:outputText value="Número Recibo :"  /></div></td>
+									<td><h:inputText value="#{extornoListaManaged.nro_recibo}" id="id_nroRecibo" style="width:200px" tabindex="1"  styleClass="textUpperCase">
+										<f:converter converterId="uppeCaseConverter"/>
+									</h:inputText></td>  
+								</tr>
+								<tr>  
+									<td align="left" width="150px"><div style="text-align: left"> 
+												<h:outputText value="Código del administrado:"  /></div></td>
+									<td><h:inputText id="id_Codigo" style="width:200px" tabindex="2" value="#{extornoListaManaged.codigoContribuyente}" styleClass="textUpperCase">
+										<f:converter converterId="uppeCaseConverter"/>
+									</h:inputText></td>  
+								</tr>
+								<tr>  
+									<td align="left" width="150px"><div style="text-align: left"> 
+												<h:outputText value="Tipo documento:"  /></div></td>
+									
+									<td><rich:comboBox width="150px" defaultLabel="Seleccionar" selectFirstOnUpdate="true" directInputSuggestions="false" id="cboTipoDocumento"
+															binding="#{extornoListaManaged.cmbtipoDoc}" requiredMessage="Seleccione un documento" immediate="true" tabindex="6"
+															onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+															>
+															<f:selectItems id="id_cmbtipodocumento" value="#{extornoListaManaged.lstTipoDoc}" />
+														</rich:comboBox>
+													</td>
+									<td align="left" width="150px"><div style="text-align: left"> 
+												<h:outputText value="Nro documento:"  /></div></td>
+									<td><h:inputText id="id_NroDocu" style="width:200px" tabindex="4"  value="#{extornoListaManaged.nroDocum}"  styleClass="textUpperCase">
+										<f:converter converterId="uppeCaseConverter"/>
+									</h:inputText></td>  
+								</tr>
+								<tr>
+										<td><h:outputText value="Fecha inicio de operación:" /></td>    
+										<td><rich:calendar value="#{extornoListaManaged.fechaInicio}" tabindex="5" datePattern="#{msg['param.datepattern']}"/>          
+										</td>
+										<td><h:outputText value="Fecha Fin de operacicón:" /></td>
+										<td><rich:calendar value="#{extornoListaManaged.fechaFin}" tabindex="6" datePattern="#{msg['param.datepattern']}"/>
+					                           
+										</td>
+										<td style="vertical-align: right">
+											<a4j:commandButton status="ajaxStatus"  value="Buscar" actionListener="#{extornoListaManaged.buscar}" style="width:100px;" reRender="id_tablelistarecibo"></a4j:commandButton>
+										</td>
+								</tr> 
+						</table>
+					</h:panelGroup>
+				</td>
+			</tr>
+			<tr> 
+					<td>
+						<table  width="100%"> 
+							<tr>
+								<td  width="100%">
+									<h:panelGrid id="pnllista" width="100%" >  
+										<f:facet name="header">Detalle del recibos</f:facet>
+										
+											<rich:extendedDataTable id="id_tablelistarecibo" value="#{extornoListaManaged.records}" var="record" width="100%" height="250px"
+											selectedClass="dataTableSelectedRow" sortMode="single" selectionMode="single" rowKeyVar="row">
+										
+											<rich:column width="12%" id="r01">
+								                		<f:facet name="header">Recibo</f:facet>
+								            	 <div style="text-align: center">
+									            	 <a4j:commandLink ajaxSingle="true" id="newlink3" reRender="panelinclude" action="#{extornoListaManaged.seleccionaExtorno}">
+									             		<h:outputText value="#{record.nroRecibo}" />
+														<f:setPropertyActionListener value="#{record}" target="#{extornoListaManaged.currentItem}" id="r426" />
+														<f:setPropertyActionListener value="/sisat/caja/extornoOperacion.xhtml" target="#{sessionManaged.page}" />
+									             	</a4j:commandLink> 
+								             	</div>
+								            </rich:column>
+								            <rich:column width="13%" id="ext01">
+								                		<f:facet name="header">Código Administrado</f:facet>
+								                		<h:outputText value="#{record.personaId}" />
+								            <div style="text-align: center">
+												<h:outputText value="" />
+											</div>
+								            </rich:column>   
+								            <rich:column width="15%" id="ext02">
+								               			<f:facet name="header">Tipo</f:facet>
+								               			<h:outputText value="#{record.tipoDocIdentidadDes}" />
+						                    </rich:column>
+						                       <rich:column width="15%" id="ext03">
+								               			<f:facet name="header">Nro documento</f:facet>
+								               			<h:outputText value="#{record.nroDocIdentidad}" />
+						                    </rich:column>
+						                       <rich:column width="15%" id="ext04">
+								               			<f:facet name="header">Nombre</f:facet>
+								               				<h:outputText value="#{record.nombrePersona}" />
+						                    </rich:column>
+								            <rich:column width="15%" id="ext05">
+								               			<f:facet name="header">Fecha Operacion</f:facet>   
+								               				<h:outputText value="#{record.fechaRecibo}" />
+						                    </rich:column>      
+						                       <rich:column width="15%" id="ext06">          
+								               			<f:facet name="header">Monto Cobrado</f:facet>
+								               				<h:outputText value="#{record.montoCobrado}" />
+						                    </rich:column>
+	                    				</rich:extendedDataTable>
+									</h:panelGrid>
+								</td>
+							</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		</rich:panel>
+		
+	</h:form>
+	
+</ui:composition>

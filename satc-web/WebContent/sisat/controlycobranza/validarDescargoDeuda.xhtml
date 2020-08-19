@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui"
+	> <!-- Esta -->
+
+	<!-- Busqueda de descargos por persona -->
+	<h:form id="frmDescargoDeudas" >
+		<rich:panel id="pnlFiltros">
+			<f:facet name="header">		
+				VALIDA DEUDA
+			</f:facet>
+			
+			<rich:simpleTogglePanel id="togglePanelResultados"
+					switchType="client"
+					label="Resultados #{validarDescargoDeudaManaged.findLoteDescargo.size()} encontrados"
+					height="auto" styleClass="uniqueClassName" opened="true"
+					>
+					
+				<rich:extendedDataTable id="datosPersona"
+						value="#{validarDescargoDeudaManaged.findLoteDescargo}" var="lote"
+						width="100%" height="330px" rows="20" selectionMode="single"
+						noDataLabel="No Se Encontro Información para esta Busqueda"
+						rowKeyVar="rowIndex" enableContextMenu="false">
+						
+						<rich:column id="x0" width="4%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Ítem</f:facet>
+							<h:outputText value="#{rowIndex + 1}" />
+						</rich:column>
+						
+						
+						<rich:column id="x1" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Edit</f:facet>
+							<h:commandLink action="#{validarDescargoDeudaManaged.verDetalleLote}"
+								title="Actualización" rendered="#{lote.estado==1}">
+								<f:setPropertyActionListener value="#{lote.lote_descargo_id}"
+									target="#{validarDescargoDeudaManaged.findLoteDescargoId}" />
+								<f:setPropertyActionListener
+									value="/sisat/controlycobranza/detalleDescargoDeuda.xhtml"
+									target="#{sessionManaged.page}" />
+								<span class="fa fa-pencil-alt" style="font-size: 20px;"></span>
+							</h:commandLink>
+							<h:commandLink rendered="#{lote.estado!=1}" action="#{validarDescargoDeudaManaged.verDetalleLote}"
+								title="Actualización">
+								<f:setPropertyActionListener value="#{lote.lote_descargo_id}"
+									target="#{validarDescargoDeudaManaged.findLoteDescargoId}" />
+								<f:setPropertyActionListener
+									value="/sisat/controlycobranza/detalleDescargoDeuda.xhtml"
+									target="#{sessionManaged.page}" />
+								<span class="fa fa-eye" style="font-size: 20px;"></span>
+							</h:commandLink>
+						</rich:column>
+						
+						
+						<rich:column id="x2" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Codigo</f:facet>
+							<h:outputText value="#{lote.persona_id}">
+							</h:outputText>
+						</rich:column>					
+						
+						
+						<rich:column id="x3" width="16%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Contribuyente</f:facet>
+							<h:outputText value="#{lote.apellidos_nombres}" />
+						</rich:column>
+						
+						<rich:column id="x5" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Nº de lote</f:facet>
+							<h:outputText value="#{lote.nro_lote}" />
+						</rich:column>
+						
+						
+						
+						<rich:column id="x6" width="8%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Tipo Descargo</f:facet>
+							<h:outputText value="#{lote.tipo_descargo}" />
+						</rich:column>
+						
+						
+						<rich:column id="x7" width="11%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Estado</f:facet>
+							<h:outputText id="tipo_acto" value="#{lote.descripcion_estado}" />
+						</rich:column>
+	
+						
+						<rich:column id="x8" width="7%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Monto Total</f:facet>
+							<h:outputText value="#{lote.monto_total_descargo_preliminar}">
+								<f:convertNumber minFractionDigits="2" />
+				            </h:outputText>
+						</rich:column>
+						
+						
+						<rich:column id="x9" width="8%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Monto Descargado</f:facet>
+							<h:outputText value="#{lote.monto_total_descargado}">
+								<f:convertNumber minFractionDigits="2" />
+				            </h:outputText>
+						</rich:column>
+						
+						
+						<!-- <rich:column id="x10" width="6%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Fec Reg.</f:facet>
+							<h:outputText value="#{lote.fecha_registro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</rich:column> -->
+						
+						
+						<rich:column id="x11" width="8%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Usu. Descargo</f:facet>
+							<h:outputText value="#{lote.nombre_usuario}" style="color: #0090FF; text-decoration: underline #0090FF;"/>
+							<rich:toolTip rendered="#{lote.fecha_registro != null}">
+								<h:panelGrid >
+									<h:outputText  rendered="#{lote.fecha_registro != null}" value="Fec Reg.: #{lote.fecha_registro}" >
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</h:panelGrid>
+							</rich:toolTip>
+						</rich:column>
+						
+						
+						<!--  <rich:column id="x12" width="6%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Fec. Val</f:facet>
+							<h:outputText value="#{lote.fecha_upd}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</rich:column> -->
+						
+							
+						<rich:column id="x13" width="8%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Usu. Validador</f:facet>
+							<h:outputText value="#{lote.nombre_usuario_valido}" style="color: #0090FF; text-decoration: underline #0090FF;"/>
+							<rich:toolTip rendered="#{lote.fecha_upd != null}">
+								<h:panelGrid>
+									<h:outputText rendered="#{lote.fecha_upd != null}"  value="Fec. Val: #{lote.fecha_upd}" >
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								
+									<h:outputText rendered="#{lote.observaciones != null and lote.fecha_rev == null}"  
+										value="Obs.: #{lote.observaciones}"  />
+								</h:panelGrid>
+							</rich:toolTip>
+						</rich:column>
+						
+						<rich:column id="x12" width="8%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Usu. Revierte</f:facet>
+							<h:outputText value="#{lote.nombre_usuario_rev}" style="color: #0090FF; text-decoration: underline #0090FF;"/>
+							<rich:toolTip  rendered="#{lote.fecha_rev != null}" >
+								<h:panelGrid>
+									<h:outputText rendered="#{lote.fecha_rev != null}" value="Fec. Rev: #{lote.fecha_rev}" >
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+									
+									<h:outputText rendered="#{lote.observaciones != null and lote.fecha_rev != null}"  
+										value="Obs.: #{lote.observaciones}"  />
+										
+								</h:panelGrid>
+							</rich:toolTip>
+						</rich:column>
+						
+						
+						
+						<rich:column id="x14" width="4%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Val.</f:facet>
+							<!-- <a4j:commandButton disabled="#{lote.estado!=1}"
+								oncomplete="Richfaces.showModalPanel('dlgValDescargo')"
+								title="Validar">
+								<f:setPropertyActionListener value="#{lote.lote_descargo_id}"
+									target="#{validarDescargoDeudaManaged.findLoteDescargoId}"
+									id="r4277">
+								</f:setPropertyActionListener>
+								<span class="fa fa-check" style="font-size: 20px;"></span>
+							</a4j:commandButton> -->
+							
+							<a4j:commandLink rendered="#{lote.estado==1}" disabled="#{lote.estado!=1}"
+								oncomplete="Richfaces.showModalPanel('dlgValDescargo')"
+								title="Validar" >
+								<h:graphicImage value="/images/font-icon/correct-symbol.png" style="border:0"
+									width="20" height="20" />
+								
+								<f:setPropertyActionListener value="#{lote.lote_descargo_id}"
+									target="#{validarDescargoDeudaManaged.findLoteDescargoId}"
+									id="r4277">
+								</f:setPropertyActionListener>
+								
+							</a4j:commandLink>
+						</rich:column>
+						
+						<rich:column id="x15" width="4%" style="text-align: center; background-color:'#FFFFFF'" >
+							<f:facet name="header">Anu.</f:facet>
+							<!--  <a4j:commandButton disabled="#{lote.estado!=1}"
+								oncomplete="Richfaces.showModalPanel('dlgAnularDescargo')"
+								title="Anular">
+								<f:setPropertyActionListener value="#{lote.lote_descargo_id}"
+									target="#{validarDescargoDeudaManaged.findLoteDescargoId}"
+									id="r4277">
+								</f:setPropertyActionListener>
+								<span class="fa fa-times" style="font-size: 20px;"></span>
+							</a4j:commandButton> -->
+							
+							
+							<a4j:commandLink disabled="#{lote.estado!=1}"
+								oncomplete="Richfaces.showModalPanel('dlgAnularDescargo')"
+								title="Anular" rendered="#{lote.estado==1}">
+								<h:graphicImage value="/images/font-icon/remove-symbol.png" style="border:0"
+									width="20" height="20" />
+								
+								<f:setPropertyActionListener value="#{lote.lote_descargo_id}"
+									target="#{validarDescargoDeudaManaged.findLoteDescargoId}"
+									id="r4277">
+								</f:setPropertyActionListener>								
+							</a4j:commandLink>
+							
+							<a4j:commandLink 
+								oncomplete="Richfaces.showModalPanel('dlgRevertirDescargo')"
+								title="Revertir" rendered="#{lote.estado == 2 || lote.estado == 3}">
+								<h:graphicImage value="/images/font-icon/undo-arrow.png" style="border:0"
+									width="20" height="20" />
+								
+								<f:setPropertyActionListener value="#{lote.lote_descargo_id}"
+									target="#{validarDescargoDeudaManaged.findLoteDescargoId}"
+									id="r4277">
+								</f:setPropertyActionListener>								
+							</a4j:commandLink>
+							
+							
+						</rich:column>
+						
+						
+					</rich:extendedDataTable>
+					
+			</rich:simpleTogglePanel>	
+			<a4j:commandButton value="Regresar" 
+				style="width: 100px;"
+				action="#{sessionManaged.sendRedirectPrincipal}" >
+				<f:setPropertyActionListener 
+					value="/sisat/controlycobranza/validarPersonaDescargoDeuda.xhtml" 
+					target="#{sessionManaged.page}" />
+			</a4j:commandButton>
+		</rich:panel>
+		
+
+	</h:form>
+	
+	
+	<rich:modalPanel id="dlgValDescargo" autosized="true" width="350"
+		style="height:100%">
+		<f:facet name="header">
+			<h:outputText value="Mensaje" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpDescargarAll"
+					styleClass="hidelink" />
+				<rich:componentControl for="dlgValDescargoAll" attachTo="gpiUsuario"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<fieldset style="padding: 5px; font-weight:bold ;color:red; text-align:center">
+				<h:panelGroup>
+					<h:outputLabel value="ESTA SEGURO DE CONFIRMAR EL LOTE, ESTA ACCIÓN DESCARGARA TODAS LAS DEUDAS ASOCIADAS AL LOTE">
+				</h:outputLabel>
+				</h:panelGroup>
+			</fieldset>
+			<div style="height: 12px;" />
+			<div align="center">
+				<h:commandButton value="Aceptar"
+					style="width: 80px;" action="#{validarDescargoDeudaManaged.descargoAll}"
+					
+					icon="ui-icon-check" >
+				</h:commandButton>
+				<h:commandButton value="No" style="width: 80px;"
+					icon="ui-icon-close" onclick="PF('dlgValidarDescargo').hide()">
+				</h:commandButton>
+			</div>
+			
+		</h:form>
+		
+		
+		
+	</rich:modalPanel>
+	
+	
+	<rich:modalPanel id="dlgAnularDescargo" autosized="true" width="350"
+		style="height:100%">
+		<f:facet name="header">
+			<h:outputText value="Mensaje" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpAnularDescargo"
+					styleClass="hidelink" />
+				<rich:componentControl for="dlgAnularDescargo" attachTo="gpiUsuario"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<div style="margin-bottom: 20px;">
+				<h:outputText value="Observacion (max 300)" /><span style="color: red">*</span>
+					
+				<h:inputTextarea value="#{validarDescargoDeudaManaged.observacionesDescargo}" cols="100" rows="5" maxlength="500" size="500"
+					 requiredMessage="Indique la Observacion">
+				</h:inputTextarea>
+			</div>
+			
+			<fieldset style="padding: 5px; font-weight:bold ;color:red; text-align:center">
+				<h:panelGroup>		
+					<h:outputLabel value="ESTA SEGURO DE ANULAR EL LOTE, ESTA ACCIÓN ACTIVARA LAS DEUDAS ASOCIADAS AL LOTE ">
+					</h:outputLabel>
+				</h:panelGroup>
+			</fieldset>
+			<div style="height: 12px;" />
+			<div align="center">					
+					<a4j:commandButton value="Aceptar" style="width: 100px;"
+						action="#{validarDescargoDeudaManaged.anulaDescargoAll}"
+						reRender="togglePanelResultados"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'dlgAnularDescargo\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};     " >						
+					</a4j:commandButton>
+					
+					<a4j:commandButton value="#{msg['elm.MPConfirmLabelNo']}" style="width:100px;"
+						onclick="#{rich:component('dlgAnularDescargo')}.hide();return false;" />
+						
+				
+					<!--  <h:commandButton value="Aceptar"
+						style="width: 80px;" 
+						action="#{validarDescargoDeudaManaged.anulaDescargoAll}"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'dlgAnularDescargo\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};" 
+						icon="ui-icon-check" >
+					</h:commandButton>
+					<h:commandButton value="No" style="width: 80px;"
+						icon="ui-icon-close" onclick="PF('dlgAnularDescargo').hide()">
+					</h:commandButton>
+					-->
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	
+	
+	<rich:modalPanel id="dlgRevertirDescargo" autosized="true" width="350"
+		style="height:100%">
+		<f:facet name="header">
+			<h:outputText value="Mensaje" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpRevertirDescargo"
+					styleClass="hidelink" />
+				<rich:componentControl for="dlgAnularDescargo" attachTo="gpiUsuario"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<div style="margin-bottom: 20px;">
+				<h:outputText value="Observacion (max 300)" /><span style="color: red">*</span>
+					
+				<h:inputTextarea value="#{validarDescargoDeudaManaged.observacionesDescargo}" cols="100" rows="5" maxlength="500" size="500"
+					 requiredMessage="Indique la Observacion">
+				</h:inputTextarea>
+			</div>
+			
+			<fieldset style="padding: 5px; font-weight:bold ;color:red; text-align:center">
+				<h:panelGroup>		
+					<h:outputLabel value="ESTA SEGURO DE REVERTIR EL LOTE, ESTA ACCIÓN ACTIVARA LAS DEUDAS ASOCIADAS AL LOTE ">
+					</h:outputLabel>
+				</h:panelGroup>
+			</fieldset>
+			<div style="height: 12px;" />
+			<div align="center">					
+					<a4j:commandButton value="Aceptar" style="width: 100px;"
+						action="#{validarDescargoDeudaManaged.revertirLote}"
+						reRender="togglePanelResultados"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'dlgRevertirDescargo\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};     " >						
+					</a4j:commandButton>
+					
+					<a4j:commandButton value="#{msg['elm.MPConfirmLabelNo']}" style="width:100px;"
+						onclick="#{rich:component('dlgRevertirDescargo')}.hide();return false;" />
+						
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	
+	
+</html>

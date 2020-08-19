@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:a4j="http://richfaces.org/a4j"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+     <rich:jQuery query="focus().select()" selector="#formFileUpload :input:visible:enabled:first" name="focusInputfu"/>
+    <h:panelGrid>
+		<rich:fileUpload id="uploadArchivo" maxFilesQuantity="1" tabindex="1" listHeight="70"
+			addControlLabel="Seleccionar" 
+			clearAllControlLabel="Limpiar Todo" clearControlLabel="Limpiar"
+			uploadControlLabel="Guardar" doneLabel="hecho"
+			progressLabel="Cargando" transferErrorLabel="Error Transferencia"
+			stopControlLabel="Detener" acceptedTypes="pdf"
+			immediateUpload="true"
+			fileUploadListener="#{fileUploadRecManaged.listener}" 
+			binding="#{fileUploadRecManaged.fileUpload}"
+			accesskey="c"
+			onsizerejected="#{rich:component('panelSizeRejected')}.show();return false;"
+			>
+			<a4j:support id="onclear" event="onclear" reRender="uploadArchivo" immediate="true" action="#{fileUploadRecManaged.clear}" />
+		</rich:fileUpload>
+		
+    </h:panelGrid>
+    <table>
+    	<tr>
+    		<td align="center">
+    			<h:panelGrid columns="3" align="center" >
+					<a4j:commandButton value="[G]uardar" style="width:100px;"	action="#{fileUploadRecManaged.guardar}"
+					status="ajaxStatus" 
+					oncomplete="#{rich:component('panelfileupload')}.hide(); return false"  reRender="uploadArchivo,pgEventosGestion"
+					accesskey="g"
+					tabindex="2"
+					/>
+					
+					<a4j:commandButton value="[S]alir" style="width:100px;"	oncomplete="#{rich:component('panelfileupload')}.hide(); return false" 
+					accesskey="s" reRender="uploadArchivo"
+					onblur="focusInputfu();"
+					tabindex="3"
+					/>
+			    </h:panelGrid>
+    		</td>
+    	</tr>
+    </table>
+	   
+</h:panelGrid>
+
+

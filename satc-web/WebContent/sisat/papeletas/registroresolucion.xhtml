@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+	
+	<script type="text/javascript">
+	 
+	</script>
+	<h:form id="formRegistroResolucion">
+				<rich:panel style="width:100%;"  >
+					<a4j:commandButton ajaxSingle="true" id="newlink1" action="#{registroResolucionManaged.generar}"  value="Generar Resoluciones"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						immediate="true" reRender="panelResultados">
+                	</a4j:commandButton>
+                </rich:panel>	
+				<rich:panel style="width:100%;" id="panelResultados" > 	
+						<rich:dataTable  style="width:100%;" id="datosResultados" value="#{registroResolucionManaged.records}" var="record" 
+								rowKeyVar="row">
+							<rich:column id="x1" style="text-align:center" >
+				                <f:facet name="header"  >Resolucion Id</f:facet>
+				                <h:outputText value="#{record.resolucionId}"/>
+				            </rich:column>
+				            <rich:column id="x2" style="text-align:center" >
+				                <f:facet name="header"  >Fecha Emision</f:facet>
+				                <h:outputText value="#{record.fechaEmision}"/>
+				            </rich:column>
+				            <rich:column id="x3" style="text-align:center" >
+				                <f:facet name="header"  >Cantidad</f:facet>
+				                <h:outputText value="#{record.cantidad}"/>
+				            </rich:column>
+				            <rich:column id="x4" style="text-align:center" >
+				                <f:facet name="header"  >Estado</f:facet>
+				                <h:outputText value="#{record.estado=='1'?'Registrado':'Recibido'}"/>
+				            </rich:column>
+				            
+				            <rich:column id="x5" style="text-align:center" >
+				            	<a4j:commandLink ajaxSingle="true" id="newlink5" action="#{registroResolucionManaged.verificar}" reRender="panelinclude" >
+				                    <h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+				                    <f:setPropertyActionListener value="#{record}" target="#{registroResolucionManaged.currentItem}" id="r427"/>
+				                    <f:setPropertyActionListener value="/sisat/papeletas/verificarResoluciones.xhtml" target="#{sessionManaged.page}" />
+				                </a4j:commandLink>
+					        </rich:column>
+						</rich:dataTable>
+				</rich:panel>
+				
+	</h:form>
+	
+</ui:composition>

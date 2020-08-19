@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form id="id_formAnalisisCuenta">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		
+	<rich:panel id="a01">
+	<f:facet name="header">
+	Análisis Cuenta
+	</f:facet>
+	
+	<table width="100%" border="0">
+	<tr>
+	<td width="15%">
+	<h:outputText value="Tipo de Análisis" />
+	</td>
+	<td width="15%">
+
+	<rich:comboBox  id="id_tipoAnalisis" width="150px" defaultLabel="Seleccionar" 
+		binding="#{analisisCuentasManaged.cmbtipoAna}" 
+		immediate="true"
+		valueChangeListener="#{analisisCuentasManaged.loadTipoAnalisis}"
+		directInputSuggestions="true"
+		onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+		>	
+
+		<f:selectItems id="id_lsTipoAnalisis" value="#{analisisCuentasManaged.lstSelectTipoAna}"/>
+		<a4j:support id="id_supportlsTipoAnalisis" event="onchange" immediate="true" ajaxSingle="true"/>
+	</rich:comboBox>
+	</td>
+	<td width="15%">
+	<h:outputText value="Concepto/SubConcepto"  />
+	</td>
+	<td>
+	<rich:comboBox width="150px" 
+		defaultLabel="Selecccione" 
+		id="id_tipoTransferencia"
+		binding="#{analisisCuentasManaged.cmbtipoSubcon}"
+		immediate="true"
+		valueChangeListener="#{analisisCuentasManaged.loadTipoSubCon}"
+		onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"	
+		directInputSuggestions="false">
+		<f:selectItems id="id_lstSelectConSub"
+		value="#{analisisCuentasManaged.lstSelectConSub}" />
+		<a4j:support id="id_supportlstSelectConSub" event="onchange" ajaxSingle="true" />
+	</rich:comboBox>
+	</td>
+	
+	<td width="12%">
+	<a4j:commandButton style="width:100px" value="Limpiar"></a4j:commandButton>	
+	</td>
+	
+	<td width="15%">
+	<a4j:commandButton style="width:100px" value="Analizar"></a4j:commandButton>	
+	</td>
+	</tr>
+
+	<tr>
+	<td>
+	<h:outputText value="Desde" />
+	</td>
+	<td>
+
+	<rich:calendar
+	inputStyle="width:100px"
+	locale="en/US" datePattern="dd/MM/yyyy" enableManualInput="true"
+	inputClass="maskDate"
+	id="idFechaInicioAnalisis"
+	value="#{analisisCuentasManaged.fechaIni}">
+	</rich:calendar> <rich:jQuery id="maskedo1" selector=".maskDate"
+	query="mask('99/99/9999')" timing="onload" />	
+
+	</td>
+	<td>
+	<h:outputText value="Hasta" />
+	</td>
+	<td>
+
+	<rich:calendar
+	inputStyle="width:100px"
+	locale="en/US" datePattern="dd/MM/yyyy" enableManualInput="true"
+	inputClass="maskDate"
+	id="idFechaFinAnalisis"
+	value="#{analisisCuentasManaged.fechaFin}">
+	</rich:calendar> <rich:jQuery id="maskedo2" selector=".maskDate"
+	query="mask('99/99/9999')" timing="onload" />
+	
+	</td>
+	<td colspan="2"></td>
+	</tr>
+	
+	
+
+	</table>
+	
+	<table width="100%">
+	<tr>
+	<td>
+	<rich:extendedDataTable width="100%" height="360px">
+	
+	<rich:column id="x1" width="5%" style="text-align:center">
+	<f:facet name="header">Item</f:facet>
+	<h:outputText value="" />
+	</rich:column>
+	<rich:column id="x2" width="12%" style="text-align:center">
+	<f:facet name="header">Impuesto</f:facet>
+	<h:outputText value="" />
+	</rich:column>
+	<rich:column id="x3" width="10%" style="text-align:center">
+	<f:facet name="header">Año</f:facet>
+	<h:outputText value="" />
+	</rich:column>
+	<rich:column id="x4" width="8%" style="text-align:center">
+	<f:facet name="header">Saldo</f:facet>
+	<h:outputText value="" />
+	</rich:column>
+	<rich:column id="x5" width="8%" style="text-align:center">
+	<f:facet name="header">Generado</f:facet>
+	<h:outputText value="" />
+	</rich:column>
+	<rich:column id="x6" width="8%" style="text-align:center">
+	<f:facet name="header">Pagos</f:facet>
+	<h:outputText value="" />
+	</rich:column>
+	<rich:column id="x7" width="8%" style="text-align:center">
+	<f:facet name="header">Variación</f:facet>
+	<h:outputText value="" />
+	</rich:column>
+	<rich:column id="x8" width="8%" style="text-align:center">
+	<f:facet name="header">Saldos</f:facet>
+	<h:outputText value="" />
+	</rich:column>
+
+	</rich:extendedDataTable>
+	</td>
+	</tr>
+	
+	</table>
+	</rich:panel>
+	
+	</h:form>
+</ui:composition>

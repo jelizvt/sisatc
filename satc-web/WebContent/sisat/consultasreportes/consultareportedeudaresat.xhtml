@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form id="id_formReportesDeudasResat"  >
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js"/>
+		
+			<style>
+	.prueba{
+	}
+	</style>
+			<h:panelGrid columns="3">
+					<h:outputText value="Ingrese Codigo Persona:" />
+					
+					<h:inputText id="id_codPersona" styleClass="textUpperCase" immediate="true" title="Ingrese Codigo de Contribuyente" 
+				           			style="width:50%" value="#{consultaReporteDeudaResatManaged.personaId}" >
+				    </h:inputText>			    		
+					<h:commandButton id="newlinkHL" action="#{consultaReporteDeudaResatManaged.imprimirEstadoCuentaResat}" value="Descargar Estado Cuenta" >					 				
+					</h:commandButton>
+			
+			</h:panelGrid>
+
+	</h:form>
+</ui:composition>

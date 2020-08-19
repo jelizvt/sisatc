@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+      
+  <h:form id="formBuscarPredio">    
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	<a4j:loadScript src="/js/sisat.js"/>
+
+	<rich:hotKey key="return" handler="#{rich:element('cmdBuscarPredio')}.click()" selector="#formBuscarPredio"/>
+
+     <rich:panel  id="p01"  rendered="#{busquedaPredioManaged.permisoBuscar}">
+		<f:facet  name="header">		
+			BUSQUEDA DE PREDIOS
+		</f:facet>
+		
+		<table border="0" width="70%" >
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputText  value="Codigo Predio :" />
+				</td>
+				<td>
+					<h:inputText  id="id_codigopredio" maxlength="12" style="width:25%" value="#{busquedaPredioManaged.codigoPredio}" >
+						<rich:jQuery selector="#id_codigopredio" query="mask('9999-9999')" timing="onload" /> 
+					</h:inputText>
+				</td>
+				<td align="left" width="150px" >
+					<h:outputText value="Numero DJ predial :" />
+				</td>
+				<td>
+					<h:inputText id="id_numerodjpredial" style="width:50%" maxlength="10" value="#{busquedaPredioManaged.numeroDjPredial}" 
+					onkeypress="return numbersonly(this.value,event)"
+					>
+					</h:inputText>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputText value="Tipo Via :" />
+				</td>
+				<td>
+					<rich:comboBox width="200px" defaultLabel="Seleccione" selectFirstOnUpdate="true"  
+						id="id_tipvia" binding="#{busquedaPredioManaged.cmbtipovia}" immediate="true" valueChangeListener="#{busquedaPredioManaged.loadViasById}"
+						inputClass="input" inputDisabledClass="input" inputInactiveClass="input"
+						enableManualInput="true"
+						directInputSuggestions="false"
+						filterNewValues="true" 
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						>
+						<f:selectItems id="id_lsttipoviabp" value="#{busquedaPredioManaged.lsttipovia}"/>
+						
+						<a4j:support id="id_supportlsttipovia" event="onchange" BypassUpdates="false" ajaxSingle="true"/>
+				    </rich:comboBox>
+				</td>
+				<td align="left" width="150px" >
+					<h:outputText value="Nombre Via :" />
+				</td>
+				<td>
+					 <h:inputText id="id_inputnombreVia" maxlength="50" style="width:50%" value="#{busquedaPredioManaged.nombreVia}"
+					 binding="#{busquedaPredioManaged.txtAUNombreVia}" 
+					 >
+					 <rich:suggestionbox width="200" suggestionAction="#{busquedaPredioManaged.autocompletevia}" var="via" for="id_inputnombreVia"
+						 immediate="true" id="id_suggestioninputnombreVia" minChars="2"
+						 shadowOpacity="0" shadowDepth="0"
+						 >
+							<h:column>
+							   <h:outputText id="id_textsuggestioninputnombreVia" value="#{via.descripcion}"/>
+							</h:column>
+							<a4j:support event="onselect" ajaxSingle="true" immediate="true">
+							   <f:setPropertyActionListener value="#{via}" target="#{busquedaPredioManaged.selectedVia}" />
+							</a4j:support>
+					     </rich:suggestionbox> 
+					 </h:inputText>
+					 
+				</td>
+			</tr>
+			<tr>	
+				<td align="left" width="100px" >
+					<h:outputText value="Direccion :" />
+				</td>
+				<td colspan="3">
+					<h:inputText id="id_direccion" style="width:70%" maxlength="10" value="#{busquedaPredioManaged.direccion}" 
+					tabindex="8"
+					styleClass="textUpperCase"
+						binding="#{busquedaPredioManaged.txtAUDireccion}"
+					>
+					<f:converter converterId="uppeCaseConverter"/>
+					</h:inputText>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4">
+					<h:panelGrid columns="3" align="center" >
+						<a4j:commandButton id="cmdBuscarPredio" value="Buscar" style="width:100px;"	action="#{busquedaPredioManaged.buscar}" status="ajaxStatus" reRender="id_panelresultadospredio" />
+				    </h:panelGrid>
+				</td>
+			</tr>
+		</table>
+		</rich:panel>
+		<br />
+		<rich:panel  id="id_panelresultadospredio" >
+				<table border="0">
+					<tr> 
+						<td>
+							<a4j:commandLink  rendered="#{busquedaPredioManaged.permisoAgregarRegistrar}"  ajaxSingle="true" id="cmdlnkinscripciondj" action="#{sessionManaged.sendRedirectPrincipal}" reRender="panelinclude" >
+			                    <h:graphicImage value="/images/modal/new.gif" style="border:0" />
+			                    <f:setPropertyActionListener value="/sisat/predial/buscarpredioinscripcion.xhtml" target="#{sessionManaged.page}" />
+			                </a4j:commandLink>
+			                
+			                <rich:toolTip for="cmdlnkinscripciondj" rendered="#{!sessionManaged.moduloFisca}" value="Registro de declaración jurada" />
+			                <rich:toolTip for="cmdlnkinscripciondj" rendered="#{sessionManaged.moduloFisca}" value="Registro de declaración jurada por Fiscalización" />
+			                
+				            <a4j:commandLink rendered="#{busquedaPredioManaged.permisoCalcular}" ajaxSingle="true" id="cmdlnkmostrarcalculoimpuesto"  
+				            	reRender="panelinclude" status="ajaxStatus" 
+				            	oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\')' }">
+								<h:graphicImage value="/images/modal/calculopredial.gif" style="width: 16px; height: 16px; margin-left: 10px;border:0" />
+								<f:setPropertyActionListener value="/sisat/predial/historiadeterminacionperiodo.xhtml" target="#{sessionManaged.page}" />
+				            </a4j:commandLink>
+				            
+				            <rich:toolTip for="cmdlnkmostrarcalculoimpuesto" value="Calculo del impuesto predial por periodo" />
+			             </td>
+	                </tr>
+              </table>  
+			<a4j:region  renderRegionOnly="true">
+				<rich:extendedDataTable 
+					id="datosConstruccion" value="#{busquedaPredioManaged.records}" var="record" width="100%" height="330px"
+					sortMode="single" selectionMode="single" enableContextMenu="false" 
+					rowKeyVar="row"	>
+					
+					<rich:column id="x14" rendered="#{busquedaPredioManaged.permisoVerDetalle}" width="3%" style="background-color:#{record.styleSelected};text-align:center">
+		            	<a4j:commandLink ajaxSingle="true" id="newlink3" action="#{busquedaPredioManaged.actualizacion}"  reRender="panelinclude">
+		                    <h:graphicImage value="/images/modal/preview.png" style="border:0" />
+		                    <f:setPropertyActionListener value="#{record}" target="#{busquedaPredioManaged.currentItem}" id="r427"/>
+		                    <f:setPropertyActionListener value="/sisat/predial/listadjpredio.xhtml" target="#{sessionManaged.page}" />
+		                </a4j:commandLink>
+		                <rich:toolTip for="newlink3" value="Ver detalle" />
+			        </rich:column>
+			        
+					<rich:column id="x4" width="6%" style="background-color:#{record.styleSelected};text-align:center" >
+		                <f:facet name="header"  >Nro DJ</f:facet>
+		                <h:outputText value="#{record.djId}"/>
+		                <h:inputHidden value="#{record.predioId}"/>
+		            </rich:column>
+		            <rich:column id="x5" width="6%" style="background-color:#{record.styleSelected};text-align:center" >
+		                <f:facet name="header" >F. Declaracion</f:facet>
+		                <h:outputText value="#{record.fechaDeclaracion}">
+		                	<f:convertDateTime pattern="dd/MM/yyyy" />
+		                </h:outputText>
+		            </rich:column>
+					<rich:column id="x6" width="6%" style="background-color:#{record.styleSelected};text-align:center" >
+		                <f:facet name="header" >F. Adquisicion</f:facet>
+		                <h:outputText value="#{record.fechaAdquisicion}">
+		                	<f:convertDateTime pattern="dd/MM/yyyy" />
+		                </h:outputText>
+		            </rich:column>						
+					<rich:column id="x7" width="6%" style="background-color:#{record.styleSelected};text-align:center">
+		                <f:facet name="header">Tipo Predio</f:facet>
+		                <h:outputText value="#{record.tipoPredio=='U'?'Urbana':'Rural'}"/>
+		            </rich:column>
+		            <rich:column id="x8" width="5%" style="background-color:#{record.styleSelected};text-align:center">
+		                <f:facet name="header">Codigo</f:facet>
+		                <h:outputText value="#{record.predioId}"/>
+		                <!--Se muestra el id del predio en lugar del codigo esto para evitar ambiguedades-->
+		            </rich:column>
+		            <rich:column id="x81" width="7%" style="background-color:#{record.styleSelected};text-align:center">
+		                <f:facet name="header">Codigo Ant.</f:facet>
+		                <h:outputText value="#{record.codigoAnterior}"/>		                
+		            </rich:column>
+		            <rich:column id="x8a" width="4%" style="background-color:#{record.styleSelected};text-align:center">
+		                <f:facet name="header">Año</f:facet>
+		                <h:outputText value="#{record.anioDj}"/>
+		            </rich:column>
+		            <rich:column id="x9" width="5%" style="background-color:#{record.styleSelected};text-align:right">
+		                <f:facet name="header">Porc Prop.</f:facet>
+		                <h:outputText value="#{record.porcPropiedad} %"/>
+		            </rich:column>
+		             <rich:column id="x9_" width="5%" style="background-color:#{record.styleSelected};text-align:center">
+		                <f:facet name="header">Area</f:facet>
+		                <h:outputText value="#{record.tipoPredio=='U'? record.areaTerreno: record.areaTerrenoHas}"/>
+		            </rich:column>
+		            <rich:column id="x11" width="28.5%" style="background-color:#{record.styleSelected};text-align:center">
+		                <f:facet name="header">#{msg['rp.direccion']}</f:facet>
+		                <h:outputText value="#{record.direccionCompleta}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x12" width="8.5%" style="background-color:#{record.styleSelected};text-align:center">
+		                <f:facet name="header">#{msg['rp.motivo']}</f:facet>
+		                <h:outputText value="#{record.motivoDeclaracion}"/>
+		            </rich:column>
+		            
+		            <rich:column width="3%" style="background-color:#{record.styleSelected};text-align:center">
+		            	<f:facet name="header">Fisc.</f:facet>
+		            	<h:outputText value="#{record.fiscalizado==1 ? 'Si' : 'No'}"/>	
+		            </rich:column>
+		            
+		            <rich:column id="x13" width="5%" style="background-color:#{record.styleSelected};text-align:center">
+		                <f:facet name="header">Estado</f:facet>
+		                <h:outputText value="#{msg['estado.activo']}" rendered="#{record.estado==1}" />
+		                <h:outputText value="#{msg['estado.pendiente']}" rendered="#{record.estado==2}" />
+		            </rich:column>
+		            
+		            
+		            <rich:column id="x19" rendered="#{busquedaPredioManaged.permisoVerDetalle}" width="3%" style="background-color:#{record.styleSelected};text-align:center">
+		            	<a4j:commandLink ajaxSingle="true" id="newlink4" 
+		            			action="Richfaces.showModalPanel('panelFoto');"
+		            			 
+		            			reRender="panelinclude">
+		                    <h:graphicImage value="/images/modal/verFoto.png" style="width:30px" />
+		                </a4j:commandLink>
+		                <rich:toolTip for="newlink3" value="Ver detalle" />
+			        </rich:column>
+			        
+	   			</rich:extendedDataTable>
+   			</a4j:region>
+        </rich:panel>           
+        
+		<a4j:commandButton value="Regresar" style="width: 100px;" reRender="panelinclude" action="#{sessionManaged.sendRedirectPrincipal}" >
+			<f:setPropertyActionListener value="/sisat/persona/buscarpersona.xhtml" target="#{sessionManaged.page}" />
+		</a4j:commandButton>
+	</h:form>
+	
+	<rich:modalPanel id="panelconfirmadeterminacion" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi666"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmadeterminacion" attachTo="hlpconfi666"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:panelGrid columns="1">
+			<a4j:outputPanel ajaxRendered="true">
+				<h:panelGrid columns="2">
+					<h:outputText id="succ666" style="font-weight:bold;color:green"
+						value="#{busquedaPredioManaged.messageCalculo}" />
+				</h:panelGrid>
+			</a4j:outputPanel>
+			
+			<h:panelGrid  columns="2">
+				<a4j:commandButton value="Aceptar" style="width:100px;" 
+					onclick="#{rich:component('panelconfirmadeterminacion')}.hide();return false;" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</rich:modalPanel>
+	
+	
+	
+	
+	
+	<!-- ==========================INICIO MODAL FOTO====================== -->
+	
+	<rich:modalPanel id="panelFoto" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi6"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelFoto" attachTo="hlpconfi6"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:panelGrid columns="1">
+			<a4j:outputPanel ajaxRendered="true">
+				<h:panelGrid columns="2">
+					<h:outputText id="succ6" style="font-weight:bold;color:green"
+						value="#{busquedaPredioManaged.messageCalculo}" />
+				</h:panelGrid>
+			</a4j:outputPanel>
+			
+			<h:panelGrid  columns="2">
+				<a4j:commandButton value="Aceptar" style="width:100px;" 
+					onclick="#{rich:component('panelFoto')}.hide();return false;" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</rich:modalPanel>
+	
+	<!-- ==========================FIN MODAL FOTO====================== -->
+	
+	
+</ui:composition>

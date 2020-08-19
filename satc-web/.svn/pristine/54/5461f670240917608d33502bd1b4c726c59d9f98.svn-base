@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+      
+      <h:form id="formListaDjPredio">
+      
+			<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+			<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	     			
+			<rich:dataTable  style="width:100%;" id="id_listadjpredio" value="#{historiaDeterminacionArbPeriodoManaged.records}" var="record" rowKeyVar="row">
+				<f:facet name="header" >
+					<h:outputText value="DETERMINACION DE ARBITRIOS :: #{historiaDeterminacionArbPeriodoManaged.codigoPredio}">
+	                </h:outputText>
+				</f:facet>
+				<rich:column style="text-align:center" >
+					<f:facet name="header">Año de Obligación</f:facet>
+	            	<h:outputText value="#{record.annoDj}"/>
+		        </rich:column>
+		        <rich:column style="text-align:center" rendered="#{historiaDeterminacionArbPeriodoManaged.permisoDeterminarArbitrios}">
+					<f:facet name="header">Calculo</f:facet>
+					<a4j:commandLink ajaxSingle="true" action="#{historiaDeterminacionArbPeriodoManaged.determinarCalculoArbitrios}" reRender="formListaDjPredio" status="ajaxStatus"  
+					oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};">
+	            		 <h:graphicImage value="/images/calculo2.png" style="border:0" />
+	            		 <f:setPropertyActionListener value="#{record}" target="#{historiaDeterminacionArbPeriodoManaged.currentItem}" />
+	                </a4j:commandLink>
+		        </rich:column>
+		        <rich:column  style="text-align:center">
+	                <f:facet name="header">Nro Dj</f:facet>
+	                <h:outputText value="#{record.djId}"/>
+	            </rich:column>
+	            
+	            <rich:column  style="text-align:center">
+	                <f:facet name="header">Predio</f:facet>
+	                <h:outputText value="#{record.predioId}"/>
+	            </rich:column>
+	            
+	            <rich:column  style="text-align:left">
+	                <f:facet name="header">Direccion del predio</f:facet>
+	                <h:outputText value="#{record.descDomicilio}"/>
+	            </rich:column>		
+	            <rich:column  style="text-align:center">
+	                <f:facet name="header">Fecha de Inscripción</f:facet>
+	                <h:outputText value="#{record.fechaDeclaracion}">
+	                	<f:convertDateTime pattern="dd/MM/yyyy" />
+	                </h:outputText>
+	            </rich:column>
+	            <!-- IMPRESIONES -->
+	            <rich:column  style="text-align:center">
+	                <f:facet name="header">Barrido</f:facet>
+	                <h:outputText rendered="#{record.determinacionArbitriosId>0}" value="#{record.arbitrioLimpieza}"/>
+	            </rich:column>
+	            <rich:column  style="text-align:center">
+	                <f:facet name="header">Recojo</f:facet>
+	                <h:outputText rendered="#{record.determinacionArbitriosId>0}" value="#{record.arbitrioRecojo}"/>
+	            </rich:column>
+	            <rich:column  style="text-align:center">
+	                <f:facet name="header">Parq y jardines</f:facet>
+	                <h:outputText rendered="#{record.determinacionArbitriosId>0}" value="#{record.arbitrioParques}"/>
+	            </rich:column>
+	            <rich:column  style="text-align:center">
+	                <f:facet name="header">Serenazgo</f:facet>
+	                <h:outputText rendered="#{record.determinacionArbitriosId>0}" value="#{record.arbitrioSeguridad}"/>
+	            </rich:column>
+	            <rich:column  style="text-align:center"  rendered="#{historiaDeterminacionArbPeriodoManaged.permisoPDF_ARBITRIOS}">
+	                <f:facet name="header">Imprimir</f:facet>
+	                <h:commandLink rendered="#{record.determinacionArbitriosId>0}" ajaxSingle="true" id="id_deterArbi" action="#{historiaDeterminacionArbPeriodoManaged.crearDeterminacionArbitrios}" >
+	            		 <h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+	                    <f:setPropertyActionListener value="#{record}" target="#{historiaDeterminacionArbPeriodoManaged.currentItem}" />
+	                </h:commandLink>
+	            </rich:column>
+				<!-- IMPRESIONES -->
+				<rich:column style="text-align:center" rendered="#{historiaDeterminacionPeriodoManaged.permisoVerCalculo}">
+					<f:facet name="header">Ver Calculo</f:facet>
+					<h:commandLink rendered="#{record.determinacionArbitriosId>0}" action="#{historiaDeterminacionArbPeriodoManaged.mostrarDetalleArb}" ajaxSingle="true" >
+	            		 <h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+	                    <f:setPropertyActionListener value="/sisat/predial/detallearbitrios.xhtml" target="#{sessionManaged.page}" />
+	                    <f:setPropertyActionListener value="#{record}" target="#{historiaDeterminacionArbPeriodoManaged.currentItem}" />
+	                </h:commandLink>
+		        </rich:column>
+   			</rich:dataTable>
+   			
+			<!-- <h:panelGrid columns="2" border="1" align="center" width="100%" > -->
+			<table border="0" width="100%">
+			<tr>
+			<td align="left">
+			<a4j:commandButton value="Salir" style="width:150px;"	action="#{historiaDeterminacionArbPeriodoManaged.salir}" reRender="panelinclude" >
+					<f:setPropertyActionListener value="/sisat/predial/historiadeterminacionperiodo.xhtml" target="#{sessionManaged.page}" />
+			</a4j:commandButton>
+			</td>
+			<td align="right">
+			<h:commandLink ajaxSingle="true" id="link_id" action="#{historiaDeterminacionArbPeriodoManaged.crearConsolidadoArbitrios}" >
+				<a4j:commandButton  id="consolida_boton_id" value="Imprimir Todo" style="width:150px;"	ajaxSingle="true">
+				</a4j:commandButton></h:commandLink>
+			</td>
+			</tr>
+			</table>
+				
+			<!-- </h:panelGrid> -->
+			
+			<h:panelGrid columns="2" align="center" width="100%" >
+				
+			</h:panelGrid>
+			
+		</h:form>
+</ui:composition>

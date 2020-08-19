@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<style type="text/css">
+#frmAgenciaUsuario .extdt-content {
+	overflow-x: hidden;
+	overflow-y: auto;
+} 
+
+#frmAgenciaUsuario .extdt-innerdiv {
+	overflow-x: auto !important;
+	overflow-y: hidden;
+	position: static;
+}
+
+#frmAgenciaUsuario .extdt-outerdiv {
+	position: static;
+}
+</style>
+
+	<h:form prependId="false" style="margin-top: 8px;">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<fieldset style="background-color: #F3F2F2;">
+			<legend
+				style="padding-bottom: 2px; width: 140px; background-image: url('#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.images.TabGradientB/DATB/eAH79Onz673zmQAYMwUh.jsf')">
+				<h:outputLabel value="Lista de usuarios" style="padding-left: 30px;" />
+			</legend>
+			<rich:extendedDataTable id="tblUsers"
+				value="#{usuarioManaged.usuarios}" var="record" width="100%"
+				height="280px" sortMode="single" selectionMode="single"
+				selection="#{usuarioManaged.selectedUsuario}"
+				noDataLabel="#{msg['gn.noexistendatos']}" enableContextMenu="false"
+				rowKeyVar="rowIndex">
+
+				<a4j:support id="rowSelectionUser"
+					action="#{usuarioManaged.selectUsuarioPerfilAction}"
+					event="onselectionchange" reRender="tblRoles,tblFechaAcc" />
+
+				<a4j:support event="ons"></a4j:support>
+				<rich:column width="10%">
+					<f:facet name="header">Código</f:facet>
+					<h:outputText value="#{record.usuarioId}" />
+				</rich:column>
+				<rich:column width="45%">
+					<f:facet name="header">Apellidos y Nombres</f:facet>
+					<h:outputText value="#{record.apellidos} #{record.nombres}" />
+				</rich:column>
+				<rich:column width="30%">
+					<f:facet name="header">Nombred de usuario</f:facet>
+					<h:outputText value="#{record.nombreUsuario}" />
+				</rich:column>
+				<rich:column width="10%">
+					<f:facet name="header">Activo</f:facet>
+					<h:outputText value="#{record.estado == '1' ? 'Si' : 'No'}" />
+				</rich:column>
+				<rich:column width="5%" style="text-align: center;">
+					<f:facet name="header">
+						<a4j:commandButton value="Nuevo"
+							action="#{usuarioManaged.nuevoUsuario}"
+							oncomplete="Richfaces.showModalPanel('mdlUsuario'), jQuery('#txtApe').focus()"
+							title="Crear nuevo usuario" reRender="mdlUsuario"></a4j:commandButton>
+					</f:facet>
+					<a4j:commandButton action="#{usuarioManaged.openActualizacion}"
+						oncomplete="Richfaces.showModalPanel('mdlActualizarUsuario'), jQuery('#txtApeAct').focus()"
+						image="/images/editar2.png" title="Actualizar"
+						reRender="mdlActualizarUsuario">
+						<f:param name="rowIndexUser" value="#{rowIndex}" />
+					</a4j:commandButton>
+				</rich:column>
+			</rich:extendedDataTable>
+		</fieldset>
+	</h:form>
+
+	<h:form prependId="false">
+		<table width="49%" cellpadding="10"
+			style="background-color: #F3F2F2; border: 1px solid #C0C0C0; float: left;">
+			<tbody>
+				<tr>
+					<!-- <td>
+						<fieldset style="background-color: #FFFFFF;">
+							<legend
+								style="padding-bottom: 2px; width: 140px; background-image: url('#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.images.TabGradientB/DATB/eAH79Onz673zmQAYMwUh.jsf')">
+								<h:outputLabel value="Roles del usuario"
+									style="padding-left: 30px;" />
+							</legend>
+							<rich:extendedDataTable id="tblRoles"
+								value="#{usuarioManaged.roles}" var="record" width="100%"
+								height="300px" sortMode="single" selectionMode="single"
+								selection="#{usuarioManaged.simpleSelectedRol}"
+								noDataLabel="#{msg['gn.noexistendatos']}"
+								enableContextMenu="false">
+
+								<a4j:support id="rowSelectionRol"
+									action="#{usuarioManaged.selectRolAction}"
+									event="onselectionchange" reRender="tblFechaAcc" />
+
+								<rich:column width="100">
+									<f:facet name="header">Código</f:facet>
+									<h:outputText value="#{record.rolId}" />
+								</rich:column>
+								<rich:column width="150">
+									<f:facet name="header">Nombre Corto</f:facet>
+									<h:outputText value="#{record.descripcionCorta}" />
+								</rich:column>
+								<rich:column width="260">
+									<f:facet name="header">Nombre</f:facet>
+									<h:outputText value="#{record.descripcion}" />
+								</rich:column>
+								<rich:column width="100" style="text-align: center;">
+									<f:facet name="header">Habilitado</f:facet>
+									<span style="#{record.habilitado ? 'background-color: #6cff00;' : ''}"> <h:selectBooleanCheckbox
+											value="#{record.habilitado}" />
+									</span>
+								</rich:column>
+								<f:facet name="footer">
+									<rich:columnGroup>
+										<rich:column colspan="4" style="text-align: center;">
+											<a4j:commandButton value="Guardar"
+												action="#{usuarioManaged.guardarRolesUsuario}"
+												oncomplete="#{(usuarioManaged.supervisor || usuarioManaged.cajero) ? 'Richfaces.showModalPanel(\'mpAgenciaUsuario\')' : 'Richfaces.showModalPanel(\'mpErrors\')'}"
+												reRender="tblRoles,frmAgenciaUsuario" style="width: 100px;"></a4j:commandButton>
+										</rich:column>
+									</rich:columnGroup>
+								</f:facet>
+							</rich:extendedDataTable>
+						</fieldset>
+					</td> -->
+					
+					<td>
+						<fieldset style="background-color: #FFFFFF;">
+							<legend
+								style="padding-bottom: 2px; width: 140px; background-image: url('#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.images.TabGradientB/DATB/eAH79Onz673zmQAYMwUh.jsf')">
+								<h:outputLabel value="Roles del usuario"
+									style="padding-left: 30px;" />
+							</legend>
+							<rich:extendedDataTable id="tblRoles"
+								value="#{usuarioManaged.listPerfiles}" var="record" width="100%"
+								height="300px" sortMode="single" selectionMode="single"
+								selection="#{usuarioManaged.simpleSelectedRol}"
+								noDataLabel="#{msg['gn.noexistendatos']}"
+								enableContextMenu="false">
+
+								<a4j:support id="rowSelectionRol"
+									action="#{usuarioManaged.selectPerfilTable}"
+									event="onclick" reRender="tblFechaAcc, tblRoles" />
+
+								<rich:column width="20%">
+									<f:facet name="header">Código</f:facet>
+									<h:outputText value="#{record.perfilId}" />
+								</rich:column>
+								<rich:column width="60%">
+									<f:facet name="header">Nombre</f:facet>
+									<h:outputText value="#{record.nombre}" />
+								</rich:column>
+								<rich:column width="20%" style="text-align: center;">
+									<f:facet name="header">Habilitado</f:facet>
+									<span style="#{record.estado ? 'background-color: #6cff00;' : ''}"> 
+									<h:selectBooleanCheckbox
+											value="#{record.estado}" 
+											
+											/>
+											
+									</span>
+								</rich:column>
+								 <f:facet name="footer">
+									<rich:columnGroup>
+										<rich:column colspan="4" style="text-align: center;">
+											<a4j:commandButton value="Guardar"
+												action="#{usuarioManaged.guardarNewRolesUsuario}"
+												oncomplete="#{(usuarioManaged.supervisor || usuarioManaged.cajero) ? 'Richfaces.showModalPanel(\'mpAgenciaUsuario\')' : 'Richfaces.showModalPanel(\'mpErrors\')'}"
+												reRender="tblRoles,frmAgenciaUsuario" style="width: 100px;"></a4j:commandButton>
+										</rich:column>
+									</rich:columnGroup>
+								</f:facet>
+							</rich:extendedDataTable>
+						</fieldset>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
+		<table width="49%" cellpadding="10"
+			style="background-color: #F3F2F2; border: 1px solid #C0C0C0; float: right;">
+			<tbody>
+				<tr>
+					
+					<td><h:panelGroup>
+							<fieldset style="background-color: #FFFFFF;">
+								<legend
+									style="padding-bottom: 2px; width: 140px; background-image: url('#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.images.TabGradientB/DATB/eAH79Onz673zmQAYMwUh.jsf')">
+									<h:outputLabel value="Fechas de acceso"
+										style="padding-left: 30px;" />
+								</legend>
+								<rich:extendedDataTable id="tblFechaAcc"
+									value="#{usuarioManaged.usuariosAcceso}" var="record"
+									width="100%" height="300px" sortMode="single"
+									selectionMode="single"
+									noDataLabel="#{msg['gn.noexistendatos']}"
+									enableContextMenu="false">
+									<rich:column width="200">
+										<f:facet name="header">Fecha Inicio</f:facet>
+										<h:outputText value="#{record.fechaInicio}"
+											style="#{record.estado !=1 ? 'color: #BBBBBB;' : ''}">
+											<f:convertDateTime locale="#{msg['param.localedate']}"
+												pattern="#{msg['param.datetimepattern']}"
+												timeZone="#{aplicationManaged.timeZone}" />
+										</h:outputText>
+									</rich:column>
+									<rich:column width="200">
+										<f:facet name="header">Fecha Final</f:facet>
+										<h:outputText value="#{record.fechaFin}"
+											style="#{record.estado !=1 ? 'color: #BBBBBB;' : ''}">
+											<f:convertDateTime locale="#{msg['param.localedate']}"
+												pattern="#{msg['param.datetimepattern']}"
+												timeZone="#{aplicationManaged.timeZone}" />
+										</h:outputText>
+									</rich:column>
+									<rich:column width="150">
+										<f:facet name="header">Activo</f:facet>
+										<h:outputText value="#{record.estado == '1' ? 'Si' : 'No'}"
+											style="#{record.estado !=1 ? 'color: #BBBBBB;' : ''}" />
+									</rich:column>
+									<rich:column width="60" style="text-align: center;">
+										<f:facet name="header">
+											<a4j:commandButton value="Nuevo"
+												rendered="#{(usuarioManaged.usuariosAcceso.size() == 0) and (usuarioManaged.selectedRol != null)}"
+												action="#{usuarioManaged.nuevoUsuarioAcceso}"
+												oncomplete="Richfaces.showModalPanel('mdlFechaAcceso')"
+												reRender="mdlFechaAcceso"></a4j:commandButton>
+										</f:facet>
+										<a4j:commandButton rendered="#{record.estado=='1'}"
+											image="/images/editar2.png" title="Cambiar fechas de acceso"
+											actionListener="#{usuarioManaged.selectUsuarioAcceso}"
+											oncomplete="Richfaces.showModalPanel('mdlFechaAcceso')"
+											reRender="mdlFechaAcceso"></a4j:commandButton>
+									</rich:column>
+								</rich:extendedDataTable>
+							</fieldset>
+						</h:panelGroup> <h:panelGroup rendered="false">
+							<fieldset style="background-color: #FFFFFF; margin-top: 10px;">
+								<legend
+									style="padding-bottom: 2px; width: 140px; background-image: url('#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.images.TabGradientB/DATB/eAH79Onz673zmQAYMwUh.jsf')">
+									<h:outputLabel value="Opción de Caja"
+										style="padding-left: 30px;" />
+								</legend>
+								<rich:extendedDataTable id="tblOpCaja" var="record" width="100%"
+									height="300px" sortMode="single" selectionMode="single"
+									noDataLabel="#{msg['gn.noexistendatos']}"
+									enableContextMenu="false"></rich:extendedDataTable>
+							</fieldset>
+						</h:panelGroup></td>
+				</tr>
+			</tbody>
+		</table>
+	</h:form>
+	
+
+		
+
+
+	<rich:modalPanel id="mdlUsuario" autosized="true" width="350"
+		height="200">
+		<f:facet name="header">
+			<h:outputText value="Nuevo Usuario" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpiUsuario"
+					styleClass="hidelink" />
+				<rich:componentControl for="mdlUsuario" attachTo="gpiUsuario"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<table>
+				<tbody>
+					<tr>
+						<td>Apellidos:<span style="color: red;"> *</span></td>
+						<td><h:inputText id="txtApe"
+								value="#{usuarioManaged.apellidos}"
+								styleClass="textUpperCase" converter="uppeCaseConverter" style="width: 200px;" /></td>
+					</tr>
+					<tr>
+						<td>Nombres:<span style="color: red;"> *</span></td>
+						<td><h:inputText value="#{usuarioManaged.nombres}"
+								styleClass="textUpperCase" converter="uppeCaseConverter" style="width: 200px;" /></td>
+					</tr>
+					<tr>
+						<td>Nombre de usuario:<span style="color: red;"> *</span></td>
+						<td><h:inputText value="#{usuarioManaged.nombreUsuario}" /></td>
+					</tr>
+					<tr>
+						<td>Contraseña:<span style="color: red;"> *</span></td>
+						<td><h:inputSecret value="#{usuarioManaged.clave}" /></td>
+					</tr>
+					<tr>
+						<td>Activo:<span style="color: red;"> *</span></td>
+						<td><h:selectBooleanCheckbox
+								value="#{usuarioManaged.usuarioActivo}" /></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr align="center">
+						<td colspan="2"><a4j:commandButton value="Guardar"
+								oncomplete="Richfaces.showModalPanel('mdlWarnSaveUser')"
+								style="width: 100px;"></a4j:commandButton> <a4j:commandButton
+								value="Cancelar"
+								onclick="Richfaces.hideModalPanel('mdlUsuario')"
+								style="width: 100px; margin-left: 2px;"></a4j:commandButton></td>
+					</tr>
+				</tfoot>
+			</table>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mdlWarnSaveUser" autosized="true" width="320"
+		height="110">
+		<f:facet name="header">
+			<h:outputText value="Advertencia" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpiWarnSaveUser"
+					styleClass="hidelink" />
+				<rich:componentControl for="mdlWarnSaveUser"
+					attachTo="gpiWarnSaveUser" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<p style="color: #fdb05d; font-weight: bold;">Los datos que
+				intenta guardar no podrán modificarse a excepción del estado.</p>
+			<p style="color: #fdb05d; font-weight: bold;">Confirme si ¿Esta
+				seguro?</p>
+			<div style="text-align: center;">
+				<a4j:commandButton value="Aceptar"
+					action="#{usuarioManaged.guardarUsuario}"
+					onclick="Richfaces.hideModalPanel('mdlWarnSaveUser')"
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''};#{usuarioManaged.saveCorrecto ? 'Richfaces.hideModalPanel(\'mdlUsuario\')' : ''}"
+					reRender="tblUsers,tblRoles" style="width: 80px;"></a4j:commandButton>
+				<a4j:commandButton value="Cancelar" immediate="true"
+					onclick="Richfaces.hideModalPanel('mdlWarnSaveUser')"
+					style="width: 80px;"></a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mdlActualizarUsuario" autosized="true" width="220"
+		height="100">
+		<f:facet name="header">
+			<h:outputText value="Actualización del Estado del Usuario" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpiActUsuario"
+					styleClass="hidelink" />
+				<rich:componentControl for="mdlActualizarUsuario"
+					attachTo="gpiActUsuario" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<table cellpadding="10">
+				<tbody>
+					<tr>
+						<td>Activo:<span style="color: red;"> *</span></td>
+						<td><h:selectBooleanCheckbox
+								value="#{usuarioManaged.usuarioActivo}" /></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr align="center">
+						<td colspan="2"><a4j:commandButton value="Guardar"
+								action="#{usuarioManaged.actualizarUsuario}"
+								oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}; #{usuarioManaged.saveCorrecto ? 'Richfaces.hideModalPanel(\'mdlActualizarUsuario\')' : ''}"
+								reRender="tblUsers" style="width: 80px;"></a4j:commandButton> <a4j:commandButton
+								value="Cancelar" immediate="true"
+								onclick="Richfaces.hideModalPanel('mdlActualizarUsuario')"
+								style="width: 80px; margin-left: 2px;">
+							</a4j:commandButton></td>
+					</tr>
+				</tfoot>
+			</table>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mdlFechaAcceso" autosized="true" width="320"
+		height="110">
+		<f:facet name="header">
+			<h:outputText value="Fecha de acceso" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpiFechaAcc"
+					styleClass="hidelink" />
+				<rich:componentControl for="mdlFechaAcceso" attachTo="gpiFechaAcc"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<table cellspacing="10">
+				<tbody>
+					<tr>
+						<td>Fecha inicio:<span style="color: red;"> *</span></td>
+						<td><rich:calendar id="calFechaIni"
+								value="#{usuarioManaged.fechaIni}"
+								locale="#{msg['param.localedate']}"
+								datePattern="#{msg['param.datepattern']}"
+								timeZone="#{aplicationManaged.timeZone}"></rich:calendar></td>
+					</tr>
+					<tr>
+						<td>Fecha fin:<span style="color: red;"> *</span></td>
+						<td><rich:calendar value="#{usuarioManaged.fechaFin}"
+								locale="#{msg['param.localedate']}"
+								datePattern="#{msg['param.datepattern']}"
+								timeZone="#{aplicationManaged.timeZone}"></rich:calendar></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr align="center">
+						<td colspan="2"><a4j:commandButton value="Guardar"
+								action="#{usuarioManaged.guardaUsuarioAcceso}"
+								oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}; #{usuarioManaged.saveCorrecto ? 'Richfaces.hideModalPanel(\'mdlFechaAcceso\')' : ''}"
+								reRender="tblFechaAcc" style="width: 100px;"></a4j:commandButton>
+							<a4j:commandButton value="Cancelar" immediate="true"
+								onclick="Richfaces.hideModalPanel('mdlFechaAcceso')"
+								style="width: 100px; margin-left: 2px;">
+							</a4j:commandButton></td>
+					</tr>
+				</tfoot>
+			</table>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mpAgenciaUsuario" autosized="true" width="700"
+		trimOverlayedElements="false" onshow="iniciarCalendar()">
+		<f:facet name="header">
+			<h:outputText value="Configuración de agencias" />
+		</f:facet>
+		<h:form id="frmAgenciaUsuario" prependId="false">
+			<h:panelGroup rendered="#{usuarioManaged.supervisor}">
+				<p>Agencias para supervisor</p>
+				<rich:extendedDataTable id="tblAgenciaSupervisor"
+					value="#{usuarioManaged.agencias}" var="item"
+					enableContextMenu="false" width="100%" height="200px">
+					<rich:column width="40">
+						<h:selectBooleanCheckbox value="#{item.selected}">
+							<a4j:support event="onchange" reRender="tblAgenciaSupervisor"></a4j:support>
+						</h:selectBooleanCheckbox>
+					</rich:column>
+					<rich:column width="80">
+						<f:facet name="header">Código</f:facet>
+					#{item.agenciaId}
+				</rich:column>
+					<rich:column width="180">
+						<f:facet name="header">Nombre</f:facet>
+					#{item.nombreAgencia}
+				</rich:column>
+					<rich:column width="130" style="text-align: center;">
+						<f:facet name="header">Fecha inicio</f:facet>
+						<rich:calendar value="#{item.fechaInicio}"
+							disabled="#{!item.selected}" locale="#{msg['param.localedate']}"
+							datePattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" enableManualInput="true"
+							inputClass="maskFecha" inputStyle="width: 86px;"
+							style="width: 86px;"></rich:calendar>
+					</rich:column>
+					<rich:column width="130" style="text-align: center;">
+						<f:facet name="header">Fecha fin</f:facet>
+						<rich:calendar value="#{item.fechaFin}"
+							disabled="#{!item.selected}" locale="#{msg['param.localedate']}"
+							datePattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" enableManualInput="true"
+							inputClass="maskFecha" inputStyle="width: 86px;"></rich:calendar>
+						<rich:jQuery selector=".maskFecha" query="mask('99/99/9999')"
+							timing="onload" />
+					</rich:column>
+					<rich:column width="100">
+						<f:facet name="header">IP</f:facet>
+						<h:inputText value="#{item.ipAsignada}"
+							disabled="#{!item.selected}" style="width: 90%;" />
+					</rich:column>
+				</rich:extendedDataTable>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{usuarioManaged.cajero}">
+				<p>Agencia para cajero</p>
+				<rich:extendedDataTable id="tblAgenCajero"
+					value="#{usuarioManaged.agenciasCajero}" var="item"
+					enableContextMenu="false" width="100%" height="200px">
+					<rich:column width="40">
+						<input type="radio" name="rbAgencia" value="#{item.agenciaId}"
+							onclick="radioButton(this)" />
+					</rich:column>
+					<rich:column width="80">
+						<f:facet name="header">Código</f:facet>
+					#{item.agenciaId}
+				</rich:column>
+					<rich:column width="180">
+						<f:facet name="header">Nombre</f:facet>
+					#{item.nombreAgencia}
+				</rich:column>
+					<rich:column width="125">
+						<f:facet name="header">Fecha inicio <span
+								style="color: red;">*</span>
+						</f:facet>
+						<rich:calendar value="#{item.fechaInicio}"
+							locale="#{msg['param.localedate']}"
+							datePattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" enableManualInput="true"
+							inputClass="maskFecha" inputStyle="width: 86px;"></rich:calendar>
+					</rich:column>
+					<rich:column width="125">
+						<f:facet name="header">Fecha fin</f:facet>
+						<rich:calendar value="#{item.fechaFin}"
+							locale="#{msg['param.localedate']}"
+							datePattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" enableManualInput="true"
+							inputClass="maskFecha" inputStyle="width: 86px;"></rich:calendar>
+					</rich:column>
+					<rich:column width="100">
+						<f:facet name="header">IP</f:facet>
+						<h:inputText value="#{item.ipAsignada}" style="width: 90%;" />
+					</rich:column>
+				</rich:extendedDataTable>
+			</h:panelGroup>
+			<div style="width: 100%; text-align: center;">
+				<a4j:commandButton value="Guardar"
+					actionListener="#{usuarioManaged.guardarConfiguracionAgencia}"
+					reRender="frmRstAgenUsu"
+					oncomplete="Richfaces.showModalPanel('mpRstAgenUsu')"
+					style="width: 120px;"></a4j:commandButton>
+				<a4j:commandButton value="Cancelar"
+					actionListener="#{usuarioManaged.cancelarRegAgenUsuario}"
+					oncomplete="#{rich:component('mpAgenciaUsuario')}.hide();"
+					reRender="tblRoles" style="width: 120px; margin-left: 6px;"></a4j:commandButton>
+			</div>
+			<rich:jQuery selector=".maskFecha" query="mask('99/99/9999')"
+				timing="onload" />
+			<h:inputHidden id="txtAgenCajeroId"
+				value="#{usuarioManaged.agenCajeroId}" />
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="mpRstAgenUsu" autosized="true" width="450">
+
+		<f:facet name="header">
+			<h:outputText value="#{msg['gn.mensajes']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hidempRstAgenUsu" styleClass="hidelink" />
+				<rich:componentControl for="mpRstAgenUsu"
+					attachTo="hidempRstAgenUsu" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmRstAgenUsu">
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{usuarioManaged.correcto ? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton value="#{msg['gn.aceptar']}"
+					rendered="#{usuarioManaged.correcto}"
+					action="#{usuarioManaged.cancelarRegAgenUsuario}"
+					oncomplete="Richfaces.hideModalPanel('mpRstAgenUsu'),Richfaces.hideModalPanel('mpAgenciaUsuario')"
+					reRender="tblRoles" />
+				<a4j:commandButton id="btnAceptRstAgenUsu2"
+					rendered="#{!usuarioManaged.correcto}" value="#{msg['gn.aceptar']}">
+					<rich:componentControl for="mpRstAgenUsu"
+						attachTo="btnAceptRstAgenUsu2" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+	<script type="text/javascript">
+		//<![CDATA[
+		function iniciarCalendar(){
+			var radios = $('tblAgenCajero').getElementsBySelector("input[type='radio']");
+			var arregloRb = $A(radios);
+			var i = 0;
+			arregloRb.each(function(itemRb){
+				var id = 'tblAgenCajero:n:' + i;
+				var allCalen = $(id).getElementsByClassName("rich-calendar-input");
+				var arregloCal = $A(allCalen);
+				arregloCal.each(function(itemCal){
+					if(itemCal.value == null || itemCal.value == ''){
+						itemCal.disable();
+						var idSplit = itemCal.id.split('InputDate');
+						var idImg = new String(idSplit[0]);
+						idImg = idImg + 'PopupButton';
+						$(idImg).setAttribute('src','#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.DisabledCalendarIcon/DATB/eAHbWurFMOs5AAnQAvY_.jsf');
+					}else{
+						itemRb.checked = 'checked';
+						$('txtAgenCajeroId').value=itemRb.value;
+						throw $break;
+					}
+				});
+				i++;
+			});
+		}
+		function radioButton(radio) {
+			var radios = $('tblAgenCajero').getElementsBySelector("input[type='radio']");
+			var allCalen = $('tblAgenCajero').getElementsByClassName("rich-calendar-input");
+			var arreglo = $A(allCalen);
+			arreglo.each(function(item) {
+				item.disable();
+				item.value='';
+				var idSplit = item.id.split('InputDate');
+				var idImg = new String(idSplit[0]);
+				idImg = idImg + 'PopupButton';
+				$(idImg).setAttribute('src','#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.DisabledCalendarIcon/DATB/eAHbWurFMOs5AAnQAvY_.jsf');		
+			});
+			for (var i = 0; i < radios.length; i++){
+				if(radios[i].value == radio.value){
+					// active this
+					var calen = $('tblAgenCajero').getElementsBySelector("input[type='radio']")[i].parentElement.parentElement.parentElement.getElementsByClassName('rich-calendar-input');
+					for(var x = 0; x < calen.length; x++){
+						calen[x].enable();
+						var idSplit = calen[x].id.split('InputDate');
+						var idImg = new String(idSplit[0]);
+						idImg = idImg + 'PopupButton';
+						$(idImg).setAttribute('src','#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.CalendarIcon/DATB/eAHbWurFMOs5AAnQAvY_.jsf');
+					}
+				}
+			}
+			$('txtAgenCajeroId').value=radio.value;
+    	}
+		//]]>
+	</script>
+</ui:composition>

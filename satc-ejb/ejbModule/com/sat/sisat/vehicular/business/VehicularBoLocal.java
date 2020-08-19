@@ -1,0 +1,471 @@
+package com.sat.sisat.vehicular.business;
+
+import java.sql.Timestamp;
+import java.util.List;
+
+import javax.ejb.Local;
+
+import com.sat.sisat.determinacion.vehicular.dto.DeudaValoresDTO;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.persistence.entity.DtDeterminacion;
+import com.sat.sisat.persistence.entity.GnNotaria;
+import com.sat.sisat.persistence.entity.GnTipoDocumento;
+import com.sat.sisat.persistence.entity.GnTipoMoneda;
+import com.sat.sisat.persistence.entity.RvAdquisicion;
+import com.sat.sisat.persistence.entity.RvCategoriaVehiculo;
+import com.sat.sisat.persistence.entity.RvClaseVehiculo;
+import com.sat.sisat.persistence.entity.RvCondicionPropiedad;
+import com.sat.sisat.persistence.entity.RvCondicionVehiculo;
+import com.sat.sisat.persistence.entity.RvDetCondVehiculo;
+import com.sat.sisat.persistence.entity.RvDjvehicular;
+import com.sat.sisat.persistence.entity.RvMarca;
+import com.sat.sisat.persistence.entity.RvModeloVehiculo;
+import com.sat.sisat.persistence.entity.RvMotivoDeclaracion;
+import com.sat.sisat.persistence.entity.RvMotivoDescargo;
+import com.sat.sisat.persistence.entity.RvSustentoVehicular;
+import com.sat.sisat.persistence.entity.RvTipoCarroceria;
+import com.sat.sisat.persistence.entity.RvTipoMotor;
+import com.sat.sisat.persistence.entity.RvTipoTraccion;
+import com.sat.sisat.persistence.entity.RvTipoTransmision;
+import com.sat.sisat.persistence.entity.RvTransferenciaPropiedad;
+import com.sat.sisat.persistence.entity.RvVehiculo;
+import com.sat.sisat.vehicular.dto.AnexosDeclaVehicDTO;
+import com.sat.sisat.vehicular.dto.BuscarPersonaDTO;
+import com.sat.sisat.vehicular.dto.BuscarVehicularDTO;
+import com.sat.sisat.vehicular.dto.CabCarteraVehicularDTO;
+import com.sat.sisat.vehicular.dto.CarteraVehiculosDTO;
+import com.sat.sisat.vehicular.dto.DistritoDTO;
+import com.sat.sisat.vehicular.dto.DocumentoSustentatorioDTO;
+import com.sat.sisat.vehicular.dto.HistoricoVehiculodjDTO;
+import com.sat.sisat.vehicular.dto.RvVehiculoDTO;
+import com.sat.sisat.vehicular.dto.VehiculoExistenteDTO;
+
+@Local
+public interface VehicularBoLocal {
+	/**
+	 * Obtiene todas las clases de vehiculos de la base de datos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvClaseVehiculo> getAllRvClaseVehiculo()
+			throws Exception;
+
+	/**
+	 * Obtiene todas las categorías de vehículos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvCategoriaVehiculo> getAllRvCategoriaVehiculo()
+			throws Exception;
+
+	/**
+	 * Obtiene todas las marcas de vehículos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvMarca> findRvMarca(int categoria) throws Exception;
+
+	/**
+	 * Obtiene modelos de vehículo de acuerdo a marca y categoría
+	 * 
+	 * @param marcaVehiculoId
+	 *            Identificador de marca de vehículo
+	 * @param categoriaVehiculoId
+	 *            Identificador de categoría de vehículo
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvModeloVehiculo> getAllRvModeloVehiculo(
+			int marcaVehiculoId, int categoriaVehiculoId) throws Exception;
+
+	/**
+	 * Obtiene las condiciones especiales de vehículos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvCondicionVehiculo> getAllRvCondicionVehiculo()
+			throws Exception;
+
+	/**
+	 * Obtiene todos los tipos de carrocería
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvTipoCarroceria> getAllRvTipoCarroceria()
+			throws Exception;
+
+	/**
+	 * Obtiene tipos de transmisión de vehículos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvTipoTransmision> getAllRvTipoTransmision()
+			throws Exception;
+
+	/**
+	 * Obtiene tipos de tracción de vehículos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvTipoTraccion> getAllRvTipoTraccion()
+			throws Exception;
+
+	/**
+	 * Obtiene todos los tipos de motores
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvTipoMotor> getAllRvTipoMotor() throws Exception;
+
+	/**
+	 * Obtiene una lista de documentos que pueden sustentar una dj vehicular
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<DocumentoSustentatorioDTO> getAllRvDocumentoSustentatorio()
+			throws Exception;
+
+	/**
+	 * Obtiene lista de motivos de descargo
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvMotivoDescargo> getAllRvMotivoDescargo()
+			throws Exception;
+
+	/**
+	 * Obtiene un vehículo existente según su placa
+	 * 
+	 * @param placa
+	 *            Placa
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract VehiculoExistenteDTO getVehiculoByPlaca(String placa)
+			throws Exception;
+
+	/**
+	 * Obtiene un vehículo existente según su número de motor
+	 * 
+	 * @param numMotor
+	 *            Número de motor
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract VehiculoExistenteDTO getVehiculoByNumMotor(String numMotor)
+			throws Exception;
+
+	/**
+	 * Obtiene todos los motivos de declaraci{on
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvMotivoDeclaracion> getAllRvMotivoDeclaracion()
+			throws Exception;
+
+	/**
+	 * Obtiene todos los tipos de adquisición
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvAdquisicion> getAllRvAdquisicion() throws Exception;
+
+	/**
+	 * Obtiene las condiciones de propiedad
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvCondicionPropiedad> getAllRvCondicionPropiedad()
+			throws Exception;
+
+	/**
+	 * Obtiene los tipos de moneda
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<GnTipoMoneda> getAllGnTipoMoneda() throws Exception;
+
+	/**
+	 * Obtiene la lista de notarias registradas
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<GnNotaria> getAllGnNotaria() throws Exception;
+
+	// Buscar persona
+	/**
+	 * Buscar persona
+	 * 
+	 * @param apePat
+	 *            Apellido paterno
+	 * @param apeMat
+	 *            Apellido Materno
+	 * @param nombres
+	 *            Primer nombre
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<BuscarPersonaDTO> findPersona(String apePat,
+			String apeMat, String nombres) throws Exception;
+
+	/**
+	 * Buscar persona
+	 * 
+	 * @param razonSocial
+	 *            Razon Social
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<BuscarPersonaDTO> findPersona(String razonSocial)
+			throws Exception;
+
+	/**
+	 * Buscar persona
+	 * 
+	 * @param tipoDocuIdentidadId
+	 *            Tipo de documento de identidad
+	 * @param nroDocuIdentidad
+	 *            Número de documento de identidad
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<BuscarPersonaDTO> findPersona(int tipoDocuIdentidadId,
+			String nroDocuIdentidad) throws Exception;
+
+	/**
+	 * Guarda un nuevo vehículo en la base de datos
+	 * 
+	 * @param vehiculo
+	 *            Vehículo
+	 * @return Identificador del nuevo vehículo guardado
+	 */	
+	public Integer guardarVehiculo(RvVehiculo vehiculo) throws SisatException;
+	
+	/**
+	 * Modifica datos de vehículo en la base de datos
+	 * 
+	 * @param vehiculo
+	 *            Vehículo
+	 */
+	public abstract void actualizarDatosVehiculo(RvVehiculo vehiculo);
+
+	/**
+	 * Guarda una nueva declaración en la base de datos
+	 * 
+	 * @param dj
+	 *            Declaración jurada vehicular
+	 * @return Identificador
+	 */	
+	public abstract RvDjvehicular guardarDJVehicular(RvDjvehicular dj) throws SisatException;
+
+	public abstract int guardaDetCondVehiculo(RvDetCondVehiculo dcv);
+
+	public abstract void actualizaDetCondVehiculo(RvDetCondVehiculo dcv);
+
+	public abstract void eliminarDetCondVehiculo(int id);
+
+	public abstract RvDetCondVehiculo obtenerDetCondVehiculo(int djVehicularId);
+
+	public abstract int guardarDescargoDJVehicular(RvDjvehicular oldDjv, RvDjvehicular dj,List<BuscarPersonaDTO> lstTransferentes, List<AnexosDeclaVehicDTO> lstAnexos)  throws SisatException;
+	
+	public abstract int guardarPendienteDescargoDJVehicular(RvDjvehicular dj,
+			List<BuscarPersonaDTO> lstTransferentes,
+			List<AnexosDeclaVehicDTO> lstAnexos) throws SisatException;
+
+	/**
+	 * Actualiza datos de una declaración jurada en la base de datos
+	 * 
+	 * @param dj
+	 *            Declaración jurada vehicular
+	 */
+	public abstract void actualizarDJVehicular(RvDjvehicular dj) throws SisatException;
+
+	/**
+	 * Elimina los transferentes correspondientes a una dj vehicular
+	 * 
+	 * @param djvehicularId
+	 *            Identificador de la dj vehicular
+	 */
+	public abstract void eliminarTransferentesDJ(int djvehicularId);
+
+	/**
+	 * Guarda transferentes en una dj vehicular
+	 * 
+	 * @param transfers
+	 *            Lista de transferentes
+	 * @param tp
+	 *            Datos de transferencia
+	 */
+	public abstract void guardarTransferenteAdquiriente(
+			List<BuscarPersonaDTO> transfers, RvTransferenciaPropiedad tp);
+
+	/**
+	 * Elimina documentos anexos de una dj vehicular
+	 * 
+	 * @param djvehicularId
+	 *            Identificador de la dj vehicular
+	 */
+	public abstract void eliminarAnexosDJ(int djvehicularId);
+
+	/**
+	 * Guarda documentos anexos de una dj vehicular
+	 * 
+	 * @param anexos
+	 *            Lista de documentos anexos
+	 * @param sv
+	 *            Datos de documentos anexos
+	 */
+	public abstract void guardarDocAnexosDjVehicular(
+			List<AnexosDeclaVehicDTO> anexos, RvSustentoVehicular sv);
+
+	public abstract boolean activarDJVehicular(int djId) throws Exception;
+
+	/**
+	 * Buscar declaraciones juradas de vehicular según el contribuyente
+	 * 
+	 * @param personaId
+	 *            Identificador de la persona contribuyente
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<BuscarVehicularDTO> findDjVehicular(int personaId)
+			throws Exception;
+
+	/**
+	 * Buscar declaraciones juradas de vehicular según el contribuyente y la
+	 * placa del vehículo
+	 * 
+	 * @param personaId
+	 *            Identificador de la persona contribuyente
+	 * @param placa
+	 *            Placa del vehículo
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<BuscarVehicularDTO> findDjVehicular(int personaId,
+			String placa) throws Exception;
+
+	/**
+	 * Obtiene una dj vehicular por el número de identificador
+	 * 
+	 * @param id
+	 *            Identificador único
+	 * @return
+	 */
+	public abstract RvDjvehicular findDjVehicularById(int id) throws SisatException;
+
+	public abstract RvVehiculo findVehiculoById(int id);
+	
+	public abstract RvVehiculoDTO findVehiculoDTOById(int id);
+
+	public abstract List<BuscarPersonaDTO> findTransferentes(int djvehicularId);
+
+	public abstract List<AnexosDeclaVehicDTO> findAnexos(int djvehicularId);
+
+	public abstract Integer existeVehiculoPlaca(String placa);
+
+	public abstract Integer existeVehiculoMotor(String nroMotor);
+
+	public abstract List<BuscarVehicularDTO> findDjVehicular(int personaId,	int vehiculoId) throws Exception;
+
+	public abstract List<BuscarVehicularDTO> findDjVehicularVehicId(int vehiculoId) throws Exception;
+
+	public abstract boolean cambiarEstadoDjv(int djId, String estado);
+
+	public abstract boolean cambiarFlagDjAnio(int djId, String flag);
+
+	public abstract List<HistoricoVehiculodjDTO> findHistoricoVehiculoDj(
+			int personaId, String placa) throws SisatException;
+
+	public abstract int duplicarDjvActualizar(int oldDjvId, int userId) throws Exception;
+
+	public abstract boolean copiarDjvAOtroAnio(int djvId, int anioCrear,
+			int contribId, int usuarioId, String terminal)
+			throws SisatException;
+	
+	public abstract boolean isVehiculoAssociToDj(int vehiculoId);
+	
+	/**
+	 * ITANTAMANGO
+	 * @param personaId
+	 * @param placa
+	 * @param codigo
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<BuscarVehicularDTO> findDjVehicular(String codigoCont, String placa, String apellidosNombres, String razon)
+			throws Exception;
+	
+	
+	/**
+	 * Autor:ITANTAMANGO
+	 * @param periodoAfecta
+	 * @param marcaVehiculoId
+	 * @param categoriaVehiculoId
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvModeloVehiculo> getAllRvModeloVehiculoByPeriodoAfecta(int periodoAfecta, int marcaVehiculoId, int categoriaVehiculoId )
+			throws Exception;
+	
+	
+	/**
+	 * Autor:ITANTAMANGO
+	 * @param categoria
+	 * @param periodoAfecta
+	 * @return
+	 * @throws Exception
+	 */
+	public abstract List<RvMarca> findRvMarca(int categoria,int periodoAfecta) throws Exception;
+	
+	public abstract List<BuscarPersonaDTO> findDjTransferentes(int djVehicularAnteriorId)
+			throws Exception;
+	
+	public abstract void guardarTransferente(RvTransferenciaPropiedad tp) throws SisatException;
+	
+	public abstract RvDjvehicular copiarDJVehicular(RvDjvehicular djvehicular) throws SisatException ;
+	
+	public RvDjvehicular findDjVehicularByPersonaIdVehiculoIdAnhoAfectacion(int personaId, int vehiculoId, int anhoAfectacion) throws SisatException;
+	
+	public List<GnTipoDocumento> obtenerTipoDocumentos() throws SisatException;
+	
+	public void eliminarDJVehicular(HistoricoVehiculodjDTO djvehicular) throws SisatException;
+	
+	public abstract List<HistoricoVehiculodjDTO> findHistoricoVehiculoDjTodo(int personaId, String placa)
+			throws SisatException;
+	
+	public abstract List<DeudaValoresDTO> getValorVehicular(Integer personaId,String anio,Integer djId) throws Exception;
+	
+//	public abstract int guardarOperacionAuditoria (GnAuditoriaOperacion auditoria)throws Exception;
+	
+	public abstract List<RvMotivoDeclaracion> getAllRvMotivoDeclaracionByDj(int djId,int anio)throws Exception;
+	
+	public abstract RvDjvehicular obtenerReqDj(int djVehicularId);
+	
+	public abstract DtDeterminacion obtenerDeterminacionByDj(int djVehicularId,int personaId);
+	
+	public abstract List<CarteraVehiculosDTO> getCarteraVehiculos(int lote_id,int sector_id,int persona_id,String nro_req,int distrito_id,String placa) throws Exception;
+	
+	public abstract List<DistritoDTO> getDistritos() throws Exception;
+	
+	public int getNuevaCarteraVehiculos(List<CabCarteraVehicularDTO> lstTemporal,int usuario_id ,String terminal)throws Exception;
+	
+	public abstract void actualizarVehiculoOmiso(int marcaVehiculoId,int categoriaVehiculoId,int modeloVehiculoId,int claseVehiculoId,int carroceriaId,int tipoMotorId, Double numeroCilindros, int vehiculoId,int usuarioId, String terminal, Timestamp fechaUpd);
+	
+	public abstract List<CarteraVehiculosDTO> getCarteraVehiculosEditarMasivo(int lote_id,String marca,String modelo) throws Exception;
+}

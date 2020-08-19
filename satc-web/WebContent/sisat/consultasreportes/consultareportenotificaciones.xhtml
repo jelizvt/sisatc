@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formBuscarLotesOrdinarios">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscarLote')}.click()"
+			selector="#formBuscarLotesOrdinarios" />
+
+		<rich:panel rendered="#{notificarLoteOrdinarioManaged.permisoBuscar}" id="p01">
+			<f:facet name="header">
+				<h:outputLabel value="#{msg['cc.actosadministrativo']}" />
+			</f:facet>
+			<h:panelGrid columns="4">
+				
+						<h:outputLabel value="Fecha inicio de notificación:">
+							<span class="requiredField">*</span>
+						</h:outputLabel>
+					
+						<rich:calendar value="#{reporteNotificacionesManaged.fechaInicio}" datePattern="dd/MM/yyyy" inputSize="8" required="true"
+							requiredMessage="Fecha inicio de registro:" enableManualInput="true" >
+						</rich:calendar>
+					
+						<h:outputLabel value="Fecha fin de notificación:">
+							<span class="requiredField">*</span>
+						</h:outputLabel>
+				
+					
+						<rich:calendar value="#{reporteNotificacionesManaged.fechaFin}" datePattern="dd/MM/yyyy" inputSize="8" required="true" 
+							requiredMessage="Fecha fin de registro:" enableManualInput="true">
+						</rich:calendar>
+					
+			</h:panelGrid>
+		</rich:panel>
+		
+		
+		<h:panelGrid columns="3" align="center">
+			<a4j:commandButton value="Buscar" style="width:100px;"
+					id="cmdBuscarLote" 
+					action="#{reporteNotificacionesManaged.buscar}"
+					
+					status="ajaxStatus" 
+					reRender="id_panelresultados" />
+
+			<a4j:commandButton value="Limpiar" style="width:100px;"
+				action="#{notificarLoteOrdinarioManaged.limpiar}"
+				status="ajaxStatus" reRender="p01,id_panelresultados" />
+
+			<h:commandLink id="exportarLstExc" 
+				
+				action="#{reporteNotificacionesManaged.exportarExcel}">
+				<h:graphicImage value="/images/modal/excel.png"
+					style="border:0;width:25px;height:25px;" />
+				<rich:toolTip for="exportarLstExc">Descargar Lista en Excel</rich:toolTip>
+			</h:commandLink>
+
+		</h:panelGrid>
+
+		<rich:panel id="id_panelresultados">
+
+		
+			<rich:datascroller for="datosactos" maxPages="20"></rich:datascroller>
+
+			<rich:extendedDataTable id="datosactos"
+				value="#{reporteNotificacionesManaged.lstFindNotificaciones}" var="noti"
+				width="100%"  rows="20" selectionMode="single"
+				noDataLabel="No Se Encontro Información de lotes Ordinarios"
+				rowKeyVar="row" enableContextMenu="false">
+				
+				<rich:column id="x1" width="40%" filterBy="#{noti.notificador}">
+					<f:facet name="header" width="8%">Notificador</f:facet>
+					<h:outputText value="#{noti.notificador}" />
+				</rich:column>
+				
+				<rich:column id="x2" width="10%" filterBy="#{noti.tipoNotificacion}">
+					<f:facet name="header" width="8%">Tipo Notificación</f:facet>
+					<h:outputText value="#{noti.tipoNotificacion}" />
+				</rich:column>
+				
+				<rich:column id="x3" width="10%">
+					<f:facet name="header">Fecha Notif.</f:facet>
+					<h:outputText value="#{noti.fechaNotificacion}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				
+				<rich:column id="x4" width="10%" filterBy="#{noti.nroValor}">
+					<f:facet name="header" width="8%">Numero valor</f:facet>
+					<h:outputText value="#{noti.tipoNotificacion}" />
+				</rich:column>
+				
+				<rich:column id="x5" width="10%" filterBy="#{noti.tipoValor}">
+					<f:facet name="header" width="8%">Tipo valor</f:facet>
+					<h:outputText value="#{noti.tipoValor}" />
+				</rich:column>
+				
+				<rich:column id="x6" width="10%">
+					<f:facet name="header">Fecha Registro</f:facet>
+					<h:outputText value="#{noti.fechaRegistro}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				
+				<rich:column id="x7" width="10%" filterBy="#{noti.usuarioRegistro}">
+					<f:facet name="header" width="8%">Usuario Registro</f:facet>
+					<h:outputText value="#{noti.usuarioRegistro}" />
+				</rich:column>
+				
+
+			</rich:extendedDataTable>
+		</rich:panel>
+
+	</h:form>
+
+	
+
+</ui:composition>

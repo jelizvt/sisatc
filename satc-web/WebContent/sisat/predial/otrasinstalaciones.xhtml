@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+	<rich:jQuery query="focus().select()"
+		selector="#id_formOtrasInstalaciones :input:visible:enabled:first"
+		name="focusInputoi" />
+	<rich:panel id="id_principalotrasinstalaciones" width="720px">
+		<h:panelGrid id="id1" columns="1">
+			<h:panelGrid id="id2" columns="4">
+				<h:outputLabel style="width:150px;" value="Año construccion:">
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<h:inputText id="id_annoconstruccion"
+					value="#{otrasInstalacionesManaged.instalacion.annoInstalacion}"
+					tabindex="1" required="true"
+					requiredMessage="El campo Año construccion es requerido" size="4"
+					maxlength="4" onkeypress="return numbersonly(this.value,event)"
+					label="Año de Construcción"
+					validatorMessage="El año de construcción debe ser mayor a 1753 y menor a #{otrasInstalacionesManaged.annoDj}"
+					disabled="#{otrasInstalacionesManaged.disabled}">
+					<f:validateLongRange minimum="1753"
+						maximum="#{otrasInstalacionesManaged.annoDj}"></f:validateLongRange>
+				</h:inputText>
+				<h:outputLabel value="Mes construcción:">
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<rich:comboBox width="120px" defaultLabel="Selecccione"
+					selectFirstOnUpdate="true" directInputSuggestions="false"
+					id="id_mes" binding="#{otrasInstalacionesManaged.cmbmes}"
+					value="#{otrasInstalacionesManaged.cmbValueMes}" tabindex="2"
+					onkeypress="return showListCbo(this,event);"
+					onblur="validaInputCbo(this)" required="true"
+					requiredMessage="El campo Mes construccion es requerido"
+					disabled="#{otrasInstalacionesManaged.disabled}">
+					<f:selectItems id="id_lstmes"
+						value="#{otrasInstalacionesManaged.lstmes}" />
+				</rich:comboBox>
+				<h:outputLabel value="Código Min. Vivienda:">
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<h:inputText id="idCodigoObra"
+					value="#{otrasInstalacionesManaged.codigoObra}" tabindex="3"
+					required="true" immediate="true"
+					requiredMessage="El campo Código de la Obra es requerido" size="4"
+					maxlength="4" onkeypress="return numbersonly(this.value,event)"
+					label="Código Obra">
+					<a4j:support ajaxSingle="true" event="onchange"
+						action="#{otrasInstalacionesManaged.loadDescripcionObraById}"
+						reRender="id_combopartidaobra,id_combotipoobra,id_areaterreno,outputmedida1" />
+				</h:inputText>
+				<h:outputLabel />
+				<h:outputLabel />
+			</h:panelGrid>
+			<h:panelGrid id="id3" columns="2">
+				<h:outputLabel value="Descripción de Obra :">
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<rich:comboBox width="520px" defaultLabel="Seleccione"
+					id="id_combopartidaobra"
+					value="#{otrasInstalacionesManaged.cmbValueCategoriaObra}"
+					binding="#{otrasInstalacionesManaged.cmbCategoriaObra}"
+					selectFirstOnUpdate="true" directInputSuggestions="false"
+					immediate="true" tabindex="4"
+					onkeypress="return showListCbo(this,event);"
+					onblur="validaInputCbo(this)" required="true"
+					requiredMessage="El campo Categoria de obra es requerido"
+					disabled="#{otrasInstalacionesManaged.disabled}"
+					valueChangeListener="#{otrasInstalacionesManaged.selectCategoriaObra}">
+					<f:selectItems id="id_lstpartidaobra"
+						value="#{otrasInstalacionesManaged.lstCategoriaObra}" />
+					<a4j:support id="id_categoriaobra" event="onchange"
+						reRender="id_combotipoobra,outputmedida1,idCodigoObra"
+						ajaxSingle="true" />
+				</rich:comboBox>
+				<h:outputLabel value="Detalle de Obra :">
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<a4j:outputPanel id="outpaneltipoobra">
+
+					<rich:comboBox width="520px" defaultLabel="Seleccione"
+						id="id_combotipoobra"
+						value="#{otrasInstalacionesManaged.cmbValueTipoObra}"
+						binding="#{otrasInstalacionesManaged.cmbTipoObra}"
+						selectFirstOnUpdate="true" directInputSuggestions="false"
+						immediate="true" tabindex="5"
+						onkeypress="return showListCbo(this,event);"
+						onblur="validaInputCbo(this)" required="true"
+						requiredMessage="El campo Tipo de obra es requerido"
+						disabled="#{otrasInstalacionesManaged.disabled}"
+						valueChangeListener="#{otrasInstalacionesManaged.selectChangeTipoObra}">
+						<f:selectItems id="id_lsttipoobra"
+							value="#{otrasInstalacionesManaged.lstTipoObra}" />
+						<a4j:support id="id_tipObra" event="onchange"
+							BypassUpdates="false" reRender="idCodigoObra,id_materialpredom" ajaxSingle="true" />
+					</rich:comboBox>
+				</a4j:outputPanel>
+			</h:panelGrid>
+			<h:panelGrid id="id4" columns="4">
+				<h:outputLabel id="outputmedida" value="Valor Unid. de Medida: ">
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<h:panelGrid columns="2">
+					<h:inputText width="50px" maxlength="15" alt="signed-decimal"
+						required="true" id="id_areaterreno" tabindex="6"
+						value="#{otrasInstalacionesManaged.instalacion.areaTerreno}"
+						requiredMessage="Ingrese Valor de Unidad de Medida"
+						disabled="#{otrasInstalacionesManaged.disabled}"
+						onkeypress="return numbersonly(this.value,event)">
+					</h:inputText>
+					<h:outputLabel id="outputmedida1"
+						style="font-weight:bold; width:10px;"
+						value="#{otrasInstalacionesManaged.medida}.">
+					</h:outputLabel>
+				</h:panelGrid>
+				<h:outputLabel id="outputNivel" value="   Nro nivel :">
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<h:inputText id="id_nronivelconst" maxlength="3" required="true"
+					style="width:50px"
+					value="#{otrasInstalacionesManaged.instalacion.nroNivel}"
+					requiredMessage="Indique el Numero de nivel"
+					validatorMessage="El Numero de nivel no es válido" tabindex="7"
+					onkeypress="return numbersonly(this.value,event)"
+					label="Numero de nivel"
+					disabled="#{otrasInstalacionesManaged.disabled}">
+					<f:validateLongRange minimum="1"></f:validateLongRange>
+				</h:inputText>
+			</h:panelGrid>
+			
+			<h:panelGrid id="id5" columns="2">
+				<h:outputLabel value="Material Predom. :" >
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<rich:comboBox width="300px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+							id="id_materialpredom" binding="#{otrasInstalacionesManaged.cmbMaterialPredominante}" 
+							requiredMessage="Seleccione el Material Predominante "
+							tabindex="7"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							disabled="#{otrasInstalacionesManaged.disabled}"
+							value="#{otrasInstalacionesManaged.cmbValueMaterial}">
+							<f:selectItems id="id_lstMaterialPredominante" value="#{otrasInstalacionesManaged.lstMaterialesPredominante}"/>		
+				</rich:comboBox>
+				<h:outputLabel value="Estado conservación :" >
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<rich:comboBox width="300px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+							id="id_estadoconcervacion" binding="#{otrasInstalacionesManaged.cmbEstadoConservacion}" 
+							requiredMessage="Seleccione el Estado de conservación "
+							tabindex="8"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							disabled="#{otrasInstalacionesManaged.disabled}">
+							<f:selectItems id="id_lstEstadoConservacion" value="#{otrasInstalacionesManaged.lstEstadoConservacion}"/>		
+				</rich:comboBox>
+				<h:outputLabel value="Clasif. depreciación :" >
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<rich:comboBox width="300px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+							id="id_tipodepreciacion" binding="#{otrasInstalacionesManaged.cmbTipoDepreciacion}" 
+							requiredMessage="Seleccione la Clasificación de depreciación"
+							tabindex="9"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							disabled="#{otrasInstalacionesManaged.disabled}"
+							value="#{otrasInstalacionesManaged.cmbValueDepreciacion}">
+							<f:selectItems id="id_lstTipoDepreciacion" value="#{otrasInstalacionesManaged.lstTipoDepreciacion}"/>		
+				</rich:comboBox>
+			</h:panelGrid>
+			
+		</h:panelGrid>
+	</rich:panel>
+	<table>
+		<tr>
+			<td align="center" colspan="4"><h:panelGrid align="center"
+					columns="3" width="40%" border="0" style="text-align:center">
+
+					<a4j:commandButton value="[G]uardar" style="width:100px;"
+						action="#{otrasInstalacionesManaged.guardar}"
+						reRender="id_otrasinstalaciones,id_principalotrasinstalaciones,
+						id_combopartidaobra,id_combotipoobra"
+						accesskey="g" tabindex="10"
+						oncomplete="if(#{facesContext.maximumSeverity == null}){ if(#{otrasInstalacionesManaged.isEditable==true}){#{rich:component('id_panelOtrasInstalaciones')}.hide();}else{focusInputoi();} }else{#{rich:component('mpErrors')}.show();}"
+						disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0')}" />
+					<a4j:commandButton value="[S]alir" style="width:100px;"
+						id="id_salir" action="#{otrasInstalacionesManaged.salir}"
+						oncomplete="#{rich:component('id_panelOtrasInstalaciones')}.hide(); return false"
+						immediate="true" accesskey="s" tabindex="11"
+						onblur="focusInputoi();" />
+				</h:panelGrid></td>
+		</tr>
+	</table>
+</h:panelGrid>
+
+

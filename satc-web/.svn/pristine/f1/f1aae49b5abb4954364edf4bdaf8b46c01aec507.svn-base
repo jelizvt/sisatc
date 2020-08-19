@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui"
+	> <!-- Esta -->
+
+	<!-- Busqueda de descargos por persona -->
+	<h:form id="frmDescargoDeudas" >
+		<rich:panel id="id_nrolote">
+			<f:facet name="header">
+				DETALLE DESCARGO DEUDA
+			</f:facet>
+			<h:panelGrid columns="3" style="font-weight: bold;">
+				<h:outputLabel value="Nº de lote" />
+				<h:outputLabel value=" :: " />
+				<h:outputLabel value="#{validarDescargoDeudaManaged.item.nro_lote}" />
+			</h:panelGrid>
+			
+			<table style="border:0; width:100%">
+				<tr>
+					<td align="left" width="120px">
+						<h:outputLabel value="Codigo: " for="persona_id" />
+					</td>
+					<td>
+						<h:inputText style="width : 400px" id="persona_id"
+							value="#{validarDescargoDeudaManaged.item.persona_id}"
+							styleClass="width-300"
+							onkeypress="return validarCarateres(event)" disabled="true">
+							
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText>
+					</td>
+					
+					<td align="left" width="120px">
+						<h:outputLabel value="Contribuyente: " for="contribuyente" />
+					</td>
+					<td>
+						<h:inputText  style="width : 400px" id="contribuyente"
+							value="#{validarDescargoDeudaManaged.item.contribuyente}"
+							onkeypress="return validarCarateres(event)" disabled="true">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText>
+					</td>
+				</tr>
+				
+				
+				<tr>
+					<td align="left" width="120px">
+						<h:outputLabel value="Fec. Registro: " for="fecha_registro" />
+					</td>
+					<td>
+						<h:inputText style="width : 400px" id="fecha_registro"
+							value="#{validarDescargoDeudaManaged.item.fecha_registro}"
+							styleClass="width-300"
+							onkeypress="return validarCarateres(event)" disabled="true">
+							
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:inputText>
+					</td>
+					
+					<td align="left" width="120px">
+						<h:outputLabel value="Tipo Descargo: " for="descripcion_tipo_descargo" />
+					</td>
+					<td>
+						<h:inputText  style="width : 400px" id="descripcion_tipo_descargo"
+							value="#{validarDescargoDeudaManaged.item.descripcion_tipo_descargo}"
+							onkeypress="return validarCarateres(event)" disabled="true">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText>
+					</td>
+				</tr>
+				
+				
+				
+				<tr>
+					<td align="left" width="120px">
+						<h:outputLabel value="Tipo Documento: " for="descripcion_tipo_documento" />
+					</td>
+					<td>
+						<h:inputText style="width : 400px" id="descripcion_tipo_documento"
+							value="#{validarDescargoDeudaManaged.item.descripcion_tipo_documento}"
+							styleClass="width-300"
+							onkeypress="return validarCarateres(event)" disabled="true">
+							
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText>
+					</td>
+					
+					<td align="left" width="120px">
+						<h:outputLabel value="Nun. Documento" for="nro_documento"></h:outputLabel>
+					</td>
+					<td>
+						<h:inputText  style="width : 400px" id="nro_documento"
+							value="#{validarDescargoDeudaManaged.item.nro_documento}"
+							onkeypress="return validarCarateres(event)" disabled="true">
+							<f:converter converterId="uppeCaseConverter" />
+							
+						</h:inputText>
+					</td>
+				</tr>
+				
+				
+				<tr>
+					<td align="left" width="120px">
+						<h:outputLabel value="Fecha Documento" for="fecha_documento" />
+					</td>
+					<td>
+						<h:inputText style="width : 400px" id="fecha_documento"
+							value="#{validarDescargoDeudaManaged.item.fecha_documento}"
+							styleClass="width-300"
+							onkeypress="return validarCarateres(event)" disabled="true">
+							
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:inputText>
+					</td>
+					
+					<td align="left" width="120px">
+						<h:outputLabel value="usuario" for="nro_documento"></h:outputLabel>
+					</td>
+					<td>
+						<h:inputText  style="width : 400px" id="usuario"
+							value="#{validarDescargoDeudaManaged.item.usuario}"
+							onkeypress="return validarCarateres(event)" disabled="true">
+							<f:converter converterId="uppeCaseConverter" />
+							
+						</h:inputText>
+					</td>
+				</tr>
+			</table>
+			
+			
+			
+			<h:panelGrid style="border: none; background: inherit; margin-top: 10px;" >			
+					  <a4j:commandButton value="Descargar" id="cmdDescargar"
+						rendered="#{(validarDescargoDeudaManaged.item.estado != 0 )  
+								and validarDescargoDeudaManaged.item.estado_descargo == 1   }"
+						oncomplete="Richfaces.showModalPanel('dlgValDescargo')"
+						icon="fa fa-cloud-download">
+						
+						<f:setPropertyActionListener value="#{lote.lote_descargo_id}"
+							target="#{validarDescargoDeudaManaged.item.lote_descargo_id}"
+							id="r4277">
+						</f:setPropertyActionListener>
+						<span class="fa fa-cloud-download" style="font-size: 20px;"></span>
+					</a4j:commandButton> 
+			</h:panelGrid>
+		</rich:panel>
+		
+		
+		<rich:panel >			
+			<rich:simpleTogglePanel id="togglePanelResultados"
+					switchType="client"
+					label="Resultados #{validarDescargoDeudaManaged.findDetalleLoteDescargo.size()} resultados"
+					height="auto" styleClass="uniqueClassName" opened="true"
+					> 
+				
+			<rich:extendedDataTable id="resultadofinal"
+					value="#{validarDescargoDeudaManaged.findDetalleLoteDescargo}" var="detalleLoteDescargo"
+					width="100%"  rows="20" selectionMode="single"
+					noDataLabel="No Se Encontro Información para esta Busqueda"
+					rowKeyVar="rowIndex" enableContextMenu="false"> 
+					
+					<rich:column id="x0" width="4%" style="text-align: center; background-color:'#FFFFFF'">
+						<f:facet name="header">Ítem</f:facet>
+						<h:outputText value="#{rowIndex + 1}" />
+					</rich:column>
+					
+					
+					<rich:column id="x1" width="5%" style="text-align: center; background-color:'#FFFFFF'"
+							>
+						<f:facet name="header">
+							<!-- <h:selectBooleanCheckbox id="checkBoxAllDeuda" 
+								value="#{validarDescargoDeudaManaged.selectedAllDeu}"
+								valueChangeListener="#{validarDescargoDeudaManaged.changeSelectAllDeu}"
+								update="resultadofinal"
+								>
+								 <p:ajax partialSubmit="true" process="@this"
+									update="resultadofinal"></p:ajax> 
+							</h:selectBooleanCheckbox>-->
+						</f:facet>
+						<h:selectBooleanCheckbox 
+								value="#{detalleLoteDescargo.isSelect}"
+								rendered="#{(validarDescargoDeudaManaged.item.estado != 0 )  
+								and validarDescargoDeudaManaged.item.estado_descargo == 1   }">
+								
+							<p:ajax partialSubmit="true" process="@this" update="@this"></p:ajax>
+						</h:selectBooleanCheckbox>
+					</rich:column>
+					
+					<rich:column id="x2" width="25%" style="text-align: center; background-color:'#FFFFFF'"
+						sortBy="#{detalleLoteDescargo.sub_concepto}"
+						filterBy="#{detalleLoteDescargo.sub_concepto}"
+						filterStyle="width:100%;">
+						<f:facet name="header">Subconcepto</f:facet>
+						<h:outputText value="#{detalleLoteDescargo.sub_concepto}" />
+					</rich:column>
+					
+					<rich:column id="x3" width="10%" style="text-align: center; background-color:'#FFFFFF'"
+						filterBy="#{detalleLoteDescargo.anno_deuda}" 
+						filterStyle="width:100%;" 
+						sortBy="#{detalleLoteDescargo.anno_deuda}"
+						>
+						<f:facet name="header">Periodo</f:facet>
+						<h:outputText value="#{detalleLoteDescargo.anno_deuda}" />
+					</rich:column>					
+					
+					
+					
+					
+					<rich:column id="x5" width="10%" style="text-align: center; background-color:'#FFFFFF'"
+						filterBy="#{detalleLoteDescargo.nro_cuota}"
+						filterStyle="width:100%;" 
+						sortBy="#{detalleLoteDescargo.nro_cuota}">
+						<f:facet name="header">Cuota</f:facet>
+						<h:outputText value="#{detalleLoteDescargo.nro_cuota}" />
+					</rich:column>
+					
+					
+					
+					<rich:column id="x6" width="10%" style="text-align: center; background-color:'#FFFFFF'">
+						<f:facet name="header">Insoluto</f:facet>
+						<h:outputText value="#{detalleLoteDescargo.insoluto}">
+							<f:convertNumber pattern="#0.00" />
+						</h:outputText>
+					</rich:column>
+					
+					
+					<rich:column id="x7" width="10%" style="text-align: center; background-color:'#FFFFFF'">
+						<f:facet name="header">Interes</f:facet>
+						<h:outputText value="#{detalleLoteDescargo.interes}">
+							<f:convertNumber pattern="#0.00" />
+						</h:outputText>
+					</rich:column>
+
+					
+					<rich:column id="x8" width="10%" style="text-align: center; background-color:'#FFFFFF'">
+						<f:facet name="header">Reajuste</f:facet>
+						<h:outputText value="#{detalleLoteDescargo.reajuste}">
+							<f:convertNumber pattern="#0.00" />
+						</h:outputText>
+					</rich:column>
+					
+					
+					<rich:column id="x9" width="10%" style="text-align: center; background-color:'#FFFFFF'">
+						<f:facet name="header">Total Deuda</f:facet>
+						<h:outputText value="#{detalleLoteDescargo.total_deuda}">
+							<f:convertNumber pattern="#0.00" />
+						</h:outputText>
+					</rich:column>
+					
+					
+					<rich:column id="x10" width="8%" style="text-align: center; background-color:'#FFFFFF'"
+						rendered="#{validarDescargoDeudaManaged.item.estado_descargo != 1 and detalleLoteDescargo.estado != 0}" >
+						
+						<f:facet name="header">Est.</f:facet>
+						<span  class="fa fa-check" style="font-size: 20px;" ></span>
+					</rich:column>
+					
+					
+					<rich:column id="x11" width="7%" style="text-align: center; background-color:'#FFFFFF'"
+						rendered="#{validarDescargoDeudaManaged.item.estado_descargo != 1 and detalleLoteDescargo.estado == 0}">
+						<f:facet name="header">Est.</f:facet>
+						<span class="fa fa-times" style="font-size: 20px;" ></span>
+					</rich:column>
+					
+					
+					<!-- <rich:column id="x12" width="6%" style="text-align: center; background-color:'#FFFFFF'"
+						>
+						<h:commandLink title="Eliminar"
+							oncomplete="PF('dlgVarRetiroLote').show()">
+							<span class="fa fa-times" style="font-size: 20px;" />
+						</h:commandLink>
+					</rich:column> -->
+					
+				</rich:extendedDataTable>
+				
+				<rich:datascroller id="tableDataScroller" align="center"
+					for="resultadofinal" renderIfSinglePage="false"
+					status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+					<f:facet name="pages">
+						<h:outputText value="#{pageIndex} / #{pages}" />
+					</f:facet>
+				</rich:datascroller>
+				
+				
+			</rich:simpleTogglePanel>
+			
+			<a4j:commandButton value="Regresar" 
+				style="width: 100px;"
+				action="#{sessionManaged.sendRedirectPrincipal}" >
+				<f:setPropertyActionListener 
+					value="/sisat/controlycobranza/validarDescargoDeuda.xhtml" 
+					target="#{sessionManaged.page}" />
+			</a4j:commandButton>
+			
+		</rich:panel>
+		
+
+	</h:form>
+	
+	<rich:modalPanel id="dlgValDescargo" autosized="true" width="350"
+		style="height:100%">
+		<f:facet name="header">
+			<h:outputText value="Mensaje" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpDescargarAll"
+					styleClass="hidelink" />
+				<rich:componentControl for="dlgValDescargoAll" attachTo="gpiUsuario"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<fieldset style="padding: 5px; font-weight:bold ;color:red; text-align:center">
+				<h:panelGroup>
+					<h:outputLabel value="ESTA SEGURO DE CONFIRMAR, ESTA ACCIÓN DESCARGARA LAS DEUDAS SELECCIONADAS DEL LOTE">
+					</h:outputLabel>
+				</h:panelGroup>
+			</fieldset>
+			<div style="height: 12px;" />
+			<div align="center">
+				<h:commandButton value="Aceptar"
+					style="width: 80px;" action="#{validarDescargoDeudaManaged.descargoParcial}"
+					
+					icon="ui-icon-check" >
+				</h:commandButton>
+				<h:commandButton value="No" style="width: 80px;"
+					icon="ui-icon-close" onclick="PF('dlgValidarDescargo').hide()">
+				</h:commandButton>
+			</div>
+			
+		</h:form>
+		
+	</rich:modalPanel>
+
+</html>

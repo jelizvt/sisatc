@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:a4j="http://richfaces.org/a4j"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+     <rich:jQuery query="focus().select()" selector="#id_formusosdelpredio :input:visible:enabled:first" name="focusInputupn"/>
+    <rich:panel  id="id_thispanelusospredio" width="100%" >
+			<table border="0" width="100%">
+				<tr>
+					<td align="left" width="100px">
+						<h:outputLabel value="Uso de Predio :" >
+							<span style="color: red;">*</span>
+						</h:outputLabel>
+					</td>
+					<td align="left" colspan="4" >
+					
+						<rich:comboBox width="430px" defaultLabel="Seleccione" id="id_combousospredio" value="#{usosPredioManaged.cmbValueRpTipoUso}"
+							binding="#{usosPredioManaged.cmbRpTipoUso}"
+							selectFirstOnUpdate="true" directInputSuggestions="false"
+							required="true" requiredMessage="El campo Uso del Predio es requerido"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							disabled="#{usosPredioManaged.disabled}"
+							>
+							<f:selectItems id="id_lstusospredio" value="#{usosPredioManaged.lstTipoUso}"/>
+						</rich:comboBox>
+					</td>
+					
+				</tr>
+				<tr>
+					<td align="left" width="100px">
+						<h:outputLabel value="Area (m2) :" >
+							<span style="color: red;">*</span>
+						</h:outputLabel>
+					</td>
+					<td align="left">
+						<h:inputText style="width:50%;" maxlength="15" id="id_areauso" value="#{usosPredioManaged.rpDjuso.areaUso}"
+						onkeypress="return numbersonly(this.value,event)"
+						required="true" requiredMessage="El campo Area (m2) es requerido"
+						disabled="#{usosPredioManaged.disabled}"	
+						/>
+					</td>
+					<td align="left" width="100px">
+						<h:outputLabel value="Periodo :" />
+					</td>
+					<td align="left">
+						<h:inputText id="id_periodouso" value="#{usosPredioManaged.rpDjuso.annoAfectacion}"
+						readonly="true" style="width:50%;border: none"
+						disabled="#{usosPredioManaged.disabled}"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px">
+						<h:outputLabel value="Mes Inicio :" >
+							<span style="color: red;">*</span>
+						</h:outputLabel>
+					</td>
+					<td align="left">
+						<rich:comboBox width="150px" defaultLabel="Selecccione" selectFirstOnUpdate="true" directInputSuggestions="false"
+							id="id_mesinicio" binding="#{usosPredioManaged.cmbmesinicio}"  value="#{usosPredioManaged.cmbValueMesInicio}"
+							required="true" requiredMessage="El campo Mes Inicio es requerido"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							disabled="#{usosPredioManaged.disabled}"
+							>
+							<f:selectItems id="id_lstmesini2" value="#{usosPredioManaged.lstmes}"/>
+						</rich:comboBox>
+					</td>
+					<td align="left" width="100px">
+						<h:outputLabel value="Mes Fin :" >
+							<span style="color: red;">*</span>
+						</h:outputLabel>
+					</td>
+					<td align="left">
+						<rich:comboBox width="150px" defaultLabel="Selecccione" selectFirstOnUpdate="true" directInputSuggestions="false"
+							id="id_mesfin" binding="#{usosPredioManaged.cmbmesfin}"  value="#{usosPredioManaged.cmbValueMesFin}"
+							required="true" requiredMessage="El campo Mes Fin es requerido"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							disabled="#{usosPredioManaged.disabled}"	
+							>
+							<f:selectItems id="id_lstmesfin2" value="#{usosPredioManaged.lstmes}"/>		
+						</rich:comboBox>
+					</td>
+				</tr>
+			</table>
+     </rich:panel>
+     
+     <table>
+			<tr>
+				<td align="center" colspan="4">
+					<h:panelGrid align="center" columns="3" width="40%" border="0" style="text-align:center" >
+						<a4j:commandButton value="[G]uardar" style="width:100px;" 
+						action="#{usosPredioManaged.guardar}" reRender="id_tablausosdelpredio,id_thispanelusospredio"
+						accesskey="g" 
+						oncomplete="if(#{facesContext.maximumSeverity == null}){ if(#{usosPredioManaged.isEditable==true}){#{rich:component('id_paneusosdelpredio')}.hide();}else{focusInputupn();} }else{#{rich:component('mpErrors')}.show();}"
+						disabled="#{(registroPredioManaged.rpDjpredial.estado=='1')}"
+						/>
+						
+						<a4j:commandButton value="[S]alir" style="width:100px;" id="id_salir" action="#{usosPredioManaged.salir}"
+						 oncomplete="#{rich:component('id_paneusosdelpredio')}.hide(); return false"
+						 immediate="true"
+						 accesskey="s" onblur="focusInputupn();" >
+						 </a4j:commandButton>
+					</h:panelGrid>
+				</td>
+			</tr>
+		</table>
+		
+          
+</h:panelGrid>
+
+

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+      <rich:panel style="background-color : transparent">
+      	<h:form id="formListaDjPredio">
+			<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+			<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	     			
+	     	<a4j:outputPanel >
+ 				<table width="100%" border="1" cellspacing="0">
+					<tr>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Nro DJ" /></td>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Año" /></td>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Direccion" /></td>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Frecuencia Barrido" /></td>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Tasa Anual Barrido" /></td>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Frente ML" /></td>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Arbitrio ML Barrido" /></td>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Cercania Parques" /></td>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Costo Anual Parques" /></td>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Arbitrio Parques" /></td>
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Recojo" /></td>
+ 							<!-- <td align="center"><h:outputText style="font-weight:bold" value="Arbitrio Recojo" /></td>  -->
+ 						<td align="center"><h:outputText style="font-weight:bold" value="Seguridad" /></td>
+ 							<!-- <td align="center"><h:outputText style="font-weight:bold" value="Arbitrio Seguridad" /></td> -->
+ 					</tr>
+ 					
+ 					<ui:repeat value="#{detalleArbitriosManaged.records}" var="record" varStatus="loop">
+ 					<tr>
+ 						<td align="center"><h:outputText value="#{record.djId}" ></h:outputText></td>
+ 						<td align="center"><h:outputText value="#{record.annoDeterminacion}" /></td>
+ 						<td align="center"><h:outputText value="#{record.direccionCompleta}" /></td>
+ 						<td align="center"><h:outputText value="#{record.frecuenciaLimpieza}" /></td>
+ 						<td align="right"><h:outputText value="#{record.tasaMlAnualLimpieza}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td>
+ 						<td align="right"><h:outputText value="#{record.frenteMlLimpieza}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td>
+ 						<td align="right"><h:outputText value="#{record.arbitrioLimpieza}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td>
+ 						<td align="center"><h:outputText value="#{record.grupoCercaniaParques}" ></h:outputText></td>
+ 						<td align="right"><h:outputText value="#{record.costoAnualParques}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td>
+ 						<td align="right"><h:outputText value="#{record.arbitrioParques}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td>
+ 						<td align="center">
+ 							<table width="100%" border="1" cellspacing="0">
+ 								<tr>
+ 									<td colspan="2">Frec. Recojo</td>
+ 									
+ 									<td colspan="4">
+ 										<h:outputText value="#{record.frecuenciaRecojo}" ><f:convertNumber pattern="#0.00" /></h:outputText>
+ 									</td>
+ 								</tr>
+ 								<tr>
+									<td>Uso</td>
+									<td>Area m2</td>
+									<td>Costo m2 Anual</td>
+									<td>Arbitrio Recojo</td>
+								</tr>
+ 								<ui:repeat value="#{record.lRecojoArbitrio}" var="obj" varStatus="loop">
+ 									<tr>
+ 										<td><h:outputText value="#{obj.uso}" /></td>
+ 										<td align="right"><h:outputText value="#{obj.areaM2}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td>
+ 										<td align="right"><h:outputText value="#{obj.costoM2Anual}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td>
+ 										<td align="right"><h:outputText value="#{obj.costoM2Anual*obj.areaM2}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td>
+ 									</tr>
+ 								</ui:repeat>
+ 							</table>
+ 						</td>
+ 						<!-- <td align="center"><h:outputText value="#{record.arbitrioRecojo}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td> -->
+ 						<td align="center">
+ 							<table width="100%" border="1" cellspacing="0">
+ 								<tr>
+ 									<td colspan="2">Zona Seguridad</td>
+ 									<td colspan="2">
+ 										<h:outputText value="#{record.zonaSeguridad}" ><f:convertNumber pattern="#0.00" /></h:outputText>
+ 									</td>
+ 								</tr>
+ 								<tr>
+									<td>Uso</td>
+									<td>Tasa Anual</td>
+									<td>Arbitrio Seguridad</td>
+								</tr>
+ 								<ui:repeat value="#{record.lSeguridadArbitrio}" var="sec" varStatus="loop">
+ 									<tr>
+ 										<td><h:outputText value="#{sec.uso}" /></td>
+ 										<td align="right"><h:outputText value="#{sec.tasaAnual}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td>
+ 										<td align="right"><h:outputText value="#{sec.tasaAnual}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td>
+ 									</tr>
+ 								</ui:repeat>
+ 							</table>
+ 						</td>
+ 						<!-- <td align="center"><h:outputText value="#{record.arbitrioSeguridad}" ><f:convertNumber  pattern="#0.00" /></h:outputText></td> -->
+ 					</tr>	
+ 					</ui:repeat>
+ 					
+ 				</table>
+ 			</a4j:outputPanel>
+ 							
+			<h:panelGrid columns="2" align="center" width="100%" >
+					<a4j:commandButton value="Salir" style="width:150px;"	action="#{detalleArbitriosManaged.salir}" reRender="panelinclude" >
+						<f:setPropertyActionListener value="/sisat/predial/historiaarbitriosperiodo.xhtml" target="#{sessionManaged.page}" />
+					</a4j:commandButton>
+			</h:panelGrid>
+		</h:form>
+	</rich:panel>	
+	
+</ui:composition>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<h:form id="id_formBuscarDetCarteraVehicular">
+		<rich:panel id="id_panelresultados">
+			<f:facet name="header">
+<!-- 				<h:outputLabel value="#{msg['rv.lotecarteravehicular']}" /> -->
+			</f:facet>
+	
+			<br></br>
+			<br></br>
+			<rich:datascroller for="datosdetlotesrv" maxPages="12"></rich:datascroller>
+			
+			
+			<rich:extendedDataTable rows="12" id="datosdetlotesrv"				
+				value="#{buscarDetalleOmisoVehicularManaged.lstDetalleOmisoVehicular}"										 		
+				var="detalleloterv" width="100%" height="310px"
+				selectionMode="single" noDataLabel="No se Encontró Información"
+				rowKeyVar="row" enableContextMenu="false">
+				
+							
+				    
+					<rich:column id="xItem" style="text-align:center" width="3%">
+					<f:facet name="header">ITEM</f:facet>
+					<div align="center">
+						<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+					</div>
+				    </rich:column>	
+
+
+				    <rich:column id="xTd" style="text-align:center" width="8%"
+					filterBy="#{detalleloterv.annoDeterminacion}">
+					<f:facet name="header">Año</f:facet>
+					<div align="center">
+						<h:outputText value="#{detalleloterv.annoDeterminacion}" />
+					</div>
+					</rich:column>	
+				    <rich:column id="xTd1" style="text-align:center" width="8%"
+				    filterBy="#{detalleloterv.descripcionCategoria}">
+				    
+					<f:facet name="header">Categoria</f:facet>
+					<div align="center">
+						<h:outputText value="#{detalleloterv.descripcionCategoria}" />
+					</div>
+					</rich:column>
+				    <rich:column id="xTd2" style="text-align:center" width="8%"
+					filterBy="#{detalleloterv.descripcionMarca}">
+					<f:facet name="header">Marca</f:facet>
+					<div align="center">
+						<h:outputText value="#{detalleloterv.descripcionMarca}" />
+					</div>
+					</rich:column>
+				    <rich:column id="xTd3" style="text-align:center" width="8%"
+					filterBy="#{detalleloterv.descripcionModelo}">
+					<f:facet name="header">Modelo</f:facet>
+					<div align="center">
+						<h:outputText value="#{detalleloterv.descripcionModelo}" />
+					</div>
+					</rich:column>																							    			    				    
+					
+					<rich:column id="xTd4" style="text-align:center" width="8%">
+					<f:facet name="header">Tasa</f:facet>
+					<div align="center">
+						<h:outputText value="#{detalleloterv.tasa}" />
+					</div>
+					</rich:column>	
+					
+				    <rich:column id="xTd5" style="text-align:center" width="8%">
+					<f:facet name="header">Base Imponible</f:facet>
+					<div align="center">
+						<h:outputText value="#{detalleloterv.baseImponible}" />
+					</div>
+					</rich:column>
+				    <rich:column id="xTd6" style="text-align:center" width="8%">
+					<f:facet name="header">Base Exonerada</f:facet>
+					<div align="center">
+						<h:outputText value="#{detalleloterv.baseExonerada}" />
+					</div>
+					</rich:column>
+				    <rich:column id="xTd7" style="text-align:center" width="8%">
+					<f:facet name="header">Base Afecta</f:facet>
+					<div align="center">
+						<h:outputText value="#{detalleloterv.baseAfecta}" />
+					</div>
+					</rich:column>										
+						
+				    <rich:column id="xTd8" style="text-align:center" width="8%">
+					<f:facet name="header">Impuesto</f:facet>
+					<div align="center">
+						<h:outputText value="#{detalleloterv.impuesto}" />
+					</div>
+					</rich:column>											
+				    				
+				
+																			
+
+			</rich:extendedDataTable>
+		</rich:panel>
+	</h:form>	
+	
+</ui:composition>
+

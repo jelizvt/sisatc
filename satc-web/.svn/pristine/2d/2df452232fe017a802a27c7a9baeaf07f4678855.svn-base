@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form  id="formRecordVehiculo">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	<a4j:loadScript src="/js/sisat.js"/>
+
+	<rich:hotKey key="return"
+		handler="#{rich:element('id_commandbuscar')}.click()"
+		selector="#formRecordVehiculo" />
+		
+     <rich:panel  id="p01" >
+		<f:facet  name="header">		
+			RECORD DE INFRACCIONES DE VEHICULO
+		</f:facet>
+		<table border="0" width="100%" >
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputText  value="Nro placa:" />
+				</td>
+				<td align="left" width="150px" >
+					<h:inputText  id="txtInfractorId" maxlength="10" style="width:80%"  
+					     value="#{recordInfraccionVehiculoManaged.numeroPlaca}" 
+					     styleClass="textUpperCase" converter="uppeCaseConverter" >
+					</h:inputText>
+				</td>
+				<td colspan="2">
+					
+				</td>
+			</tr>
+		</table>
+	</rich:panel>
+		
+	<h:panelGrid columns="3" align="center" >
+		<a4j:commandButton id="id_commandbuscar" value="Buscar" style="width:100px;"	
+		action="#{recordInfraccionVehiculoManaged.buscar}" status="ajaxStatus" reRender="id_panelresultados" />
+		
+		<a4j:commandButton id="id_commandlimpiar" value="Limpiar" style="width:100px;"	
+		action="#{recordInfraccionVehiculoManaged.limpiar}" status="ajaxStatus" reRender="id_panelresultados" />
+	</h:panelGrid>
+	
+	<rich:panel  id="id_panelresultados" style = "width:100%;" >
+		<table border="0">
+			<tr>
+				<td>
+					<h:commandLink ajaxSingle="true" id="cmdlnkinscripciondj" action="#{recordInfraccionVehiculoManaged.exportarPdf}" >
+	                    <h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+	                </h:commandLink>
+	                <rich:toolTip for="cmdlnkinscripciondj" value="Exportar a pdf" />
+	             </td>
+            </tr>
+            
+            <tr>
+	           <td>
+	    		<h:outputText style="font-size:14px; font-family:arial;font-weight: bold;" 
+	    		value="El Vehiculo no presenta Infracciones de Transito" rendered="#{(empty recordInfraccionVehiculoManaged.records) and (recordInfraccionVehiculoManaged.realizaConsulta>0)}" />
+	           </td>
+	        </tr>   
+        </table>
+		<rich:extendedDataTable 
+			value="#{recordInfraccionVehiculoManaged.records}" var="record" width="100%" height="300px"
+			sortMode="single" selectionMode="single" enableContextMenu="false" 
+			rowKeyVar="row"	>
+			
+			<rich:column id="x1" style="text-align:center" width="2%" >
+                <f:facet name="header" >Itm</f:facet>
+                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+            </rich:column>
+            <rich:column id="x2" style="text-align:center" width="7%">
+                <f:facet name="header"  >Nro Papeleta</f:facet>
+                <h:outputText value="#{record.nroPapeleta}"/>
+            </rich:column>
+            <rich:column id="x3" style="text-align:center" width="6%">
+                <f:facet name="header" >Fecha Inf.</f:facet>
+               	<h:outputText value="#{record.fechaInfraccion}">
+               		<f:convertDateTime pattern="dd/MM/yyyy" />
+               	</h:outputText>
+            </rich:column>
+            <rich:column id="x4_" width="5%" style="text-align:center">
+                <f:facet name="header">Código</f:facet>
+                <h:outputText value="#{record.personaInfractorId}"/>
+            </rich:column>
+			<rich:column id="x4" width="15%" style="text-align:center">
+                <f:facet name="header">Infractor</f:facet>
+                <h:outputText value="#{record.apellidosNombresInfractor}"/>
+            </rich:column>
+            
+            
+            <rich:column id="x5" width="15%" style="text-align:center">
+                <f:facet name="header">Propietario</f:facet>
+                <h:outputText rendered="#{record.tipoDocumentoId!=2}" value="#{record.apellidosNombresPropietario}"/>
+                <h:outputText rendered="#{record.tipoDocumentoId==2}" value="#{record.razonSocial}"/>
+            </rich:column>
+            
+            <rich:column id="x6" width="12%" style="text-align:center">
+                <f:facet name="header">Direccion Propietario</f:facet>
+                <h:outputText value="#{record.direccionPropietario}"/>
+            </rich:column>            		
+            <rich:column id="x7" width="5%" style="text-align:center">
+                <f:facet name="header">Infraccion</f:facet>
+                <h:outputText value="#{record.infraccion}"/>
+            </rich:column>
+            <rich:column id="x8" width="5%" style="text-align:center">
+                <f:facet name="header">Nivel Grav.</f:facet>
+                <h:outputText value="#{record.nivelGravedad} "/>
+            </rich:column>
+            <rich:column id="x9" width="5%" style="text-align:center">
+                <f:facet name="header">Puntos Ac.</f:facet>
+                <h:outputText value="#{record.puntos}"/>
+            </rich:column>
+            <rich:column id="x10" width="6%" style="text-align:right">
+                <f:facet name="header">Monto Multa</f:facet>
+                <h:outputText value="#{record.montoMulta}"/>
+            </rich:column>
+            <!-- 
+            <rich:column id="x11" width="5%" style="text-align:center">
+                <f:facet name="header">Incidencia</f:facet>
+                <h:outputText value="#{record.reincidencia}"/>
+            </rich:column>
+             -->
+            <rich:column id="x12" width="6%" style="text-align:center">
+                <f:facet name="header">Estado Pa.</f:facet>
+                <h:outputText value="#{record.estadoPapeletaString}"/>
+            </rich:column>
+            
+            <rich:column id="x13" width="8%" style="text-align:center">
+                <f:facet name="header">Num Resolucion</f:facet>
+                <h:outputText value="#{record.nroResolucion}"/>
+            </rich:column>
+            
+            <rich:column id="x14" width="5%" style="text-align:center">
+                <f:facet name="header">Estado Rs.</f:facet>
+                <h:outputText value="#{record.estadoResolucion}"/>
+            </rich:column>
+  			</rich:extendedDataTable>
+   			
+      </rich:panel>           
+	</h:form>
+</ui:composition>

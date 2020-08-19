@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+	<a4j:loadScript src="/js/sisat.js" />
+
+	<h:form id="frmBuscarVehicular">
+
+<!-- Verificar cuando se aplica este estado de  buscarVehicularManaged.desactiva -->	
+<!-- INICIO ITANTAMANGO -->
+		<rich:panel id="id_pnlBuscarBasico" style="min-width: 1000px;" rendered="#{buscarVehicularManaged.desactiva==1 and buscarVehicularManaged.permisoBuscar}">
+			<f:facet name="header">
+			#{msg['rv.titulobuscardjv']}*
+			12
+		</f:facet>
+			<table width="100%">
+				<tr>
+					<td align="left" width="120px"><h:outputText value="Codigo Contribuyente :" /></td>
+					<td colspan="3"><h:inputText id="id_codigoContribuyente" style="width:10%" maxlength="10"
+							value="#{buscarVehicularManaged.codigoContri}" onkeypress="return validaEnteroPositivo(event)">
+						</h:inputText></td>
+				</tr>
+				<tr>
+					<td align="left" width="120px"><h:outputText value="Apellidos y nombres :" /></td>
+					<td colspan="3"><h:inputText id="id_apellidosnombres" maxlength="50" style="width:70%"
+							value="#{buscarVehicularManaged.nomApe}" styleClass="textUpperCase" converter="uppeCaseConverter" /></td>
+				</tr>
+				<tr>
+					<td align="left" width="120px"><h:outputText value="Razon Social :" /></td>
+					<td colspan="3"><h:inputText id="id_razonsocial" maxlength="50" style="width:70%"
+							value="#{buscarVehicularManaged.razon}" styleClass="textUpperCase" converter="uppeCaseConverter" /></td>
+				</tr>
+				<tr>
+					<td align="left" width="120px"><h:outputText value="Nro Placa :" /></td>
+					<td colspan="3"><h:inputText id="id_nroPlaca" maxlength="10" style="width:10%"
+							value="#{buscarVehicularManaged.placa}" styleClass="textUpperCase" converter="uppeCaseConverter" /></td>
+				</tr>
+				<tr>
+					<td align="left" colspan="4"><a4j:commandButton value="[B]uscar"
+							actionListener="#{buscarVehicularManaged.buscarDeclaracionesGeneral}" reRender="tblListaDJVehicular2"
+							style="width: 100px;"></a4j:commandButton></td>
+				</tr>
+			</table>
+		</rich:panel>
+		<rich:panel id="pnlListado2"
+			style="margin-top: 4px; min-width: 1000px;" rendered="#{buscarVehicularManaged.desactiva==1}">
+			
+			<rich:extendedDataTable id="tblListaDJVehicular2"
+				value="#{buscarVehicularManaged.lstDjVehicular}" var="record"
+				width="100%" height="250px" sortMode="single" selectionMode="single"
+				noDataLabel="#{msg['rv.noexistendj']}" enableContextMenu="false"
+				rowKeyVar="index">
+
+
+				<rich:column width="40px" styleClass="extdt-subheader" style="background-color:#{record.estado== 3 ?'#FFFF00':(record.estado== 2 ?'#FF0000':'#FFFFFF')}">
+					<h:outputText value="#{index+1}" style="font-weight: bold;" />
+				</rich:column>
+
+				<rich:column width="70px;" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.placa']}</f:facet>
+					<h:outputText value="#{record.placa}"
+						rendered="#{record.estado!=msg['param.rv.estadoactivo']}" />
+
+						<h:outputText value="#{record.placa}"  rendered="#{record.estado==msg['param.rv.estadoactivo']}"/>
+					
+				</rich:column>
+				
+				<rich:column width="50" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.codigoPersona']}</f:facet>
+					<h:outputText value="#{record.codPersona}"/>
+				</rich:column>
+				<rich:column width="120" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.nombreProp']}</f:facet>
+					<h:outputText value="#{record.nomPropietario}" />
+				</rich:column>
+				<rich:column width="70" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.nromotor']}</f:facet>
+					<h:outputText value="#{record.nroMotor}" />
+				</rich:column>
+
+				<rich:column width="200" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.categoria']}</f:facet>
+					<h:outputText value="#{record.categoria}" />
+				</rich:column>
+
+				<rich:column width="100" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.marca']}</f:facet>
+					<h:outputText value="#{record.marca}" />
+				</rich:column>
+
+				<rich:column width="150" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.modelo']}</f:facet>
+					<h:outputText value="#{record.modelo}" />
+				</rich:column>
+
+				<rich:column width="60" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.nroDJ']}</f:facet>
+					<h:outputText value="#{record.djvehicularNro}" />
+				</rich:column>
+
+				<rich:column width="100" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.fechaadquisicion']}</f:facet>
+					<h:outputText value="#{record.fechaAdquisicion}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="80" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.fechaDJ']}</f:facet>
+					<h:outputText value="#{record.fecha}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="120" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['rv.motivo']}</f:facet>
+					<h:outputText value="#{record.motivoDecla}" />
+				</rich:column>
+
+				<rich:column width="120" style="background-color:#{record.estado== 3 ?'#FFFF00':'#FFFFFF'}">
+					<f:facet name="header">#{msg['gn.estado']}</f:facet>
+					<h:outputText value="#{msg['estado.activo']}"
+						rendered="#{record.estado==msg['param.rv.estadoactivo']}" />
+						
+					<h:outputText value="#{msg['estado.pendientedescargo']}"
+						rendered="#{record.estado==msg['param.rv.estadopendientedescargo']}" />
+
+					<h:outputText value="#{msg['estado.anulado']}"
+						rendered="#{record.estado==msg['param.rv.anulado']}" />
+				</rich:column>
+
+			</rich:extendedDataTable>
+		</rich:panel>
+<!-- FIN ITANTAMANGO -->
+		
+	
+		<rich:panel id="pnlBuscar" style="min-width: 1000px;" rendered="#{buscarVehicularManaged.desactiva==0 and buscarVehicularManaged.permisoBuscar}">
+			<f:facet name="header">
+			#{msg['rv.titulobuscardjv']}
+			14 #{buscarVehicularManaged.desactiva}	
+		</f:facet>
+			<h:panelGrid columns="5">
+				<h:outputLabel value="#{msg['rv.placa']}: " />
+				<h:inputText id="txtPlaca"
+					value="#{buscarVehicularManaged.placaBusc}" maxlength="15"
+					styleClass="textUpperCase" converter="uppeCaseConverter">
+				</h:inputText>
+				<a4j:commandButton value="#{msg['gn.buscar']}"
+					actionListener="#{buscarVehicularManaged.buscarDeclaraciones}"
+					reRender="pnlListado" style="width: 100px;" />
+				<a4j:commandButton value="#{msg['gn.mostrartodos']}"
+					actionListener="#{buscarVehicularManaged.mostrarTodasDeclaraciones}"
+					reRender="pnlListado" style="width: 100px;" />
+				<h:outputLabel value="#{msg['rv.contribuyentenull']}"
+					rendered="#{buscarVehicularManaged.contribuyenteNull==true}"
+					style="margin-left: 50px; color: red;" />
+			</h:panelGrid>
+		</rich:panel>
+		<rich:panel id="pnlListado"
+			style="margin-top: 4px; min-width: 1000px;" rendered="#{buscarVehicularManaged.desactiva==0}">
+			
+			<h:panelGrid rendered="#{buscarVehicularManaged.permisoAgregarRegistrar}" cellpadding="0" cellspacing="2">
+				<a4j:commandButton id="btnNuevaDecla"
+					title="#{msg['rv.nuevadeclaracion']}" immediate="true"
+					action="#{sessionManaged.sendRedirectPrincipal}"
+					styleClass="nueva_djvehicular">
+					<f:setPropertyActionListener
+						value="/sisat/vehicular/nuevadjbuscavehiculo.xhtml"
+						target="#{sessionManaged.page}" />
+				</a4j:commandButton>
+			</h:panelGrid>
+			
+			<rich:extendedDataTable id="tblListaDJVehicular"
+				value="#{buscarVehicularManaged.lstDjVehicular}" var="record"
+				width="100%" height="250px" sortMode="single" selectionMode="single"
+				noDataLabel="#{msg['rv.noexistendj']}" enableContextMenu="false"
+				rowKeyVar="index">
+
+				<rich:column width="30px" styleClass="extdt-subheader" style="background-color:#{record.styleSelected}">
+					<h:outputText value="#{index+1}" style="font-weight: bold;" />
+				</rich:column>
+
+				<rich:column width="70px;" style="background-color:#{record.styleSelected};text-align:center;">
+					<f:facet name="header">#{msg['rv.placa']}</f:facet>
+					<h:outputText value="#{record.placa}"
+						rendered="#{record.estado!=msg['param.rv.estadoactivo']}" style="font-weight:bold; font-size:13px;"/>
+					<a4j:commandLink
+						rendered="#{record.estado==msg['param.rv.estadoactivo'] and buscarVehicularManaged.permisoVerDetalle}"
+						actionListener="#{buscarVehicularManaged.mostrarHistorico}">
+						<h:outputText value="#{record.placa}" style="font-weight:bold; font-size:13px;"/>
+						<f:setPropertyActionListener
+							value="/sisat/vehicular/historicovehiculodj.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandLink>
+					<h:outputText value="#{record.placa}"
+						rendered="#{record.estado==msg['param.rv.estadoactivo'] and !buscarVehicularManaged.permisoVerDetalle}" style="font-weight:bold; font-size:13px;"/>
+				</rich:column>
+
+				<rich:column width="100px" style="background-color:#{record.styleSelected}">
+					<f:facet name="header">#{msg['rv.nromotor']}</f:facet>
+					<h:outputText value="#{record.nroMotor}" />
+				</rich:column>
+
+				<rich:column width="190px" style="background-color:#{record.styleSelected}">
+					<f:facet name="header">#{msg['rv.categoria']}</f:facet>
+					<h:outputText value="#{record.categoria}" />
+				</rich:column>
+
+				<rich:column width="140px" style="background-color:#{record.styleSelected}">
+					<f:facet name="header">#{msg['rv.marca']}</f:facet>
+					<h:outputText value="#{record.marca}" />
+				</rich:column>
+
+				<rich:column width="200px" style="background-color:#{record.styleSelected}">
+					<f:facet name="header">#{msg['rv.modelo']}</f:facet>
+					<h:outputText value="#{record.modelo}" />
+				</rich:column>
+
+				<rich:column width="80px" style="background-color:#{record.styleSelected}">
+					<f:facet name="header">#{msg['rv.nroDJ']}</f:facet>
+					<h:outputText value="#{record.djvehicularNro}" />
+				</rich:column>
+
+				<rich:column width="85px" style="background-color:#{record.styleSelected}">
+					<f:facet name="header">#{msg['rv.fechaadquisiciondescargo']}</f:facet>
+					<h:outputText value="#{record.motivoDeclaId != 4 ? record.fechaAdquisicion : record.fechaDescargo}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" />
+					</h:outputText>
+				</rich:column>
+				
+				<rich:column width="80px" style="background-color:#{record.styleSelected}">
+					<f:facet name="header">#{msg['rv.fechainsregistro']}</f:facet>
+					<h:outputText value="#{record.fechaInsReg}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="80px" style="background-color:#{record.styleSelected}">
+					<f:facet name="header">#{msg['rv.fechaDJ']}</f:facet>
+					<h:outputText value="#{record.fecha}">
+						<f:convertDateTime pattern="#{msg['param.datepattern']}"
+							timeZone="#{aplicationManaged.timeZone}" />
+					</h:outputText>
+				</rich:column>
+
+				<rich:column width="120px" style="background-color:#{record.styleSelected}">
+					<f:facet name="header">#{msg['rv.motivo']}</f:facet>
+					<h:outputText value="#{record.motivoDecla}" />
+				</rich:column>
+
+				<rich:column width="120px" style="background-color:#{record.styleSelected}">
+					<f:facet name="header">#{msg['gn.estado']}</f:facet>
+					<h:outputText value="#{msg['estado.activo']}"
+						rendered="#{record.estado==msg['param.rv.estadoactivo']}" />
+					<a4j:commandLink value="#{msg['estado.pendienteaprobacion']}"
+						rendered="#{record.estado==msg['param.rv.estadopendienteaprobacion']}"
+						actionListener="#{buscarVehicularManaged.terminarPendiente}">
+						<f:setPropertyActionListener
+							value="/sisat/vehicular/nuevadjregistro.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandLink>
+					<a4j:commandLink value="#{msg['estado.pendientedescargo']}"
+						rendered="#{record.estado==msg['param.rv.estadopendientedescargo']}"
+						actionListener="#{buscarVehicularManaged.realizarDescargo}">
+						<f:setPropertyActionListener
+							value="/sisat/vehicular/descargovehicular.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandLink>
+					<h:outputText value="#{msg['estado.anulado']}"
+						rendered="#{record.estado==msg['param.rv.anulado']}" />
+				</rich:column>
+
+			</rich:extendedDataTable>
+		</rich:panel>
+	</h:form>
+
+</ui:composition>

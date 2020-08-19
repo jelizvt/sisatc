@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui"
+	> <!-- Esta -->
+
+	<!-- Busqueda de descargos por persona -->
+	<h:form id="frmDescargoDeudas" >
+		<rich:panel id="pnlFiltros">
+			<f:facet name="header">		
+				FOTO INSPECCION
+			</f:facet>
+			
+			 <h:panelGrid columns="6">
+				
+				<!-- Codigo de persona -->
+			 	<h:outputText value="Codigo: " />
+			 	<h:inputText  
+			 		value="#{bandejaFotoInspeccionManaged.personaId}">
+				</h:inputText>
+				
+				<h:outputText value="Predio: " />
+			 	<h:inputText  
+			 		value="#{bandejaFotoInspeccionManaged.predioId}">
+				</h:inputText>
+				
+				
+			 </h:panelGrid>
+			
+		</rich:panel>
+		
+		
+		
+		<h:panelGrid columns="3" align="center">
+			<a4j:commandButton value="Buscar" 
+				style="width:100px;"
+				id="cmdBuscarLote" 
+				action="#{bandejaFotoInspeccionManaged.buscar}"
+				status="ajaxStatus" 
+				reRender="id_panelresultados"
+				/>
+			<a4j:commandButton value="Limpiar" style="width:100px;"
+				action="#{bandejaFotoInspeccionManaged.limpiar}" status="ajaxStatus"
+				reRender="pnlFiltros,id_panelresultados" />
+		</h:panelGrid>
+		
+		
+		
+		<rich:panel id="id_panelresultados">
+			<rich:simpleTogglePanel id="togglePanelResultados"
+					switchType="client"
+					label="Resultados #{bandejaFotoInspeccionManaged.listFotoInspeccion.size()} encontrados"
+					height="auto" styleClass="uniqueClassName" opened="true"
+					>
+				<rich:extendedDataTable id="datosPersona"
+						value="#{bandejaFotoInspeccionManaged.listFotoInspeccion}" var="insp"
+						width="100%"  rows="15" selectionMode="single"
+						noDataLabel="No Se Encontro Información para esta Busqueda"
+						rowKeyVar="rowIndex" enableContextMenu="false">
+						
+						<rich:column id="x0" width="3%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Ítem</f:facet>
+							<h:outputText value="#{rowIndex + 1}" />
+						</rich:column>
+						
+						<rich:column id="x2" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">CODIGO</f:facet>
+							<h:outputText value="#{insp.personaId}" />
+							<!--  <h:outputText value="#{persona.estado == 1 ? 'Pendiente':'Terminado'}" /> -->
+						</rich:column>
+						
+						<!--<rich:column id="x22" width="20%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">DIRECCIÓN FISCAL</f:facet>
+							<h:outputText value="#{insp.direccionCompleta}" />
+						</rich:column> -->
+						
+						<rich:column id="x4" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">PREDIO</f:facet>
+							<h:outputText value="#{insp.predioId}" />
+						</rich:column>
+						
+						<rich:column id="x5" width="20%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">DIRECCIÓN PREDIO</f:facet>
+							<h:outputText value="#{insp.direccionPredio}" />
+						</rich:column>
+						
+						
+						<rich:column id="x3" width="11%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">INSPECTOR </f:facet>
+							<h:outputText value="#{insp.nombreInspector}" />
+						</rich:column>
+						
+						<rich:column id="x30" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">USU. REG.</f:facet>
+							<h:outputText value="#{insp.nombreUsuarioRegistro}" />
+						</rich:column>
+						
+						<rich:column id="x31" width="6%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">FECHA REG.</f:facet>
+							<h:outputText value="#{insp.fechaRegistro}" />
+						</rich:column>
+						
+						<rich:column id="x6" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">DIAS BANDEJA</f:facet>
+							<h:outputText value="#{insp.diasBaneja}" />
+						</rich:column>
+						
+						
+						<rich:column id="x32" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">USU. ASIG.</f:facet>
+							<h:outputText value="#{insp.nombreUsuarioAsigna}" />
+						</rich:column>
+						
+						<rich:column id="x33" width="6%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">FECHA ASIG.</f:facet>
+							<h:outputText value="#{insp.fechaAsigna}" />
+						</rich:column>
+						
+						<rich:column id="x20" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">DIAS ASIG.</f:facet>
+							<h:outputText value="#{insp.diasAsignado}" />
+						</rich:column>
+						
+						<rich:column id="x34" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">USU. CIE.</f:facet>
+							<h:outputText value="#{insp.nombreUsuarioCierra}" />
+						</rich:column>
+						
+						<rich:column id="x35" width="6%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">FECHA CIE.</f:facet>
+							<h:outputText value="#{insp.fechaCierra}" />
+						</rich:column>
+
+						<!--  <rich:column id="x21" width="8%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Fec. Val.</f:facet>
+							<h:outputText value="#{persona.fecha_valida}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</rich:column> -->
+						
+						
+						<rich:column id="x111" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">Foto</f:facet>
+							<a4j:commandLink ajaxSingle="true" id="newlink4" 		            			 
+			            			action="#{bandejaFotoInspeccionManaged.getFotos(insp.predioId,insp.direccionCompleta, insp.apellidosNombres)}"
+			            			oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelFoto\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+			            			reRender="panelFoto">
+			            			
+				                    <h:graphicImage value="/images/modal/verFoto.png" style="width:30px" />
+				                </a4j:commandLink> 
+												
+												
+			                <rich:toolTip for="newlink3" value="Ver detalle" />
+						</rich:column>
+						
+						<rich:column id="x1562" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">ASIG. INS.</f:facet>
+							<a4j:commandLink ajaxSingle="true" id="newlink41" 	
+									 rendered="#{insp.estado==1}"	            			 
+			            			action="#{bandejaFotoInspeccionManaged.cargarInspectores(insp.fotoInspeccionId)}"
+			            			oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'dlgAsignarInspector\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+			            			reRender="dlgAsignarInspector">
+			            			
+				                    <h:graphicImage value="/images/font-icon/pencil.png" style="width:20px" />
+				                </a4j:commandLink> 
+												
+												
+			                <rich:toolTip for="newlink3" value="Ver detalle" />
+						</rich:column>
+						
+						
+						<rich:column id="x8" width="5%" style="text-align: center; background-color:'#FFFFFF'">
+							<f:facet name="header">CERRAR</f:facet>
+
+							<a4j:commandLink rendered="#{insp.estado==1 and insp.nombreInspector != '' and insp.nombreUsuarioCierra == ''}"
+								action="#{bandejaFotoInspeccionManaged.openModalCerrarInspeccion(insp.fotoInspeccionId)}"
+								oncomplete="Richfaces.showModalPanel('dlgCerrarInspeccion')"
+								title="Validar">
+								<h:graphicImage value="/images/font-icon/correct-symbol.png" style="border:0"
+									width="20" height="20" />
+							</a4j:commandLink>
+							
+							<a4j:commandLink rendered="#{insp.estado==2 and insp.flagActualizado}"
+								title="Validar">
+								<span  class="fa fa-check" style="font-size: 20px; color:#000;" ></span>
+							</a4j:commandLink>
+							
+							<a4j:commandLink rendered="#{insp.estado==2 and !insp.flagActualizado}"
+								title="Validar">
+								<span  class="fa fa-times" style="font-size: 20px; color:#000;" ></span>
+							</a4j:commandLink>
+							
+						</rich:column>
+						
+						<!--  <rich:column id="x9" width="5%" style="text-align: center; background-color:'#FFFFFF'" >
+							<f:facet name="header">Anu.</f:facet>
+							
+							<a4j:commandLink rendered="#{persona.estado==1}" 
+							action="#{validaUbicacionManaged.selectValidaUbicacionAnul(persona.persona_id,persona.is_ubicable_control)}"
+								oncomplete="Richfaces.showModalPanel('dlgAnular')"
+								title="Anular">
+								<h:graphicImage value="/images/font-icon/remove-symbol.png" style="border:0"
+									width="20" height="20" />
+							</a4j:commandLink>
+							
+							
+							
+						</rich:column>-->
+							
+					</rich:extendedDataTable>
+					
+					<rich:datascroller id="tableDataScroller" align="center"
+						for="datosPersona" renderIfSinglePage="false"
+						status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+						<f:facet name="pages">
+							<h:outputText value="#{pageIndex} / #{pages}" />
+						</f:facet>
+					</rich:datascroller>
+						
+		    </rich:simpleTogglePanel>        
+		
+		</rich:panel>
+	</h:form>
+	
+	
+	<rich:modalPanel id="dlgAsignarInspector" autosized="true" width="400"
+		style="height:100%">
+		<f:facet name="header">
+			<h:outputText value="Mensaje" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="gpAsignarInspector"
+					styleClass="hidelink" />
+				<rich:componentControl for="dlgAsignarInspector" attachTo="gpiUsuario"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form prependId="false">
+			<fieldset style="padding: 5px; font-weight:bold ;color:red; text-align:center">
+				<table border="0" width="100%">
+					<tr>
+						<td align="left" width="120px"><h:outputText
+								value="Inspector." /> <span style="color: red;">*</span>
+						</td>
+	
+						<td align="left" width="280px">
+						
+						
+						
+						<rich:comboBox
+								width="280px" required="true"
+								requiredMessage="#{msg['mp.errortipocontribuyente']}"
+								defaultLabel="Seleccione inspector" 
+								onblur="validaInputCbo(this)"
+								onkeypress="return showListCbo(this,event)"
+								id="id_inspetor"
+								valueChangeListener="#{bandejaFotoInspeccionManaged.loadInspectorById}">
+								
+								<f:selectItems id="id_lsttipopersona"
+									value="#{bandejaFotoInspeccionManaged.listSelectItemFisca}" />
+								<a4j:support id="id_supportlsttipoper"
+									reRender="id_inspetor"
+									event="onchange" BypassUpdates="false"
+									ajaxSingle="true" />
+							</rich:comboBox> 
+							
+							</td>
+					</tr>
+				</table>
+				
+				
+			</fieldset>
+			<div style="height: 12px;" />
+			<div align="center">
+				<a4j:commandButton value="Asignar" style="width: 100px;"
+						action="#{bandejaFotoInspeccionManaged.asignarInspector()}"
+						reRender="id_panelresultados"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'dlgAsignarInspector\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};" >						
+					</a4j:commandButton>
+					
+				<h:commandButton value="Salir" style="width: 80px;"
+					icon="ui-icon-close" onclick="PF('dlgAsignarInspector').hide()">
+				</h:commandButton>
+			</div>
+			
+		</h:form>
+	</rich:modalPanel>
+	
+	
+	<!-- =================================================== -->
+		<rich:modalPanel id="dlgCerrarInspeccion" autosized="true" width="350"
+			style="height:100%">
+			<f:facet name="header">
+				<h:outputText value="Mensaje" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png" id="gpRevertirDescargo"
+						styleClass="hidelink" />
+					<rich:componentControl for="dlgCerrarInspeccion" attachTo="gpiUsuario"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:form prependId="false">
+				<div style="margin-bottom: 20px;">
+					<h:outputText value="Observacion (max 300)" /><span style="color: red">*</span>
+						
+					<h:inputTextarea value="#{bandejaFotoInspeccionManaged.observacionCierre}" cols="100" rows="5" maxlength="500" size="500"
+						 requiredMessage="Indique la Observacion">
+					</h:inputTextarea>
+					
+					<div style="margin-top: 10px;">
+						<h:outputText value="Actualizado: " />
+						
+						<h:selectBooleanCheckbox  id="checkBoxAllDeuda" 
+							value="#{bandejaFotoInspeccionManaged.selecteFiscalizado}"
+							immediate="true" >
+							
+							<a4j:support event="onchange" 
+								reRender="checkBoxAllDeuda" 
+								immediate="true">
+							</a4j:support>
+						</h:selectBooleanCheckbox>
+					</div>
+					
+				</div>
+				
+				
+				<fieldset style="padding: 5px; font-weight:bold ;color:red; text-align:center">
+					<h:panelGroup>		
+						<h:outputLabel value="ESTA SEGURO DE REVERTIR EL LOTE, ESTA ACCIÓN ACTIVARA LAS DEUDAS ASOCIADAS AL LOTE ">
+						</h:outputLabel>
+					</h:panelGroup>
+				</fieldset>
+				<div style="height: 12px;" />
+				<div align="center">					
+						<a4j:commandButton value="Aceptar" style="width: 100px;"
+							action="#{bandejaFotoInspeccionManaged.cerrarInspeccion}"
+							reRender="togglePanelResultados"
+							oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'dlgCerrarInspeccion\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};" >						
+						</a4j:commandButton>
+						
+						<a4j:commandButton value="Salir" style="width:100px;"
+							onclick="#{rich:component('dlgCerrarInspeccion')}.hide();return false;" />
+							
+				</div>
+			</h:form>
+		</rich:modalPanel>
+	<!-- =================================================== -->
+	
+	
+	
+	
+	<!-- ==========================INICIO MODAL FOTO====================== -->
+	<rich:modalPanel id="panelFoto" autosized="true" width="1200"  height="700">
+		<f:facet name="header">
+			<h:outputText value="Fotos" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi6"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelFoto" attachTo="hlpconfi6"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+			<h:form prependId="false" id="imagenPredio">
+				<a4j:outputPanel id="panelImagePapeleta">
+										
+					<h:graphicImage										
+							value="#{bandejaFotoInspeccionManaged.imgpredio}"
+							height="580px" width="580px" style="border:0; padding: 15px;" />
+							
+					<a4j:commandLink style="    position: absolute; left: 0;top: 290px;" ajaxSingle="true" id="newlink4" 		            			 
+	           			action="#{bandejaFotoInspeccionManaged.regresarImg()}"
+	           			oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelFoto\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+	           			reRender="panelImagePapeleta">
+	           			
+	                    <h:graphicImage value="/images/font-icon/regresa.png" style="width:30px" />
+	                </a4j:commandLink> 
+	                
+	                
+	                
+	                <a4j:commandLink style="    position: absolute; left: 605px;top: 290px;" ajaxSingle="true" id="newlin" 		            			 
+	           			action="#{bandejaFotoInspeccionManaged.adelantarImg()}"
+	           			oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelFoto\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+	           			reRender="panelImagePapeleta">
+	           			
+	                    <h:graphicImage value="/images/font-icon/adelanta.png" style="width:30px" />
+	                </a4j:commandLink> 
+				</a4j:outputPanel>
+				
+				
+				<!-- ==========================INICIO DATOS GENERALES ================ -->
+	
+					<table border="0" style="width: 530px;position: absolute; top: 50px; left: 650px;" >
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText  value="Codigo Predio :" />
+							</td>
+							<td>
+								<h:outputText  value="#{bandejaFotoInspeccionManaged.fotoPredioId}" />
+								
+							</td>
+						</tr>
+						
+						
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText  value="Contribuyente :" />
+							</td>
+							<td>
+								<h:outputText  value="#{bandejaFotoInspeccionManaged.fotoContribuyente}" />
+								
+							</td>
+						</tr>
+						
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText  value="Direccion :" />
+							</td>
+							<td>
+								<h:outputText  value="#{bandejaFotoInspeccionManaged.fotoDireccion}" />
+								
+							</td>
+						</tr>
+						
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText  value="Area de Terreno :" />
+							</td>
+							<td>
+								<h:outputText  value="#{bandejaFotoInspeccionManaged.listConstruccionFotos.get(0).area_terreno}" />
+								
+							</td>
+						</tr>
+						
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText  value="Arancel :" />
+							</td>
+							<td>
+								<h:outputText  value="#{bandejaFotoInspeccionManaged.listConstruccionFotos.get(0).arancel}" />
+								
+							</td>
+						</tr>
+						
+						
+						
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText  value="Valor de Autovalúo :" />
+							</td>
+							<td>
+								<h:outputText  value="#{bandejaFotoInspeccionManaged.listConstruccionFotos.get(0).base_afecta}" />
+								
+							</td>
+						</tr>
+						
+						
+					</table>
+				
+				<!-- ==========================FIN DATOS GENERALES =================== -->
+				
+				
+				<!-- INICIO TABLA CONSTRUCCIONES -->
+				
+				<rich:extendedDataTable 
+					id="datosConstruccion" value="#{bandejaFotoInspeccionManaged.listConstruccionFotos}" var="record" 
+						style="width: 530px; height: 200px !important; position: absolute; top: 170px; left: 650px;"
+					sortMode="single" selectionMode="single" enableContextMenu="false" 
+					rowKeyVar="row"	>				
+			        
+					<rich:column id="x1" width="15%" style="text-align:center" >
+		                <f:facet name="header"  >Nivel</f:facet>
+		                <h:outputText value="#{record.nivel}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x2" width="15%" style="text-align:center" >
+		                <f:facet name="header"  >Seccion</f:facet>
+		                <h:outputText value="#{record.seccion}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x3" width="15%" style="text-align:center" >
+		                <f:facet name="header"  >Año</f:facet>
+		                <h:outputText value="#{record.annoConstruccion}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x4" width="40%" style="text-align:center" >
+		                <f:facet name="header"  >Categorias</f:facet>
+		                <h:outputText value="#{record.categorias}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x5" width="15%" style="text-align:center" >
+		                <f:facet name="header"  >Area. Cons</f:facet>
+		                <h:outputText value="#{record.areaConstruccion}"/>
+		            </rich:column>
+
+	   			</rich:extendedDataTable>
+				
+				<!-- FIN TABLA CONSTRUCCIONES -->
+				
+				
+				<!-- INICIO TABLA INSTALACIONES -->
+				
+				<rich:extendedDataTable rendered="#{bandejaFotoInspeccionManaged.listInstalacionesFotos.size() >0}"
+					id="datosInstalacion" value="#{bandejaFotoInspeccionManaged.listInstalacionesFotos}" var="record" style="width: 530px; height: 200px !important; position: absolute; top: 410px; left: 650px;"
+					sortMode="single" selectionMode="single" enableContextMenu="false" 
+					rowKeyVar="row"	>				
+			        
+					<rich:column id="x1" width="15%" style="text-align:center" >
+		                <f:facet name="header"  >Cod.</f:facet>
+		                <h:outputText value="#{record.tipoObra_id}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x2" width="58%" style="text-align:center" >
+		                <f:facet name="header"  >Tipo obra</f:facet>
+		                <h:outputText value="#{record.tipoinstalaciondescripcion}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x3" width="15%" style="text-align:center" >
+		                <f:facet name="header"  >Año</f:facet>
+		                <h:outputText value="#{record.annoInstalacion}"/>
+		            </rich:column>
+		           
+		            
+		            <rich:column id="x5" width="15%" style="text-align:center" >
+		                <f:facet name="header"  >Area.</f:facet>
+		                <h:outputText value="#{record.areaTerreno}"/>
+		            </rich:column>
+
+	   			</rich:extendedDataTable>
+				
+				<!-- FIN TABLA INSTALACIONES -->
+				
+				
+				
+				
+			</h:form>
+		
+	</rich:modalPanel>
+	
+	<!-- ==========================FIN MODAL FOTO====================== -->
+
+</html>

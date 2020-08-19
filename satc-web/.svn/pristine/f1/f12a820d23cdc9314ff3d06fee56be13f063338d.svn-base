@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form id="idformregistroinfractor">
+		<a4j:loadScript src="/js/sisat.js"></a4j:loadScript>
+		<script type="text/javascript">
+		 function validaNroDocumento(nroDocumento){
+			 if(jQuery.trim(nroDocumento).length==8){
+					 return true;
+			 }
+			 return false; 
+		 }
+		</script>
+
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+		<table align="center" border="0" cellpadding="1" cellspacing="1"
+			width="70%">
+			<tr>
+				<td><rich:panel id="id_registroinfractor">
+						<f:facet name="header">#{msg['pa.registrarinfractor']}</f:facet>
+						<h:panelGroup>
+							<table border="0" width="100%" cellpadding="2" cellspacing="2">
+								<tr>
+									<td><h:panelGroup id="id_buscarInfractor">
+											<a4j:region>
+												<table border="0" width="100%" cellpadding="2"
+													cellspacing="2">
+													<tr>
+														<td width="100px"><h:outputLabel
+																value="#{msg['gn.codigoPersona']}: " /></td>
+														<td width="150px"><h:inputText id="id_infractorId"
+																maxlength="50" style="width:100%"
+																value="#{registrarInfractorManaged.personaId}"
+																onkeypress="validaEnteroPositivo(event);">
+															</h:inputText></td>
+														<td><a4j:commandButton id="btnBuscarInfractorId"
+																value="#{msg['gn.buscar']}"
+																action="#{registrarInfractorManaged.buscarInfractorId}"
+																status="ajaxStatus" reRender="id_registroinfractor"
+																oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'modalError\')': 'Richfaces.showModalPanel(\'mpErrors\');'};">
+															</a4j:commandButton></td>
+													</tr>
+												</table>
+											</a4j:region>
+										</h:panelGroup></td>
+								</tr>
+
+								<tr>
+									<td><h:panelGroup id="id_datosinfractor">
+											<table border="0" width="100%" cellpadding="2"
+												cellspacing="2">
+												<tr>
+													<td width="100px"><h:outputLabel
+															value="#{msg['gn.tipodoc']}: " /><span
+														style="color: red;">*</span></td>
+													<td><rich:comboBox width="125px"
+															defaultLabel="Seleccione" id="idPerTipoDocumento"
+															value="#{registrarInfractorManaged.tipoDocumento}"
+															valueChangeListener="#{registrarInfractorManaged.selectTipoDocumento}"
+															selectFirstOnUpdate="true" directInputSuggestions="false"
+															immediate="true" enableManualInput="true"
+															onkeypress="return showListCbo(this,event);"
+															ajaxSingle="true" reRender="id_registroinfractor"
+															binding="#{registrarInfractorManaged.cmbTipoDocumento}"
+															required="true"
+															requiredMessage="Ingrese Tipo de Documento">
+															<a4j:support id="idInfSupportTipDoc" event="onchange"
+																reRender="id_registroinfractor" immediate="true"
+																ajaxSingle="true">
+															</a4j:support>
+															<f:selectItems id="idlstInfTipoDocumento2"
+																value="#{registrarInfractorManaged.lstTipoDocumento}" />
+														</rich:comboBox></td>
+													<td width="100px"><h:outputLabel
+															value="#{msg['gn.nrodoc']}: " /><span
+														style="color: red;">*</span></td>
+													<td><h:inputText
+															value="#{registrarInfractorManaged.numDocumentPersona}"
+															required="true"
+															requiredMessage="Ingrese Numero de Documento"
+															id="idnrodoc"
+															onkeypress="return validaEnteroPositivo(event)"
+															binding="#{registrarInfractorManaged.txtNumDocumento}"
+															style="width:100%;"
+															maxlength="#{registrarInfractorManaged.maxlengthNroDocumento}">
+															<!-- 
+															<a4j:support event="onblur" onsubmit="true"
+																ajaxSingle="true" immediate="true" status="ajaxStatus"
+																action="#{registrarInfractorManaged.buscarPersonaDNI}"
+																reRender="id_datospersona_natural"
+																oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+															</a4j:support>
+															 -->
+														</h:inputText></td>
+												</tr>
+											</table>
+										</h:panelGroup></td>
+								</tr>
+								<tr>
+									<td><h:panelGroup id="id_apellidosNombres">
+											<table border="0" width="100%" cellpadding="2"
+												cellspacing="2">
+												<tr>
+													<td><h:outputLabel
+															value="#{registrarInfractorManaged.apellidosyNombres}">
+														</h:outputLabel></td>
+												</tr>
+											</table>
+										</h:panelGroup></td>
+								</tr>
+								<tr>
+									<td><h:panelGroup id="id_datospersona_natural"
+											rendered="#{registrarInfractorManaged.isPersonaNatural}">
+											<table border="0" width="100%" cellpadding="2"
+												cellspacing="2">
+												<tr>
+													<td width="100px"><h:outputLabel
+															value="#{msg['mp.apellidopaterno']} : "
+															id="idLabelApePat" /><span style="color: red;">*</span></td>
+													<td><h:inputText
+															value="#{registrarInfractorManaged.apellidoPaterno}"
+															binding="#{registrarInfractorManaged.txtApePaterno}"
+															onkeypress="return validarCarateres(event)"
+															style="width:100%;" styleClass="textUpperCase"
+															required="true"
+															requiredMessage="Ingrese Apellido Paterno">
+															<f:converter converterId="uppeCaseConverter"></f:converter>
+														</h:inputText></td>
+													<td width="100px"><h:outputLabel
+															value="#{msg['mp.apellidomaterno']} : " /><span
+														style="color: red;">*</span></td>
+													<td><h:inputText
+															value="#{registrarInfractorManaged.apellidoMaterno}"
+															onkeypress="return validarCarateres(event)"
+															style="width:100%;" styleClass="textUpperCase"
+															binding="#{registrarInfractorManaged.txtApeMaterno}"
+															required="true"
+															requiredMessage="Ingrese Apellido Materno">
+															<f:converter converterId="uppeCaseConverter"></f:converter>
+														</h:inputText></td>
+												</tr>
+												<tr>
+													<td width="100px"><h:outputLabel
+															value="Primer Nombre :" /><span style="color: red;">*</span></td>
+													<td><h:inputText
+															value="#{registrarInfractorManaged.primerNombre}"
+															required="true" style="width:100%;"
+															requiredMessage="Ingrese Primer Nombre"
+															styleClass="textUpperCase"
+															onkeypress="return validarCarateres(event)"
+															binding="#{registrarInfractorManaged.txtPrimerNombre}"
+															maxlength="15">
+															<f:converter converterId="uppeCaseConverter"></f:converter>
+														</h:inputText></td>
+													<td width="100px"><h:outputLabel
+															value="Segundo Nombre :" /><span style="color: red;">*</span></td>
+													<td><h:inputText
+															value="#{registrarInfractorManaged.segundoNombre}"
+															onkeypress="return validarCarateres(event)"
+															style="width:100%;" styleClass="textUpperCase"
+															binding="#{registrarInfractorManaged.txtSegundoNombre}"
+															maxlength="15">
+															<f:converter converterId="uppeCaseConverter"></f:converter>
+														</h:inputText></td>
+												</tr>
+											</table>
+										</h:panelGroup> <h:panelGroup id="id_datospersona_juridica"
+											rendered="#{!registrarInfractorManaged.isPersonaNatural}">
+											<table border="0" width="100%" cellpadding="2"
+												cellspacing="2">
+												<tr>
+													<td width="100px"><h:outputLabel
+															value="#{msg['mp.razonsocial']}: " /><span
+														style="color: red;">*</span></td>
+													<td colspan="3"><h:inputText
+															value="#{registrarInfractorManaged.razonSocial}"
+															onkeypress="return validarCarateres(event)"
+															style="width:100%;" styleClass="textUpperCase"
+															binding="#{registrarInfractorManaged.txtRazonSocial}"
+															maxlength="100" required="true"
+															requiredMessage="Ingrese Direccion Completa">
+															<f:converter converterId="uppeCaseConverter"></f:converter>
+														</h:inputText></td>
+												</tr>
+												<tr>
+													<td colspan="4"><br /></td>
+												</tr>
+											</table>
+										</h:panelGroup></td>
+								</tr>
+
+								<tr>
+									<td><h:panelGroup>
+											<table border="0" width="100%" cellpadding="2"
+												cellspacing="2">
+												<tr>
+													<td align="left" width="100px"><h:outputLabel
+															value="#{msg['pa.nrolicencia']} :">
+															<span style="color: red;">*</span>
+														</h:outputLabel></td>
+													<td align="left"><h:inputText id="txtNroLicencia"
+															size="10" maxlength="10" 
+															binding="#{registrarInfractorManaged.txtNumeroLicencia}"
+															style="width:150px; text-transform:uppercase;"
+															requiredMessage="Ingrese el número de licencia del infractor"
+															immediate="true" styleClass="licencia"
+															converter="#{uppeCaseConverter}"/> <rich:jQuery id="masklic"
+															selector=".licencia"
+															query="mask('**9999999')"
+															timing="onload" /></td>
+												</tr>
+											</table>
+										</h:panelGroup> <h:panelGroup>
+											<table border="0" width="100%" cellpadding="2"
+												cellspacing="2">
+												<tr>
+													<td align="left" width="100px"><h:outputLabel
+															value="#{msg['pa.clasecategoria']} :">
+															<span style="color: red;">*</span>
+														</h:outputLabel></td>
+													<td><rich:comboBox width="150px"
+															defaultLabel="Seleccione" id="cmbclasevehicular"
+															selectFirstOnUpdate="true" enableManualInput="true"
+															requiredMessage="Seleccione clase de licencia infractor"
+															onkeypress="return showListCbo(this,event);"
+															onblur="validaInputCbo(this)"
+															binding="#{registrarInfractorManaged.cmbClase}"
+															immediate="true">
+															<f:selectItems id="idInflstClaseLicencia"
+																value="#{registrarInfractorManaged.lstClaseLicencia}" />
+														</rich:comboBox></td>
+												</tr>
+											</table>
+										</h:panelGroup></td>
+								</tr>
+								<tr>
+									<td>
+										<div
+											style="width: 100%; text-align: center; margin-top: 10px;">
+											<a4j:commandButton value="#{msg['gn.guardar']}"
+												action="#{registrarInfractorManaged.registrarPersona}"
+												oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'panelconfirma\')': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+												id="btnGuardar"
+												rendered="#{registrarInfractorManaged.actualizaPersona == 'N'}"
+												style="width:100px;" status="ajaxStatus">
+											</a4j:commandButton>
+
+											<a4j:commandButton value="#{msg['gn.actualizar']}"
+												action="#{registrarInfractorManaged.registrarPersona}"
+												oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'panelconfirma\')': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+												id="btnActualizar"
+												rendered="#{registrarInfractorManaged.actualizaPersona == 'S'}"
+												style="width:100px;" status="ajaxStatus">
+											</a4j:commandButton>
+
+											<a4j:commandButton value="Limpiar"
+												action="#{registrarInfractorManaged.limpiar}"
+												reRender="id_registroinfractor" ajaxSingle="true"
+												style="width:100px;"></a4j:commandButton>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</h:panelGroup>
+					</rich:panel></td>
+			</tr>
+		</table>
+	</h:form>
+</ui:composition>

@@ -1,0 +1,564 @@
+package com.sat.sisat.fiscalizacion.business;
+
+import java.math.BigDecimal;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
+import javax.faces.model.SelectItem;
+
+import com.sat.sisat.cobranzacoactiva.dto.FindCcLoteDetalleActoExp;
+import com.sat.sisat.cobranzacoactiva.dto.FindCcLoteExigible;
+import com.sat.sisat.cobranzacoactiva.dto.FindCcRecHistorico;
+import com.sat.sisat.cobranzacoactiva.dto.FindCcRecTipo;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.common.util.SATParameterFactory;
+import com.sat.sisat.controlycobranza.dto.FindCcLote;
+import com.sat.sisat.controlycobranza.dto.FindCcLoteDetalleActo;
+import com.sat.sisat.controlycobranza.dto.MpFiscalizador;
+import com.sat.sisat.controlycobranza.dto.MpFiscalizadorArea;
+import com.sat.sisat.controlycobranza.dto.MpFiscalizadorDto;
+import com.sat.sisat.determinacion.vehicular.dto.DatosNecesariosDeterDTO;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.fiscalizacion.dao.FiscalizacionBusinessDao;
+import com.sat.sisat.fiscalizacion.dto.DatosNecesariosDeclaracionDTO;
+import com.sat.sisat.fiscalizacion.dto.FindInpscDocTipo;
+import com.sat.sisat.fiscalizacion.dto.FindInspeccionByDetalle;
+import com.sat.sisat.fiscalizacion.dto.FindInspeccionByHorario;
+import com.sat.sisat.fiscalizacion.dto.FindInspeccionById;
+import com.sat.sisat.fiscalizacion.dto.FindInspeccionByIdAsociada;
+import com.sat.sisat.fiscalizacion.dto.FindInspeccionByResultado;
+import com.sat.sisat.fiscalizacion.dto.FindInspeccionDj;
+import com.sat.sisat.fiscalizacion.dto.FindInspeccionDocCargoTipo;
+import com.sat.sisat.fiscalizacion.dto.FindInspeccionHistorial;
+import com.sat.sisat.fiscalizacion.dto.FindInspeccionHistorialDetalle;
+import com.sat.sisat.papeleta.dto.FindPapeletas;
+import com.sat.sisat.persistence.entity.CcLote;
+import com.sat.sisat.persistence.entity.CcLoteTipoPersona;
+import com.sat.sisat.persistence.entity.DtTasaVehicular;
+import com.sat.sisat.persistence.entity.PaPapeleta;
+import com.sat.sisat.persistence.entity.RpFiscalizacionHorario;
+import com.sat.sisat.persistence.entity.RpFiscalizacionHorarioDetalle;
+import com.sat.sisat.persistence.entity.RpFiscalizacionInspeccion;
+import com.sat.sisat.persistence.entity.RpFiscalizacionPrograma;
+import com.sat.sisat.persistence.entity.RpFiscalizacionProgramaDetalle;
+import com.sat.sisat.persistence.entity.RvCategoriaVehiculo;
+import com.sat.sisat.persistence.entity.RvClaseVehiculo;
+import com.sat.sisat.persistence.entity.RvDjvehicular;
+import com.sat.sisat.persistence.entity.RvMarca;
+import com.sat.sisat.persistence.entity.RvModeloVehiculo;
+import com.sat.sisat.persistence.entity.RvOmisosDetalleVehicular;
+import com.sat.sisat.persistence.entity.RvOmisosVehicular;
+import com.sat.sisat.persistence.entity.RvSustentoVehicular;
+import com.sat.sisat.persistence.entity.RvTipoCarroceria;
+import com.sat.sisat.persistence.entity.RvTipoMotor;
+import com.sat.sisat.persistence.entity.RvVehiculo;
+import com.sat.sisat.predial.business.BaseBusiness;
+import com.sat.sisat.predial.dto.FindRpDjPredial;
+import com.sat.sisat.vehicular.dto.AnexosDeclaVehicDTO;
+import com.sat.sisat.vehicular.dto.BuscarPersonaDTO;
+import com.sat.sisat.vehicular.dto.MarcaModeloTemporalDTO;
+
+@Stateless
+public class FiscalizacionBo extends BaseBusiness implements
+		FiscalizacionBoRemote {
+
+	private static final long serialVersionUID = 6148980956071264795L;
+
+	private FiscalizacionBusinessDao service;
+	
+	
+	public FiscalizacionBusinessDao getService() {
+		return this.service;
+	}
+
+	@PostConstruct
+	public void initialize() {
+		this.service = new FiscalizacionBusinessDao();
+		setDataManager(this.service);
+	}
+
+	public List<FindInpscDocTipo> getAllTipoDoc() throws Exception {
+		return getService().getAllTipoDoc();
+	}
+	
+	
+	public List<RpFiscalizacionPrograma> getAllTipoPrograma() throws Exception {
+		return getService().getAllTipoPrograma();
+	}
+	
+	public List<MpFiscalizador> getAllInspector() throws Exception {
+		return getService().getAllInspector();
+	}
+	
+	public List<RpFiscalizacionHorario> getAllHorario() throws Exception {
+		return getService().getAllHorario();
+	}
+	
+	public List<FindInpscDocTipo> getCorrelativo(Integer tipoDocId) throws Exception {
+		return getService().getCorrelativo(tipoDocId);
+	}
+	
+	public int guardarRequerimiento(Integer tipoDocumento,String nroCorrelativo,Integer tipoPrograma,Integer nombreInspector, Date fechaInspeccion,Integer codPersona,String observacion, String dirPersona,Date fechaNotifica,
+			String anioInspeccion,String tipoDocumentoRef,String nroDocumentoRef,Integer omiso,Integer estado)
+	throws Exception{
+		return getService().guardarRequerimiento(tipoDocumento,nroCorrelativo,tipoPrograma,nombreInspector,fechaInspeccion,codPersona,observacion,dirPersona,fechaNotifica,anioInspeccion,tipoDocumentoRef,nroDocumentoRef,omiso,estado,getUser().getUsuarioId(), getUser().getTerminal());
+	}
+	
+	public int guardarRequerimientoDetalle(Integer inspectorId, String anio,Integer djId,Integer predioId,Integer inspcc_id,Date fechaInspeccion,Integer ubicacion,Integer sector,Integer tipoVia, Integer via,String manzana,String cuadra,String lado,String predioDir)
+	throws Exception{
+		return getService().guardarRequerimientoDetalle(inspectorId,anio,djId,predioId,getUser().getUsuarioId(), getUser().getTerminal(),inspcc_id,fechaInspeccion,ubicacion,sector,tipoVia,via,manzana,cuadra,lado,predioDir);
+	}
+	
+	public int guardarDetalleFip(Integer inspectorId, String anio,Integer djId,Integer predioId,
+			Integer ubicacionId,Integer tipoViaId,Integer viaId,Integer sectorId,String manzana,String cuadra,String lado,
+			Date fechaInspeccion,Integer inspcc_id,String direccion,String sector,String via,String tipoVia,String lugar,
+			Integer inspectorIdAr,Date fechaInspeccionAr,Integer usuarioId,String terminal)
+	throws Exception{
+		return getService().guardarDetalleFip(inspectorId,anio,djId,predioId,
+				ubicacionId,tipoViaId,viaId,sectorId,manzana,cuadra,lado,
+				fechaInspeccion,inspcc_id,direccion,sector,via,tipoVia,lugar,inspectorIdAr,fechaInspeccionAr,
+				getUser().getUsuarioId(), getUser().getTerminal());
+	
+	}
+	
+	public List<FindInspeccionHistorial> getAllInspecciones() throws Exception {
+		return getService().getAllInspecciones();
+	}
+
+	public List<BuscarPersonaDTO> findPersona(Integer persId, String apeNom) throws Exception {
+		return getService().findPersona(persId, apeNom);
+	}
+	
+	public List<BuscarPersonaDTO> findPersona(int tipoDocuIdentidadId, String nroDocuIdentidad) throws Exception {
+		return getService().findPersona(tipoDocuIdentidadId, nroDocuIdentidad);
+	}
+	
+	public List<FindInspeccionDj> getDeclaracionesInsp(Integer persona_id)throws Exception {
+		return getService().getDeclaracionesInsp(persona_id);
+	}
+	
+	public List<FindInspeccionDj> getDeclaracionesInspById(Integer inspId,Integer personaId,Integer djId)throws Exception {
+		return getService().getDeclaracionesInspById(inspId,personaId,djId);
+	}
+	
+//	public List<FindInspeccionDj> getDeclaracionesInspById(Integer inspId,Integer personaId)throws Exception {
+//		return getService().getDeclaracionesInspById(inspId,personaId);
+//	}
+
+	public List<FindInspeccionDj> getDeclaracionesInspByPersona(Integer personaId,Integer predioId,Integer anioId)throws Exception {
+		return getService().getDeclaracionesInspByPersona(personaId,predioId,anioId);
+	}
+	
+	public List<FindInspeccionDj> getDeclaracionesInspeccionById(Integer inspId)throws Exception {
+		return getService().getDeclaracionesInspeccionById(inspId);
+	}
+	
+	public List<FindInspeccionDj> getPrediosInspById(Integer inspId)throws Exception {
+		return getService().getPrediosInspById(inspId);
+	}
+	
+	public List<FindRpDjPredial> getPrediosInspeccionById(Integer inspId)throws Exception {
+		return getService().getPrediosInspeccionById(inspId);
+	}
+//	public List<RpFiscalizacionInspeccion> getUltimaInspeccion(Integer persona) throws Exception {
+//		return getService().getUltimaInspeccion(persona);
+//		
+//	}
+	
+	public int getUltimaInspeccion()
+			throws Exception {
+		return getService().getUltimaInspeccion();
+	}
+	
+	public void create(RpFiscalizacionHorarioDetalle rpFiscaHora)throws Exception{
+		rpFiscaHora.setFechaRegistro(DateUtil.getCurrentDate());
+		rpFiscaHora.setUsuarioId(getUser().getUsuarioId());
+		rpFiscaHora.setTerminal(getUser().getTerminal());
+		getService().create(rpFiscaHora);
+	}
+	
+	public List<FindInspeccionById> getInspeccionById(Integer inspId)throws Exception {
+		return getService().getInspeccionById(inspId);
+	}
+	
+	public RpFiscalizacionInspeccion getInspeccion(Integer inspId)throws Exception{
+		return getService().find(inspId, RpFiscalizacionInspeccion.class);		
+	}
+	
+	public FindInspeccionById getInspecciones(Integer inspId)throws Exception{
+		return getService().find(inspId, FindInspeccionById.class);		
+	}
+	
+	public List<FindInspeccionByHorario> getInspeccionesHorario(Integer inspId)throws Exception {
+		return getService().getInspeccionesHorario(inspId);
+	}
+	
+	public List<FindInspeccionByHorario> getInspeccionesHorarioAr(Integer inspId)throws Exception {
+		return getService().getInspeccionesHorarioAr(inspId);
+	}
+	
+	public List<FindInspeccionByDetalle> getInspeccionesDetalle(Integer inspId)throws Exception {
+		return getService().getInspeccionesDetalle(inspId);
+	}
+	
+	public List<FindInspeccionDocCargoTipo> getAllTipoDocCargo() throws Exception {
+		return getService().getAllTipoDocCargo();
+	}
+	
+	public List<FindInspeccionDocCargoTipo> getCorrelativoCargo(Integer tipoDocId)throws Exception {
+		return getService().getCorrelativoCargo(tipoDocId);
+	}
+	
+	public String correlativo(Integer tipoDocId) throws Exception{
+		 		return getService().correlativo(tipoDocId);
+	}
+	
+	public int actualizarRequerimiento 	
+								      (Integer tipoDocumento,String nroDocumentoResultado, Date fechaNotResultado,
+								       Integer tipoEsquela,String nroDocumentoEsquela, Date fechaNotEsquela,
+								       Integer tipoAr,String nroDocumentoAr, 
+								       Integer inspId,Integer estado,Date fechaNotAr)
+	throws Exception{
+		return getService().actualizarRequerimiento
+									   (tipoDocumento,nroDocumentoResultado,fechaNotResultado,
+									    tipoEsquela,nroDocumentoEsquela,fechaNotEsquela,tipoAr,nroDocumentoAr,
+									    getUser().getUsuarioId(), getUser().getTerminal(),inspId,estado,fechaNotAr);
+	}
+	
+	public int actualizarRequerimientoNotificacion( Integer nombreInspector, Date fechaInspeccion,
+													Integer codPersona,String observacion, String dirPersona,Date fechaNotifica,Integer estado,Integer inspId,
+													Integer usuarioId,String terminal)
+	throws Exception
+	{
+				return getService().actualizarRequerimientoNotificacion(nombreInspector,fechaInspeccion,codPersona,observacion,
+						dirPersona,fechaNotifica,estado,inspId,getUser().getUsuarioId(), getUser().getTerminal());
+				
+
+    }
+
+	public int actualizarRequerimientoDetalle(Date fechaAr,Integer inspectorArId,Date fechaActualiza,Integer inspId)throws Exception{
+		return getService().actualizarRequerimientoDetalle(fechaAr,inspectorArId,fechaActualiza,inspId);
+	}	
+	
+	public int actualizarRequerimientoArFIP(Integer fipId,String fipNro,Date fechagenera,Date fechanotifica,Integer usuarioId,String terminal,Integer inspId)throws Exception{
+		return getService().actualizarRequerimientoArFIP(fipId,fipNro,fechagenera,fechanotifica,getUser().getUsuarioId(),getUser().getTerminal(),inspId);
+	}	
+	
+	public List<FindInspeccionByResultado> getAllInspeccionesResultado(Integer inspId) throws Exception {
+		return getService().getAllInspeccionesResultado(inspId);
+	}
+	
+	public List<FindInspeccionByHorario> getInspeccionesHorarioByResultado(Integer inspId)throws Exception {
+		return getService().getInspeccionesHorarioByResultado(inspId);
+	}
+	
+	public  List<FindInspeccionHistorial> findInspeccion(Integer contribuyenteId,String correlativo,String direccion,String apellidos,Integer dniId,String dniNumero) throws Exception{
+		return getService().findInspeccion(contribuyenteId,correlativo,direccion,apellidos,dniId,dniNumero);//Integer personaId,
+	}
+	
+	public List<FindInspeccionHistorial> getInspeccionByCorrelativo(String correlativo, Integer tipo)throws Exception {
+		return getService().getInspeccionByCorrelativo(correlativo,tipo);
+	}
+	
+	public List<FindInspeccionByHorario> getHorarioByInspector(Integer inspector,Date fechaInspeccion,Integer horaInspeccion)throws Exception {
+		return getService().getHorarioByInspector(inspector,fechaInspeccion,horaInspeccion);
+	}
+	
+//	public String getHorarioByInspector(Integer inspector,Date fechaInspeccion,Integer horaInspeccion)throws Exception {
+//		return getService().getHorarioByInspector(inspector,fechaInspeccion,horaInspeccion);
+//	}
+	
+    public List<FindInspeccionHistorialDetalle> getAllInspeccionesDetalle(Integer inspId) throws Exception {
+		return getService().getAllInspeccionesDetalle(inspId);
+	}
+	
+	public List<FindInspeccionDj> getInspeccionesByPredio(Integer personaId,Integer inspId)throws Exception {
+		return getService().getInspeccionesByPredio(personaId,inspId);
+	}
+	
+	public List<RpFiscalizacionProgramaDetalle> getAllAnios(Integer programaId) throws Exception {
+		return getService().getAllAnios(programaId);
+	}
+	
+	public List<RpFiscalizacionProgramaDetalle> getAllAniosReq() throws Exception {
+		return getService().getAllAniosReq();
+	}
+	
+	public List<RpFiscalizacionProgramaDetalle> getAllAniosById(Integer inspId) throws Exception {
+		return getService().getAllAniosById(inspId);
+	}
+	
+	public List<FindInspeccionHistorial> getAllInspeccionesByPrograma(Integer programaId) throws Exception {
+		return getService().getAllInspeccionesByPrograma(programaId);
+	}
+	
+	public void crearPrograma(RpFiscalizacionPrograma rpPrograma)throws Exception{
+		rpPrograma.setFechaRegistro(DateUtil.getCurrentDate());
+		rpPrograma.setUsuarioId(getUser().getUsuarioId());
+		rpPrograma.setTermninal(getUser().getTerminal());
+		getService().create(rpPrograma);
+	}
+	
+	public int getUltimoPrograma()
+			throws Exception {
+		return getService().getUltimoPrograma();
+	}
+	
+	public void crearProgramaDetalle(RpFiscalizacionProgramaDetalle rpProgramaDet)throws Exception{
+		rpProgramaDet.setFechaRegistro(DateUtil.getCurrentDate());
+		rpProgramaDet.setUsuarioId(getUser().getUsuarioId());
+		rpProgramaDet.setTermninal(getUser().getTerminal());
+		getService().create(rpProgramaDet);
+	}
+	
+	public List<RpFiscalizacionPrograma> getAllPrograma() throws Exception {
+		return getService().getAllPrograma();
+	}
+	
+	public  List<RpFiscalizacionPrograma> findPrograma(String programa) throws Exception{
+		return getService().findPrograma(programa);//Integer personaId,
+	}
+	
+	public RpFiscalizacionPrograma getAllProgramaById(Integer progId)throws Exception{
+		return getService().find(progId, RpFiscalizacionPrograma.class);		
+	}
+	
+	public List<RpFiscalizacionProgramaDetalle> getAllProgramaAniosById(Integer programaId)throws Exception {
+		return getService().getAllProgramaAniosById(programaId);
+	}
+	
+	public int actualizarPrograma( String descripcion,Integer programaId)throws Exception{
+		return getService().actualizarPrograma(descripcion,programaId);
+		}
+	
+	public List<MpFiscalizadorDto> getAllInspectores() throws Exception {
+		return getService().getAllInspectores();
+	}
+	
+	public List<MpFiscalizadorArea> getAllTipoArea() throws Exception {
+		return getService().getAllTipoArea();
+	}
+	
+	public void crearInspector(MpFiscalizadorDto f)throws Exception{
+		getService().create(f);
+	}
+	
+	public MpFiscalizador buscarInspector(String identificador) {
+		// TODO Auto-generated method stub
+		return getService().find(identificador, MpFiscalizador.class);
+			
+	}
+	
+	public List<MpFiscalizadorDto> getAllInspectoresById(Integer inspeId) throws Exception {
+		return getService().getAllInspectoresById(inspeId);
+	}
+	
+//	public MpFiscalizadorDto getAllInspectoresById(Integer inspeId)throws Exception{
+//		return getService().find(inspeId, MpFiscalizadorDto.class);		
+//	}
+	
+	public  List<MpFiscalizadorDto> findInspector(String nombre) throws Exception{
+		return getService().findInspector(nombre);//Integer personaId,
+	}
+	
+//	public void editarInspector(MpFiscalizador f)throws Exception{
+//		getService().update(f);
+//	}
+	
+	public int actualizarInspector(String codigo, String nombre,String dni, String telf,String direccion,Date inicio,Date fin,
+			Integer unidad, Integer id)throws Exception{
+		return getService().actualizarInspector(codigo,nombre,dni,telf,direccion,inicio,fin,unidad,id);
+	}
+	
+	public List<FindInspeccionByIdAsociada> getInspeccionByIdAsociada(Integer inspId)throws Exception {
+		return getService().getInspeccionByIdAsociada(inspId);
+	}
+	
+	/*
+	 * IMPUESTO VEHICULAR
+	 */
+	public List<FindCcLote> getAllLotes() throws Exception {
+		return getService().getAllLotes();
+	}
+	
+	public List<RvOmisosVehicular> getAllDetalleLotes(int loteId) throws Exception {
+		return getService().getAllDetalleLotes(loteId);
+	}
+	public List<RvOmisosVehicular> getDetalleOmiso(int omisoId) throws Exception{
+		return getService().getDetalleOmiso(omisoId);
+	};	
+	
+	public List<RpFiscalizacionPrograma> getAllTipoProgramaVehicular() throws Exception {
+		return getService().getAllTipoProgramaVehicular();
+	}
+	
+	public int guardarRequerimientoVehicular(int loteId,int programaId)
+	throws Exception{
+		return getService().guardarRequerimientoVehicular(loteId,programaId,getUser().getUsuarioId(), getUser().getTerminal());
+	}
+	public int decargarOmniso(int omisoId,String justificacion) 
+	throws Exception{
+		
+		return getService().decargarOmniso(omisoId, justificacion);
+	};
+	public List<Integer> estadisticaLote(int loteId) 
+	throws Exception{
+		return getService().estadisticaLote(loteId);
+	};		
+	//CONTROL REQUERIMIENTOS ::IMPUESTO VEHICULAR
+	public List<FindInspeccionHistorial> getAllInspeccionesVehicular(int loteId) throws Exception {
+		return getService().getAllInspeccionesVehicular(loteId);
+	}
+	/**
+	 * Generacion del Impuesto Vehicular::
+	 */
+	public List<RvOmisosVehicular> getAllDetalleLotes2(int loteId,int estado) throws Exception {
+		return getService().getAllDetalleLotes2(loteId,estado);
+	}
+	
+	public DatosNecesariosDeterDTO getDatosNecesariosDeterminar(int omisoId,int loteId) throws Exception {
+		return getService().getDatosNecesariosDeterminar(omisoId,loteId);
+	}
+	
+	public DtTasaVehicular getTasaVehicular(Integer anioAfec) {
+		return getService().getTasaVehicular(anioAfec);
+	}
+	
+	public BigDecimal getUitAnio(int anio) {
+		return getService().getUitAnio(anio);
+	}
+	
+	public BigDecimal getValorMEF(int categoriaId,int marcaVehiculoId, int modeloVehiculoId, int periodoAfectacion,
+			int periodoFabricacion) {
+		return getService().getValorMEF(categoriaId,marcaVehiculoId,modeloVehiculoId,periodoAfectacion,periodoFabricacion);
+	}
+	
+	public BigDecimal getMontoAnioMenorAntig(int categoriaId, int  marcaVehiculoId, int modeloVehiculoId,int periodoAfectacion){
+		return getService().getMontoAnioMenorAntig(categoriaId,marcaVehiculoId,modeloVehiculoId,periodoAfectacion);
+	}
+	
+	public int guardarImpuestoVehicular (RvOmisosDetalleVehicular deter) throws Exception {
+		return getService().guardarImpuestoVehicular(deter);
+	}
+	
+	public int actualizaEstadoRequerimiento (Integer requerimientoId, Integer omisoId,Integer estado) throws Exception {
+		return getService().actualizaEstadoRequerimiento(requerimientoId,omisoId,estado);
+	}
+	
+	/**
+	 * Generacion de la Declaración Jurada::
+	 */
+	public DatosNecesariosDeclaracionDTO getDatosNecesariosDeclaracion(int omisoId,int loteId) throws Exception {
+		return getService().getDatosNecesariosDeclaracion(omisoId,loteId);
+	}
+	public Integer guardarVehiculo(RvVehiculo vehiculo) throws SisatException {
+		return getService().guardarVehiculo(vehiculo);
+	}
+	public RvDjvehicular guardarDJVehicular(RvDjvehicular dj) throws SisatException {
+		return getService().guardarDJVehicular(dj);
+	}
+	public void guardarDocAnexosDjVehicular(RvSustentoVehicular sv) {
+		getService().guardarDocAnexosDjVehicular(sv);
+	}
+	public boolean copiarDjvAOtroAnio(int djvId, int anioCrear, int contribId,int usuarioId, String terminal) throws SisatException {
+		return getService().copiarDjvAOtroAnio(djvId, anioCrear, usuarioId,terminal);
+	}
+	
+	//////
+	public List<RvOmisosDetalleVehicular> getAllDetalleOmisosVehicular(int inspeccionId) throws Exception{
+		return getService().getAllDetalleOmisosVehicular(inspeccionId);
+	};
+	
+	public List<RvClaseVehiculo> getAllClaseVehiculos() throws Exception {
+		return getService().getAllClaseVehiculos();
+	}
+	public List<RvCategoriaVehiculo> getAllCategoriaVehiculos() throws Exception {
+		return getService().getAllCategoriaVehiculos();
+	}	
+	public List<RvMarca> getAllMarcaVehiculos() throws Exception {
+		return getService().getAllMarcaVehiculos();
+	}
+	public List<RvTipoMotor> getAllMotorVehiculos() throws Exception {
+		return getService().getAllMotorVehiculos();
+	}	
+	public List<RvTipoCarroceria> getAllCarroceriaVehiculos() throws Exception {
+		return getService().getAllCarroceriaVehiculos();
+	}	
+	
+	/////
+	
+	/**
+	 * Generación de RD Vehicular::
+	 */
+	public List<FindCcLote> getAllLoteOmiso() throws Exception {
+		return getService().getAllLoteOmiso();
+	}
+	public int actualizarDjOmisaVehicular (Integer loteId) throws Exception {
+		return getService().actualizarDjOmisaVehicular(loteId,getUser().getUsuarioId(), getUser().getTerminal());
+	}
+	public List<RvDjvehicular> getAllDjOmiso(Integer loteId) throws Exception{
+		return getService().getAllDjOmiso(loteId);
+	}
+	
+	/***
+	 * Detalle de Imp. Vehicular
+	 */
+	public List<RvOmisosDetalleVehicular> getAllDetalleVerificacion(int reqId) throws Exception {
+		return getService().getAllDetalleVerificacion(reqId);
+	}
+	
+	public List<RvMarca> findRvMarca(int categoria) throws Exception {
+		return getService().findRvMarca(categoria);
+	}
+	
+	public List<RvModeloVehiculo> getAllRvModeloVehiculo(int marcaVehiculoId,
+			int categoriaVehiculoId) throws Exception {
+		return getService().getAllRvModeloVehiculo(marcaVehiculoId,
+				categoriaVehiculoId);
+	}
+	public DatosNecesariosDeterDTO getAllAnioFabricacion(int reqId,int anio) throws Exception {
+		return getService().getAllAnioFabricacion(reqId,anio);
+	}
+	
+	public BigDecimal getMontoAnioMenorAntigDetalle(int categoriaId, int  marcaVehiculoId, int modeloVehiculoId,int periodoAfectacion) throws SisatException{
+		return getService().getMontoAnioMenorAntigDetalle(categoriaId,marcaVehiculoId,modeloVehiculoId,periodoAfectacion);
+	}
+	
+	public int actualizarImpuestoVehicular (RvOmisosDetalleVehicular deter) throws Exception {
+		return getService().actualizarImpuestoVehicular(deter);
+	}
+	public DatosNecesariosDeclaracionDTO getDatosNecesariosDeclaracionDetalle(int reqDetId,int reqId,int anio) throws Exception {
+		return getService().getDatosNecesariosDeclaracionDetalle(reqDetId,reqId,anio);
+	}
+	
+	public Integer getVehiculoFiscalizado(int reqId ) throws Exception {
+		return getService().getVehiculoFiscalizado(reqId);
+	}
+	public int actualizarUbicacion(int reqId,int paquete,int annioPaquete,int expediente) throws Exception{
+		return getService().actualizarUbicacion(reqId,paquete,annioPaquete,expediente);
+	}
+	
+	//--==CRAMIREZ==--
+	public List<FindCcLote> getAllLotesVehicular() throws Exception {
+		return getService().getAllLotesVehicular();
+	}
+	
+	public List<Integer> estadisticaLoteMasivo(int loteId) 
+	throws Exception{
+		return getService().estadisticaLoteMasivo(loteId);
+	}
+
+	//@Override
+	public List<MarcaModeloTemporalDTO> getMarcaModeloTemporal(int loteId, int tipo) throws Exception {
+		// TODO Auto-generated method stub
+		return getService().getMarcaModeloTemporal(loteId, tipo);
+	};
+
+}

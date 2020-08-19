@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pa_record_conductornoinf" pageWidth="421" pageHeight="595" whenNoDataType="AllSectionsNoDetail" columnWidth="381" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6ce58b7c-ffca-4e17-9ab4-d52dd70d27e3">
+	<property name="ireport.zoom" value="2.143588810000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\report\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="nombre_infractor" class="java.lang.String"/>
+	<parameter name="tipo_documento" class="java.lang.String"/>
+	<parameter name="numero_documento" class="java.lang.String"/>
+	<parameter name="numero_licencia" class="java.lang.String"/>
+	<parameter name="tipo_doc_identidad" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ruta_image" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<variable name="TOTAL_PUNTOS" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="111" splitType="Stretch">
+			<image>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="75" height="36" isRemoveLineWhenBlank="true" uuid="f2e9a9dd-fffc-4d78-9c85-4224590706f2"/>
+				<imageExpression><![CDATA[$P{ruta_image}+"logo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="107" y="0" width="113" height="15" isRemoveLineWhenBlank="true" uuid="a1d4305a-50b0-4fa1-90aa-b12e95a2c8a1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[RECORD DE CONDUCTOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="5" y="65" width="60" height="13" isRemoveLineWhenBlank="true" uuid="03898cf3-7eb6-46d7-a5c1-9dc0c56c95b2"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="5" y="78" width="60" height="13" isRemoveLineWhenBlank="true" uuid="bf155a80-4e44-44cc-b7d1-d4a13ccdeeb7"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documento:]]></text>
+			</staticText>
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="58" width="381" height="1" isRemoveLineWhenBlank="true" uuid="ec967ed7-8e4b-4fc6-a59b-fb88e5ed11c6"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="47" width="200" height="11" isRemoveLineWhenBlank="true" uuid="78657219-cd9b-4a68-9acc-36c2a5ae831b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Servicio de Administración Tributaria de Cajamarca]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="235" y="47" width="146" height="11" isRemoveLineWhenBlank="true" uuid="e6f94df2-0e17-4609-bb33-a16c1ea449aa"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Municipalidad Provincial de Cajamarca]]></text>
+			</staticText>
+			<image>
+				<reportElement stretchType="RelativeToBandHeight" x="292" y="0" width="42" height="47" isRemoveLineWhenBlank="true" uuid="2c13c807-38d2-40b5-be40-f5af5f707b0b"/>
+				<imageExpression><![CDATA[$P{ruta_image}+"escudo_caj.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="94" y="15" width="83" height="11" isRemoveLineWhenBlank="true" uuid="14aba3ae-0a36-4c8f-8711-ae8b2c2b8cf0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Fecha de expedición :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="209" y="77" width="67" height="13" isRemoveLineWhenBlank="true" uuid="bd921f39-3593-404b-a5e4-f5035b7605ce"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Licencia Nro :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="65" y="65" width="316" height="13" isRemoveLineWhenBlank="true" uuid="984b033f-4c7a-4f21-8267-867d7ad5b29f"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{nombre_infractor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="65" y="78" width="26" height="13" isRemoveLineWhenBlank="true" uuid="87b3af96-abc6-45b9-ba2a-29f6be8c0b8a"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tipo_documento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="91" y="78" width="117" height="13" isRemoveLineWhenBlank="true" uuid="7f9b97fc-716e-4e3c-9b71-8723ed664638"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{numero_documento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="275" y="77" width="100" height="14" isRemoveLineWhenBlank="true" uuid="92b76219-5270-4467-934a-8c191f38071b"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{numero_licencia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="10" y="96" width="357" height="15" isRemoveLineWhenBlank="true" uuid="60da48bd-fbe9-4d23-ba02-f57d3e2ff75c"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[El conductor no presenta Infracciones de Tránsito]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
+				<reportElement key="textField" x="177" y="15" width="91" height="11" forecolor="#000000" backcolor="#FFFFFF" uuid="fc35832a-66a1-4bbd-8f4d-d833c6ef2a20"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="20" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch">
+			<line>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="-17" width="381" height="1" isRemoveLineWhenBlank="true" uuid="4a7a8302-17dd-4e71-b2b7-d5537d4bb472"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="-15" width="380" height="13" isRemoveLineWhenBlank="true" uuid="d4ecd9df-89fa-4da6-a5ee-3678015d217e"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Av. De los Incas S/N Complejo "Qhapac Ñan" Teléfonos: (076) 630671 - (076)630689 Página WEB: www.satcajamarca.gob.pe]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="33" y="16" width="348" height="26" isRemoveLineWhenBlank="true" uuid="449c4d15-2244-42e4-a199-28ae9dac6eb5"/>
+				<textElement textAlignment="Justified">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[El presente Record de Conductor, únicamente registra las infracciones cometidas dentro de la Provincia de Cajamarca.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="5" y="16" width="28" height="13" isRemoveLineWhenBlank="true" uuid="3238aac9-3df8-46fc-a9f5-95eeca22c6c6"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Nota :]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

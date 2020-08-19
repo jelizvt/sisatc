@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<head>
+<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+
+<title>#{msg['rv.pagina.titulo']}</title>
+
+<script type="text/javascript">
+</script>
+
+</head>
+
+<body onload="loadFocus()">
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<a4j:loadScript src="/js/vehicular/djvehicular.js" />
+
+	<h:form id="frmRegistroVehicular" prependId="false">
+		<rich:panel id="pnlDatosDJ" style="min-width: 1000px;">
+			<f:facet name="header">#{msg['rv.titulodatosdeclaracion']}</f:facet>
+			<table cellpadding="6">
+				<tbody>
+					<tr>
+						<td width="150"><h:outputLabel
+								value="#{msg['rv.nrodeclaracion']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td width="250"><h:inputText id="txtNroDecla"
+								value="#{descargoVehicularManaged.numeroDecla}" disabled="true" /></td>
+						<td width="150"><h:outputLabel
+								value="#{msg['rv.fechadeclaracion']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><h:panelGroup>
+								<rich:calendar value="#{descargoVehicularManaged.fechaDecla}"
+									locale="#{msg['param.localedate']}" enableManualInput="true"
+									datePattern="#{msg['param.datepattern']}"
+									timeZone="#{aplicationManaged.timeZone}" disable="true"></rich:calendar>
+							</h:panelGroup></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.motivo']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedMotivoDecla}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" disabled="true"
+								width="200" onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmMotivoDecla"
+									value="#{descargoVehicularManaged.lstMotivoDecla}" />
+							</rich:comboBox></td>
+						<td><h:outputLabel value="#{msg['rv.aniodeclaracion']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><h:inputText
+								value="#{descargoVehicularManaged.anioDecla}" maxlength="4"
+								disabled="true" style="width: 60px;" /></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.motivodescargo']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedMotivoDescargo}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								onkeypress="return showListCbo(this,event)"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmMotivoDescargo"
+									value="#{descargoVehicularManaged.lstMotivoDescargo}" />
+							</rich:comboBox></td>
+					</tr>
+					<tr>
+							<td><h:outputLabel value="#{msg['rv.glosa']}: "/></td>
+							<td colspan="3"><h:inputTextarea value="#{descargoVehicularManaged.glosa}" cols="75" rows="2" maxlength="500" size="500"/></td>							
+					</tr>
+				</tbody>
+			</table>
+		</rich:panel>
+		<div style="width: 100%; height: 4px;"></div>
+		<rich:panel id="pnlDatosVehiculo" style="min-width: 1000px;">
+			<f:facet name="header">#{msg['rv.titulodatosvehiculo']}</f:facet>
+			<table cellpadding="6">
+				<tbody>
+					<tr>
+						<td width="150"><h:outputLabel value="#{msg['rv.placa']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td width="250"><h:inputText id="txtPlaca"
+								value="#{descargoVehicularManaged.placaVehic}" disabled="true"></h:inputText></td>
+						<td width="150"><h:outputLabel
+								value="#{msg['rv.nromotor']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td width="250"><h:inputText id="txtNumMotor"
+								value="#{descargoVehicularManaged.nroMotorVehic}"
+								disabled="true"></h:inputText></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.fechaprimerainsreg']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:calendar
+								value="#{descargoVehicularManaged.fechaPrimeraInsReg}"
+								locale="#{msg['param.localedate']}"
+								datePattern="#{msg['param.datepattern']}"
+								timeZone="#{aplicationManaged.timeZone}" disabled="true"></rich:calendar>
+						</td>
+						<td><h:outputLabel value="#{msg['rv.aniofabricacion']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><h:inputText
+								value="#{descargoVehicularManaged.anioFabricVehic}"
+								disabled="true" style="width: 60px;" /></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.clase']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedClaseVehic}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmClase"
+									value="#{descargoVehicularManaged.lstClaseVehiculo}" />
+							</rich:comboBox></td>
+						<td><h:outputLabel value="#{msg['rv.categoria']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedCategoriaVehic}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								disabled="true" onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmCategoria"
+									value="#{descargoVehicularManaged.lstCategoriaVehiculo}" />
+							</rich:comboBox></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.marca']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox id="cboMarcaVehic"
+								value="#{descargoVehicularManaged.selectedMarcaVehic}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								disabled="true" onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmMarca"
+									value="#{descargoVehicularManaged.lstMarcaVehiculo}" />
+							</rich:comboBox></td>
+						<td><h:outputLabel value="#{msg['rv.modelo']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox id="cboModeloVehic"
+								value="#{descargoVehicularManaged.selectedModeloVehic}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								disabled="true" onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmModelo"
+									value="#{descargoVehicularManaged.lstModelo}" />
+							</rich:comboBox></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.tipomotor']}: ">
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedTipoMotorVehic}"
+								width="200" disabled="true"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmTipoMotor"
+									value="#{descargoVehicularManaged.lstTipoMotor}" />
+							</rich:comboBox></td>
+						<td><h:outputLabel value="#{msg['rv.carroceria']}: ">
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedCarroceriaVehic}"
+								width="200" disabled="true"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmCarroceria"
+									value="#{descargoVehicularManaged.lstCarroceria}" />
+							</rich:comboBox></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.transmision']}: ">
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedTransmisionVehic}"
+								width="200" disabled="true"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmTransmision"
+									value="#{descargoVehicularManaged.lstTransmision}" />
+							</rich:comboBox></td>
+						<td><h:outputLabel value="#{msg['rv.traccion']}: ">
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedTraccionVehic}"
+								width="200" disabled="true"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmTraccion"
+									value="#{descargoVehicularManaged.lstTraccion}" />
+							</rich:comboBox></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.pesobruto']}: ">
+							</h:outputLabel></td>
+						<td><h:inputText id="txtPesoBruto"
+								value="#{descargoVehicularManaged.pesoBrutoVehic}"
+								disabled="true" /></td>
+						<td><h:outputLabel value="#{msg['rv.cilindros']}: ">
+							</h:outputLabel></td>
+						<td><h:inputText
+								value="#{descargoVehicularManaged.cilindrosVehic}"
+								disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel
+								value="#{msg['rv.condicionespecialvehic']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox id="cboCondicionEspecial"
+								value="#{descargoVehicularManaged.selectedCondicionVehic}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								disabled="true" onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmCondicionEspecial"
+									value="#{descargoVehicularManaged.lstCondicionVehic}" />
+							</rich:comboBox></td>
+						<td><h:outputLabel value="Fecha Transferencia/Venta: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:calendar
+								value="#{descargoVehicularManaged.fechaDescargo}" enableManualInput="true"
+								locale="#{msg['param.localedate']}"
+								datePattern="#{msg['param.datepattern']}" 
+								required="true" 
+								requiredMessage="Debe indicar la Fecha de Transferencia"
+								inputStyle="width: 60px;padding-left: 5px;"
+								inputClass="maskDate"></rich:calendar>
+								<rich:jQuery selector=".maskDate" query="mask('99/99/9999',{placeholder:'_'})" />
+							</td>
+					</tr>
+					<tr><td></td><td></td>
+						<td><h:outputLabel value="Valor Transferencia/Venta (S/.): ">
+							</h:outputLabel></td>
+						<td><h:inputText
+								value="#{descargoVehicularManaged.valAdqSoles}" /></td>
+					</tr>
+
+
+				</tbody>
+			</table>
+		</rich:panel>
+		<div style="width: 100%; height: 4px;"></div>
+		<rich:panel id="pnlTransferente"
+			style="height:220px; min-width: 1000px;">
+			<f:facet name="header">#{msg['rv.titulodatosadquiriente']}</f:facet>
+			<table cellpadding="6" width="100%">
+				<tbody>
+					<tr>
+						<td width="180"><label>#{msg['rv.notaria']}: </label><span style="color: red;">*</span></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedNotaria}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="300"
+								onkeypress="return showListCbo(this,event)"
+								onblur="validaInputCbo(this)">
+								<f:selectItems value="#{descargoVehicularManaged.lstNotarias}"></f:selectItems>
+							</rich:comboBox></td>
+					</tr>
+				</tbody>
+			</table>
+				<a4j:commandButton
+					actionListener="#{descargoVehicularManaged.agregarTransferente}"
+					value="#{msg['rv.buscaraquiriente']}"
+					oncomplete="Richfaces.showModalPanel('modalSelecTransferente')"></a4j:commandButton>
+				
+				<a4j:commandButton action="#{descargoVehicularManaged.nuevoAdquiriente}" immediate="true"
+								value="Agregar adquiriente" reRender="id_panelprincipalregistropersona"
+								oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : 
+								'Richfaces.showModalPanel(\'modalRegistroPersonaBasico\')'}">
+					<f:param name="destinoRefresh" value="tblTransferentes" />
+				</a4j:commandButton>
+			<rich:extendedDataTable id="tblTransferentes"
+				value="#{descargoVehicularManaged.lstTransferentes}" var="record"
+				width="100%" height="120px" sortMode="single" selectionMode="single"
+				enableContextMenu="false"
+				noDataLabel="#{msg['rv.noexistentransferentes']}">
+
+				<rich:column width="40" style="text-align: center">
+					<a4j:commandButton title="#{msg['gn.eliminar']}"
+						actionListener="#{descargoVehicularManaged.eliminarTransfDeLista}"
+						reRender="tblTransferentes" image="/images/remove.png"
+						style="width: 16px; height: 16px;"></a4j:commandButton>
+				</rich:column>
+
+				<rich:column width="10%">
+					<f:facet name="header">#{msg['gn.id']}</f:facet>
+					<h:outputText value="#{record.personaId}" />
+				</rich:column>
+
+				<rich:column width="30%">
+					<f:facet name="header">#{msg['gn.tipodoc']}</f:facet>
+					<h:outputText value="#{record.tipoDocIdentidad}" />
+				</rich:column>
+
+				<rich:column width="10%">
+					<f:facet name="header">#{msg['gn.nrodoc']}</f:facet>
+					<h:outputText value="#{record.nroDocuIdentidad}" />
+				</rich:column>
+
+				<rich:column width="30%">
+					<f:facet name="header">#{msg['gn.apenomorazonsocial']}</f:facet>
+					<h:outputText
+						value="#{record.apellidosNombres} #{record.apellidosNombres != null ? record.razonSocial != null ? ' - ': '' : ''} #{record.razonSocial}" />
+				</rich:column>
+
+				<!--<rich:column width="100">
+					<f:facet name="header">#{msg['rv.porcentaje']} (#{msg['gn.sporcentaje']})</f:facet>
+					<h:inputText value="#{record.porcentajeDescargo}"
+						onkeypress="return numbersonly(this.value,event)"
+						style="width: 100%;" />
+				</rich:column>-->
+
+			</rich:extendedDataTable>
+		</rich:panel>
+		<div style="width: 100%; height: 4px;"></div>
+		<rich:panel id="pnlAnexos" style="height: 250px; min-width: 1000px;">
+			<f:facet name="header">#{msg['rv.tituloanexos']}</f:facet>
+			<a4j:commandButton value="#{msg['rv.agregardocs']}"
+				actionListener="#{descargoVehicularManaged.mostrarPanelDocSustent}"
+				immediate="true"
+				oncomplete="Richfaces.showModalPanel('modalSelecDocAnexos')"
+				reRender="tblAnexos,tblDocSusnten"></a4j:commandButton>
+				<span style="color: red;">*</span>
+			<rich:extendedDataTable id="tblAnexos"
+				value="#{descargoVehicularManaged.lstAnexos}" var="record"
+				width="100%" height="150px" sortMode="single" selectionMode="single"
+				enableContextMenu="false" noDataLabel="#{msg['rv.noexistenanexos']}">
+
+				<rich:column width="40" style="text-align: center">
+					<a4j:commandButton title="#{msg['gn.eliminar']}"
+						actionListener="#{descargoVehicularManaged.eliminarAnexoDeLista}"
+						image="/images/remove.png" reRender="tblAnexos"
+						style="width: 16px; height: 16px;"></a4j:commandButton>
+				</rich:column>
+
+				<rich:column width="50%">
+					<f:facet name="header">#{msg['gn.descripciondoc']}</f:facet>
+					<h:outputText value="#{record.descripcionDoc}" />
+				</rich:column>
+
+				<rich:column width="20%">
+					<f:facet name="header">#{msg['rv.glosa']}</f:facet>
+					<h:inputText value="#{record.glosaDoc}"
+						styleClass="textUpperCase" converter="uppeCaseConverter" style="width: 100%" />
+				</rich:column>
+
+				<rich:column width="20%">
+					<f:facet name="header">#{msg['gn.docadjunto']}</f:facet>
+					<h:outputText value="#{record.nomDocAdjunto}" />
+				</rich:column>
+			</rich:extendedDataTable>
+		</rich:panel>
+
+		<div style="width: 100%; text-align: center; margin-top: 20px;">
+			<a4j:commandButton value="#{msg['gn.presentacionpreliminar']}"
+				actionListener="#{descargoVehicularManaged.verPreview}"
+				oncomplete="#{facesContext.maximumSeverity.ordinal == 0 ? 'openWindow(\'../sisat/vehicular/preliminardescargo.jsf\')' : 'Richfaces.showModalPanel(\'mpErrors\')' }"
+				reRender="pnlPreliminar,panelconfirma,mpErrors"
+				style="width: 150px;" />
+			<a4j:commandButton value="#{msg['gn.cancelar']}"
+				actionListener="#{descargoVehicularManaged.cancelar}"
+				immediate="true" style="width: 150px; margin-left:2px;">
+			</a4j:commandButton>
+		</div>
+
+		<div style="width: 100%; text-align: center; margin-top: 30px;">
+			<h:panelGroup id="pnlPreliminar">
+				<table style="margin: 0 auto;" cellpadding="6">
+					<tbody>
+						<tr>
+							<td><h:outputLabel value=" #{msg['gn.avisocreardeclaj']}"
+									rendered="#{descargoVehicularManaged.estadoDecla=='2'}" /></td>
+							<td><h:selectBooleanCheckbox
+									value="#{descargoVehicularManaged.datosCorrectos}"
+									rendered="#{descargoVehicularManaged.estadoDecla=='2'}">
+									<a4j:support event="onchange"
+										actionListener="#{descargoVehicularManaged.changeDatosCorrectos}"
+										reRender="pnlPreliminar" />
+								</h:selectBooleanCheckbox></td>
+							<td><a4j:commandButton id="btnGenerarDjV"
+									rendered="#{(descargoVehicularManaged.estadoDecla=='2') and (descargoVehicularManaged.datosCorrectos)}"
+									value="#{msg['gn.generardj']}"
+									actionListener="#{descargoVehicularManaged.generarDJ}"
+									oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'modalResultadoGenerarDJ\');' : 'Richfaces.showModalPanel(\'modalResultadoGenerarDJ\');' };"
+									reRender="pnlBotonesAceptarResultDJ" style="width:100px;"
+									immediate="true" status="ajaxStatus"/></td>
+						</tr>
+					</tbody>
+				</table>
+			</h:panelGroup>
+		</div>
+	</h:form>
+
+	<rich:modalPanel id="modalSelecTransferente" autosized="true"
+		width="800" height="500">
+		<f:facet name="header">#{msg['rv.agregaradquirientes']}</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideIconST"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalSelecTransferente"
+					attachTo="hideIconST" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/vehicular/buscarpersona.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="modalSelecDocAnexos" autosized="true" width="800"
+		height="500">
+		<f:facet name="header">
+			<h:outputText value="#{msg['rv.tituloanexos']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="gpSelecDocAnexos" styleClass="hidelink" />
+				<rich:componentControl for="modalSelecDocAnexos"
+					attachTo="gpSelecDocAnexos" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:extendedDataTable id="tblDocSusnten"
+				value="#{descargoVehicularManaged.lstDocSusten}" var="item"
+				width="780" height="450px">
+				<rich:column width="30">
+					<h:selectBooleanCheckbox id="chkDoc" value="#{item.selected}"
+						onchange="focusNroDocAnexos(this)" />
+				</rich:column>
+				<rich:column width="350">
+					<f:facet name="header">
+						<h:outputLabel value="#{msg['gn.descripciondoc']}" />
+					</f:facet>
+					<h:outputText value="#{item.descripcion}" />
+				</rich:column>
+				<rich:column width="180">
+					<f:facet name="header">
+						<h:outputLabel value="#{msg['rv.glosa']}" />
+					</f:facet>
+					<h:inputText id="txtGlosa" value="#{item.glosa}"
+						styleClass="textUpperCase" converter="uppeCaseConverter" style="width: 100%" />
+				</rich:column>
+				<rich:column width="200">
+					<f:facet name="header">
+						<h:outputLabel value="#{msg['gn.docadjunto']}" />
+					</f:facet>
+				</rich:column>
+			</rich:extendedDataTable>
+			<div style="width: 100%; text-align: center; margin-top: 10px;">
+				<a4j:commandButton value="#{msg['gn.aceptar']}"
+					actionListener="#{descargoVehicularManaged.agregarAnexos}"
+					oncomplete="Richfaces.hideModalPanel('modalSelecDocAnexos')"
+					reRender="tblAnexos" style="width: 100px;"></a4j:commandButton>
+				<a4j:commandButton value="#{msg['gn.cancelar']}" immediate="true"
+					onclick="Richfaces.hideModalPanel('modalSelecDocAnexos')"
+					style="margin-left:4px; width: 100px;"></a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="modalResultadoGenerarDJ" autosized="true"
+		width="450">
+
+		<f:facet name="header">
+			<h:outputText value="#{msg['gn.resultado']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="gpResultGenerarDJ" styleClass="hidelink" />
+				<rich:componentControl for="modalResultadoGenerarDJ"
+					attachTo="gpResultGenerarDJ" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<h:panelGroup id="pnlBotonesAceptarResultDJ">
+					<a4j:commandButton id="btnAceptarGenerarDJ"
+						value="#{msg['gn.aceptar']}"
+						rendered="#{descargoVehicularManaged.djGeneradoCorrect}"
+						action="#{sessionManaged.sendRedirectPrincipal}" immediate="true">
+						<f:setPropertyActionListener
+							value="/sisat/vehicular/historicovehiculodj.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandButton>
+					<a4j:commandButton id="btnAceptarGenerarDJ2"
+						value="#{msg['gn.aceptar']}"
+						rendered="#{!descargoVehicularManaged.djGeneradoCorrect}"
+						type="button" immediate="true">
+						<rich:componentControl for="modalResultadoGenerarDJ"
+							attachTo="btnAceptarGenerarDJ2" operation="hide" event="onclick" />
+					</a4j:commandButton>
+				</h:panelGroup>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	
+			<rich:modalPanel id="modalRegistroPersonaBasico" autosized="true"
+					width="800" height="460">
+					<f:facet name="header">Agregar Persona</f:facet>
+					<f:facet name="controls">
+						<h:panelGroup>
+							<h:graphicImage value="/images/modal/close.png" id="hidePersona"
+								styleClass="hidelink" />
+							<rich:componentControl for="modalRegistroPersonaBasico"
+								attachTo="hidePersona" operation="hide" event="onclick" />
+						</h:panelGroup>
+					</f:facet>
+					<h:panelGrid width="100%">
+						<a4j:include viewId="/sisat/persona/registropersonabasico.xhtml"/>
+					</h:panelGrid>
+				</rich:modalPanel>
+
+</body>
+
+</html>

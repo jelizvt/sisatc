@@ -1,0 +1,671 @@
+package com.sat.sisat.predial.managed;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.component.html.HtmlInputText;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+
+import org.richfaces.component.html.HtmlComboBox;
+import org.richfaces.component.html.HtmlExtendedDataTable;
+import org.richfaces.model.selection.SimpleSelection;
+
+import com.sat.sisat.common.business.GeneralBoRemote;
+import com.sat.sisat.common.util.BaseManaged;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.FacesUtil;
+import com.sat.sisat.common.util.WebMessages;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.fiscalizacion.dto.FindInspeccionHistorial;
+import com.sat.sisat.menus.business.MenuBoRemote;
+import com.sat.sisat.menus.dto.SimpleMenuDTO;
+import com.sat.sisat.persistence.entity.GnDenominacionUrbana;
+import com.sat.sisat.persistence.entity.GnTipoDenoUrbana;
+import com.sat.sisat.persistence.entity.GnTipoVia;
+import com.sat.sisat.persistence.entity.GnVia;
+import com.sat.sisat.persistence.entity.RpDjuso;
+import com.sat.sisat.predial.business.CalculoPredialBoRemote;
+import com.sat.sisat.predial.business.RegistroPrediosBoRemote;
+import com.sat.sisat.predial.dto.FindRpDjPredial;
+import com.sat.sisat.predial.dto.FotoPredioConstruccionesDTO;
+import com.sat.sisat.predial.dto.FotoPredioDTO;
+import com.sat.sisat.predial.dto.FotoPredioInstalacionesDTO;
+import com.sat.sisat.tramitedocumentario.dto.ItemBandejaEntradaDTO;
+
+@ManagedBean
+@ViewScoped
+public class BusquedaPredioManaged extends BaseManaged{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4931760346592443997L;
+
+	@EJB
+	RegistroPrediosBoRemote servicio;
+	
+	@EJB
+	CalculoPredialBoRemote calculoPredialBo;
+	
+	@EJB
+	GeneralBoRemote generalBo;
+	
+	@EJB
+	MenuBoRemote menuBo;
+	
+	private String resultado;
+	
+	private String codigoPredio;
+	private String numeroDjPredial;
+	
+	private String nombreVia;
+	private String nombreDenoUrbana;
+	
+	private HtmlInputText txtAUDireccion;
+	private HtmlInputText txtAUNombreVia;
+
+	private HtmlComboBox cmbtipovia;
+	
+	private HtmlComboBox cmbDescVia;
+	
+	private List<SelectItem> lsttipovia=new ArrayList<SelectItem>();
+	private HashMap<String, Integer> mapRpTipovia=new HashMap<String, Integer>();
+	
+	private HtmlComboBox cmbtipoDenoUrbana;
+	private List<SelectItem> lsttipoDenoUrbana=new ArrayList<SelectItem>();
+	private HashMap<String, Integer> mapGntipoDenoUrbana=new HashMap<String, Integer>();
+	
+	private ArrayList<FindRpDjPredial> records;
+	private SimpleSelection selection = new SimpleSelection();
+	private HtmlExtendedDataTable table;
+	private int currentRow;
+	private FindRpDjPredial currentItem = new FindRpDjPredial();
+	
+	private ArrayList<GnVia> lGnVia;
+	
+	private List<FotoPredioDTO> listFotos;
+	private List<FotoPredioConstruccionesDTO> listConstruccionFotos;
+	private List<FotoPredioInstalacionesDTO> listInstalacionesFotos;
+	
+	private GnVia selectedVia;
+	private GnDenominacionUrbana selectedDenUrbana;
+	
+	private String direccion;
+	
+	private FindRpDjPredial selectedFindRpDjPredial=new FindRpDjPredial();
+	
+	// INICIO PERMISOS PARA EL MODULO
+		private List<SimpleMenuDTO> listPermisosSubmenu = new ArrayList<SimpleMenuDTO>();
+		private boolean permisoAgregarRegistrar;
+		private boolean permisoBuscar;
+		private boolean permisoEstadoCuenta;
+		private boolean permisoVerDetalle;
+		private boolean permisoCalcular;
+	// FIN PERMISOS PARA EL MODULO
+		
+	// FOTO PREDIO
+		private String imgpredio;
+		private int posicionImg;
+		private int fotoPredioId;
+		private String fotoContribuyente;
+		private String fotoDireccion;
+	// ==============
+	
+	public FindRpDjPredial getSelectedFindRpDjPredial() {
+		return selectedFindRpDjPredial;
+	}
+
+	public void setSelectedFindRpDjPredial(FindRpDjPredial selectedFindRpDjPredial) {
+		this.selectedFindRpDjPredial = selectedFindRpDjPredial;
+	}
+
+	public BusquedaPredioManaged(){
+		getSessionManaged().setLinkRegresar("/sisat/persona/buscarpersona.xhtml");
+		try {
+			if(getSessionManaged()==null){
+				//return
+			}
+			records=new ArrayList<FindRpDjPredial>();
+		} catch (Exception ex) {
+			// TODO : Controller exception
+		}
+	}
+	
+	
+	
+	@PostConstruct
+	public void init(){
+
+		//imgpredio = "http://172.26.128.130/imagenes_predios/img/1668/35176_1569947405.jpeg";
+		//http://172.26.128.130/imagenes_predios/1668/35176_1569947260.jpeg
+		
+		permisosMenu();
+		try{
+			SimpleDateFormat sdf=new SimpleDateFormat("dd/MM/yyyy");
+			String fechaInicio=sdf.format(Calendar.getInstance().getTime());
+			
+			//GnTipoVia
+	        List<GnTipoVia> lstGnTipoVia=servicio.getAllGnTipoVia();
+			Iterator<GnTipoVia> it = lstGnTipoVia.iterator();  
+			lsttipovia = new ArrayList<SelectItem>();
+			 
+	        while (it.hasNext()){
+	        	GnTipoVia obj = it.next();  
+	            lsttipovia.add(new SelectItem(obj.getDescripcion(),String.valueOf(obj.getTipoViaId())));  
+	        	mapRpTipovia.put(obj.getDescripcion().trim(), obj.getTipoViaId());
+	        }
+	        
+	        //RjMes
+	        List<GnTipoDenoUrbana> lstGnTipoDenoUrbana=servicio.getAllGnTipoDenoUrbana();
+			Iterator<GnTipoDenoUrbana> it2 = lstGnTipoDenoUrbana.iterator();  
+			lsttipoDenoUrbana = new ArrayList<SelectItem>();
+			 
+	        while (it2.hasNext()){
+	        	GnTipoDenoUrbana obj = it2.next();  
+	        	lsttipoDenoUrbana.add(new SelectItem(obj.getDescripcion().trim(),String.valueOf(obj.getTipoDenoId())));
+	        	mapGntipoDenoUrbana.put(obj.getDescripcion().trim(), obj.getTipoDenoId());
+	        }
+	        
+			getPrediosContribuyente(getSessionManaged().getContribuyente().getPersonaId());
+		}catch(Exception e){
+			e.printStackTrace();
+			WebMessages.messageFatal(e);			
+		}
+	}
+	
+	public void permisosMenu() {	
+		try {
+			int submenuId = Constante.DECLARACION_JURADA;
+			
+			int permisoAgregarRegistrarId = Constante.AGREGAR_REGISTRAR;
+			int permisoBuscarId = Constante.BUSCAR;
+			int permisoVerDetalleId = Constante.VER_DETALLE;
+			int permisoEstadoCuentaId = Constante.ESTADO_CUENTA;
+			int permisoCalcularId = Constante.CALCULAR;
+			permisoAgregarRegistrar = false;
+			permisoBuscar = false;
+			permisoVerDetalle = false;
+			permisoEstadoCuenta = false;
+			permisoCalcular = false;
+			
+			listPermisosSubmenu  = menuBo.getAccesosSubmenuUsuario( getSessionManaged().getUsuarioLogIn().getUsuarioId() , submenuId);
+			
+			Iterator<SimpleMenuDTO> menuIterar = listPermisosSubmenu.iterator();
+			while (menuIterar.hasNext()) {
+				SimpleMenuDTO lsm = menuIterar.next();
+				if(lsm.getItemId() == permisoAgregarRegistrarId) {
+					permisoAgregarRegistrar = true;
+				}
+				if(lsm.getItemId() == permisoBuscarId) {
+					permisoBuscar = true;
+				}
+				if(lsm.getItemId() == permisoVerDetalleId) {
+					permisoVerDetalle = true;
+				}
+				if(lsm.getItemId() == permisoEstadoCuentaId) {
+					permisoEstadoCuenta = true;
+				}				
+				if(lsm.getItemId() == permisoCalcularId) {
+					permisoCalcular = true;
+				}									
+			}
+			
+		} catch (SisatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	
+	@PreDestroy
+	public void clear(){
+					
+	}
+	String messageCalculo;
+	public String getMessageCalculo() {
+		return messageCalculo;
+	}
+
+	public void setMessageCalculo(String messageCalculo) {
+		this.messageCalculo = messageCalculo;
+	}
+
+	public void loadViasById(ValueChangeEvent event) {
+		try{
+			String value=(String)event.getNewValue();
+			if(value!=null){
+				Integer tipoViaId=(Integer)mapRpTipovia.get(value);
+				if(tipoViaId!=null){
+					lGnVia=servicio.findGnVia(tipoViaId);	
+				}
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			WebMessages.messageFatal(e);			
+		}
+    }
+	
+	public void getPrediosContribuyente(Integer personaId){
+		try{
+			records=servicio.getRpDjpredial(null,null,null,null,null,null,null,null,null,null,null,personaId,Boolean.TRUE);
+		}catch(Exception e){
+			e.printStackTrace();
+			WebMessages.messageFatal(e);
+		}
+	}
+	
+	List<GnTipoVia> lstGnTipoVia=new LinkedList<GnTipoVia>(); 
+	
+	public void validateComboBox(){
+		String tipovia=(String)getCmbtipovia().getValue();
+		if(tipovia!=null){
+			if(mapRpTipovia.get(tipovia)>0){
+				
+			}
+		}
+	}
+	public void buscar(){
+		try{
+			limpiar();
+			records=new ArrayList<FindRpDjPredial>();
+			
+			if(codigoPredio!=null&&codigoPredio.trim().length()>0){
+				//Buscar por codigo de predio
+				records=servicio.getRpDjpredial(null,null,null,null,codigoPredio,
+						null,null,null,null,null,
+						null,getSessionManaged().getContribuyente().getPersonaId(),Boolean.TRUE);
+			}else if(numeroDjPredial!=null &&numeroDjPredial.trim().length()>0){
+				//Buscar por numero de dj
+				records=servicio.getRpDjpredial(null,null,null,null,null,
+						null,null,null,null,null,
+						Integer.valueOf(numeroDjPredial),getSessionManaged().getContribuyente().getPersonaId(),Boolean.TRUE);
+			}else if(nombreDenoUrbana!=null&&nombreDenoUrbana.trim().length()>0){
+				//buscar por direccion
+				records=servicio.getRpDjpredial(null,null,null,null,null,
+						null,null,null,null,nombreDenoUrbana,
+						null,getSessionManaged().getContribuyente().getPersonaId(),Boolean.TRUE);	
+			}else{
+				//records=new ArrayList<FindRpDjPredial>();
+				records=servicio.getRpDjpredial(null,null,null,null,null,
+						null,null,null,null,null,
+						null,getSessionManaged().getContribuyente().getPersonaId(),Boolean.TRUE);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			WebMessages.messageFatal(e);
+		}
+	}
+	public void limpiar(){
+		if(!(getTxtAUDireccion().getValue()!=null&&getTxtAUDireccion().getValue().toString().trim().length()>0)){
+			selectedFindRpDjPredial=new FindRpDjPredial();
+			setDireccion("");
+		}
+		
+		if(!(getTxtAUNombreVia().getValue()!=null&&getTxtAUNombreVia().getValue().toString().trim().length()>0)){
+			selectedVia=new GnVia();
+			setNombreVia("");
+		}
+	}
+	
+	/**
+	 * Muestra el historial de DJ de un determinado predio
+	 * @return
+	 */
+	public String actualizacion(){
+		try{
+			if(currentItem!=null){
+				FacesUtil.setSessionMapValue(FacesContext.getCurrentInstance(), "RECORD_STATUS",Constante.RECORD_STATUS_UPDATE);
+				FacesUtil.setSessionMapValue(FacesContext.getCurrentInstance(), "NextPredioId",currentItem.getPredioId());
+				FacesUtil.setSessionMapValue(FacesContext.getCurrentInstance(), "NextDjId",currentItem.getDjId());
+				getSessionMap().put("findRpDjPredial", currentItem);
+			}else{
+				//selecciones
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			WebMessages.messageFatal(e);
+		}
+		return sendRedirectPrincipal();
+	}
+	
+	
+	public void getFotos(int predioId, String contribuyente, String direccion) {
+		System.out.println("=============");
+		System.out.println(predioId);
+		
+		fotoPredioId = predioId;
+		fotoContribuyente = contribuyente;
+		fotoDireccion = direccion;
+		
+		try {
+			listFotos=servicio.getFotoPredio(predioId);
+			
+			int catidad = listFotos.size();
+			
+			System.out.println(catidad);
+			
+			if (catidad <= 0) {
+				System.out.println("entre");
+				addErrorMessage("El predio no cuenta con fotos registradas.");
+				return;
+			}else {
+				listConstruccionFotos = servicio.getFotoPredioConstrucciones(predioId);
+				listInstalacionesFotos = servicio.getFotoPredioInstalaciones(predioId);
+				
+				posicionImg = 0;
+				this.imgpredio  = listFotos.get(posicionImg).getUrl();
+								
+				System.out.println(this.imgpredio);
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void regresarImg() {
+		int catidad = listFotos.size() - 1;
+		
+		if(this.posicionImg > 0) {
+			this.posicionImg--;
+			this.imgpredio  = listFotos.get(posicionImg).getUrl();
+		}else if(this.posicionImg == 0){
+			this.posicionImg= catidad;
+			this.imgpredio  = listFotos.get(posicionImg).getUrl();
+		}
+		
+	}
+	
+	public void adelantarImg() {
+		int catidad = listFotos.size() - 1;
+	
+		if(this.posicionImg < catidad) {
+			this.posicionImg++;
+			this.imgpredio  = listFotos.get(posicionImg).getUrl();
+		}else if(this.posicionImg == catidad){
+			this.posicionImg= 0;
+			this.imgpredio  = listFotos.get(posicionImg).getUrl();
+		}
+		
+		System.out.println(this.imgpredio);
+		
+	}
+	
+	public void inspecionarPredio() {	
+		try {
+			servicio.registrarFotoInspeccion(1,getSessionManaged().getContribuyente().getPersonaId(),fotoPredioId,0,0,0,null,getSessionManaged().getUsuarioLogIn().getUsuarioId(),getSessionManaged().getTerminalLogIn());
+			listConstruccionFotos = servicio.getFotoPredioConstrucciones(getSessionManaged().getContribuyente().getPersonaId());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public String primeraInscripcion(){
+		return "registro";
+	}
+	public String getResultado() {
+		return resultado;
+	}
+	public void setResultado(String resultado) {
+		this.resultado = resultado;
+	}
+	
+	public List<SelectItem> getLsttipovia() {
+		return lsttipovia;
+	}
+	public void setLsttipovia(List<SelectItem> lsttipovia) {
+		this.lsttipovia = lsttipovia;
+	}
+	
+	public HtmlComboBox getCmbtipovia() {
+		return cmbtipovia;
+	}
+
+	public void setCmbtipovia(HtmlComboBox cmbtipovia) {
+		this.cmbtipovia = cmbtipovia;
+	}
+
+	public HtmlComboBox getCmbtipoDenoUrbana() {
+		return cmbtipoDenoUrbana;
+	}
+
+	public void setCmbtipoDenoUrbana(HtmlComboBox cmbtipoDenoUrbana) {
+		this.cmbtipoDenoUrbana = cmbtipoDenoUrbana;
+	}
+
+	public List<SelectItem> getLsttipoDenoUrbana() {
+		return lsttipoDenoUrbana;
+	}
+
+	public void setLsttipoDenoUrbana(List<SelectItem> lsttipoDenoUrbana) {
+		this.lsttipoDenoUrbana = lsttipoDenoUrbana;
+	}
+	
+	public String getCodigoPredio() {
+		return codigoPredio;
+	}
+
+	public void setCodigoPredio(String codigoPredio) {
+		this.codigoPredio = codigoPredio;
+	}
+
+	public String getNumeroDjPredial() {
+		return numeroDjPredial;
+	}
+
+	public void setNumeroDjPredial(String numeroDjPredial) {
+		this.numeroDjPredial = numeroDjPredial;
+	}
+
+	public String getNombreVia() {
+		return nombreVia;
+	}
+
+	public void setNombreVia(String nombreVia) {
+		this.nombreVia = nombreVia;
+	}
+
+	public String getNombreDenoUrbana() {
+		return nombreDenoUrbana;
+	}
+
+	public void setNombreDenoUrbana(String nombreDenoUrbana) {
+		this.nombreDenoUrbana = nombreDenoUrbana;
+	}
+	
+	public SimpleSelection getSelection() {
+		return selection;
+	}
+
+	public void setSelection(SimpleSelection selection) {
+		this.selection = selection;
+	}
+
+	public HtmlExtendedDataTable getTable() {
+		return table;
+	}
+
+	public void setTable(HtmlExtendedDataTable table) {
+		this.table = table;
+	}
+
+	public int getCurrentRow() {
+		return currentRow;
+	}
+
+	public void setCurrentRow(int currentRow) {
+		this.currentRow = currentRow;
+	}
+	public ArrayList<FindRpDjPredial> getRecords() {
+		return records;
+	}
+
+	public void setRecords(ArrayList<FindRpDjPredial> records) {
+		this.records = records;
+	}
+
+	public FindRpDjPredial getCurrentItem() {
+		return currentItem;
+	}
+
+	public void setCurrentItem(FindRpDjPredial currentItem) {
+		this.currentItem = currentItem;
+	}
+	public GnVia getSelectedVia() {
+		return selectedVia;
+	}
+	public void setSelectedVia(GnVia selectedVia) {
+		this.selectedVia = selectedVia;
+	}
+	public GnDenominacionUrbana getSelectedDenUrbana() {
+		return selectedDenUrbana;
+	}
+	public void setSelectedDenUrbana(GnDenominacionUrbana selectedDenUrbana) {
+		this.selectedDenUrbana = selectedDenUrbana;
+	}
+
+	public HtmlInputText getTxtAUDireccion() {
+		return txtAUDireccion;
+	}
+
+	public void setTxtAUDireccion(HtmlInputText txtAUDireccion) {
+		this.txtAUDireccion = txtAUDireccion;
+	}
+
+	public HtmlInputText getTxtAUNombreVia() {
+		return txtAUNombreVia;
+	}
+
+	public void setTxtAUNombreVia(HtmlInputText txtAUNombreVia) {
+		this.txtAUNombreVia = txtAUNombreVia;
+	}
+	
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public HtmlComboBox getCmbDescVia() {
+		return cmbDescVia;
+	}
+
+	public void setCmbDescVia(HtmlComboBox cmbDescVia) {
+		this.cmbDescVia = cmbDescVia;
+	}
+
+	public List<SimpleMenuDTO> getListPermisosSubmenu() {
+		return listPermisosSubmenu;
+	}
+
+	public void setListPermisosSubmenu(List<SimpleMenuDTO> listPermisosSubmenu) {
+		this.listPermisosSubmenu = listPermisosSubmenu;
+	}
+
+	public boolean isPermisoAgregarRegistrar() {
+		return permisoAgregarRegistrar;
+	}
+
+	public void setPermisoAgregarRegistrar(boolean permisoAgregarRegistrar) {
+		this.permisoAgregarRegistrar = permisoAgregarRegistrar;
+	}
+
+	public boolean isPermisoBuscar() {
+		return permisoBuscar;
+	}
+
+	public void setPermisoBuscar(boolean permisoBuscar) {
+		this.permisoBuscar = permisoBuscar;
+	}
+
+	public boolean isPermisoEstadoCuenta() {
+		return permisoEstadoCuenta;
+	}
+
+	public void setPermisoEstadoCuenta(boolean permisoEstadoCuenta) {
+		this.permisoEstadoCuenta = permisoEstadoCuenta;
+	}
+
+	public boolean isPermisoVerDetalle() {
+		return permisoVerDetalle;
+	}
+
+	public void setPermisoVerDetalle(boolean permisoVerDetalle) {
+		this.permisoVerDetalle = permisoVerDetalle;
+	}
+
+	public boolean isPermisoCalcular() {
+		return permisoCalcular;
+	}
+
+	public void setPermisoCalcular(boolean permisoCalcular) {
+		this.permisoCalcular = permisoCalcular;
+	}
+
+	public String getImgpredio() {
+		return imgpredio;
+	}
+
+	public void setImgpredio(String imgpredio) {
+		this.imgpredio = imgpredio;
+	}
+
+	public List<FotoPredioConstruccionesDTO> getListConstruccionFotos() {
+		return listConstruccionFotos;
+	}
+
+	public void setListConstruccionFotos(List<FotoPredioConstruccionesDTO> listConstruccionFotos) {
+		this.listConstruccionFotos = listConstruccionFotos;
+	}
+
+	public List<FotoPredioInstalacionesDTO> getListInstalacionesFotos() {
+		return listInstalacionesFotos;
+	}
+
+	public void setListInstalacionesFotos(List<FotoPredioInstalacionesDTO> listInstalacionesFotos) {
+		this.listInstalacionesFotos = listInstalacionesFotos;
+	}
+
+	public int getFotoPredioId() {
+		return fotoPredioId;
+	}
+
+	public void setFotoPredioId(int fotoPredioId) {
+		this.fotoPredioId = fotoPredioId;
+	}
+
+	public String getFotoContribuyente() {
+		return fotoContribuyente;
+	}
+
+	public void setFotoContribuyente(String fotoContribuyente) {
+		this.fotoContribuyente = fotoContribuyente;
+	}
+
+	public String getFotoDireccion() {
+		return fotoDireccion;
+	}
+
+	public void setFotoDireccion(String fotoDireccion) {
+		this.fotoDireccion = fotoDireccion;
+	}
+	
+	
+}

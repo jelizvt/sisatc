@@ -1,0 +1,139 @@
+package com.sat.sisat.cobranzacoactiva.business;
+
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.ejb.Remote;
+
+import com.sat.sisat.cobranzacoactiva.dto.FindCcLoteDetalleActoExp;
+import com.sat.sisat.cobranzacoactiva.dto.FindCcLoteExigible;
+import com.sat.sisat.cobranzacoactiva.dto.FindCcRecHistorico;
+import com.sat.sisat.cobranzacoactiva.dto.FindCcRecTipo;
+import com.sat.sisat.controlycobranza.dto.FindCcLote;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.obligacion.dto.ObligacionDTO;
+import com.sat.sisat.persistence.entity.GnRemate;
+
+@Remote
+public interface CobranzaCoactivaBoRemote {
+
+	public Boolean contribEnCobranzaCoactiva(Integer personaId)
+			throws SisatException;
+
+	public Boolean resultadoDjsSinDeterminar(Integer personaId)
+			throws SisatException, SQLException;
+
+	public abstract List<FindCcLoteDetalleActoExp> getAllFindCcLoteExp(
+			Integer lote_id) throws Exception;
+
+	public List<FindCcLoteExigible> getAllFindLote() throws Exception;
+
+	public List<FindCcLoteDetalleActoExp> getAllDeudaExigibleOpPredialVehicular(
+			Integer tipoActo, Integer conceptoId, Integer anio,
+			BigDecimal montoMinimo, Integer flagUbicacion) throws Exception;
+
+	public List<FindCcLoteDetalleActoExp> getAllDeudaExigibleRdArbitriosyRm(
+			Integer tipoActo, Integer conceptoId, Integer anio,
+			BigDecimal montoMinimo, Integer flagUbicacion) throws Exception;
+
+	public List<FindCcLoteDetalleActoExp> getAllDeudaExigibleRdPredial(
+			Integer tipoActo, Integer conceptoId, Integer anio,
+			BigDecimal montoMinimo, Integer flagUbicacion) throws Exception;
+
+	public List<FindCcLoteDetalleActoExp> getAllDeudaExigibleRs(
+			Integer tipoActo, Integer conceptoId, Integer anio,
+			BigDecimal montoMinimo, Integer flagUbicacion) throws Exception;
+
+	public abstract List<FindCcLote> getAllFindCcLoteDeudaExigible(Integer loteId,Integer annoLote)
+			throws Exception; 
+	
+	public abstract int registrarActoDeudaExigibleRs(Integer loteId,
+			Integer periodo, Integer conceptoId, Integer tipoActoId,
+			BigDecimal montoMinimo, Integer flagUbicable) throws Exception;
+
+	public abstract int registrarActoDeudaExigibleRdPredial(Integer loteId,
+			Integer periodo, Integer conceptoId, Integer tipoActoId,
+			BigDecimal montoMinimo, Integer flagUbicable) throws Exception;
+
+	public abstract int registrarActoDeudaExigibleRdArbitriosRm(Integer loteId,
+			Integer periodo, Integer conceptoId, Integer tipoActoId,
+			BigDecimal montoMinimo, Integer flagUbicable) throws Exception;
+
+	// getUser().getUsuarioId()
+	public abstract int registrarActoDeudaExigibleOPPredialVehicular(
+			Integer loteId, Integer periodo, Integer conceptoId,
+			Integer tipoActoId, BigDecimal montoMinimo, Integer flagUbicable)
+			throws Exception;
+
+	public List<FindCcLoteDetalleActoExp> getAllFindDetalleFinalDeudaExigible(
+			Integer loteId) throws Exception;
+
+	public abstract boolean eliminarDeudaExigible(Integer deudaExigibleId,
+			Integer loteId, Integer actoId, String administrado,
+			String nroActo, String motivoDescargo) throws Exception;
+
+	public List<FindCcRecHistorico> getAllFindRecHistorico(Integer loteId,
+			Integer deudaExId, Integer personaId) throws Exception;
+
+	public abstract int generarRecInicio(Integer loteId,
+			Integer loteExigibleId, Integer nroRegistros) throws Exception;
+
+	public abstract List<FindCcRecTipo> getAllTipoRec() throws Exception;
+
+	public int actualizarNotificacionRec(Integer recId,
+			Integer noNotificacionId, Integer notificadorId, Date fechaNotifica)
+			throws Exception;
+
+	public int actualizarEmisionRec(Integer recId, Date fechaEmision)
+			throws Exception;
+
+	public abstract int generarRec(Integer loteRecId, Integer anioRec,
+			Integer personaRecId, String nroExpedienteRec, Integer anioDeuda,
+			Integer tipoRec, Integer tipoDocRec, Integer loteExId,
+			Integer actoRecId) throws Exception;
+
+	public List<FindCcRecTipo> getAllRecsMasivasPorLote(Integer loteId)
+			throws Exception;
+
+	public List<FindCcLoteDetalleActoExp> getAllExpedientesAcumulados(
+			Integer personaId) throws Exception;
+
+	public List<FindCcLoteDetalleActoExp> getAllExpedientesXPlaca(String placa)
+			throws Exception;
+
+	public List<ObligacionDTO> getAllCostasXTipoRec(Integer personaId,
+			Integer recId) throws Exception;
+
+	public void insertarJustificacion(Integer personaId, Integer conceptoId,
+			Integer subConceptoId, Integer anho, Integer determinacionId,
+			String nroExped, String justificacion) throws SisatException;
+
+	public int actualizarRecXCancelacion(String motivoCancelacion,
+			String resolucionCancelacion, String estado, String nroExpediente,
+			Integer codPersona) throws Exception;
+
+	public List<FindCcLoteDetalleActoExp> getAllReporteExpedientes(
+			Integer tipoDeuda, Integer tipoRecId) throws Exception;
+
+	public List<FindCcLoteDetalleActoExp> getAllExpedientesAnteriorAdministrado(
+			String codigoAnterior) throws Exception;
+
+	public List<GnRemate> getAllRemates() throws Exception;
+	
+	public GnRemate guardarRemate(GnRemate remate) throws Exception;
+	
+	public List<FindCcLoteDetalleActoExp> getAllDeudaExigibleRdVehicular(
+			Integer tipoActo, Integer conceptoId, Integer anio,
+			BigDecimal montoMinimo, Integer flagUbicacion) throws Exception;
+	
+	public abstract int registrarActoDeudaExigibleRdVehicular(Integer loteId,
+			Integer periodo, Integer conceptoId, Integer tipoActoId,
+			BigDecimal montoMinimo, Integer flagUbicable) throws Exception;
+	
+	public Integer registraCarteraExigible(String listActoId,Integer loteId,Integer usuarioId,String terminal)throws Exception;
+
+	public Integer retiraCarteraExigible(Integer actoId,Integer motivoId,String resenaRetiro,Integer loteId,Integer usuarioId,String terminal)throws Exception;
+}

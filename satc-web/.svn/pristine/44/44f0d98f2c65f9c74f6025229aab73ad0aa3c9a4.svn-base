@@ -1,0 +1,1136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<style type="">
+
+.classTblDeuda tr:nth-child(odd) {
+background-color: #F2F2F2;
+color: #000000;
+}
+
+.col1_1 {
+	text-align: left;
+	width: 140px;		
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.col1 {
+	text-align: right;
+	width: 80px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.col2 {
+	text-align: right;
+	width: 78px;
+	border-right: solid 1px silver;
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.col3 {
+	text-align: right;
+	width: 43px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.col4 {
+	text-align: right;
+	width: 48px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.col5 {
+	text-align: right;
+	width: 72px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.col6 {
+	text-align: right;
+	width: 98px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.col7 {
+	text-align: right;
+	width: 88px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.col8 {
+	text-align: right;
+	width: 98px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.col9 {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: right;
+	width: 57px;		
+	padding: 4px 4px 4px 4px;
+	font-size: 12px;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+.colFooter1_1 {
+	text-align: left;
+	width: 140px;
+		
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.colFooter1 {
+	text-align: right;
+	width: 80px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.colFooter2 {
+	text-align: right;
+	width: 61px;
+	border-right: solid 1px silver;
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.colFooter3 {
+	text-align: right;
+	width: 36px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.colFooter4 {
+	text-align: right;
+	width: 41px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter5 {
+	text-align: right;
+	width: 51px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter6 {
+	text-align: right;
+	width: 81px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter7 {
+	text-align: right;
+	width: 71px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter8 {
+	text-align: right;
+	width: 81px;
+	border-right: solid 1px silver;	
+	padding: 4px 4px 4px 4px;
+	font-size: 14px;
+	font-weight: bold;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+.colFooter9 {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: right;
+	width: 82px;		
+	padding: 4px 4px 4px 4px;
+	font-size: 12px;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;	
+}
+
+
+
+
+
+.footerDeudas {
+	text-align: right;
+	margin-left: 100px;
+}
+
+.col1tblDeuda{
+	border-right: solid 1px silver;
+	border-bottom: solid 1px silver;
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.classTblDeuda{
+	border-spacing: 0px;
+	border-left: solid 1px silver;
+
+}
+.headerTblDeudas{
+border-right: solid 1px silver;
+border-bottom: solid 1px silver;
+padding: 4px 4px 4px 4px;
+text-align: center;
+font-size: 11px;
+color: black;
+font-family: Arial,Verdana,sans-serif;
+white-space: nowrap;
+background-color: #EAF0F8;
+}
+
+.richPanelBodyOnlyZoneRefresh{
+	padding: 0px;
+}
+.richPanelOnlyZoneRefresh{
+	border-width: 0px;
+	border-style: solid;
+	padding: 0px;
+	background-color: white;
+	border-color: silver;
+}
+
+.colModalPanel{
+	text-align: center;
+}
+
+</style>
+
+	<div class="contribuyente_data">
+		<table width="1202" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<td width="92" style="font-weight: bold; padding-top: 9px;padding-left: 9px">Contribuyente:</td>
+				<td width="350" style="padding-top: 9px;">#{sessionManaged.contribuyente.apellidosNombres}</td>
+				<td width="50" style="font-weight: bold;padding-top: 9px;">Codigo:</td>
+				<td width="150" style="padding-top: 9px;">#{sessionManaged.contribuyente.personaId}</td>
+				<td width="60" style="font-weight: bold;padding-top: 9px;">Domicilio:</td>
+				<td width="500">#{sessionManaged.contribuyente.domicilioPersona}</td>
+			</tr>
+		</table>
+	</div>
+
+	<h:form id="frmCtaCte"
+		onclick="jQuery('.tooltipAnios').hide();jQuery('.tooltipSubconc').hide();jQuery('.tooltipCuota').hide();jQuery('.tooltipPlacas').hide();jQuery('.tooltipPredios').hide();jQuery('.tooltipUso').hide();">
+		<rich:panel id="tblCtaCte" style="bgcolor:white" bodyClass="richPanelBodyOnlyZoneRefresh" styleClass="richPanelOnlyZoneRefresh">
+		<table  cellpadding="0" cellspacing="0">
+			<thead>
+				<tr>
+					<th class="extdt-header" width="100%" height="22px"
+						style="float: left;">
+						<div
+							style="width: 49px; text-align: center; border-right: 1px solid silver; float: left;">
+							<div onclick="jQuery('.tooltipAnios').slideToggle('100');">
+								<a id="btnAniosDeu" href="#"
+									
+									style="padding-left: 10px; padding-right: 10px; padding-top: 10px;">
+									<img
+									src="#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.PanelMenuIconChevronDown/DATB/eAH7!!8!AAX9Av4_.jsf"
+									alt="" width="20" height="20" border="0" />
+								</a>
+							</div>
+							<div class="tooltipAnios" style="text-align: left;"
+								onclick="event.stopPropagation()">
+								<h:panelGroup id="pnlSelectAnios">
+									<table cellpadding="2">
+										<thead>
+											<tr>
+												<th colspan="2" style="border-bottom: 1px solid silver;"
+													width="100%">
+													<!-- Debe tener immediate=true en ambos sino no funciona -->
+													<h:selectBooleanCheckbox id="selectAllAnio"
+														value="#{cuentaCorrienteManaged.selectedAllYears}"
+														immediate="true"
+														valueChangeListener="#{cuentaCorrienteManaged.changeSelectAnios}">
+														<a4j:support immediate="true" event="onchange"
+															reRender="pnlSelectAnios,tblCtaCte"></a4j:support>
+													</h:selectBooleanCheckbox>Todos
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											<ui:repeat var="item"
+												value="#{cuentaCorrienteManaged.listAnios}">
+												<tr>
+													<td><h:selectBooleanCheckbox id="selectAnio"
+															value="#{item.selected}" label="#{item.id}"
+															valueChangeListener="#{cuentaCorrienteManaged.changeSelectItemAnio}">
+															<a4j:support event="onchange"
+																reRender="pnlSelectAnios,tblCtaCte"></a4j:support>
+														</h:selectBooleanCheckbox></td>
+													<td>#{item.descripcion}</td>
+												</tr>
+											</ui:repeat>
+										</tbody>
+									</table>
+								</h:panelGroup>
+							</div>
+						</div>
+						<!-- INICIO Filtro concepto -->
+						<div
+							style="width: 138px; text-align: center; border-right: 1px solid silver; float: left;">
+							<div onclick="jQuery('.tooltipSubconc').slideToggle('100');">
+								<a id="btnSubconcDeu" href="#"
+									
+									style="padding-left: 55px; padding-right: 55px; padding-top: 10px;">
+									<img
+									src="#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.PanelMenuIconChevronDown/DATB/eAH7!!8!AAX9Av4_.jsf"
+									alt="" width="20" height="20" border="0" />
+								</a>
+							</div>
+							<div class="tooltipSubconc" style="text-align: left;"
+								onclick="event.stopPropagation()">
+								<h:panelGroup id="pnlSelectSubconc">
+									<table>
+										<thead>
+											<tr>
+												<th colspan="2" style="border-bottom: 1px solid silver;"
+													width="100%"><h:selectBooleanCheckbox
+														value="#{cuentaCorrienteManaged.selectedAllConc}"
+														immediate="true"
+														valueChangeListener="#{cuentaCorrienteManaged.changeSelectConc}">
+														<a4j:support immediate="true" event="onchange"
+															reRender="pnlSelectSubconc,tblCtaCte"></a4j:support>
+													</h:selectBooleanCheckbox>Todos</th>
+											</tr>
+										</thead>
+										<tbody>
+											<ui:repeat var="item"
+												value="#{cuentaCorrienteManaged.listConceptos}">
+												<tr>
+													<td><h:selectBooleanCheckbox id="selectConcept"
+															value="#{item.selected}" label="#{item.id}"
+															valueChangeListener="#{cuentaCorrienteManaged.changeSelectItemConc}">
+															<a4j:support event="onchange"
+																reRender="selectConcept,tblCtaCte"></a4j:support>
+														</h:selectBooleanCheckbox></td>
+													<td>#{item.descripcion}</td>
+												</tr>
+											</ui:repeat>
+										</tbody>
+									</table>
+								</h:panelGroup>
+							</div>
+						</div>
+						
+						<!-- FIN Filtro concepto -->
+						
+						<!-- INICIO - Filtro cuotas -->
+						<div
+							style="width: 68px; text-align: center; border-right: 1px solid silver; float: left;">
+							<div onclick="jQuery('.tooltipCuota').slideToggle('100');">
+								<a id="btnCuotaDeu" href="#"
+									
+									style="padding-left: 15px; padding-right: 15px; padding-top: 10px;">
+									<img
+									src="#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.PanelMenuIconChevronDown/DATB/eAH7!!8!AAX9Av4_.jsf"
+									alt="" width="20" height="20" border="0" />
+								</a>
+							</div>
+							<div class="tooltipCuota" style="text-align: left;"
+								onclick="event.stopPropagation()">
+								<h:panelGroup id="pnlSelectCuotas">
+									<table>
+										<thead>
+											<tr>
+												<th colspan="2" style="border-bottom: 1px solid silver;"
+													width="100%"><h:selectBooleanCheckbox
+														value="#{cuentaCorrienteManaged.selectedAllCuotas}"
+														immediate="true"
+														valueChangeListener="#{cuentaCorrienteManaged.changeSelectCuotas}">
+														<a4j:support immediate="true" event="onchange"
+															reRender="pnlSelectCuotas,tblCtaCte"></a4j:support>
+													</h:selectBooleanCheckbox>Todos</th>
+											</tr>
+										</thead>
+										<tbody>
+											<ui:repeat var="item"
+												value="#{cuentaCorrienteManaged.listCuotas}">
+												<tr>
+													<td><h:selectBooleanCheckbox id="selectCuota"
+															value="#{item.selected}" label="#{item.id}"
+															valueChangeListener="#{cuentaCorrienteManaged.changeSelectItemCuota}">
+															<a4j:support event="onchange"
+																reRender="selectCuota,tblCtaCte"></a4j:support>
+														</h:selectBooleanCheckbox></td>
+													<td>#{item.descripcion}</td>
+												</tr>
+											</ui:repeat>
+										</tbody>
+									</table>
+								</h:panelGroup>
+							</div>
+						</div>
+						<!-- FIN - Filtro cuotas -->
+						
+						
+						<!-- 
+						<div style="width: 159px;text-align: center; border-right: 1px solid silver; float: left;">
+							<div><div>
+							<a id="btnPredios" href="#" onclick="jQuery('.tooltipPredios').slideToggle('100');"
+									style="padding-left: 15px; padding-right: 15px; padding-top: 10px;">
+									<img
+									src="#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.PanelMenuIconChevronDown/DATB/eAH7!!8!AAX9Av4_.jsf"
+									alt="" width="20" height="20" border="0" />
+								</a>
+							</div></div>
+						</div>
+						 -->
+						
+						
+						 
+						 
+						 <!-- INICIO - Filtro predios -->
+						 <a4j:outputPanel rendered="#{cuentaCorrienteManaged.renderedDirec}">
+						<div
+							style="width: 158px; text-align: center; border-right: 1px solid silver; float: left;" onclick="jQuery('.tooltipPredios').slideToggle('100');">
+							<div>
+								<a id="btnPredios" href="#" 
+									style="padding-left: 15px; padding-right: 15px; padding-top: 10px;">
+									<img
+									src="#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.PanelMenuIconChevronDown/DATB/eAH7!!8!AAX9Av4_.jsf"
+									alt="" width="20" height="20" border="0" />
+								</a>
+							</div>
+							<div class="tooltipPredios" style="text-align: left;"
+								onclick="event.stopPropagation()">
+								<h:panelGroup id="pnlSelectPredios">
+									<table width="158px">
+										<thead>
+											<tr>
+												<th colspan="2" style="border-bottom: 1px solid silver;"
+													width="100%"><h:selectBooleanCheckbox
+														value="#{cuentaCorrienteManaged.selectedAllPredios}"
+														immediate="true"
+														valueChangeListener="#{cuentaCorrienteManaged.changeSelectPredios}">
+														<a4j:support immediate="true" event="onchange"
+															reRender="pnlSelectPredios,tblCtaCte"></a4j:support>
+													</h:selectBooleanCheckbox>Todos</th>
+											</tr>
+										</thead>
+										<tbody>
+											<ui:repeat var="item" value="#{cuentaCorrienteManaged.listPredios}">
+												<tr>
+													<td width="25"><h:selectBooleanCheckbox id="selectPredio"
+															value="#{item.selected}" label="#{item.descripcion}"
+															valueChangeListener="#{cuentaCorrienteManaged.changeSelectItemPredio}">
+															<a4j:support event="onchange"
+																reRender="pnlSelectPredios,tblCtaCte"></a4j:support>
+														</h:selectBooleanCheckbox></td>
+													<td width="135px">#{item.descripcion}</td>
+												</tr>
+											</ui:repeat>
+										</tbody>
+									</table>
+								</h:panelGroup>
+							</div>
+						</div>
+						</a4j:outputPanel>
+						<!-- FIN - Filtro predios -->
+						
+						<!-- INICIO Filtro Uso --> 
+						<a4j:outputPanel rendered="#{cuentaCorrienteManaged.renderedUso}">
+						<div onclick="jQuery('.tooltipUso').slideToggle('100');" style="width: 108px;text-align: center; border-right: 1px solid silver; float: left;">
+							<div>
+							<a id="btnUso" href="#" 
+									style="padding-left: 15px; padding-right: 15px; padding-top: 10px;">
+									<img
+									src="#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.PanelMenuIconChevronDown/DATB/eAH7!!8!AAX9Av4_.jsf"
+									alt="" width="20" height="20" border="0" />
+								</a>
+							</div>
+							<div class="tooltipUso" style="text-align: left;"
+								onclick="event.stopPropagation()">
+								<h:panelGroup id="pnlSelectUso">
+									<table>
+										<thead>
+											<tr>
+												<th colspan="2" style="border-bottom: 1px solid silver;"
+													width="100%"><h:selectBooleanCheckbox
+														value="#{cuentaCorrienteManaged.selectedAllUso}"
+														immediate="true"
+														valueChangeListener="#{cuentaCorrienteManaged.changeSelectUso}">
+														<a4j:support immediate="true" event="onchange"
+															reRender="pnlSelectUso,tblCtaCte"></a4j:support>
+													</h:selectBooleanCheckbox>Todos</th>
+											</tr>
+										</thead>
+										<tbody>
+											<ui:repeat var="item" value="#{cuentaCorrienteManaged.listUso}">
+												<tr>
+													<td><h:selectBooleanCheckbox id="selectPlaca"
+															value="#{item.selected}" label="#{item.descripcion}"
+															valueChangeListener="#{cuentaCorrienteManaged.changeSelectItemUso}">
+															<a4j:support event="onchange"
+																reRender="pnlSelectUso,tblCtaCte"></a4j:support>
+														</h:selectBooleanCheckbox></td>
+													<td>#{item.descripcion}</td>
+												</tr>
+											</ui:repeat>
+										</tbody>
+									</table>
+								</h:panelGroup>
+							</div>
+						</div>
+						</a4j:outputPanel>
+						<!-- FIN Filtro Uso -->
+						
+						
+						<!-- empieza el tooltip placa -->
+						<a4j:outputPanel rendered="#{cuentaCorrienteManaged.renderedPlaca}">
+						<div onclick="jQuery('.tooltipPlacas').slideToggle('100');"
+							style="width: 78px; text-align: center; border-right: 1px solid silver; float: left;">
+							<div>
+								<a id="btnPlaca" href="#" 
+									style="padding-left: 15px; padding-right: 15px; padding-top: 10px;">
+									<img
+									src="#{request.contextPath}/a4j/g/3_3_3.Finalorg.richfaces.renderkit.html.iconimages.PanelMenuIconChevronDown/DATB/eAH7!!8!AAX9Av4_.jsf"
+									alt="" width="20" height="20" border="0" />
+								</a>
+							</div>
+							<div class="tooltipPlacas" style="text-align: left;"
+								onclick="event.stopPropagation()">
+								<h:panelGroup id="pnlSelectPlacas">
+									<table>
+										<thead>
+											<tr>
+												<th colspan="2" style="border-bottom: 1px solid silver;"
+													width="100%"><h:selectBooleanCheckbox
+														value="#{cuentaCorrienteManaged.selectedAllPlacas}"
+														immediate="true"
+														valueChangeListener="#{cuentaCorrienteManaged.changeSelectPlacas}">
+														<a4j:support immediate="true" event="onchange"
+															reRender="pnlSelectPlacas,tblCtaCte"></a4j:support>
+													</h:selectBooleanCheckbox>Todos</th>
+											</tr>
+										</thead>
+										<tbody>
+											<ui:repeat var="item" value="#{cuentaCorrienteManaged.listPlacas}">
+												<tr>
+													<td><h:selectBooleanCheckbox id="selectPlaca"
+															value="#{item.selected}" label="#{item.descripcion}"
+															valueChangeListener="#{cuentaCorrienteManaged.changeSelectItemPlaca}">
+															<a4j:support event="onchange"
+																reRender="pnlSelectPlacas,tblCtaCte"></a4j:support>
+														</h:selectBooleanCheckbox></td>
+													<td>#{item.descripcion}</td>
+												</tr>
+											</ui:repeat>
+										</tbody>
+									</table>
+								</h:panelGroup>
+							</div>
+						</div>
+						</a4j:outputPanel>
+						<!-- termina tooltip placa -->
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>
+					<!-- Definiendo una rich:panel con estilos limpios debido a q solo sera usado como zona de refreso de ajax -->
+					<!-- <rich:panel id="tblCtaCte" style="bgcolor:white" bodyClass="richPanelBodyOnlyZoneRefresh" styleClass="richPanelOnlyZoneRefresh"> -->	
+					<!-- HEADER TABLE  h:datatable que contiene solo las cabecera de la tabla de deudas en cada elemento del header de esta se inserto un div que contiene la dimension de la columna acorde a las columnas
+					de la tabla de datos de deuda-->
+							<h:dataTable var="itemTemp"
+								columnClasses="col1tblDeuda, col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda"
+								styleClass="classTblDeuda" headerClass="headerTblDeudas" cellpadding="0" cellspacing="0" >
+								<h:column>
+									<f:facet name="header">
+										<div style="width: 40px; text-align: center;">Año</div>
+									</f:facet>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<div style="width: 130px; text-align: center;">Concepto</div>
+									</f:facet>
+								</h:column>
+								<h:column style="padding-left: 10px;">
+									<f:facet name="header">
+										<div style="width: 60px; text-align: center;">Cuota</div>
+									</f:facet>
+								</h:column>
+								<h:column rendered="#{cuentaCorrienteManaged.renderedDirec}">
+									<f:facet name="header">
+										<div style="width: 150px; text-align: center;">Dirección</div>
+									</f:facet>
+								</h:column>
+								<h:column rendered="#{cuentaCorrienteManaged.renderedUso}">
+									<f:facet name="header">
+										<div style="width: 100px; text-align: center;">Uso</div>
+									</f:facet>
+								</h:column>
+								<h:column rendered="#{cuentaCorrienteManaged.renderedPlaca}">
+									<f:facet name="header">
+										<div style="width: 70px; text-align: center;">Placa</div>
+									</f:facet>
+								</h:column>
+								<h:column rendered="#{cuentaCorrienteManaged.rendereNumPap}">
+									<f:facet name="header">
+										<div style="width: 80px; text-align: center;">Nº Papeleta</div>
+									</f:facet>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<div style="width: 80px; text-align: center;">Fecha Venc.</div>
+									</f:facet>
+								</h:column>
+								<!-- <h:column>
+									<f:facet name="header">
+										<div style="width: 80px; text-align: center;">Insoluto</div>
+									</f:facet>
+								</h:column> 
+								<h:column>
+									<f:facet name="header">
+										<div style="width: 45px; text-align: center;">D. Emi</div>
+									</f:facet>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<div style="width: 50px; text-align: center;">Reajus</div>
+									</f:facet>
+								</h:column>-->
+								<h:column>
+									<f:facet name="header">
+										<div style="width: 74px; text-align: center;">Interes</div>
+									</f:facet>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<div style="width: 100px; text-align: center;">Subtotal</div>
+									</f:facet>
+								</h:column>
+								<!-- <h:column>
+									<f:facet name="header">
+										<div style="width: 90px; text-align: center;">Descuento</div>
+									</f:facet>
+								</h:column> -->
+								<h:column>
+									<f:facet name="header">
+										<div style="width: 100px; text-align: center;">Total</div>
+									</f:facet>
+								</h:column>
+								<h:column>
+									<f:facet name="header">
+										<h:selectBooleanCheckbox  id="checkBoxAllDeuda" value="#{cuentaCorrienteManaged.selectedAllDeu}"
+											valueChangeListener="#{cuentaCorrienteManaged.changeSelectAllDeu}" immediate="true" style="width:53px">
+											<a4j:support event="onchange" reRender="tblCtaCte" immediate="true"></a4j:support>
+										</h:selectBooleanCheckbox>
+									</f:facet>
+								</h:column>
+							</h:dataTable>
+							<!-- BODY TABLE  div contiene la funcionalidad de mostar un scroll para que cuando la tabla sea demasiado grande, este scroll aparezca automaticamente
+								 h:datatable contiene los datos de la deudas, en cada columna de añadio un div para manejar el ancho de la columna
+							 -->
+							<div style="max-height: 250px; overflow: overlay">
+								<h:dataTable id="tblDeudasPer" value="#{cuentaCorrienteManaged.listCtaCte}" var="item" height="250"
+									sortMode="single" rowKeyVar="index" headerClass="headerTblDeudas" footerClass="footerDeudas"
+									columnClasses="col1tblDeuda, col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda,col1tblDeuda "
+									styleClass="classTblDeuda" cellpadding="0" cellspacing="0">
+									<h:column>
+										<div style="width: 40px">
+											<h:outputText value="#{item.anioDeuda}" />
+										</div>
+									</h:column>
+									<h:column>
+										<div style="width: 130px">
+											<h:outputText value="#{item.conceptoId == 3 ? item.subconcepto : item.concepto}" />
+										</div>
+									</h:column>
+									<h:column style="padding-left: 10px;">
+										<div style="width: 50px; padding-left: 10px;">
+											<h:outputText value="#{item.numCuota}" />
+										</div>
+									</h:column>
+									<h:column rendered="#{cuentaCorrienteManaged.renderedDirec}">
+										<div style="width: 150px">
+											<h:outputText value="#{item.direccion}" />
+										</div>
+									</h:column>
+									<h:column rendered="#{cuentaCorrienteManaged.renderedUso}">										
+										<div style="width: 100px;">
+											<h:outputText value="#{item.uso}" />
+										</div>
+									</h:column>
+									<h:column rendered="#{cuentaCorrienteManaged.renderedPlaca}">
+										<div style="width: 70px;">
+											<h:outputText value="#{item.conceptoId == 2 ? item.placaVe : item.placaPa}" />
+										</div>
+									</h:column>
+									<h:column rendered="#{cuentaCorrienteManaged.rendereNumPap}">
+										<div style="width: 80px;">
+											<h:outputText value="#{item.numPapeleta}" />
+										</div>
+									</h:column>
+									<h:column>
+										<div style="width: 80px;">
+											<h:outputText value="#{item.fechaVencim}">
+												<f:convertDateTime locale="#{msg['param.localedate']}" timeZone="#{aplicationManaged.timeZone}"
+													pattern="#{msg['param.datepattern']}" />
+											</h:outputText>
+										</div>
+									</h:column>
+									<!-- <h:column>
+										<div style="width: 80px; text-align: right;">
+											<h:outputText value="#{item.insoluto}" />
+										</div>
+									</h:column> 
+									<h:column>
+										<div style="width: 45px; text-align: right;">
+											<h:outputText value="#{item.derechoEmi}" />
+										</div>
+									</h:column>
+									<h:column>
+										<div style="width: 50px; text-align: right;">
+											<h:outputText value="#{item.reajuste}" />
+										</div>
+									</h:column>-->
+									<h:column>
+										<div style="width: 74px; text-align: right;">
+											<h:outputText value="#{item.interes}" />
+										</div>
+									</h:column>
+									<h:column>
+										<div style="width: 100px; text-align: right;">
+											<h:outputText value="#{item.subtotal}" />
+										</div>
+									</h:column>
+									<!-- <h:column>
+										<div style="width: 90px; text-align: right;">
+											<h:outputText value="#{item.descuento}" />
+										</div>
+									</h:column> -->
+									<h:column>
+										<div style="width: 100px; text-align: right;">
+											<h:outputText value="#{item.totalDeuda}" />
+										</div>
+									</h:column>
+									<h:column>
+										<div style="width: 60px; text-align: center;">
+											<h:selectBooleanCheckbox value="#{item.selected}">
+												<a4j:support event="onchange" ajaxSingle="true" />
+											</h:selectBooleanCheckbox>
+										</div>
+									</h:column>
+								</h:dataTable>
+							</div>
+							<!-- FOOTER TABLE  div, este me permitira alinear la tabla de totales a la derecha, esta tabla esta compuesta por columnas que no dependen 
+							del tipo de concepto a pagar, para mostar la tabla de totales se esta usando un panelgrid, en los cuales los estilos de las columnas dependen 
+							del ancho de las columnas de la tabla de datos de deuda BODY TABLE
+							 -->
+							 
+							<div align="right" style="background-color: #CCCCCC;">
+								<h:panelGrid columns="9" styleClass="buttons"
+									columnClasses="col1_1, col1,  col5, col6, col8, col9">
+									<!-- col2, col3, col4, -->
+									<h:outputLabel value="Nro de Items: #{cuentaCorrienteManaged.listCtaCte.size()}" />
+										
+									<h:outputLabel value="Total"/>
+<!-- 									<h:outputLabel value="#{cuentaCorrienteManaged.insoluto}"> -->
+<!-- 										<f:convertNumber minFractionDigits="2" maxFractionDigits="4" locale="en" /> -->
+<!-- 									</h:outputLabel>  -->
+									<!-- <h:outputLabel value="#{cuentaCorrienteManaged.derechoEmi}">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+									</h:outputLabel>
+									<h:outputLabel value="#{cuentaCorrienteManaged.reajuste}">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+									</h:outputLabel>-->
+									<h:outputLabel value="#{cuentaCorrienteManaged.interes}">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="4" locale="en" />
+									</h:outputLabel>
+									<h:outputLabel value="#{cuentaCorrienteManaged.subtotal}">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="4" locale="en" />
+									</h:outputLabel>
+									<!-- <h:outputLabel value="#{cuentaCorrienteManaged.descuento}">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" /> 
+									</h:outputLabel>-->
+									<h:outputLabel value="#{cuentaCorrienteManaged.total}">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="4" locale="en" />
+									</h:outputLabel>
+									<a4j:commandLink value="Agregar" action="#{cuentaCorrienteManaged.agregar}"
+										reRender="checkBoxAllDeuda,tblCtaCte,tblDeudaCobrar, modalDeudasEnCobranzaCoactiva" styleClass="buttonRed"
+										status="ajaxStatus" ajaxSingle="true" oncomplete="#{empty cuentaCorrienteManaged.lstResumenDeudasCobranzaCoactiva ? ' ' : 'Richfaces.showModalPanel(\'modalDeudasEnCobranzaCoactiva\');' };"></a4j:commandLink>
+								</h:panelGrid>
+							</div>
+						<!-- </rich:panel> -->
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</rich:panel>
+	</h:form>
+	<div style="width: 100%; height: 4px;"></div>
+	<h:form id="frmDeudaCobrar">
+		<table cellpadding="0" cellspacing="0">
+			<tr>
+				<td><rich:panel id="tblDeudaCobrar" bodyClass="richPanelBodyOnlyZoneRefresh"
+						styleClass="richPanelOnlyZoneRefresh">
+						<f:facet name="header">Listado de deudas a cobrar</f:facet>
+						<!-- HEADER TABLE DEUDAS SELECCIONADAS A COBRAR	 -->
+						<h:dataTable var="item3" height="250"	
+							columnClasses="col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, "
+							styleClass="classTblDeuda" headerClass="headerTblDeudas" cellpadding="0" cellspacing="0">
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 32px; text-align: center">Año</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 121px; text-align: center">Concepto</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 31px; text-align: center">Cuota</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 141px; text-align: center">Dirección</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 81px; text-align: center">uso</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 61px; text-align: center">Placa</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 71px; text-align: center">Nº Papeleta</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 66px; text-align: center">Fecha Venc.</div>
+								</f:facet>
+							</h:column>
+							<!-- <h:column>
+								<f:facet name="header">
+									<div style="width: 61px; text-align: center;">Insoluto</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 36px; text-align: center;">D. Emi</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 41px; text-align: center;">Reajus</div>
+								</f:facet>
+							</h:column> -->
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 51px; text-align: center;">Interes</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 81px; text-align: center;">Subtotal</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 71px; text-align: center;">Descuento</div>
+								</f:facet>
+							</h:column>
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 81px; text-align: center;">Total</div>
+								</f:facet>
+							</h:column>
+							<!-- <h:column>
+								<f:facet name="header">
+									<div style="width: 81px; text-align: center;">Total Des</div>
+								</f:facet>
+							</h:column> -->
+							<h:column>
+								<f:facet name="header">
+									<div style="width: 41px; text-align: center"></div>
+								</f:facet>
+							</h:column>
+						</h:dataTable>
+						<!-- BODY TABLE DEUDAS SELECCIONADAS A COBRAR	 -->
+						<div style="max-height: 175px; overflow: overlay">
+							<h:dataTable value="#{cuentaCorrienteManaged.listDeudaCobrar}" var="item"
+								columnClasses="col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda, col1tblDeuda"
+								styleClass="classTblDeuda">
+								<h:column>
+									<div style="width: 32px;">
+										<h:outputText value="#{item.anioDeuda}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 121px;">
+										<h:outputText value="#{item.conceptoId == 3 ? item.subconcepto : item.concepto}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 21px; padding-left: 10px;">
+										<h:outputText value="#{item.numCuota}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 141px;">
+										<h:outputText value="#{item.direccion}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 81px;">
+										<h:outputText value="#{item.uso}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 61px;">
+										<h:outputText value="#{item.conceptoId == 2 ? item.placaVe : item.placaPa}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 71px;">
+										<h:outputText value="#{item.numPapeleta}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 66px;">
+										<h:outputText value="#{item.fechaVencim}">
+											<f:convertDateTime locale="#{msg['param.localedate']}" timeZone="#{aplicationManaged.timeZone}"
+												pattern="#{msg['param.datepattern']}" />
+										</h:outputText>
+									</div>
+								</h:column>
+								<!-- <h:column>
+									<div style="width: 61px; text-align: right;">
+										<h:outputText value="#{item.insoluto}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 36px; text-align: right;">
+										<h:outputText value="#{item.derechoEmi}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 41px; text-align: right;">
+										<h:outputText value="#{item.reajuste}" />
+									</div>
+								</h:column>  -->
+								<h:column>
+									<div style="width: 51px; text-align: right;">
+										<h:outputText value="#{item.interes}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 81px; text-align: right;">
+										<h:outputText value="#{item.subtotal}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 71px; text-align: right;">
+										<h:outputText value="#{item.descuento}" />
+									</div>
+								</h:column>
+								<h:column>
+									<div style="width: 81px; text-align: right;">
+										<h:outputText value="#{item.totalDeuda}" />
+									</div>
+								</h:column>
+								<!-- <h:column>
+									<div style="width: 81px; text-align: right;">
+										<h:outputText value="#{item.totalPosible}" />
+									</div>
+								</h:column> -->								
+								<h:column>
+									<div style="width: 41px; text-align: center">
+										<a4j:commandButton title="#{msg['gn.eliminar']}" status="ajaxStatus"
+											actionListener="#{cuentaCorrienteManaged.removeRowDeudaCobrar}" immediate="true" reRender="tblDeudaCobrar"
+											image="/images/remove.png" style="width: 16px; height: 16px;"></a4j:commandButton>
+									</div>
+								</h:column>
+							</h:dataTable>
+						</div>
+						<!-- FOOTER TABLE DEUDAS SELECCIONADAS A COBRAR	 -->
+						<div align="right" style="background-color: #CCCCCC; margin-right: 50px">
+							<h:panelGrid columns="9" styleClass="buttons"
+								columnClasses="colFooter1_1,colFooter1,  colFooter5, colFooter6, colFooter7, colFooter8"								
+								cellpadding="0" cellspacing="0">
+								<!-- colFooter2, colFooter3, colFooter4, -->
+								<h:outputLabel value="Nro de Items: #{cuentaCorrienteManaged.listDeudaCobrar.size()}" />
+								<h:outputLabel value="Total" />
+								<!-- <h:outputLabel value="#{cuentaCorrienteManaged.insolutoCobrar}">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+								</h:outputLabel>
+								<h:outputLabel value="#{cuentaCorrienteManaged.derechoEmiCobrar}">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+								</h:outputLabel>
+								<h:outputLabel value="#{cuentaCorrienteManaged.reajusteCobrar}">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+								</h:outputLabel> -->
+								<h:outputLabel value="#{cuentaCorrienteManaged.interesCobrar}">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+								</h:outputLabel>
+								<h:outputLabel value="#{cuentaCorrienteManaged.subtotalCobrar}">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+								</h:outputLabel>
+								<h:outputLabel value="#{cuentaCorrienteManaged.descuentoCobrar}">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+								</h:outputLabel>
+								<h:outputLabel value="#{cuentaCorrienteManaged.totalCobrar}">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+								</h:outputLabel>
+								<!-- <h:outputLabel value="#{cuentaCorrienteManaged.totalPosibleCobrar}">
+									<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="en" />
+								</h:outputLabel> -->
+							</h:panelGrid>
+						</div>
+						<!-- Panel de botones -->
+						<div align="left" style="width: 500px">
+							<a4j:commandButton id="btnCobrar" value="Cobrar" action="#{cuentaCorrienteManaged.cobrar}" status="ajaxStatus"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'modalCobrar\')' : 'Richfaces.showModalPanel(\'mpErrors\')'}"
+								reRender="modalCobrar" style="width: 150px;"></a4j:commandButton>
+							<a4j:commandButton value="Cancelar" immediate="true" action="#{cuentaCorrienteManaged.cancelar}"
+								status="ajaxStatus" reRender="tblDeudaCobrar" style="width: 150px; margin-left:4px;"></a4j:commandButton>
+							<a4j:commandButton value="Salir" action="#{sessionManaged.sendRedirectPrincipal}"
+								style="width: 150px; margin-left:4px;">
+								<f:setPropertyActionListener value="/sisat/caja/cajaUbicaPersona.xhtml" target="#{sessionManaged.page}" />
+							</a4j:commandButton>
+						</div>
+					</rich:panel></td>
+			</tr>
+		</table>
+	</h:form>
+	<rich:modalPanel id="modalCobrar" minWidth="1000" autosized="true"
+		top="50" styleClass="sisatModalPanel"
+		onshow="$('incCajaCob:frmFormasPago:txtMontoSoles').focus();">
+		<f:facet name="header">CAJA</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideCobranza"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalCobrar" attachTo="hideCobranza"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<a4j:include id="incCajaCob" viewId="/sisat/caja/cajaCobranza.xhtml" />
+	</rich:modalPanel>
+
+	<h:form id="formModalDeudasCobranzaCoactiva">
+	<rich:modalPanel id="modalDeudasEnCobranzaCoactiva" autosized="true" minWidth="500"
+		top="180" styleClass="sisatModalPanel" onshow="$('formModalDeudasCobranzaCoactiva:btnAceptarModalCobranza').focus();">		 
+         
+		<f:facet name="header">Mensaje</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideDeudasCobranzaCoactiva"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalDeudasEnCobranzaCoactiva" attachTo="hideDeudasCobranzaCoactiva"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<div align="center">
+			<h:panelGrid columns="1" columnClasses="colModalPanel" >
+				<h:outputText value="Las cuotas seleccionadas del contribuyente estan bloqueadas para su cobro. Tiene los siguientes conceptos y años en Cobranza Coactiva" />
+				<ui:repeat var="iter" value="#{cuentaCorrienteManaged.lstResumenDeudasCobranzaCoactiva}">
+					<h:outputText value="#{iter.conceptoDescripcion} - #{iter.anho} - #{iter.nroCuotas}" />
+					<br/>
+				</ui:repeat>
+				<a4j:commandButton value="Aceptar" id="btnAceptarModalCobranza"/>
+				<rich:componentControl for="modalDeudasEnCobranzaCoactiva" attachTo="btnAceptarModalCobranza"
+					operation="hide" event="onclick" />
+			</h:panelGrid>
+		</div>	
+		</rich:modalPanel>
+	</h:form>
+</ui:composition>

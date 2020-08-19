@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<style type="">
+		.classLeft {
+		    text-align: left;
+		}
+		.classCenter {
+		    text-align: right;
+		}
+	</style>
+	
+	<h:form id="formMantenedorEjecutorCoactivo">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		
+		<rich:panel id="pnlheader">
+	        <f:facet name="header">
+	        	Mantenimiento de Ejecutor Coactivo
+	        </f:facet>
+	        
+	        <h:panelGrid rendered="#{manteEjecutorCoactivoManaged.permisoAgregarRegistrar}" width="100%" columnClasses="classLeft" >
+	        	<a4j:commandButton id="btnNuevo" value="Nuevo Registro" action="#{manteEjecutorCoactivoManaged.nuevo()}"
+	        	oncomplete="#{rich:component('mpEjecutorCoactivo')}.show()" 
+	        	reRender="mpEjecutorCoactivo" />
+	        </h:panelGrid>
+	        
+		    <rich:extendedDataTable id="edtLista" value="#{manteEjecutorCoactivoManaged.records}" width="100%" height="190px"
+				sortMode="single" selectionMode="single" enableContextMenu="false" var="record"
+				rowKeyVar="row" rows="10">
+				<rich:column id="c0" style="text-align:center" width="4%" >
+		               <f:facet name="header" >Item</f:facet>
+		               <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		           </rich:column>
+				<rich:column id="c1" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Codigo</f:facet>
+					<h:outputText value="#{record.usuarioId}" />
+				</rich:column>
+				<rich:column id="c2" style="text-align:left" width="20%" >
+					<f:facet name="header" width="10%">Apellidos y Nombres</f:facet>
+					<h:outputText value="#{record.apellidosNombres}" />
+				</rich:column>
+				<rich:column id="c7" style="text-align:left" width="10%" >
+					<f:facet name="header" width="10%">Nro Registro</f:facet>
+					<h:outputText value="#{record.nroRegistro}" />
+				</rich:column>
+				<rich:column id="c6" style="text-align:left" width="20%" >
+					<f:facet name="header" width="10%">Apellidos y Nombres Auxiliar</f:facet>
+					<h:outputText value="#{record.apellidosNombresAux}" />
+				</rich:column>
+				<rich:column id="c8" style="text-align:left" width="10%" >
+					<f:facet name="header" width="10%">Nro Registro Auxiliar</f:facet>
+					<h:outputText value="#{record.nroRegistroAux}" />
+				</rich:column>
+				<rich:column id="c3" style="text-align:center" width="6%" >
+					<f:facet name="header" width="10%">Estado</f:facet>
+					<h:outputText value="#{record.estado?'Activo':'InActivo'}" />
+				</rich:column>
+				<rich:column rendered="#{manteEjecutorCoactivoManaged.permisoModificarActualizar}" id="c4" width="4%"
+					style="text-align:center">
+					<a4j:commandLink ajaxSingle="true" id="clEditar"
+						action="#{manteEjecutorCoactivoManaged.editar}"
+						oncomplete="#{rich:component('mpEjecutorCoactivo')}.show();"
+						reRender="mpEjecutorCoactivo" status="ajaxStatus">
+						<h:graphicImage value="/images/editar2.png" style="border:0;width:14px;height:14px;" />
+						<f:setPropertyActionListener value="#{record}"
+							target="#{manteEjecutorCoactivoManaged.selected}"
+							id="pal1" />
+					</a4j:commandLink>
+				</rich:column>
+			</rich:extendedDataTable>
+			<rich:datascroller for="edtLista" maxPages="5" fastStep="3"/>
+		</rich:panel>
+	</h:form>    
+	<rich:modalPanel id="mpEjecutorCoactivo" autosized="true" width="500" height="180">
+		<f:facet name="header">
+			<h:outputText value="Datos de Ejecutor Coactivo" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					styleClass="hidelink" id="hidelink3" />
+				<rich:componentControl for="mpEjecutorCoactivo" attachTo="hidelink3"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+			
+        <h:form id="formEditarEjecutorCoactivo">
+            <h:panelGrid columns="2" columnClasses="classCenter">
+	            <h:outputText for="idArea" value="Area :" />
+	            <h:selectOneMenu id="idArea"  style="width:250px;" disabled="true" >
+					<f:selectItem itemLabel="DEPARTAMENTO DE COBRANZA COACTIVA" itemValue="63" />
+				</h:selectOneMenu>
+				
+				<h:outputText for="idCargo" value="Cargo :" />
+	            <h:selectOneMenu id="idCargo" style="width:250px;" disabled="true" value="#{manteEjecutorCoactivoManaged.selected.cargoId}" >
+					<f:selectItem itemLabel="EJECUTOR COACTIVO" itemValue="1" />
+				</h:selectOneMenu>
+				
+            	<h:outputText for="idUsuario" value="Titular :"/>
+					<h:panelGroup>
+						<h:panelGrid columns="3" cellpadding="0" cellspacing="0" >            	
+			            	<h:selectOneMenu id="idUsuario"
+				        		value="#{manteEjecutorCoactivoManaged.selected.usuarioId}" style="width:250px;"
+				        		rendered="#{manteEjecutorCoactivoManaged.selected.usuarioId==0}"
+				        		required="true" requiredMessage="Seleccione usuario"
+				        		>
+				        		<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+								<f:selectItems
+									value="#{manteEjecutorCoactivoManaged.lUsuarios}"
+									var="item" itemLabel="#{item.descripcion}"
+									itemValue="#{item.id}"></f:selectItems>
+				        	</h:selectOneMenu>
+				        	<h:selectOneMenu id="idUsuario2"
+				        		value="#{manteEjecutorCoactivoManaged.selected.usuarioId}" style="width:250px;"
+				        		rendered="#{manteEjecutorCoactivoManaged.selected.usuarioId>0}"
+				        		disabled="true">
+				        		<f:selectItem itemLabel="#{manteEjecutorCoactivoManaged.selected.apellidosNombres}" itemValue="#{manteEjecutorCoactivoManaged.selected.usuarioId}" />
+				        	</h:selectOneMenu>
+			        		<h:outputText for="idNroRegistro" value="Nro Registro :"/>
+			        		<h:inputText id="idNroRegistro" value="#{manteEjecutorCoactivoManaged.selected.nroRegistro}" size="20" maxlength="20" style="width:100px;" />
+			        	</h:panelGrid>
+			        </h:panelGroup>	
+            	<h:outputText for="idUsuarioAux" value="Auxiliar :"/>
+            		<h:panelGroup>
+            			<h:panelGrid columns="3" cellpadding="0" cellspacing="0" >
+			            	<h:selectOneMenu id="idUsuarioAux"
+				        		value="#{manteEjecutorCoactivoManaged.selected.usuarioAuxId}" style="width:250px;"
+				        		required="true" requiredMessage="Seleccione usuario">
+				        		<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+								<f:selectItems
+									value="#{manteEjecutorCoactivoManaged.lUsuarios}"
+									var="item" itemLabel="#{item.descripcion}"
+									itemValue="#{item.id}"></f:selectItems>
+				        	</h:selectOneMenu>
+				        	<h:outputText for="idNroRegistroAux" value="Nro Registro :"/>
+			        		<h:inputText id="idNroRegistroAux" value="#{manteEjecutorCoactivoManaged.selected.nroRegistroAux}" size="20" maxlength="20" style="width:100px;" />
+				        </h:panelGrid>	
+			        </h:panelGroup>	
+			    
+			    <h:outputText for="txtTipDeuda" value="Materia :" />
+	        	<h:selectOneMenu id="idSelectOneTipDeuda" style="width:150px;"
+	        		value="#{manteEjecutorCoactivoManaged.selected.materiaId}">
+	        		<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItem itemLabel="Tributario" itemValue="1" />
+					<f:selectItem itemLabel="No Tributario" itemValue="2" />	
+	        	</h:selectOneMenu>
+			        
+            	<h:outputText for="idEstado" value="Estado :"/>	
+            	<h:selectBooleanCheckbox id="idEstado" value="#{manteEjecutorCoactivoManaged.selected.estado}">
+					<a4j:support event="onchange" ajaxSingle="true" />
+				</h:selectBooleanCheckbox>
+            </h:panelGrid>
+            <br></br>	            
+            <h:panelGrid columns="2" columnClasses="classCenter">
+	        	<h:commandButton value="Aceptar"
+				action="#{manteEjecutorCoactivoManaged.guardar()}"
+				reRender="pnlheader"
+				oncomplete="#{rich:component('mpEjecutorCoactivo')}.hide();"
+				status="ajaxStatus"
+				 />
+				 
+	        	<h:commandButton value="Cancelar" onclick="#{rich:component('mpEjecutorCoactivo')}.hide(); return false;" />
+        	</h:panelGrid>
+	        	
+        </h:form>
+     </rich:modalPanel>
+
+</ui:composition>

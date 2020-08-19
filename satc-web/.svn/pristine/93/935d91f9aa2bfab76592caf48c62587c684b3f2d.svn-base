@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:form id="formReporteDJPredial">
+	<style>
+.col1 {
+	vertical-align: top;
+	width: 480px;
+}
+
+.col2 {
+	vertical-align: top;
+	width: 260px;
+}
+
+.col3 {
+	vertical-align: top;
+	width: 260px;
+}
+.col1recaudacion{
+	width: 160px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+	height: 25px;
+}
+.col2recaudacion{
+	width: 88px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+}
+</style>
+	<rich:panel id="idPanelReporteVehicular">
+		<f:facet name="header">REPORTE DE SALDOS MENSUAL</f:facet>
+		<h:panelGrid columns="6">
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Seleccione tramo de generación:*" for="idSelectOneArea"></h:outputLabel>
+			<h:selectOneMenu id="idSelectTramo" style="width:150px;"
+			value="#{reporteSaldosMensualManaged.tramo_id}">
+			<f:selectItems value="#{reporteSaldosMensualManaged.listaTramos}"
+			var="items" itemLabel="#{items.label}"
+			itemValue="#{items.value}" />
+			</h:selectOneMenu>
+		</h:panelGrid>			
+			
+			<h:panelGrid columns="1">
+				<a4j:commandButton id="id_buttonInsoluto" action="#{reporteDJPredialManaged.previewDJ}"
+				value="Reporte Insoluto Excel"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS5\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>			
+			<a4j:commandButton id="id_buttonDerecho" action="#{reporteDJPredialManaged.previewDJ}"
+				value="Reporte Derecho de Emisión Excel"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS6\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+			<a4j:commandButton id="id_buttonReajuste" action="#{reporteDJPredialManaged.previewDJ}"
+				value="Reporte Reajuste Excel"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS7\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+			<a4j:commandButton id="id_buttonInteres" action="#{reporteDJPredialManaged.previewDJ}"
+				value="Reporte Interés Excel"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS8\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+			<a4j:commandButton id="id_buttonOtrosSaldos" action="#{reporteDJPredialManaged.previewDJ}"
+				value="Reporte Otros Saldos Excel"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS9\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+			</h:panelGrid>		
+			
+			<h:panelGrid columns="1">
+				<a4j:commandButton id="id_buttonInsolutopdf" action="#{reporteDJPredialManaged.previewDJ}"
+				value="Reporte Insoluto Pdf"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>			
+			<a4j:commandButton id="id_buttonDerechopdf" action="#{reporteDJPredialManaged.previewDJ}"
+				value="Reporte Derecho de Emisión Pdf"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS2\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+			<a4j:commandButton id="id_buttonReajustepdf" action="#{reporteDJPredialManaged.previewDJ}"
+				value="Reporte Reajuste Pdf"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS3\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+			<a4j:commandButton id="id_buttonInterespdf" action="#{reporteDJPredialManaged.previewDJ}"
+				value="Reporte Interés Pdf"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS4\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+			<a4j:commandButton id="id_buttonOtrosSaldospdf" action="#{reporteDJPredialManaged.previewDJ}"
+				value="Reporte Otros Saldos Pdf"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS10\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+			</h:panelGrid>	
+			
+			<h:commandLink id="linkIdInsolutoxls" styleClass="pruebaSOATXLS5" value="sasas" style="display: none;" action="#{reporteSaldosMensualManaged.imprimirXLSInsoluto}" />
+			<h:commandLink id="linkIdDerechoxls" styleClass="pruebaSOATXLS6" value="sasas" style="display: none;" action="#{reporteSaldosMensualManaged.imprimirXLSDerecho}" />
+			<h:commandLink id="linkIdReajustexls" styleClass="pruebaSOATXLS7" value="sasas" style="display: none;" action="#{reporteSaldosMensualManaged.imprimirXLSReajuste}" />
+			<h:commandLink id="linkIdInteresxls" styleClass="pruebaSOATXLS8" value="sasas" style="display: none;" action="#{reporteSaldosMensualManaged.imprimirXLSInteres}" />
+			<h:commandLink id="linkIdOtrosxls" styleClass="pruebaSOATXLS9" value="sasas" style="display: none;" action="#{reporteSaldosMensualManaged.imprimirXLSOtros}" />
+			
+			
+			<h:commandLink id="linkIdInsoluto" styleClass="pruebaSOATXLS" value="sasas" style="display: none;" action="#{reporteSaldosMensualManaged.imprimirPdfInsoluto}" />
+			<h:commandLink id="linkIdDerecho" styleClass="pruebaSOATXLS2" value="sasas" style="display: none;" action="#{reporteSaldosMensualManaged.imprimirPdfDerecho}" />
+			<h:commandLink id="linkIdReajuste" styleClass="pruebaSOATXLS3" value="sasas" style="display: none;" action="#{reporteSaldosMensualManaged.imprimirPdfReajuste}" />
+			<h:commandLink id="linkIdInteres" styleClass="pruebaSOATXLS4" value="sasas" style="display: none;" action="#{reporteSaldosMensualManaged.imprimirPdfInteres}" />
+			<h:commandLink id="linkIdOtros" styleClass="pruebaSOATXLS10" value="sasas" style="display: none;" action="#{reporteSaldosMensualManaged.imprimirPdfOtros}" />
+			
+		</h:panelGrid>
+	</rich:panel>
+
+</h:form>
+</html>

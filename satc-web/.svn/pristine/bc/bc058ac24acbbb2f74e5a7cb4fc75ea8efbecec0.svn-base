@@ -1,0 +1,2033 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" hideDelay="0"
+	submitMode="client">
+	
+	<style type="text/css">
+				.body3 {
+					height: 300px;
+					overflow: auto;
+				}
+				.foo label { 
+				font-weight: normal; 
+				font-size: 9px;
+				
+				}
+	</style>
+	<style type="">
+.		collabel {
+					width: 100px;
+				 }
+				 
+
+	</style>
+
+	<h:form id="frm">
+
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscarLote')}.click()" selector="#frm" />
+			
+	
+ <rich:tabPanel switchType="client">
+  <rich:tab id="pnlTab1" label="REGISTRO DEL REQUERIMIENTO DE INSPECCIÓN">
+	<a4j:outputPanel id="id_panelprincipalregistropredio">
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td>
+						<table align="center" width="100%">
+												
+							<tr>
+								<td>
+									<table align="center" border="0" width="100%" cellpadding="2" cellspacing="2">
+	
+										<tr>
+											<td>
+												<rich:panel style="width:100%; height: 200px;" id="id_panelregistrorequerimiento">
+	
+													<f:facet name="header">
+														<h:outputText style="font-weight:bold"	value="DATOS DEL REQUERIMIENTO"  />
+													</f:facet>
+	
+													<table border="0" width="100%" height="100%">
+														
+														<tr>
+																	<td align="left" width="100px"><h:outputLabel
+																			value="Tipo de Documento :">
+																			<span style="color: red;">*</span>
+																		</h:outputLabel>
+																	</td>
+																	<td align="left" width="280px">
+																		<!-- <h:panelGrid id="panelsubconcepto" style=" width:200px;"> -->
+																		<rich:comboBox id="id_cmbrequerimiento" disabled="true"
+																			value="#{actualizarRequerimientoManaged.cmbTipoDocRequerimiento}"
+																			valueChangeListener="#{actualizarRequerimientoManaged.loadTipoDocRequerimiento}"
+																			defaultLabel="#{msg['obl.defaultLabelCmbSubConcepto']}"
+																			required="true"
+																			requiredMessage="Indique el tipo de documento"
+																			width="240" tabindex="3"
+																			onkeypress="return showListCbo(this,event);"
+																			onblur="validaInputCbo(this)">
+																			<f:selectItems
+																				value="#{actualizarRequerimientoManaged.listaTipoDocRequerimiento}" />
+																			<a4j:support
+																				reRender="id_textcorrelativoR"
+																				event="onchange" bypassUpdates="false"
+																				ajaxSingle="true"></a4j:support>
+																				
+																		</rich:comboBox>
+																	</td>
+
+																	<td align="left" width="110px"><h:outputLabel
+																			value="Nro. de Documento:">
+																			<span style="color: red;">*</span>
+																		</h:outputLabel>
+																	</td>
+																	<td><h:panelGroup>
+
+																	<h:outputText value="#{actualizarRequerimientoManaged.correlativoCarta}"
+																	 id="id_textcorrelativoR"/>
+																			
+																		</h:panelGroup>
+																		
+																	</td>
+																</tr>
+	
+														<tr>
+														<!--  -->
+																	<td align="left" width="120px"><h:outputLabel
+																			value="Referencia :">
+																			<span style="color: red;">*</span>
+																		</h:outputLabel></td>
+																	<td align="left" width="280px">
+															
+																	<rich:comboBox defaultLabel="Seleccione" disabled="true"
+																			enableManualInput="false" width="240"
+																			onblur="validaInputCbo(this)"
+																			value="#{actualizarRequerimientoManaged.cmbTipoProgramaRequerimiento}"
+																			required="true" id="id_tipoprograma"
+																			binding="#{actualizarRequerimientoManaged.cmbxTipoProgramaRequerimiento}"
+																			valueChangeListener="#{actualizarRequerimientoManaged.loadTipoProgramaRequerimiento}">
+																	<f:selectItems
+																		value="#{actualizarRequerimientoManaged.listaTipoProgramaRequerimiento}" />
+																</rich:comboBox>
+
+																	</td>
+
+															<td align="left" width="120px">
+																<h:outputLabel
+																	value="Fecha de notificación:">
+																</h:outputLabel>
+															</td>
+															<td align="left">
+																<rich:calendar locale="en/US"
+																	datePattern="dd/MM/yyyy" enableManualInput="true"
+																	inputClass="maskDate" required="false"
+																	id="id_fechanotificacion"
+																	value="#{actualizarRequerimientoManaged.fechaNotificacion}"
+																	inputStyle="width:60px"
+																	>
+																</rich:calendar> 
+																<rich:jQuery id="maskedo4" selector=".maskDate" query="mask('99/99/9999')" timing="onload" />
+															</td>
+														</tr>
+														<tr></tr>
+														<tr></tr>
+														<tr></tr>
+														<tr>
+															<td>
+																		<h:outputLabel value="Periodo a fiscalizar: "/>
+																		
+															</td>
+															<td>
+																		<h:outputLabel value="#{actualizarRequerimientoManaged.peridoInspeccion}"/>
+																		
+															</td>
+														</tr>
+														<tr></tr>
+														<tr></tr>
+														<tr>
+															<td>
+																		<h:outputLabel value="Documento Asociado: "/>
+															</td>
+															<td>
+																		<h:outputLabel value="#{actualizarRequerimientoManaged.nroDocAsociado}"/>
+															</td>
+														</tr>
+														<tr></tr>
+														<tr></tr>
+														<tr>
+																<td align="left" width="120px">
+																		<h:outputLabel value="Observaciones :">
+																			<span style="color: red;">*</span>
+																		</h:outputLabel>
+																</td>
+																<td align="left" width="120px">
+																		<h:inputTextarea value="#{actualizarRequerimientoManaged.observaciones}" style="width: 200px;" rows="2" id="id_glosa" />
+																</td>
+														</tr>
+													</table>
+												</rich:panel>
+											</td>
+											
+											<td>
+								  				<rich:panel style="width:100%; height: 200px;" id="id_panelregistroinspector" >
+														<f:facet name="header">		
+															DATOS DEL INSPECTOR
+														</f:facet>
+														<table border="0" width="100%" height="100%">
+															<tr>
+																<td align="left" width="100px">
+																	<h:outputLabel
+																		value="Inspector :">
+																		<span style="color: red;">*</span>
+																	</h:outputLabel>
+																</td>
+																<td align="left">
+																	<rich:comboBox defaultLabel="Seleccione"
+																		enableManualInput="false" width="200"
+																		onblur="validaInputCbo(this)"
+																		value="#{actualizarRequerimientoManaged.cmbInspector}"
+																		required="true" id="id_inspector"
+																		binding="#{actualizarRequerimientoManaged.cmbxInspector}"
+																		valueChangeListener="#{actualizarRequerimientoManaged.loadInspectorxRequerimiento}">
+																		<f:selectItems
+																			value="#{actualizarRequerimientoManaged.listaInspectores}" />
+																	</rich:comboBox>
+																</td>
+																<td align="left" width="120px">
+																	<h:outputLabel
+																		value="Fecha de inspeccion:">
+																		<span style="color: red;">*</span>
+																	</h:outputLabel>
+																</td>
+																<td align="left">
+																	<rich:calendar locale="en/US"
+																	
+																	datePattern="dd/MM/yyyy" enableManualInput="true"
+																	inputClass="maskDate" required="false"
+																	id="id_fechainspeccion"
+																	value="#{actualizarRequerimientoManaged.fechaInspeccion}"
+																	requiredMessage="Indique la Fecha de Inspección"
+																	inputStyle="width:60px">
+																	</rich:calendar> <rich:jQuery id="maskedo2" selector=".maskDate" query="mask('99/99/9999')" timing="onload" />
+																</td>
+															 
+																
+															</tr>
+<!-- 															<tr> -->
+<!-- 															<td align="left" width="100px"></td> -->
+<!-- 															<td align="left"></td> -->
+<!-- 															<td align="left" width="120px"> -->
+<!-- 																<h:outputLabel -->
+<!-- 																	value="Hora de inspeccion:"> -->
+<!-- 																	<span style="color: red;">*</span> -->
+<!-- 																</h:outputLabel> -->
+																
+<!-- 															</td> -->
+															
+<!-- 															<td align="left" width="120px">  -->
+<!-- 															<h:selectManyListbox id="lstHorariosInspc"  -->
+<!-- 																				required="true" -->
+<!-- 																				requiredMessage="Ingrese un ejercicio fiscal" -->
+<!-- 																				value="#{actualizarRequerimientoManaged.lstHorarios}" -->
+<!-- 																				size="9" > -->
+<!-- 																				<f:selectItems var="var" itemValue="#{var.intervaloHorario}" -->
+<!-- 																					itemLabel="#{var.intervaloHorario}" -->
+																				
+<!-- 																					value="#{actualizarRequerimientoManaged.lstHorariosInspc}" /> -->
+<!-- 																				<a4j:support ajaxSingle="true" event="onblur" /> -->
+<!-- 															</h:selectManyListbox> -->
+														
+<!-- 														<rich:inputNumberSpinner value="08:00" step="30"/>  -->
+														
+<!-- 															<rich:comboBox defaultLabel="Seleccione" -->
+<!-- 																	enableManualInput="false" width="90" -->
+<!-- 																	onblur="validaInputCbo(this)" -->
+<!-- 																	value="#{actualizarRequerimientoManaged.cmbHorario}" -->
+<!-- 																	required="true" id="id_horario" -->
+<!-- 																	binding="#{actualizarRequerimientoManaged.cmbxHorario}" -->
+<!-- 																	valueChangeListener="#{actualizarRequerimientoManaged.loadHorarioRequerimiento}"> -->
+<!-- 																	<f:selectItems -->
+<!-- 																		value="#{actualizarRequerimientoManaged.listaHorarios}" /> -->
+<!-- 																</rich:comboBox> -->
+<!-- 															<h:selectManyListbox id="id_selCuotaAnio"  -->
+<!-- 																				required="true" -->
+<!-- 																				requiredMessage="#{msg['cc.errorcuotasanio']}" -->
+<!-- 																				value="#{actualizarRequerimientoManaged.lstHorarios}" -->
+<!-- 																				size="9" > -->
+<!-- 																				<f:selectItems var="var" itemValue="#{var.intervaloHorario}" -->
+<!-- 																					itemLabel=" #{var.intervaloHorario}" -->
+<!-- 																					value="#{actualizarRequerimientoManaged.lstHorariosInspc}" /> -->
+<!-- 																				<a4j:support ajaxSingle="true" event="onblur" /> -->
+<!-- 															</h:selectManyListbox> -->
+															
+<!-- 															</td>											 -->
+															
+<!-- 															</tr> -->
+														
+															
+															
+													
+														</table>
+													</rich:panel>
+											</td>
+										</tr>
+										
+										<!--Segunda fila  -->
+										
+										<tr>
+											<td colspan="2">
+												<rich:panel style="width:100%; height: 350px;" id="id_panelegistrocontribuyente">
+	
+													<f:facet name="header">
+														<h:outputText style="font-weight:bold"	value="DATOS DEL CONTRIBUYENTE"  />
+													</f:facet>
+													
+													<h:panelGrid cellpadding="0" cellspacing="0" columns="1" align="center" width="100%">
+	
+													<table border="0" width="100%" height="100%">
+														
+														<tr>
+
+																		<td><h:panelGroup>
+																				<h:outputLabel value="Contribuyente:">
+																				</h:outputLabel>
+
+																				<h:inputText style="width:5%"
+																					value="#{actualizarRequerimientoManaged.datosContribuyente.personaId}"
+																					id="txtPersonaId" disabled="true" />
+
+																				<h:inputText id="txtPersonaNombres"
+																					value="#{actualizarRequerimientoManaged.datosContribuyente.apellidosNombres}"
+																					style="width:50%" disabled="true" />
+
+																				<a4j:commandButton id="cmdBuscarInfractor"
+																					value="#{msg['gn.buscar']}" immediate="true"
+																					action="#{actualizarRequerimientoManaged.setPersonaInspeccion}"
+																					oncomplete="#{rich:component('modalBusquedaPersona')}.hide();#{rich:component('modalBusquedaPersona')}.show();">
+																					<f:param name="destinoRefresh"
+																						value="txtPersonaNombres,txtDomicFiscal,txtPersonaId" />
+																				</a4j:commandButton>
+
+																			</h:panelGroup></td>
+
+																		<td align="left" width="100px"><h:panelGroup>
+																				<h:outputLabel value="Domicilio Fiscal :">
+																				</h:outputLabel>
+																				<h:inputText id="txtDomicFiscal"
+																					value="#{actualizarRequerimientoManaged.datosContribuyente.direccionCompleta}"
+																					style="width:50%" disabled="true" />
+																			</h:panelGroup>
+																		</td>
+																		<a4j:commandButton value="#{msg['gn.buscar']}" rendered="#{actualizarRequerimientoManaged.esEmitido==true}"
+																			style="width:100px;"
+																			id="id_btnBuscarPredio"
+																			action="#{actualizarRequerimientoManaged.buscarPredioFiscalizado}"
+																			reRender="id_panelPredios" immediate="true" 
+																			oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+																			
+																		</a4j:commandButton>
+																		
+																	
+																    <!--NO AGREGARON PREDIOS -->
+																		<rich:panel id="id_panelPredios" style="width:100%;">
+																			<rich:datascroller for="datosPrediosFiscalizadas"></rich:datascroller>
+																			<rich:extendedDataTable height="150px"
+																				id="datosPrediosFiscalizadas"
+																				value="#{actualizarRequerimientoManaged.listDjPredials}"
+																				var="record" rowKeyVar="row" rows="4"
+																				noDataLabel="No se encontró registros de Predio(s)"
+																				enableContextMenu="false">
+
+																				<rich:column width="5%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">
+																					</f:facet>
+																					<div style="text-align: center;">
+																						<h:selectBooleanCheckbox
+																							value="#{record.selected}"
+																							valueChangeListener="#{actualizarRequerimientoManaged.valueChangeListenerPredio(record)}">
+																							<a4j:support event="onchange" ajaxSingle="true" />
+																						</h:selectBooleanCheckbox>
+																					</div>
+																				</rich:column>
+																				<rich:column id="codPredioInspc" width="8%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">Codigo Predio</f:facet>
+																					<h:outputText value="#{record.predioId}" />
+																				</rich:column>
+
+																				<rich:column id="codPredioAntInspc" width="8.5%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">Cod.Predio Ant.</f:facet>
+																					<h:outputText value="#{record.codigoAnterior}" />
+																				</rich:column>
+																				<rich:column id="dirPredioInspc" width="32%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">Dirección del Predio</f:facet>
+																					<h:outputText value="#{record.direccionCompleta}" />
+																				</rich:column>
+																				<rich:column id="tipoPredioInspc" width="8%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">Tipo de Predio</f:facet>
+																					 <h:outputText value="#{record.tipoPredio=='U'?'Urbana':'Rural'}"/>
+																				</rich:column>
+																				<rich:column id="porcPredioInspc" width="6%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">Porc. Prop.</f:facet>
+																					<h:outputText value="#{record.porcPropiedad} %" />
+																				</rich:column>
+																				<rich:column id="areaInspc" width="5%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">Área</f:facet>
+																					<h:outputText
+																						value="#{record.tipoPredio =='U'? record.areaTerreno: record.areaTerrenoHas}" />
+																				</rich:column>
+																				<rich:column id="djInspc" width="5%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">Nro. DJ.</f:facet>
+																					<h:outputText value="#{record.djId}" />
+																				</rich:column>
+
+																				<rich:column id="fecDjInspc" width="7.5%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">F. Declaracion</f:facet>
+																					<h:outputText value="#{record.fechaDeclaracion}">
+																						<f:convertDateTime pattern="dd/MM/yyyy" />
+																					</h:outputText>
+																				</rich:column>
+
+																				<rich:column id="fecAdqInspc" width="7.5%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">F. Adquisicion</f:facet>
+																					<h:outputText value="#{record.fechaAdquisicion}">
+																						<f:convertDateTime pattern="dd/MM/yyyy" />
+																					</h:outputText>
+																				</rich:column>
+
+																				<rich:column id="estadoFiscalizadoInspc" width="3%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">Fisc.</f:facet>
+																					<h:outputText value="#{record.fiscalizado==1 ? 'Si' : 'No'}"/>	
+																				</rich:column>
+
+																				<rich:column id="estadoInspc" width="7%"
+																					style="background-color:#{record.styleSelected};text-align:center">
+																					<f:facet name="header">Estado</f:facet>
+																					<h:outputText value="#{msg['estado.activo']}"
+																						rendered="#{record.estado==1}" />
+																					<h:outputText value="#{msg['estado.pendiente']}"
+																						rendered="#{record.estado==2}" />
+																				</rich:column>
+
+																			</rich:extendedDataTable>
+
+																		</rich:panel>
+													
+																	</tr>
+														
+	
+																												
+													</table>
+													</h:panelGrid>
+												</rich:panel>
+											</td>
+										</tr>
+											
+											<tr>
+								<td align="center"><a4j:outputPanel id="id_panelcommand">
+											<table cellpadding="4" cellspacing="4">
+												<tr>
+<!-- 													<td> -->
+<!-- 														<a4j:commandButton value="Guardar" -->
+<!-- 															style="width:100px;" -->
+<!-- 															action="#{actualizarRequerimientoManaged.guardar}" -->
+<!-- 															reRender="panelconfirmageneradj,id_panelcommand" -->
+<!-- 															oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmageneradj\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };" -->
+<!-- 															disabled="#{(actualizarRequerimientoManaged.rpInspeccion.estado=='1' or actualizarRequerimientoManaged.rpInspeccion.estado=='0')}" -->
+<!-- 															id="id_guardarcommand" /> -->
+<!-- 													</td> -->
+													<td>
+																		<a4j:commandButton value="Actualizar" rendered="#{actualizarRequerimientoManaged.esEmitido==true}"
+																			style="width:100px;" id="id_commandactualizainsp"
+																			action="#{actualizarRequerimientoManaged.guardarInspeccionActual}"
+																			disabled="#{(actualizarRequerimientoManaged.rpInspeccion.estado=='1' or actualizarRequerimientoManaged.rpInspeccion.estado=='2')}"
+																			oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmaactualizainsp\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+																		</a4j:commandButton> 
+
+													
+													</td>
+													<td><a4j:commandButton value="Salir" 
+															style="width:100px;"
+															action="#{actualizarRequerimientoManaged.salir}" immediate="true"
+															reRender="panelinclude">
+															<f:setPropertyActionListener
+																value="/sisat/fiscalizacion/buscarrequerimiento.xhtml"
+																target="#{sessionManaged.page}" />
+													</a4j:commandButton></td>
+
+												</tr>
+												
+												
+												
+											</table>
+									</a4j:outputPanel></td>
+							</tr>
+									</table>
+								</td>
+							</tr>
+							
+						</table>
+	
+					</td>
+				</tr>
+	
+			</table>
+	</a4j:outputPanel>	
+	</rich:tab>
+	<rich:tab id="pnlTab2" label="REGISTRO DEL RESULTADO DE LA FISCALIZACIÓN" rendered="#{!actualizarRequerimientoManaged.esEmitido==true}">
+		<a4j:outputPanel id="id_panelprincipalregistroresultado">
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+				<tr>
+					<td>
+						<table align="center" width="100%">
+												
+							<tr>
+								<td>
+									<table align="center" border="0" width="100%" cellpadding="2" cellspacing="2">
+	
+										<tr>
+											<td>
+												<rich:panel style="width:100%; height: 100px;" id="id_panelegistroresultado">
+	
+													<f:facet name="header">
+														<h:outputText style="font-weight:bold"	value="DATOS DEL RESULTADO"  />
+													</f:facet>
+	
+													<table border="0" width="100%">
+													<tr>
+															
+															<td align="left" width="120px">
+															    <h:outputLabel
+																		value="Tipo de Documento :">
+																		<span style="color: red;">*</span>
+																</h:outputLabel>
+																</td>
+																<td>
+																<rich:comboBox defaultLabel="Seleccione"
+																		enableManualInput="false" width="100"
+																		onblur="validaInputCbo(this)"
+																		value="#{actualizarRequerimientoManaged.cmbCargo}"
+																		required="true" id="id_cargo"
+																		requiredMessage="Indique el tipo de documento"
+																		binding="#{actualizarRequerimientoManaged.cmbxCargo}"
+																		disabled="#{(actualizarRequerimientoManaged.conResultado==true)}"
+																		valueChangeListener="#{actualizarRequerimientoManaged.loadCargoxRequerimiento}">
+<!-- 																		<a4j:support event="onchange" -->
+<!-- 																				reRender="#{rich:clientId('id_correlativos')}" -->
+<!-- 																				immediate="true" ajaxSingle="true"  -->
+<!-- 																				/> -->
+																		<f:selectItems 
+																			value="#{actualizarRequerimientoManaged.listaCargos}" />
+																		<a4j:support id="id_supportlsttipoper"
+																		reRender="id_textcorrelativoFip,id_panelregistronotificacion,id_cmbfechaFip,id_nroea,id_fechanotificea"
+																		event="onchange" bypassUpdates="false"
+																		ajaxSingle="true" />
+																</rich:comboBox> 
+															</td>
+															<td align="left" width="400px">
+																<h:outputText value="Nro. de Documento:" />
+<!-- 																<h:outputText id="id_textnrodocumento" value="#{actualizarRequerimientoManaged.correlativo}"  /> -->
+																	 <h:panelGroup id="id_textcorrelativoFip">
+																				<h:inputText maxlength="16"
+																					style=" width:100px;" id="id_correlativos"
+																					value="#{actualizarRequerimientoManaged.correlativo}"
+																					ajaxSingle="true" required="true"
+																					requiredMessage="Indique el número de resultado">
+																				</h:inputText>
+<!-- 																			<rich:jQuery id="maskedRq" selector=".prueba" -->
+<!-- 																				query="mask('#{msg['obl.maskNroValorR']}')" -->
+<!-- 																				timing="onload" /> -->
+																	 </h:panelGroup>
+																	</td>
+
+															
+															<td align="left">
+																<h:outputText value="Fecha de documento:" /> 
+																<h:panelGroup
+																			id="id_cmbfechaFip">
+																			<rich:calendar locale="en/US"
+																				datePattern="dd/MM/yyyy" enableManualInput="true"
+																				inputClass="maskDate" required="true"
+																				id="id_fechanotificacionresultadofip"
+																				value="#{actualizarRequerimientoManaged.fechaNotificacionfip}"
+																				disabled="#{(actualizarRequerimientoManaged.conResultado==true)}"
+																				
+																				inputStyle="width:60px">
+																			</rich:calendar>
+																			<rich:jQuery id="maskfecnotifip" selector=".maskDate"
+																				query="mask('99/99/9999')" timing="onload" />
+																	</h:panelGroup> 
+<!-- 																	<h:panelGroup id="id_cmbfechaAinr"> -->
+<!-- 																			<rich:calendar locale="en/US" -->
+<!-- 																				datePattern="dd/MM/yyyy" enableManualInput="true" -->
+<!-- 																				inputClass="maskDate" required="true" -->
+<!-- 																				id="id_fechanotificacionresultado" -->
+<!-- 																				value="#{actualizarRequerimientoManaged.fechaNotificacionainr}" -->
+<!-- 																				disabled="#{(actualizarRequerimientoManaged.conResultado==true)}" -->
+<!-- 																				rendered="#{actualizarRequerimientoManaged.istipoAinr}" -->
+<!-- 																				inputStyle="width:60px"> -->
+<!-- 																			</rich:calendar> -->
+<!-- 																			<rich:jQuery id="maskfecnoti" selector=".maskDate" -->
+<!-- 																				query="mask('99/99/9999')" timing="onload" /> -->
+<!-- 																		</h:panelGroup> -->
+																	</td>
+															
+													</tr>
+													<tr>
+															<td></td>
+															<td></td>
+															<td align="left" width="450px">
+															<h:panelGroup id="id_textnroea">
+															<h:outputText value="Nro. de E.A.:" />
+															</h:panelGroup>
+															<h:panelGroup id="id_nroea">
+																	 
+																			<h:inputText id="inputcorrelativoEA"
+																				
+																				value="#{actualizarRequerimientoManaged.correlativoEsquela}"
+																				required="true"
+																				requiredMessage="Digite el número de esquela"
+																				styleClass="prueba" style="text-align:left"
+																				disabled="#{(actualizarRequerimientoManaged.conResultado==true)}"
+																				size="16" maxlength="16" tabindex="5">
+																				<a4j:support ajaxSingle="true" event="onblur"
+																					oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+																					action="#{actualizarRequerimientoManaged.validarCorrelativoEsquela}" />
+																			</h:inputText>
+																			<rich:jQuery id="maskedEA" selector=".prueba"
+																				query="mask('#{msg['obl.maskNroValorEA']}')"
+																				timing="onload" />
+																				
+<!-- 																				<h:inputText id="inputcorrelativoEAainr" -->
+<!-- 																				rendered="#{actualizarRequerimientoManaged.istipoAinr}"  -->
+<!-- 																				value="#{actualizarRequerimientoManaged.correlativoEsquela}" -->
+<!-- 																				required="true" -->
+<!-- 																				requiredMessage="Digite el número de esquela" -->
+<!-- 																				styleClass="prueba" style="text-align:left" -->
+<!-- 																				disabled="#{(actualizarRequerimientoManaged.conResultado==true)}" -->
+<!-- 																				size="16" maxlength="16" tabindex="5"> -->
+<!-- 																				<a4j:support ajaxSingle="true" event="onblur" -->
+<!-- 																					oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };" -->
+<!-- 																					action="#{actualizarRequerimientoManaged.validarCorrelativoEsquela}" /> -->
+<!-- 																			</h:inputText> -->
+<!-- 																			<rich:jQuery id="maskedEAainr" selector=".prueba" -->
+<!-- 																				query="mask('#{msg['obl.maskNroValorEA']}')" -->
+<!-- 																				timing="onload" /> -->
+																				
+																		  
+															</h:panelGroup>
+
+															</td>
+															<td align="left">
+															   
+																<h:panelGroup id="id_fechaea">
+																		<h:outputText value="Fecha notificación E.A.:" />
+																		
+																</h:panelGroup>
+																<h:panelGroup id="id_fechanotificea">
+<!-- 																<rich:calendar locale="en/US" -->
+<!-- 																	datePattern="dd/MM/yyyy" enableManualInput="true" -->
+<!-- 																	inputClass="maskDate" required="true" -->
+<!-- 																	id="id_fechaesquelaainr" -->
+<!-- 																	value="#{actualizarRequerimientoManaged.fechaNotificacionEsquela}" -->
+<!-- 																	rendered="#{actualizarRequerimientoManaged.istipoAinr}" -->
+<!-- 																	disabled="#{(actualizarRequerimientoManaged.conResultado==true)}" -->
+<!-- 																	inputStyle="width:60px" -->
+<!-- 																	> -->
+<!-- 																</rich:calendar>  -->
+<!-- 																<rich:jQuery id="maskeaainr" selector=".maskDate" -->
+<!-- 																	query="mask('99/99/9999')" timing="onload" /> -->
+																
+																<rich:calendar locale="en/US"
+																	datePattern="dd/MM/yyyy" enableManualInput="true"
+																	inputClass="maskDate" required="true"
+																	id="id_fechaesquela"
+																	value="#{actualizarRequerimientoManaged.fechaNotificacionEsquela}"
+																	
+																	disabled="#{(actualizarRequerimientoManaged.conResultado==true)}"
+																	inputStyle="width:60px">
+																</rich:calendar> <rich:jQuery id="maskea" selector=".maskDate"
+																	query="mask('99/99/9999')" timing="onload" />
+																	</h:panelGroup>
+																</td>
+																
+													</tr>
+
+											</table>
+
+												</rich:panel>
+												<rich:panel style="width:100%; height: 220px;" id="id_panelregistronotificacion" rendered="#{actualizarRequerimientoManaged.istipoAinr}">
+
+													<table border="0" width="100%">
+
+														<tr>
+															
+														<td>
+															<table><tr><td>
+																	<h:panelGroup
+																		id="id_selectar"
+																		rendered="#{actualizarRequerimientoManaged.istipoAinr}">
+																		<h:outputText value="¿A.R.?" />
+																		
+																   </h:panelGroup>
+																	</td>
+																<td align="left">
+																<h:selectBooleanCheckbox
+																	valueChangeListener="#{actualizarRequerimientoManaged.checkReq}"
+																	style="align:right;text-align:right;"
+																	value="#{actualizarRequerimientoManaged.actaReprograma}"	
+																	rendered="#{actualizarRequerimientoManaged.istipoAinr}" 																
+																	immediate="true"																	
+																	>
+																	<a4j:support event="onchange" ajaxSingle="true" reRender="id_panelregistronotificacion"/>
+																</h:selectBooleanCheckbox>
+															</td></tr></table>
+															
+														</td>
+														<td>
+																<h:panelGroup
+																		id="id_ar2"
+																		rendered="#{actualizarRequerimientoManaged.actaReprograma}">
+																		<h:outputText value="Nro. de A.R.:" />
+																		
+																</h:panelGroup>
+<!-- 																<h:outputText value="#{actualizarRequerimientoManaged.correlativoAR}"  -->
+<!-- 														 		  rendered="#{actualizarRequerimientoManaged.actaReprograma}"> -->
+<!-- 															   </h:outputText> -->
+																	<h:inputText id="inputcorrelativoAR"
+																				rendered="#{actualizarRequerimientoManaged.actaReprograma}" 
+																				value="#{actualizarRequerimientoManaged.correlativoAR}"
+																				required="true"
+																				requiredMessage="Digite el número del A.R."
+																				styleClass="prueba" style="text-align:left"
+																				disabled="#{actualizarRequerimientoManaged.esAr}"
+																				size="16" maxlength="16" tabindex="5">
+																				<a4j:support ajaxSingle="true" event="onblur"
+																					oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+																					action="#{actualizarRequerimientoManaged.validarCorrelativo}" />
+																	</h:inputText>
+																			<rich:jQuery id="maskedAr" selector=".prueba"
+																				query="mask('#{msg['obl.maskNroValorA']}')"
+																				timing="onload" />
+														
+														</td>
+															<td> 
+																	   	<h:panelGroup
+																		id="id_lblar"
+																		rendered="#{actualizarRequerimientoManaged.actaReprograma}">
+																		<h:outputText value="Fecha de A.R.:" />
+																		
+																	</h:panelGroup>
+																	
+																	<rich:calendar locale="en/US"
+																	datePattern="dd/MM/yyyy" enableManualInput="true"
+																	inputClass="maskDate" required="true"
+																	id="id_fechaar"
+																	requiredMessage="Indique la fecha del A.R."
+																	value="#{actualizarRequerimientoManaged.fechaNotificacionAr}"
+																	rendered="#{actualizarRequerimientoManaged.actaReprograma}"
+																	disabled="#{actualizarRequerimientoManaged.esAr}"
+																	inputStyle="width:60px"
+																	>
+																</rich:calendar> <rich:jQuery id="maskear" selector=".maskDate"
+																	query="mask('99/99/9999')" timing="onload" />
+																	
+																	
+																	</td>
+																	
+																			
+													
+																	<td>
+																	<h:panelGroup
+																		id="id_textInspectorAr"
+																		rendered="#{actualizarRequerimientoManaged.actaReprograma}">
+																		<h:outputText value="Inspector:" />
+																		
+																</h:panelGroup>
+																<rich:comboBox defaultLabel="Seleccione"
+																		enableManualInput="false" width="200"
+																		onblur="validaInputCbo(this)"
+																		value="#{actualizarRequerimientoManaged.cmbInspectorAr}"
+																		required="true" id="id_inspectorAR"
+																		requiredMessage="Indique el inspector para la reprogramación"
+																		rendered="#{actualizarRequerimientoManaged.actaReprograma}"
+																		binding="#{actualizarRequerimientoManaged.cmbxInspectorAr}"
+																		valueChangeListener="#{actualizarRequerimientoManaged.loadInspectorArxRequerimiento}"
+																		disabled="#{actualizarRequerimientoManaged.esAr}">
+																		<f:selectItems
+																			value="#{actualizarRequerimientoManaged.listaInspectoresAr}" />
+																	</rich:comboBox>
+															</td>
+														</tr>
+														<tr></tr>
+														<tr></tr>
+																<tr>
+																<td></td>
+																<td>
+																	<h:outputText value="Nro. de FIP.:"  rendered="#{actualizarRequerimientoManaged.actaReprograma}" />
+																	 <h:panelGroup id="id_textcorrelativoFipAr">
+																			<h:inputText id="inputcorrelativoFipar"
+																				rendered="#{actualizarRequerimientoManaged.actaReprograma}" 
+																				value="#{actualizarRequerimientoManaged.correlativoFipar}"
+																				required="false"
+																				requiredMessage="Digite el número del documento"
+																				styleClass="prueba" style="text-align:left"
+																				disabled="#{actualizarRequerimientoManaged.esArFIP}"
+																				size="16" maxlength="16" tabindex="5">
+																				<a4j:support ajaxSingle="true" event="onblur"
+																					oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+																					action="#{actualizarRequerimientoManaged.validarCorrelativoFipAr}" />
+																			</h:inputText>
+																			<rich:jQuery id="maskedFipar" selector=".prueba"
+																				query="mask('#{msg['obl.maskNroValorF']}')"
+																				timing="onload" />
+																				
+																	</h:panelGroup>
+																</td>
+																<td><h:outputText value="Fecha Not.FIP.:"  rendered="#{actualizarRequerimientoManaged.actaReprograma}" />
+																		<h:panelGroup id="id_fechanotificaFipar">
+																			<rich:calendar locale="en/US"
+																				datePattern="dd/MM/yyyy" enableManualInput="true"
+																				inputClass="maskDate" required="false"
+																				id="id_fechafipar"
+																				value="#{actualizarRequerimientoManaged.fechaNotificacionFipar}"
+																				rendered="#{actualizarRequerimientoManaged.actaReprograma}"
+																				disabled="#{actualizarRequerimientoManaged.esArFIP}"
+																				inputStyle="width:60px">
+																			</rich:calendar>
+																			<rich:jQuery id="maskfipar" selector=".maskDate"
+																				query="mask('99/99/9999')" timing="onload" />
+
+																		</h:panelGroup>
+																	</td>
+																	<td><h:panelGroup id="id_texthorainsp"
+																			rendered="#{actualizarRequerimientoManaged.actaReprograma}">
+																			<h:outputText value="Hora de inspección:" />
+
+																		</h:panelGroup></td>
+																</tr>
+
+																<tr>
+																	<td><h:outputText style="color:red;" value="¡Generar Multa!"  rendered="#{actualizarRequerimientoManaged.esMayor==true}" /></td>
+																	<td></td>
+																	<td></td>
+																	<td><h:selectManyListbox id="id_listbxHorariosAr"
+																			required="true"
+																			requiredMessage="#{msg['cc.errorcuotasanio']}"
+																			rendered="#{actualizarRequerimientoManaged.actaReprograma}"
+																			value="#{actualizarRequerimientoManaged.lstHorariosAr}"
+																			disabled="#{actualizarRequerimientoManaged.esAr}"
+																			size="9">
+																			<f:selectItems var="var"
+																				itemValue="#{var.intervaloHorario}"
+																				itemLabel="#{var.intervaloHorario}"
+																				value="#{actualizarRequerimientoManaged.lstHorariosArInspc}" />
+																			<a4j:support ajaxSingle="true" event="onblur" />
+																		</h:selectManyListbox></td>
+															
+														
+												
+															<td></td>
+															
+														</tr>
+													</table>
+												</rich:panel>
+											</td>
+										
+										</tr>
+										
+								<tr>
+								<td align="center">
+								<a4j:outputPanel id="id_panelcommandresultado">
+											<table cellpadding="4" cellspacing="4">
+												<tr>
+
+													<td>
+													<h:panelGroup rendered="#{(actualizarRequerimientoManaged.conResultado==false)}">
+															      <a4j:commandButton 
+																		value="Guardar" style="width:100px;" 
+																		id="id_commandcrearresultado"
+																		action="#{actualizarRequerimientoManaged.guardarResultado}"
+																		rendered="#{actualizarRequerimientoManaged.ocultarBoton==false}"
+																		disabled="#{(actualizarRequerimientoManaged.rpInspeccion.estado=='3')or (actualizarRequerimientoManaged.rpInspeccion.estado=='4')}"
+																		oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmaresultadoinsp\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+																	</a4j:commandButton>
+													</h:panelGroup>
+													</td>
+													<td>
+													<h:panelGroup rendered="#{actualizarRequerimientoManaged.esAINR==true}">
+															      <a4j:commandButton
+																		value="Guardar A.R." style="width:100px;" 
+																		id="id_commandcrearresultadoar"
+																		action="#{actualizarRequerimientoManaged.guardarResultadoAr}"
+																		rendered="#{actualizarRequerimientoManaged.ocultarBoton==false}"
+																		disabled="#{(actualizarRequerimientoManaged.rpInspeccion.estado=='2')}"
+																		oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmaresultadoinspar\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+																	</a4j:commandButton>
+													</h:panelGroup>
+													
+													</td>
+													<td>
+													<h:panelGroup rendered="#{actualizarRequerimientoManaged.esAr==true}">
+															        <a4j:commandButton
+																		value="Guardar FIP" style="width:100px;" 
+																		id="id_commandcrearresultadofipar"
+																		action="#{actualizarRequerimientoManaged.guardarResultadoFipAr}"
+																		rendered="#{actualizarRequerimientoManaged.ocultarBoton==false}"
+																		disabled="#{actualizarRequerimientoManaged.esArFIP==true}"
+																		oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmaresultadoinspar\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+																	</a4j:commandButton>
+													</h:panelGroup>
+													
+													</td>
+													
+<!-- 													<td> -->
+<!-- 															      <a4j:commandButton -->
+<!-- 																		value="Generar Multa" style="width:100px;"   -->
+<!-- 																		id="id_commandcrearmulta" status="ajaxStatus" ajaxSingle="true" -->
+<!-- 																		action="#{actualizarRequerimientoManaged.mostrar}" -->
+<!-- 																		oncomplete="#{rich:component('panelMultas')}.hide();#{rich:component('panelMultas')}.show();" -->
+<!-- 																		reRender="panelMultas" > -->
+<!-- 																</a4j:commandButton> -->
+																	
+<!-- 													</td> -->
+													
+
+												</tr>
+												
+												
+												
+											</table>
+									</a4j:outputPanel>
+									</td>
+									</tr>
+
+										<tr>
+										
+											<td align="center">
+
+<!-- 													<rich:spacer height="10" /> -->
+											<div align="left">
+													<rich:panel id="id_panelResultadoFisca" style="width:680px;">
+													
+													<rich:extendedDataTable height="148px" 
+																				id="datoResultados"
+																				value="#{actualizarRequerimientoManaged.inspeccionResultado}"
+																				var="record" rowKeyVar="row" rows="4"
+																				noDataLabel="No se encontró registros"
+																				enableContextMenu="false">
+																	<f:facet name="header">
+																		<h:outputLabel
+																			value="RESULTADO DE LA FISCALIZACIÓN" />
+																	</f:facet>
+																	<rich:column width="30px" style="text-align:center">
+																		<f:facet name="header"></f:facet>
+																		<h:commandLink id="newlink22"
+																			action="#{actualizarRequerimientoManaged.imprimirDocxTipo}"
+																			immediate="true">
+																			<h:graphicImage id="img1"
+																				value="/images/download.png" style="border:0" />
+																			<f:setPropertyActionListener value="#{record}" id="al1"
+																				target="#{actualizarRequerimientoManaged.inspeccionResultadoTabla}" />
+																			<rich:toolTip for="newlink22" direction="top-left"> Descargar</rich:toolTip>
+																		</h:commandLink>
+																	</rich:column>
+																	<rich:column id="dd" style="text-align:center" width="30px" >
+													                <f:facet name="header" >Item</f:facet>
+													                <div align="center">
+													                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+													                </div>
+											           		 </rich:column>
+														            														            
+														            <rich:column id="nd" style="text-align:center" width="150px">
+														                <f:facet name="header"  >Req./Carta</f:facet>
+														                <div align="center">
+														                <h:outputText value="#{record.nroDocumento}"/>
+														                 </div>
+														            </rich:column>
+
+														            <rich:column id="tresultado" style="text-align:center" width="200px">
+														                <f:facet name="header"  >Resultado</f:facet>
+														                <div align="center">
+														                <h:outputText value="#{record.tipoDocResultado}"/>
+														                 </div>
+														            </rich:column>
+														            <rich:column id="nroresultado" style="text-align:center" width="130px">
+														                <f:facet name="header"  >Nro.Documento</f:facet>
+														                <div align="center">
+														                <h:outputText value="#{record.nroDocumentoResultadoFip}"/>
+														                 </div>
+														            </rich:column>
+																	<rich:column id="fecFIP" style="text-align:center" width="120px">
+														                <f:facet name="header"  >Fecha Notificacion</f:facet>
+														                <div align="center">
+														                <h:outputText value="#{record.fechaFip}"/>
+														                 </div>
+														            </rich:column>
+														            
+															
+											</rich:extendedDataTable>
+													
+													</rich:panel>
+													
+													</div>
+<!-- 													 <a4j:commandButton value="Mostrar Horario" reRender="table"  -->
+<!--                										 action="#{actualizarRequerimientoManaged.mostrar}" -->
+<!--                										 oncomplete="javascript:Richfaces.showModalPanel('panelHorarios');"/> -->
+               										 
+
+											</td>
+												
+											</tr>
+											
+												<tr>
+													<td>
+
+														<a4j:commandButton
+															value="Procesar Dj(s)" style="width:80px;"
+															action="#{actualizarRequerimientoManaged.actualizacion}"
+															immediate="true">
+															<f:setPropertyActionListener
+																value="#{actualizarRequerimientoManaged.currentItemValue}"
+																target="#{actualizarRequerimientoManaged.currentItemValue}"
+																id="ractual" />
+															<f:setPropertyActionListener
+																value="/sisat/persona/buscarpersona.xhtml"
+																target="#{sessionManaged.page}" />
+														</a4j:commandButton>
+														 
+<!-- 														<a4j:commandButton value="Buscar Dj(s)" -->
+<!-- 															style="width:100px;"> -->
+<!-- 														</a4j:commandButton> -->
+													</td>
+												</tr>
+												
+<!-- SE COMENTA ESTA GRILLA PARA QUE EL REGISTRO DE LA DJ SEA DESDE EL FORM: REGISTROPREDIO.XHTML -->
+<!-- 												<tr> -->
+<!-- 													<td align="center"> -->
+<!-- 														<div align="left"> -->
+														
+															
+<!-- 																AL ESTAR CON FIP -->
+																
+<!-- 																		<rich:panel id="id_panelDjs" style="width:100%;"> -->
+<!-- 																			<rich:datascroller for="datosDjsFiscalizadas" -->
+<!-- 																				maxPages="20"> -->
+<!-- 																			</rich:datascroller> -->
+<!-- 																			<rich:extendedDataTable height="150px" -->
+<!-- 																				id="datosDjsFiscalizadas" -->
+<!-- 																				value="#{actualizarRequerimientoManaged.listaDjInspeccion}" -->
+<!-- 																				var="record" rowKeyVar="row" rows="3" -->
+<!-- 																				noDataLabel="No se encontró registros de DJs. fiscalizadas" -->
+<!-- 																				enableContextMenu="false"> -->
+<!-- 																	<f:facet name="header"> -->
+<!-- 																		<h:outputLabel value="DECLARACIONES JURADAS CON FISCALIZACIÓN" /> -->
+<!-- 																	</f:facet> -->
+
+<!-- 																	<rich:column width="4%"> -->
+<!-- 																					<f:facet name="header"> -->
+<!-- 																					</f:facet> -->
+<!-- 																					<div style="text-align: center;"> -->
+<!-- 																						<h:selectBooleanCheckbox -->
+<!-- 																							value="#{record.selected}" disabled="#{record.reqInspeccion!=0}" -->
+<!-- 																							valueChangeListener="#{actualizarRequerimientoManaged.valueChangeListenerItem(record)}"> -->
+<!-- 																							<a4j:support event="onchange" ajaxSingle="true" /> -->
+<!-- 																						</h:selectBooleanCheckbox> -->
+<!-- 																					</div> -->
+<!-- 																				</rich:column> -->
+																				
+<!-- 																				<rich:column id="codPredioInspc" width="8%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">Codigo Predio</f:facet> -->
+<!-- 																					<h:outputText value="#{record.predioId}" /> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="codPredioAntInspc" width="10%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">Codigo Predio Ant.</f:facet> -->
+<!-- 																					<h:outputText value="#{record.predioIdAntiguo}" /> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="djInspc" width="5%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">Nro. DJ.</f:facet> -->
+<!-- 																					<h:outputText value="#{record.djId}" /> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="annoInspc" width="5%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">Año DJ.</f:facet> -->
+<!-- 																					<h:outputText value="#{record.annoDj}" /> -->
+<!-- 																					<rich:toolTip>Periodo a fiscalizar</rich:toolTip> -->
+
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="fecDjInspc" width="6.5%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">F. Declaracion</f:facet> -->
+<!-- 																					<h:outputText value="#{record.fechaDeclaracion}"> -->
+<!-- 																						<f:convertDateTime pattern="dd/MM/yyyy" /> -->
+<!-- 																					</h:outputText> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="fecAdqInspc" width="6.5%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">F. Adquisicion</f:facet> -->
+<!-- 																					<h:outputText value="#{record.fechaAdquisicion}"> -->
+<!-- 																						<f:convertDateTime pattern="dd/MM/yyyy" /> -->
+<!-- 																					</h:outputText> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="tipoPredioInspc" width="6%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">Tipo Predio</f:facet> -->
+<!-- 																					<h:outputText -->
+<!-- 																						value="#{record.descripcionCortaTipoPredio=='U'?'Urbana':'Rural'}" /> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="porcPredioInspc" width="6%" -->
+<!-- 																					style="text-align:right"> -->
+<!-- 																					<f:facet name="header">Porc. Prop.</f:facet> -->
+<!-- 																					<h:outputText value="#{record.porcPropiedad} %" /> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="areaInspc" width="5%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">Area</f:facet> -->
+<!-- 																					<h:outputText -->
+<!-- 																						value="#{record.descripcionCortaTipoPredio =='U'? record.areaTerreno: record.areaTerrenoHas}" /> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="estadoFiscalizadoInspc" width="3%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">Fisc.</f:facet> -->
+<!-- 																					<h:outputText -->
+<!-- 																						value="#{record.estadoFiscalizado==1 ? 'Si' : 'No'}" /> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="estadoInspc" width="7%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">Estado</f:facet> -->
+<!-- 																					<h:outputText value="#{msg['estado.activo']}" -->
+<!-- 																						rendered="#{record.estado==1}" /> -->
+<!-- 																					<h:outputText value="#{msg['estado.pendiente']}" -->
+<!-- 																						rendered="#{record.estado==2}" /> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																				<rich:column id="fecRegInspc" width="6%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">F. Registro</f:facet> -->
+<!-- 																					<h:outputText value="#{record.fechaRegistro}"> -->
+<!-- 																						<f:convertDateTime pattern="dd/MM/yyyy" /> -->
+<!-- 																					</h:outputText> -->
+<!-- 																				</rich:column> -->
+<!-- 																				<rich:column id="nroInspc" width="25%" -->
+<!-- 																					style="text-align:center"> -->
+<!-- 																					<f:facet name="header">Direccion Predio</f:facet> -->
+<!-- 																					<h:outputText value="#{record.direccionPredio}" /> -->
+<!-- 																				</rich:column> -->
+
+<!-- 																			</rich:extendedDataTable> -->
+
+<!-- 																		</rich:panel> -->
+															
+															
+														
+<!-- 														</div> -->
+<!-- 													</td> -->
+<!-- 												</tr> -->
+<!-- SE COMENTA EL BOTÓN PARA QUE EL REGISTRO DE LA DJ SEA DESDE EL FORM: REGISTROPREDIO.XHTML -->
+<!-- 												<tr> -->
+<!-- 													<td> -->
+<!-- 														<a4j:commandButton value="[Guardar Dj(s)]" -->
+<!-- 															style="width:100px;" -->
+<!-- 															rendered="#{actualizarRequerimientoManaged.esEmitido==false and actualizarRequerimientoManaged.esNotif==false}" -->
+<!-- 															id="id_commandcreardj" -->
+<!-- 															action="#{actualizarRequerimientoManaged.actualizarResultado}" -->
+<!-- 															disabled="#{(actualizarRequerimientoManaged.rpInspeccion.estado=='1' or actualizarRequerimientoManaged.rpInspeccion.estado=='2')}" -->
+<!-- 															oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmaactualizainsp\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };" -->
+<!-- 															reRender="id_panelResultadoDjsAsociadas,id_panelprincipalregistropredio"> -->
+<!-- 														</a4j:commandButton> -->
+<!-- 													</td> -->
+													
+<!-- 												</tr> -->
+												<tr>
+													<td>
+													<div align="left">
+													<rich:panel id="id_panelResultadoDjsAsociadas" style="width:680px;" >
+												
+																<rich:extendedDataTable height="120px" 
+																				id="datoDjsAsociadas"
+																				value="#{actualizarRequerimientoManaged.listaDjsInspeccion}"
+																				var="record" rowKeyVar="row" rows="3"
+																				noDataLabel="No se encontró registros"
+																				enableContextMenu="false">
+																	<f:facet name="header">
+																		<h:outputLabel
+																			value="DECLARACIONES JURADAS ASOCIADAS AL REQUERIMIENTO" />
+																	</f:facet>
+																	
+																	<rich:column id="dd" style="text-align:center" width="30px" >
+													                <f:facet name="header" >Item</f:facet>
+													                <div align="center">
+													                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+													                </div>
+											           		 </rich:column>
+														            														            
+														            <rich:column id="nroDjs" style="text-align:center" width="60px">
+														                <f:facet name="header"  >Nro. Dj</f:facet>
+														                <div align="center">
+														                <h:outputText value="#{record.djId}"/>
+														                 </div>
+														            </rich:column>
+
+														            <rich:column id="codPredio" style="text-align:center" width="80px">
+														                <f:facet name="header"  >Cod. Predio</f:facet>
+														                <div align="center">
+														                <h:outputText value="#{record.predioId}"/>
+														                 </div>
+														            </rich:column>
+														            <rich:column id="anio" style="text-align:center" width="48px">
+														                <f:facet name="header"  >Año Dj</f:facet>
+														                <div align="center">
+														                <h:outputText value="#{record.annoDj}"/>
+														                 </div>
+														            </rich:column>
+																	<rich:column id="direccionPred" style="text-align:center" width="380px">
+														                <f:facet name="header"  >Dirección Predio</f:facet>
+														                <div align="center">
+														                <h:outputText value="#{record.direccionPredio}"/>
+														                 </div>
+														            </rich:column>
+														            <rich:column id="codUbicacion" style="text-align:center" width="60px">
+														                <f:facet name="header"  >Cod. Ubic.</f:facet>
+														                <div align="center">
+														                <h:outputText value="#{record.ubicacionId}"/>
+														                 </div>
+														            </rich:column>
+														            
+															
+													</rich:extendedDataTable>
+													<rich:datascroller for="datoDjsAsociadas"></rich:datascroller>
+												</rich:panel>
+												</div>
+												</td>
+											</tr>
+											</table>
+								</td>
+							</tr>
+							<tr>
+								<td><a4j:commandButton value="Salir" 
+															style="width:100px;"
+															action="#{actualizarRequerimientoManaged.salir}" immediate="true"
+															reRender="panelinclude">
+															<f:setPropertyActionListener
+																value="/sisat/fiscalizacion/buscarrequerimiento.xhtml"
+																target="#{sessionManaged.page}" />
+													</a4j:commandButton></td>
+							</tr>
+							
+						</table>
+	
+					</td>
+				</tr>
+	
+			</table>
+	    </a4j:outputPanel>	
+
+
+   </rich:tab>
+</rich:tabPanel>
+
+	</h:form>
+
+<rich:modalPanel id="modalBusquedaPersona" autosized="true" onshow="autofocus('frmBuscarPersonaDJs');focusInputCodigoPersona()"
+		width="600" top="110" heigth="300" styleClass="sisatModalPanel" >
+
+		<f:facet name="header">BÚSQUEDA DE CONTRIBUYENTE</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalBusquedaPersona" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/fiscalizacion/buscarrequerimientopersona.xhtml" />
+		</h:panelGrid>
+		
+		
+</rich:modalPanel>
+
+<rich:modalPanel id="panelconfirmaactualizainsp" autosized="true"
+		width="300">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfigdj"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaactualizainsp"
+					attachTo="hlpconfigdj" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2">
+						<h:outputText id="succgdj" style="font-weight:bold;color:green"
+							value="Se actualizó la Inspección satisfactoriamente" />
+					</h:panelGrid>
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+<!-- 					<a4j:commandButton value=" Aceptar " style="width:100px;" -->
+<!-- 							reRender="id_panelcommandresultado" -->
+<!-- 							 immediate="true" > -->
+							 
+							
+<!-- 							<f:setPropertyActionListener -->
+<!-- 									value="/sisat/fiscalizacion/buscarrequerimiento.xhtml" -->
+<!-- 									target="#{sessionManaged.page}" /> -->
+<!-- 					</a4j:commandButton> -->
+
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+					    action="#{sessionManaged.sendRedirectPrincipal}"
+						id="id_commandAceptarAct"
+						reRender="panelconfirmaactualizainsp,id_panelprincipalregistropredio,id_panelprincipalregistroresultado" immediate="true">
+						<f:setPropertyActionListener
+							value="/sisat/fiscalizacion/buscarrequerimiento.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandButton>
+					
+					
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+<rich:modalPanel id="panelconfirmaresultadoinsp" autosized="true"
+		width="300">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfigresulta"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaresultadoinsp"
+					attachTo="hlpconfigresulta" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2">
+						<h:outputText id="succgdj" style="font-weight:bold;color:green"
+							value="Se registró el documento satisfactoriamente." />
+					</h:panelGrid>
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+<!-- 					<a4j:commandButton value=" Aceptar " style="width:100px;" -->
+<!-- 							reRender="id_panelcommandresultado" -->
+<!-- 							 immediate="true" > -->
+							 
+							
+<!-- 							<f:setPropertyActionListener -->
+<!-- 									value="/sisat/fiscalizacion/buscarrequerimiento.xhtml" -->
+<!-- 									target="#{sessionManaged.page}" /> -->
+<!-- 					</a4j:commandButton> -->
+
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						id="id_commandAceptarAct"
+						reRender="panelconfirmaresultadoinsp,datoResultados,id_panelprincipalregistroresultado,id_panelprincipalregistropredio">
+					</a4j:commandButton>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelconfirmaresultadoinspar" autosized="true"
+		width="300">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfigresultadoar"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaresultadoinspar"
+					attachTo="hlpconfigresultadoar" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2">
+						<h:outputText id="succgdj" style="font-weight:bold;color:green"
+							value="Se registró el documento satisfactoriamente." />
+					</h:panelGrid>
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						id="id_commandAceptarAct"
+						reRender="panelconfirmaresultadoinspar,datoResultados,id_panelprincipalregistroresultado,id_panelprincipalregistropredio">
+					</a4j:commandButton>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+<!-- <rich:modalPanel id="panelHorarios" autosized="false" keepVisualState="false" width="315" height="230"> -->
+<!--                 <f:facet name="header"> -->
+<!--                     <h:outputText value="Selected Rows"/> -->
+<!--                 </f:facet> -->
+<!--                <f:facet name="controls"> -->
+<!--                     <span style="cursor:pointer" onclick="javascript:Richfaces.hideModalPanel('panelHorarios')">X</span> -->
+<!--                 </f:facet> -->
+<!--             <h:panelGroup layout="block" styleClass="scrolls"> -->
+<!--             <rich:dataTable value="#{actualizarRequerimientoManaged.historico}" var="sel" id="table"> -->
+<!--                 <rich:column> -->
+<!--                     <f:facet name="header"><h:outputText value="Make" /></f:facet> -->
+<!--                     <h:outputText value="#{sel.intervaloHorario}" /> -->
+<!--                 </rich:column> -->
+<!--                 <rich:column id="model"> -->
+<!--                     <f:facet name="header"><h:outputText value="Model" /></f:facet> -->
+<!--                     <h:outputText value="#{sel.descripcionEstado}" /> -->
+<!--                 </rich:column> -->
+<!--                 <rich:column id="price"> -->
+<!--                     <f:facet name="header"><h:outputText value="Price" /></f:facet> -->
+<!--                     <h:outputText value="#{sel.fechaRegistro}" /> -->
+<!--                 </rich:column> -->
+<!--                 <rich:column id="mileage"> -->
+<!--                     <f:facet name="header"><h:outputText value="Mileage" /></f:facet> -->
+<!--                     <h:outputText value="#{sel.nombreUsuario}" /> -->
+<!--                 </rich:column> -->
+<!--                 <rich:column id="stock"> -->
+<!--                     <f:facet name="header"><h:outputText value="Stock" /></f:facet> -->
+<!--                     <h:outputText value="#{sel.stock}" /> -->
+<!--                 </rich:column> -->
+<!--             </rich:dataTable> -->
+<!--             </h:panelGroup> -->
+<!-- </rich:modalPanel> -->
+
+<!-- <rich:modalPanel id="panelMultas" width="750" height="450" autosized="true" -->
+<!-- 		top="110" styleClass="sisatModalPanel"> -->
+<!-- 		<f:facet name="header">EMISIÓN DE MULTAS</f:facet> -->
+<!-- 		<f:facet name="controls"> -->
+<!-- 			<h:panelGroup> -->
+<!-- 				<h:graphicImage value="/images/modal/close.png" id="hlpconfigmulta" -->
+<!-- 					styleClass="hidelink" /> -->
+<!-- 				<rich:componentControl for="panelMultas" attachTo="hlpconfigmulta" -->
+<!-- 					operation="hide" event="onclick" /> -->
+<!-- 			</h:panelGroup> -->
+<!-- 		</f:facet> -->
+
+<!-- 		<h:form id="panel"> -->
+<!-- 			<a4j:outputPanel ajaxRendered="true"> -->
+<!-- 				<rich:panel id="p01" columns="3"> -->
+
+<!-- 					<table border="0"> -->
+<!-- 						<tr> -->
+<!-- 							<td align="left" width="120px"><h:outputText id="textContribuyenteM" value="Contribuyente :" /></td> -->
+<!-- 							<td align="left"> -->
+<!-- 								<h:panelGrid> -->
+<!-- 									<h:outputText id="tdNombre" style="font-weight:bold;" -->
+<!-- 										value="#{actualizarRequerimientoManaged.currentItemValue.personaId} - #{actualizarRequerimientoManaged.currentItemValue.apellidosNombres}" /> -->
+<!-- 								</h:panelGrid> -->
+<!-- 							</td> -->
+<!-- 							<td align="left"> -->
+<!-- 								<h:panelGrid> -->
+<!-- 									<h:outputText id="succ3" -->
+<!-- 										value="Nro. de Requerimiento : #{actualizarRequerimientoManaged.currentItemValue.nroRequerimiento}" /> -->
+<!-- 								</h:panelGrid> -->
+<!-- 							</td> -->
+<!-- 						</tr>	 -->
+<!-- 						<tr>	 -->
+<!-- 							<td align="left"><h:outputText id="textArM" value="Nro. de Acta :" /></td> -->
+<!-- 							<td align="left"> -->
+<!-- 								<h:panelGrid> -->
+<!-- 									<h:outputText id="succ4" style="font-weight:bold;" -->
+<!-- 										value="#{actualizarRequerimientoManaged.currentItemValue.nroRequerimiento}" /> -->
+<!-- 								</h:panelGrid> -->
+<!-- 							</td> -->
+<!-- 						</tr> -->
+<!-- 						<tr> -->
+<!-- 						<td> -->
+<!-- 							<h:panelGrid cellpadding="0" cellspacing="0" -->
+<!-- 								style="padding-left:4px" columns="2" -->
+<!-- 								columnClasses="col1comboTipoMulta, col2comboTipoMulta"> -->
+<!-- 								<h:outputLabel value="Unidad: "> -->
+<!-- 									<span class="requiredField">*</span> -->
+<!-- 								</h:outputLabel> -->
+<!-- 							</h:panelGrid> -->
+<!-- 						</td> -->
+<!-- 						<td>		 -->
+<!-- 								<rich:comboBox id="idComboBoxUnidad" -->
+<!-- 									value="#{actualizarRequerimientoManaged.cmbUnidad}" -->
+<!-- 									valueChangeListener="#{actualizarRequerimientoManaged.changeListenerComboBoxUnidad}" -->
+<!-- 									width="210" tabindex="3"> -->
+
+<!-- 									<f:selectItem itemValue="Dpto. Fiscalización y Censo Predial"/> -->
+<!-- 									<a4j:support event="onchange" ajaxSingle="true" -->
+<!-- 										reRender="idPanelPartesFisca, idPanelContexto"></a4j:support> -->
+<!-- 								</rich:comboBox> -->
+							
+<!-- 						</td> -->
+<!-- 						</tr> -->
+<!-- 						<tr> -->
+<!-- 							<td align="left"> -->
+<!-- 							    <h:outputLabel value="Multa: "> -->
+<!-- 									<span class="requiredField">*</span> -->
+<!-- 								</h:outputLabel> -->
+<!-- 							</td> -->
+<!-- 							<td align="left"> -->
+<!-- 								<rich:comboBox id="cmbsubconcepto" -->
+<!-- 									value="#{actualizarRequerimientoManaged.cmbSubConcepto}" -->
+<!-- 									valueChangeListener="#{actualizarRequerimientoManaged.changeListenerSubConcepto}" -->
+<!-- 									defaultLabel="#{msg['obl.defaultLabelCmbSubConcepto']}" -->
+<!-- 									width="210" tabindex="3" required="true" -->
+<!-- 									requiredMessage="Seleccione una Multa"> -->
+<!-- 									<f:selectItems -->
+<!-- 										value="#{actualizarRequerimientoManaged.listSubConceptoDTOItems}" /> -->
+<!-- 									<a4j:support reRender="panelsubconceptodescripcion" -->
+<!-- 										event="onchange" ajaxSingle="true"></a4j:support> -->
+<!-- 								</rich:comboBox> -->
+<!-- 								</td> -->
+						
+<!-- 								<td align="left"> -->
+<!-- 								<h:panelGrid id="panelsubconceptodescripcion" width="450" -->
+<!-- 								rowClasses="row-tipo-multa"> -->
+<!-- 								<h:outputText -->
+<!-- 									value="Descripción: #{actualizarRequerimientoManaged.obligacionDTO.subConceptoDescripcion}" -->
+<!-- 									rendered="#{not empty actualizarRequerimientoManaged.obligacionDTO.subConceptoDescripcion}" /> -->
+<!-- 							</h:panelGrid> -->
+<!-- 							</td> -->
+<!-- 						</tr> -->
+<!-- 						<tr> -->
+<!-- 							<td width="120px"> -->
+<!-- 								<h:panelGrid cellpadding="0" cellspacing="0" columns="2" -->
+<!-- 									columnClasses="col1comboTipoMulta, col2comboTipoMulta"> -->
+<!-- 									<h:outputLabel value="Tributo Asociado: " -->
+<!-- 										for="comboBoxTributoAsociado"> -->
+<!-- 										<span class="requiredField">*</span> -->
+<!-- 									</h:outputLabel> -->
+<!-- 								</h:panelGrid> -->
+<!-- 							</td>		 -->
+<!-- 							<td>	 -->
+<!-- 									<rich:comboBox id="comboBoxTributoAsociado" -->
+<!-- 										value="#{actualizarRequerimientoManaged.cmbTributoAsociado}" width="210" -->
+<!-- 										valueChangeListener="#{actualizarRequerimientoManaged.changeListenerComboBoxTributoAsociado}" -->
+<!-- 										defaultLabel="Seleccione" required="true" -->
+<!-- 										requiredMessage="Seleccione un tributo asociado"> -->
+<!-- 										<f:selectItem itemValue="Predial" /> -->
+
+<!-- 									</rich:comboBox> -->
+								
+<!-- 							</td> -->
+<!-- 							</tr> -->
+<!-- 							<tr> -->
+<!-- 							<td> -->
+<!-- 								<h:outputLabel value="Contexto: "> -->
+<!-- 								<span class="requiredField">*</span> -->
+<!-- 								</h:outputLabel>							 -->
+<!-- 							</td> -->
+<!-- 							<td width="300px"> -->
+<!-- 							<h:panelGrid id="idPanelContexto" columns="2" columnClasses="col1comboTipoMulta, col2comboTipoMulta"> -->
+
+<!-- 									<a4j:outputPanel -->
+<!-- 										rendered="#{actualizarRequerimientoManaged.obligacionDTO.unidadId == 61}"> -->
+<!-- 										<h:selectOneRadio -->
+<!-- 											value="#{actualizarRequerimientoManaged.obligacionDTO.contexto}" -->
+<!-- 											layout="lineDirection"> -->
+
+<!-- 											<f:selectItem itemLabel="Inscripción" itemValue="1" /> -->
+<!-- 											<f:selectItem itemLabel="Descargo" itemValue="2" /> -->
+
+
+<!-- 											<a4j:support event="onchange" ajaxSingle="true" -->
+<!-- 												reRender="idPanelDatosFecha"></a4j:support> -->
+<!-- 										</h:selectOneRadio> -->
+<!-- 									</a4j:outputPanel> -->
+<!-- 									<a4j:outputPanel -->
+<!-- 										rendered="#{actualizarRequerimientoManaged.obligacionDTO.unidadId == 64 or actualizarRequerimientoManaged.obligacionDTO.unidadId == 62 }"> -->
+<!-- 										<h:selectOneRadio -->
+<!-- 											value="#{actualizarRequerimientoManaged.obligacionDTO.contexto}" -->
+<!-- 											layout="lineDirection"> -->
+
+<!-- 											<f:selectItem itemLabel="Inscripción" itemValue="1" /> -->
+<!-- 											<f:selectItem itemLabel="Descargo" itemValue="2" /> -->
+<!-- 											<f:selectItem itemLabel="Omisión" itemValue="3" /> -->
+
+<!-- 											<a4j:support event="onchange" ajaxSingle="true" -->
+<!-- 												reRender="idPanelDatosFecha"></a4j:support> -->
+<!-- 										</h:selectOneRadio> -->
+<!-- 									</a4j:outputPanel> -->
+<!-- 								</h:panelGrid> -->
+
+<!-- 							</td> -->
+<!-- 							<td> -->
+<!-- 						<h:panelGrid columns="2" id="idPanelDatosFecha"> -->
+<!-- 									<h:panelGrid cellpadding="0" cellspacing="0" columns="2" -->
+<!-- 										columnClasses="col1CampoFecha, col2CampoFecha"> -->
+
+<!-- 										<h:outputLabel -->
+<!-- 											value="#{(actualizarRequerimientoManaged.obligacionDTO.contexto eq 1) ?'Fecha de Compra: ' : (actualizarRequerimientoManaged.obligacionDTO.contexto eq 2 ? 'Fecha de Venta: ': 'Fecha Acta (AINR): ' )}" -->
+<!-- 											for="calendarfechaAdquision"> -->
+<!-- 											<span class="requiredField">*</span> -->
+<!-- 										</h:outputLabel> -->
+									 
+<!-- 										<h:panelGroup> -->
+<!-- 											<rich:calendar id="calendarfechaAdquision" -->
+<!-- 												value="#{actualizarRequerimientoManaged.obligacionDTO.fechaAdquision}" -->
+<!-- 												locale="#{msg['param.localedate']}" inputClass="maskDate" -->
+<!-- 												datePattern="#{msg['param.datepattern']}" required="true" -->
+<!-- 												enableManualInput="true" -->
+<!-- 												requiredMessage="#{msg['obl.requiredFechaInfraccion']}" -->
+<!-- 												converterMessage="#{msg['obl.converterFecha']}" -->
+<!-- 												inputSize="10" tabindex="6" inputStyle="text-align:center"> -->
+<!-- 												</rich:calendar> -->
+<!-- 											<rich:jQuery id="maskedo002" selector=".maskDate" -->
+<!-- 												query="mask('#{msg['obl.maskFecha']}')" timing="onload" /> -->
+<!-- 										</h:panelGroup> -->
+<!-- 									</h:panelGrid> -->
+<!-- 								</h:panelGrid> -->
+<!-- 							</td> -->
+<!-- 						</tr> -->
+						
+<!-- 						<tr> -->
+
+<!-- 							<td> -->
+<!-- 							<h:panelGrid id="panelRefenciaObligacion" -->
+<!-- 									cellpadding="0" cellspacing="0" columns="6" -->
+<!-- 									columnClasses="panelrefereciacol1, panelrefereciacol2,panelrefereciacol1, panelrefereciacol2"> -->
+<!-- 								<h:panelGroup> -->
+<!-- 									<h:outputLabel value="#{msg['obl.labelCodigo']}" -->
+<!-- 										for="inputcodigo" -->
+<!-- 										rendered="#{actualizarRequerimientoManaged.tipoReferenciaOblg == actualizarRequerimientoManaged.TIPOPREDIO}"> -->
+<!-- 										<span class="requiredField">*</span> -->
+<!-- 									</h:outputLabel> -->
+									
+<!-- 								</h:panelGroup> -->
+<!-- 							</h:panelGrid> -->
+<!-- 							</td> -->
+<!-- 							<td> -->
+<!-- 					                <h:panelGrid id="panelbusquedavehipredio" columns="3" columnClasses="panelbusquedavehiprediocol2, panelbusquedavehiprediocol3 "> -->
+<!-- 										<h:panelGroup> -->
+<!-- 											<h:inputText id="inputcodigo" -->
+<!-- 												rendered="#{actualizarRequerimientoManaged.tipoReferenciaOblg == actualizarRequerimientoManaged.TIPOPREDIO}" -->
+<!-- 												value="#{actualizarRequerimientoManaged.obligacionDTO.codigoPlacaReferencia}" -->
+<!-- 												size="12" -->
+<!-- 												onclick="#{rich:component('modalPanelPredios')}.show();return false" /> -->
+	
+<!-- 										</h:panelGroup> -->
+	
+<!-- 										<a4j:commandLink -->
+<!-- 											action="#{actualizarRequerimientoManaged.quitarPredioVehiculo}" -->
+<!-- 											value="quitar" reRender="panelbusquedavehipredio" -->
+<!-- 											immediate="true" ajaxSingle="true" /> -->
+<!-- 								</h:panelGrid> -->
+
+<!-- 							</td> -->
+								
+
+<!-- 						</tr> -->
+<!-- 						<tr> -->
+<!-- 								<td width="100px"> -->
+<!-- 								<h:panelGrid columns="2"> -->
+<!-- 									<h:outputLabel value="¿Presentó Documentación?: " -->
+<!-- 										for="textAreaGlosa" /> -->
+<!-- 								</h:panelGrid> -->
+<!-- 								</td>	 -->
+<!-- 								<td>	 -->
+<!-- 									<h:selectBooleanCheckbox value="#{actualizarRequerimientoManaged.obligacionDTO.presentoDocumentos}"/> -->
+<!-- 								</td> -->
+<!-- 								<td> -->
+								
+<!-- 									<h:panelGrid columns="2"> -->
+<!-- 										<h:outputLabel value="Glosa: " for="textAreaGlosa" /> -->
+<!-- 										<h:inputTextarea id="textAreaGlosa" -->
+<!-- 											value="#{actualizarRequerimientoManaged.obligacionDTO.glosa}" cols="30" rows="1" /> -->
+<!-- 									</h:panelGrid> -->
+<!-- 								</td> -->
+<!-- 						</tr> -->
+<!-- 					</table> -->
+<!-- 				</rich:panel> -->
+<!-- <div align="center"> -->
+<!-- 			<h:panelGrid columns="5"> -->
+					
+<!-- 						<a4j:commandButton value="Generar" -->
+<!-- 							action="#{emisionMultasManaged.generarMulta}" -->
+<!-- 							oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};" -->
+<!-- 							reRender="idTablaMultas, idPanelFormulario" status="ajaxStatus"> -->
+<!-- 						</a4j:commandButton> -->
+
+<!-- 					<h:outputText value="Descargar RM(s) Fiscalización: " -->
+<!-- 						rendered="#{emisionMultasManaged.listVehicularDTOs!=null or (emisionMultasManaged.listDjPredials!=null)}" /> -->
+				
+<!-- 					<h:commandLink id="id_descargarRmServ" -->
+<!-- 						action="#{emisionMultasManaged.generacionRmPendientesPagoFiscalizacion}" -->
+<!-- 						immediate="true"> -->
+<!-- 						<h:graphicImage id="btnFisc" value="/images/modal/pdf.png" -->
+<!-- 							style="border:0 ; height:22px; width:22px;" -->
+<!-- 							title="Lista de RM(s)  Pendientes de Pago Emitidas por Fiscalización" /> -->
+<!-- 					</h:commandLink> -->
+					
+<!-- 				</h:panelGrid> -->
+<!-- 				</div> -->
+<!-- 			</a4j:outputPanel> -->
+<!-- 					<rich:panel id="pnlTablaRm"> -->
+
+<!-- 			<rich:dataTable id="idTablaMultas" -->
+<!-- 				value="#{emisionMultasManaged.lstMultaDTOs}" var="item"> -->
+<!-- 				<f:facet name="header"> Multas Pendientes de Pago</f:facet> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Ejer. Fiscal</f:facet> -->
+<!-- 					<div align="center"> -->
+<!-- 						<h:outputText value="#{item.anho}" /> -->
+<!-- 					</div> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Nro RS-Multa</f:facet> -->
+<!-- 					<h:outputText value="#{item.nroRsMulta}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Unidad</f:facet> -->
+<!-- 					<h:outputText value="#{item.unidad}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Multa</f:facet> -->
+<!-- 					<h:outputText value="#{item.subConcepto}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Fecha Emisión</f:facet> -->
+<!-- 					<h:outputText value="#{item.fechaEmision}"> -->
+<!-- 						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" -->
+<!-- 							timeZone="#{msg['param.timezone']}" /> -->
+<!-- 					</h:outputText> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Fecha Infracción</f:facet> -->
+<!-- 					<div align="center"> -->
+<!-- 						<h:outputText value="#{item.fechaVencimiento}"> -->
+<!-- 							<f:convertDateTime pattern="dd/MM/yyyy" -->
+<!-- 								timeZone="#{msg['param.timezone']}" /> -->
+<!-- 						</h:outputText> -->
+<!-- 					</div> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">UIT</f:facet> -->
+<!-- 					<h:outputText value="#{item.valorUit}"> -->
+<!-- 						<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 							locale="en" /> -->
+<!-- 					</h:outputText> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">% Sancion</f:facet> -->
+<!-- 					<div align="center"> -->
+<!-- 						<h:outputText value="#{item.porcentajeSancion}"> -->
+<!-- 							<f:convertNumber type="percent" /> -->
+<!-- 						</h:outputText> -->
+<!-- 					</div> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Monto</f:facet> -->
+<!-- 					<div align="right"> -->
+<!-- 						<h:outputText value="#{item.monto}"> -->
+<!-- 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 								locale="en" /> -->
+<!-- 						</h:outputText> -->
+<!-- 					</div> -->
+<!-- 					<f:facet name="footer"> -->
+
+<!-- 						<h:outputText value="#{emisionMultasManaged.totalMonto}"> -->
+<!-- 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 								locale="en" /> -->
+<!-- 						</h:outputText> -->
+
+<!-- 					</f:facet> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Interes</f:facet> -->
+<!-- 					<div align="right"> -->
+<!-- 						<h:outputText value="#{item.interes}"> -->
+<!-- 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 								locale="en" /> -->
+<!-- 						</h:outputText> -->
+<!-- 					</div> -->
+<!-- 					<f:facet name="footer"> -->
+
+<!-- 						<h:outputText value="#{emisionMultasManaged.totalInteres}"> -->
+<!-- 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 								locale="en" /> -->
+<!-- 						</h:outputText> -->
+
+<!-- 					</f:facet> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Sub Total</f:facet> -->
+<!-- 					<div align="right"> -->
+<!-- 						<h:outputText value="#{item.montoSinDscto}"> -->
+<!-- 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 								locale="en" /> -->
+<!-- 						</h:outputText> -->
+<!-- 					</div> -->
+<!-- 					<f:facet name="footer"> -->
+
+<!-- 						<h:outputText value="#{emisionMultasManaged.totalSubTotal}"> -->
+<!-- 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 								locale="en" /> -->
+<!-- 						</h:outputText> -->
+
+<!-- 					</f:facet> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Dscto</f:facet> -->
+<!-- 					<div align="right"> -->
+<!-- 						<h:outputText value="#{item.montoDescuento}"> -->
+<!-- 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 								locale="en" /> -->
+<!-- 						</h:outputText> -->
+<!-- 					</div> -->
+<!-- 					<f:facet name="footer"> -->
+
+<!-- 						<h:outputText value="#{emisionMultasManaged.totalDscto}"> -->
+<!-- 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 								locale="en" /> -->
+<!-- 						</h:outputText> -->
+
+<!-- 					</f:facet> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header">Total A Pagar</f:facet> -->
+<!-- 					<div align="right"> -->
+<!-- 						<h:outputText value="#{item.montoConDscto}"> -->
+<!-- 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 								locale="en" /> -->
+<!-- 						</h:outputText> -->
+<!-- 					</div> -->
+<!-- 					<f:facet name="footer"> -->
+<!-- 						<h:outputText value="#{emisionMultasManaged.totalAPagar}"> -->
+<!-- 							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" -->
+<!-- 								locale="en" /> -->
+<!-- 						</h:outputText> -->
+<!-- 					</f:facet> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column> -->
+<!-- 					<f:facet name="header"> -->
+<!-- 					</f:facet> -->
+<!-- 					<div style="width: 60px; text-align: center;"> -->
+<!-- 						<h:selectBooleanCheckbox value="#{item.selected}" -->
+<!-- 							disabled="#{item.fechaNotificacion!=null}" -->
+<!-- 							valueChangeListener="#{emisionMultasManaged.valueChangeListenerItem(item)}"> -->
+<!-- 							<a4j:support event="onchange" ajaxSingle="true" /> -->
+<!-- 						</h:selectBooleanCheckbox> -->
+<!-- 					</div> -->
+
+<!-- 					<f:facet name="footer"> -->
+<!-- 						<h:panelGrid style="width: 60px; text-align: center;"> -->
+<!-- 							<a4j:commandLink value="Notificar" -->
+<!-- 								title="Notificación de RM Autorizado Solo a Personal de Servicios" -->
+<!-- 								action="#{emisionMultasManaged.notificarResolucionMulta}" -->
+<!-- 								oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }" -->
+<!-- 								styleClass="colorBoton" style="color:black;" status="ajaxStatus" -->
+<!-- 								ajaxSingle="true" reRender="panelinclude"></a4j:commandLink> -->
+<!-- 						</h:panelGrid> -->
+<!-- 					</f:facet> -->
+<!-- 				</rich:column> -->
+<!-- 			</rich:dataTable> -->
+<!-- 		</rich:panel> -->
+<!-- 		<rich:modalPanel id="modalPanelPredios" width="660" height="430"> -->
+<!-- 			<f:facet name="header"> -->
+<!-- 				<h:outputText value="#{msg['obl.headerModalListadoPred']}" /> -->
+<!-- 			</f:facet> -->
+<!-- 			<f:facet name="controls"> -->
+<!-- 				<h:panelGroup> -->
+<!-- 					<h:graphicImage value="/images/modal/close.png" -->
+<!-- 						styleClass="hidelink" id="hidelink3" /> -->
+<!-- 					<rich:componentControl for="modalPanelPredios" attachTo="hidelink3" -->
+<!-- 						operation="hide" event="onclick" /> -->
+<!-- 				</h:panelGroup> -->
+<!-- 			</f:facet> -->
+<!-- 			<div align="center"> -->
+<!-- 				<h3> -->
+<!-- 					<h:outputText value="#{msg['obl.labelPredios']}" /> -->
+<!-- 				</h3> -->
+<!-- 			</div> -->
+<!-- 			<rich:extendedDataTable id="datosConstruccion" -->
+<!-- 				value="#{actualizarRequerimientoManaged.listDjPredials}" var="recordPredial" -->
+<!-- 				width="635px" height="330px" sortMode="single" -->
+<!-- 				selectionMode="single" enableContextMenu="false" rowKeyVar="row"> -->
+<!-- 				<rich:column id="x14" width="30px"> -->
+<!-- 					<a4j:commandLink ajaxSingle="true" -->
+<!-- 						oncomplete="#{rich:component('modalPanelPredios')}.hide();" -->
+<!-- 						reRender="panelRefenciaObligacion"> -->
+<!-- 						<h:graphicImage value="/images/ver2.png" style="border: 0px;" /> -->
+<!-- 						<f:setPropertyActionListener -->
+<!-- 							target="#{actualizarRequerimientoManaged.obligacionDTO.codigoPlacaReferencia}" -->
+<!-- 							value="#{recordPredial.codigoPredio}" /> -->
+<!-- 						<f:setPropertyActionListener -->
+<!-- 							target="#{actualizarRequerimientoManaged.obligacionDTO.djReferencia}" -->
+<!-- 							value="#{recordPredial.djId}" /> -->
+<!-- 					</a4j:commandLink> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column id="x8" width="95px"> -->
+<!-- 					<f:facet name="header">Codigo Predio</f:facet> -->
+<!-- 					<h:outputText value="#{recordPredial.codigoPredio}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column id="x11" width="400px"> -->
+<!-- 					<f:facet name="header">#{msg['rp.direccion']}</f:facet> -->
+<!-- 					<h:outputText value="#{recordPredial.direccionCompleta}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column id="x7" width="110px"> -->
+<!-- 					<f:facet name="header">Tipo Predio</f:facet> -->
+<!-- 					<h:outputText value="#{recordPredial.tipoPredio}" /> -->
+<!-- 				</rich:column> -->
+<!-- 			</rich:extendedDataTable> -->
+<!-- 		</rich:modalPanel> -->
+<!-- 		</h:form> -->
+<!-- </rich:modalPanel> -->
+
+<!-- <rich:modalPanel id="panelconfirmagenerardj" autosized="true" -->
+<!-- 		width="300"> -->
+
+<!-- 		<f:facet name="header"> -->
+<!-- 			<h:outputText value="Confirmacion" /> -->
+<!-- 		</f:facet> -->
+<!-- 		<f:facet name="controls"> -->
+<!-- 			<h:panelGroup> -->
+<!-- 				<h:graphicImage value="/images/modal/close.png" id="hlpconfiggenera" -->
+<!-- 					styleClass="hidelink" /> -->
+<!-- 				<rich:componentControl for="panelconfirmagenerardj" -->
+<!-- 					attachTo="hlpconfiggenera" operation="hide" event="onclick" /> -->
+<!-- 			</h:panelGroup> -->
+<!-- 		</f:facet> -->
+<!-- 		<h:form> -->
+<!-- 			<h:panelGrid columns="1"> -->
+<!-- 				<a4j:outputPanel ajaxRendered="true"> -->
+<!-- 					<h:panelGrid columns="2"> -->
+<!-- 						<h:outputText id="otextgenerar" -->
+<!-- 							style="font-weight:bold;color:green" -->
+<!-- 							value="¿Desea generar DJ(s) de fiscalización?" /> -->
+<!-- 					</h:panelGrid> -->
+<!-- 				</a4j:outputPanel> -->
+<!-- 				<h:panelGrid columns="2"> -->
+<!-- 					<a4j:commandButton value=" Aceptar " style="width:80px;" -->
+<!-- 						action="#{controlRequerimientoManaged.actualizacion}" -->
+<!-- 						immediate="true"> -->
+<!-- 						<f:setPropertyActionListener -->
+<!-- 							value="#{controlRequerimientoManaged.datosContribuyente}" -->
+<!-- 							target="#{controlRequerimientoManaged.datosContribuyente}" -->
+<!-- 							id="ractual" /> -->
+<!-- 						<f:setPropertyActionListener -->
+<!-- 							value="/sisat/persona/buscarpersona.xhtml" -->
+<!-- 							target="#{sessionManaged.page}" /> -->
+<!-- 					</a4j:commandButton> -->
+<!-- 					<a4j:commandButton value="#{msg['gn.cancelar']}" -->
+<!-- 						style="width:80px;" -->
+<!-- 						action="#{controlRequerimientoManaged.buscarDjFiscalizada}" -->
+<!-- 						reRender="id_panelDjs" -->
+<!-- 						onclick="Richfaces.hideModalPanel('panelconfirmagenerardj')" -->
+<!-- 						immediate="true"> -->
+<!-- 					</a4j:commandButton> -->
+
+<!-- 				</h:panelGrid> -->
+
+<!-- 			</h:panelGrid> -->
+<!-- 		</h:form> -->
+<!-- 	</rich:modalPanel> -->
+<!-- 	<rich:modalPanel id="panelconfirmagenerardjomisa" autosized="true" -->
+<!-- 		width="300"> -->
+
+<!-- 		<f:facet name="header"> -->
+<!-- 			<h:outputText value="Confirmacion" /> -->
+<!-- 		</f:facet> -->
+<!-- 		<f:facet name="controls"> -->
+<!-- 			<h:panelGroup> -->
+<!-- 				<h:graphicImage value="/images/modal/close.png" -->
+<!-- 					id="hlpconfiggeneraomisa" styleClass="hidelink" /> -->
+<!-- 				<rich:componentControl for="panelconfirmagenerardjomisa" -->
+<!-- 					attachTo="hlpconfiggeneraomisa" operation="hide" event="onclick" /> -->
+<!-- 			</h:panelGroup> -->
+<!-- 		</f:facet> -->
+<!-- 		<h:form> -->
+<!-- 			<h:panelGrid columns="1"> -->
+<!-- 				<a4j:outputPanel ajaxRendered="true"> -->
+<!-- 					<h:panelGrid columns="2"> -->
+<!-- 						<h:outputText id="otextgenerar" -->
+<!-- 							style="font-weight:bold;color:green" -->
+<!-- 							value="¿Tiene un predio omiso?" /> -->
+<!-- 					</h:panelGrid> -->
+<!-- 				</a4j:outputPanel> -->
+<!-- 				<h:panelGrid columns="2"> -->
+<!-- 					<a4j:commandButton value="#{msg['gn.si']}" style="width:80px;" -->
+<!-- 						action="#{controlRequerimientoManaged.actualizacion}" -->
+<!-- 						immediate="true"> -->
+<!-- 						<f:setPropertyActionListener -->
+<!-- 							value="#{controlRequerimientoManaged.datosContribuyente}" -->
+<!-- 							target="#{controlRequerimientoManaged.datosContribuyente}" -->
+<!-- 							id="ractual" /> -->
+<!-- 						<f:setPropertyActionListener -->
+<!-- 							value="/sisat/persona/buscarpersona.xhtml" -->
+<!-- 							target="#{sessionManaged.page}" /> -->
+<!-- 					</a4j:commandButton> -->
+<!-- 					<a4j:commandButton value="#{msg['gn.no']}" style="width:80px;" -->
+<!-- 						action="#{controlRequerimientoManaged.buscarDjFiscalizada}" -->
+<!-- 						reRender="id_panelDjs" -->
+<!-- 						oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'panelconfirmagenerardj\')' }" -->
+<!-- 						onclick="Richfaces.hideModalPanel('panelconfirmagenerardjomisa')" -->
+<!-- 						immediate="true"> -->
+<!-- 					</a4j:commandButton> -->
+
+<!-- 				</h:panelGrid> -->
+
+<!-- 			</h:panelGrid> -->
+<!-- 		</h:form> -->
+<!-- 	</rich:modalPanel> -->
+	
+<!-- 	<rich:modalPanel onshow="autofocus('formBuscarPredio')" -->
+<!-- 		id="panelprediosxpersona" moveable="true" resizeable="false" -->
+<!-- 		minWidth="1000" minHeight="650"> -->
+<!-- 		<f:facet name="header">PREDIOS POR CONTRIBUYENTE</f:facet> -->
+<!-- 		<f:facet name="controls"> -->
+<!-- 			<h:panelGroup> -->
+<!-- 				<h:graphicImage value="/images/modal/close.png" -->
+<!-- 					id="id_imagepredio" styleClass="hidelink" /> -->
+<!-- 				<rich:componentControl for="panelprediosxpersona" -->
+<!-- 					attachTo="id_imagepredio" operation="hide" -->
+<!-- 					event="onclick" /> -->
+<!-- 			</h:panelGroup> -->
+<!-- 		</f:facet> -->
+<!-- 		<h:form id="formBuscarPredio"> -->
+<!-- 			<h:panelGrid width="100%"> -->
+<!-- 				<a4j:include viewId="/sisat/predial/buscarpredio.xhtml" /> -->
+<!-- 			</h:panelGrid> -->
+<!-- 		</h:form> -->
+<!-- 	</rich:modalPanel> -->
+	
+</ui:composition>

@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+
+	<h:form>
+		<rich:panel id="p01">
+			<f:facet name="header">
+				<h:outputLabel value="#{msg['mt.admintablas']}" />
+			</f:facet>
+<style type="">
+.col1cmb {
+	width: 50px;
+}
+
+.col2cmb {
+	width: 270px;
+}
+
+.col2cmb2 {
+	width: 160px;
+}
+
+.colButtons {
+	width: 170px;
+}
+
+.rowcmb {
+	height: 27px;
+}
+
+.body-panel-class {
+	padding: 0px;
+}
+</style>
+			<h:panelGrid>
+			<h:panelGrid id="panelgridcmbmodulo" columns="2"
+							columnClasses="col1cmb, col2cmb" rowClasses="rowcmb">
+							<h:outputText value="#{msg['mt.labelModulo']} :" />
+							<rich:comboBox width="270px" defaultLabel="#{msg['mt.defaultLabelCmbModulo']}"
+								selectFirstOnUpdate="true" directInputSuggestions="false"
+								id="cmbmodulo" immediate="true"
+								valueChangeListener="#{administrarTablasManaged.listenerChangeComboBoxModulo}"
+								required="true" requiredMessage="#{msg['mt.requiredCmbModulo']}" tabindex="1">
+								<f:selectItems id="selectitemsmodulo"
+									value="#{administrarTablasManaged.lstModulos}" />
+								<a4j:support id="supportcmbmodulos" reRender="panelgridcmbtabla, idPanelResultados"
+									event="onchange" BypassUpdates="false" ajaxSingle="true"
+									oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+									status="ajaxStatus" />
+							</rich:comboBox>
+						</h:panelGrid> <h:panelGrid id="panelgridcmbtabla" columns="3"
+							columnClasses="col1cmb, col2cmb2, colButtons" rowClasses="rowcmb">
+
+							<h:outputText value="#{msg['mt.labelTabla']} :" />
+
+							<rich:comboBox width="150px" defaultLabel="#{msg['mt.defaultLabelCmbTabla']}"
+								selectFirstOnUpdate="true" directInputSuggestions="false"
+								value="#{administrarTablasManaged.cmbValueTabla}"
+								id="id_tipodocumento" immediate="true"
+								binding="#{administrarTablasManaged.cmbtabla}"
+								valueChangeListener="#{administrarTablasManaged.listenerChangeTabla}"
+								required="true" requiredMessage="#{msg['mt.requiredCmbTabla']}" tabindex="2">
+								<f:selectItems id="id_lsttipodocumento"
+									value="#{administrarTablasManaged.lstTablas}" />
+								<a4j:support id="id_supportlsttipodocumento"
+									reRender="idPanelResultados, modalPanel, buttonNuevo"
+									event="onchange" BypassUpdates="false" ajaxSingle="true"
+									oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+									status="ajaxStatus" />
+							</rich:comboBox>
+
+							<rich:panel id="buttonNuevo" style="border:0; width:200px"
+								bodyClass="body-panel-class" headerClass="body-panel-class">
+								<a4j:commandButton value="#{msg['mt.admintablasnuevoregistro']}"
+									onclick="#{rich:component('modalPanel')}.show();return false"
+									rendered="#{administrarTablasManaged.flagMostarButtonNuevo }" />
+
+								<!-- Descomentar el siguiente boton cuando se confirme la habilidad de duplicacion de registros -->
+								<a4j:commandButton
+									value="#{msg['mt.admintablasduplicarregistro']}"
+									onclick="#{rich:component('modalPanelConfirmDuplicar')}.show();return false"
+									rendered="#{administrarTablasManaged.flagMostarButtonDuplicar }" />
+
+							</rich:panel>
+						</h:panelGrid>
+				</h:panelGrid>
+
+		</rich:panel>
+
+		<!-- <rich:panel id="panelFiltro">
+					
+			<h:selectManyCheckbox id="filtroColumns" value="#{administrarTablasManaged.listColumnasFiltroSelect}" valueChangeListener="#{administrarTablasManaged.listenerChangeValueFiltroColumns}">
+				<f:selectItems value="#{administrarTablasManaged.lstColumnasSelectTable}" ></f:selectItems>
+				<a4j:support event="onchange" ajaxSingle="true" bypassUpdates="true" reRender="panelFiltro,idPanelResultados" 
+				oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"></a4j:support>
+			</h:selectManyCheckbox>
+		
+		</rich:panel> -->
+
+	</h:form>
+
+
+<h:form>
+		<rich:panel id="idPanelResultados">
+
+			<rich:panel id="panelFiltro"
+				rendered="#{administrarTablasManaged.tablaDTO != null}">
+				<h:outputText value="#{msg['mt.labelFiltrarPor']}: " />
+				<h:selectOneMenu
+					value="#{administrarTablasManaged.filtroSeleccionado.campoDTO}"
+					converter="campoConverter">
+					<f:selectItems
+						value="#{administrarTablasManaged.listCmbFiltroSelect}" var="col"
+						itemLabel="#{col.alias}" />
+				</h:selectOneMenu>
+				<h:outputText value=" = " />
+				<h:inputText
+					value="#{administrarTablasManaged.filtroSeleccionado.valorFiltro}"
+					requiredMessage="#{msg['mt.requiredValorFiltro']}" />
+
+				<a4j:commandButton value="#{msg['mt.labelButtonFiltrar']}"
+					action="#{administrarTablasManaged.agregarFiltroColumna}"
+					oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+					reRender="panelFiltro, idExtendedTableData, tableDataScroller" />
+
+				<h:outputText
+					value="  #{msg['mt.labelNota']}" />
+				<h:dataTable var="itemFiltro"
+					value="#{administrarTablasManaged.listFiltroColunmaDTOs}">
+
+					<h:column>
+						<a4j:outputPanel style="border:1px solid gray;padding:2px"
+							layout="block">
+							<a4j:commandLink
+								action="#{administrarTablasManaged.quitarFiltroColumna}"
+								oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+								reRender="panelFiltro, idExtendedTableData, tableDataScroller"
+								title="#{msg['mt.titleQuitarFiltro']}">
+								<h:graphicImage value="/images/modal/close.png"
+									style="border:0px;" />
+								<f:setPropertyActionListener
+									target="#{administrarTablasManaged.filtroSeleccionado}"
+									value="#{itemFiltro}" />
+							</a4j:commandLink>
+
+							<h:outputText
+								value="  #{itemFiltro.campoDTO.alias} = #{itemFiltro.valorFiltro}" />
+						</a4j:outputPanel>
+					</h:column>
+				</h:dataTable>
+			</rich:panel>
+
+			<rich:extendedDataTable id="idExtendedTableData"
+				value="#{administrarTablasManaged.lstData}" var="model" rows="15"
+				height="430px" selectionMode="multi"
+				noDataLabel="#{msg['mt.admintablasnoregistros']}" rowKeyVar="row"
+				selection="#{administrarTablasManaged.lstSelectionData}">
+				<f:facet name="header">
+					<h:outputText
+						value="#{administrarTablasManaged.tablaDTO.descripcionCorta}" />
+				</f:facet>
+
+				<rich:column width="30px" id="xm10">
+					<f:facet name="header" width="10%">
+						<h:outputText value="#{msg['mt.admintablascolumnedit']}" />
+					</f:facet>
+
+					<a4j:commandLink ajaxSingle="true" id="newlink3"
+						action="#{administrarTablasManaged.seleccionarItem}"
+						oncomplete="#{rich:component('modalPanel')}.show();return false"
+						reRender="modalPanel" status="ajaxStatus">
+						<h:graphicImage value="/images/modal/edit.gif" style="border:0"
+							id="xm11" />
+						<f:setPropertyActionListener value="#{model}"
+							target="#{administrarTablasManaged.rowLstDataDTO}" id="xm#{row}" />
+						<f:setPropertyActionListener value="#{row}"
+							target="#{administrarTablasManaged.currentRow}" id="xm1#{row}" />
+						<f:setPropertyActionListener
+							target="#{administrarTablasManaged.flagEdicion}" value="true" />
+					</a4j:commandLink>
+
+				</rich:column>
+
+				<rich:columns value="#{administrarTablasManaged.listColumnasSelect}"
+					index="ind" id="column#{ind}" var="columns"
+					width="#{98/administrarTablasManaged.listColumnasSelect.size()}%">
+					<f:facet name="header">
+						<h:outputText value="#{columns.alias}" />
+					</f:facet>
+					<h:outputText value="#{model.rowData[ind]}" />
+				</rich:columns>
+				<a4j:support reRender="buttonNuevo, modalPanelConfirmDuplicar"
+					id="extended_table_bean_take_selection"
+					action="#{administrarTablasManaged.takeSelection}"
+					event="onselectionchange" />
+			</rich:extendedDataTable>
+
+			<rich:datascroller id="tableDataScroller" align="center"
+				for="idExtendedTableData" renderIfSinglePage="false"
+				status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages"  >
+				<f:facet name="pages">
+					<h:outputText value="#{pageIndex} / #{pages}" />
+				</f:facet>
+			</rich:datascroller>
+
+		</rich:panel>
+
+
+
+		<rich:modalPanel id="modalPanel" width="450" autosized="true">
+			<f:facet name="header">
+			#{administrarTablasManaged.flagEdicion? msg['mt.admintablaseditarregistro'] :msg['mt.admintablasnuevoregistro'] } #{administrarTablasManaged.tablaDTO.descripcionCorta}			
+		</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink"
+						onclick="submitClear();return false">
+					</h:graphicImage>
+					<rich:componentControl for="modalPanel" attachTo="hidelink"
+						operation="hide" event="onclick">
+					</rich:componentControl>
+				</h:panelGroup>
+			</f:facet>
+
+			<table border="0" width="100%">
+				<ui:repeat var="item"
+					value="#{administrarTablasManaged.lstFieldEditablesTable}">
+
+					<tr>
+						<td><h:outputText value="#{item.alias}"
+								rendered="#{item.tipoControlId != 4 }" /> <h:outputText
+								value="#{item.alias} (#{item.nombreTablaPadre})"
+								rendered="#{item.tipoControlId == 4 }" /></td>
+
+						<td style="height: 31px">
+							<!-- tipoControl CALENDAR--> <rich:calendar locale="en/US"
+								datePattern="#{msg['param.datepattern']}"
+								enableManualInput="true" inputClass="maskDate"
+								inputStyle="width:80px" id="id_fecha#{item}"
+								value="#{item.valorCampoUpdate}"
+								rendered="#{item.tipoControlId == 2}">
+								<f:convertDateTime type="date"
+									pattern="#{msg['param.datepattern']}" />
+							</rich:calendar> <rich:jQuery id="maskedo001" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" /> <h:selectOneMenu
+								value="#{item.valorCampoUpdate}"
+								rendered="#{item.tipoControlId == 4 }" style="width:350px">
+
+								<f:selectItems
+									value="#{administrarTablasManaged.getMapForId(item)}"></f:selectItems>
+
+							</h:selectOneMenu> <!-- tipoControl INPUTTEXT pero solo con ingreso de numeros--> <h:inputText
+								value="#{item.valorCampoUpdate}"
+								rendered="#{item.tipoControlId == 1 and item.tipoDatoId == 1}"
+								maxlength="#{item.tamano}" size="#{item.tamano}"
+								onkeypress="return validaEnteroPositivo(event)" /> <!-- tipoControl INPUTTEXT ingreso de texto, no parrafos-->
+							<h:inputText value="#{item.valorCampoUpdate}"
+								rendered="#{item.tipoControlId == 1 and item.tipoDatoId == 3 and (item.tamano lt 50)}"
+								maxlength="#{item.tamano}" size="#{item.tamano}" /> <!-- tipoControl INPUTTEXT ingreso de texto, parrafos-->
+							<h:inputTextarea value="#{item.valorCampoUpdate}"
+								rendered="#{item.tipoControlId == 1 and item.tipoDatoId == 3 and (item.tamano ge   50)}"
+								maxlength="#{item.tamano}" cols="50" /> <!-- tipoControl INPUTTEXT ingreso de texto, parrafos-->
+							<h:inputText value="#{item.valorCampoUpdate}"
+								rendered="#{item.tipoControlId == 1 and item.tipoDatoId == 4}"
+								maxlength="#{item.tamano}" size="#{item.tamano}" /> <!-- tipoControl INPUTTEXT numeros en formato moneda-->
+							<h:inputText value="#{item.valorCampoUpdate}"
+								rendered="#{item.tipoControlId == 1 and item.tipoDatoId == 2}"
+								maxlength="#{item.tamano}" size="#{item.tamano}"
+								onkeypress="return validaEnteroPositivo2(event)">
+
+							</h:inputText> <!-- tipoControl checkbox --> <h:selectBooleanCheckbox
+								value="#{item.valorCampoUpdate}"
+								rendered="#{item.tipoControlId == 3}" />
+						</td>
+					</tr>
+				</ui:repeat>
+			</table>
+
+			<table border="0" width="100%">
+				<tr>
+					<td align="right"><a4j:commandButton
+							value="#{msg['mt.admintablasbtnguardar']}"
+							onclick="#{rich:component('modalPanel')}.hide();submit();return false"
+							reRender="idPanelResultados"
+							rendered="#{!administrarTablasManaged.flagEdicion}"></a4j:commandButton>
+						<a4j:commandButton value="Actualizar"
+							onclick="#{rich:component('modalPanel')}.hide();submitUpdate();return false"
+							reRender="idPanelResultados"
+							rendered="#{administrarTablasManaged.flagEdicion}"></a4j:commandButton>
+
+
+						<a4j:commandButton value="#{msg['mt.admintablasbtncancelar']}"
+							onclick="#{rich:component('modalPanel')}.hide();submitClear();return false">
+						</a4j:commandButton></td>
+				</tr>
+			</table>
+		</rich:modalPanel>
+
+
+		<a4j:jsFunction name="submit"
+			action="#{administrarTablasManaged.saveEntryTable}"
+			reRender="idPanelResultados, modalPanel"
+			oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+			status="ajaxStatus" />
+
+		<a4j:jsFunction name="submitClear"
+			action="#{administrarTablasManaged.clearEntryTable}"
+			reRender="idPanelResultados, modalPanel"
+			oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+			status="ajaxStatus" />
+
+		<a4j:jsFunction name="submitUpdate"
+			action="#{administrarTablasManaged.updateEntryTable}"
+			reRender="idPanelResultados, modalPanel"
+			oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+			status="ajaxStatus" />
+
+		<rich:modalPanel id="modalPanelConfirmDuplicar" width="350"
+			height="180">
+			<f:facet name="header">
+			#{msg['mt.admintablasheadermsgconfirmacionduplicacion']}:<br />
+			 #{administrarTablasManaged.tablaDTO.descripcionCorta}			
+			</f:facet>
+
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink2" />
+					<rich:componentControl for="modalPanelConfirmDuplicar"
+						attachTo="hidelink2" operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<div align="center">
+				<h3>
+					<h:outputText
+						value="#{msg['mt.admintablasmsgconfirmacionduplicacion1']} #{administrarTablasManaged.cantRegistrosDuplicar} #{msg['mt.admintablasmsgconfirmacionduplicacion2']}" />
+				</h3>
+			</div>
+			<br />
+			<br />
+			<br />
+			<table border="0" width="100%">
+				<tr>
+					<td align="center"><a4j:commandButton value="Confirmar"
+							onclick="#{rich:component('modalPanelConfirmDuplicar')}.hide();submitDuplicar();return false"
+							reRender="idPanelResultados"
+							rendered="#{!administrarTablasManaged.flagEdicion}"
+							status="ajaxStatus"></a4j:commandButton> <a4j:commandButton
+							value="Cancelar"
+							onclick="#{rich:component('modalPanelConfirmDuplicar')}.hide();return false"
+							status="ajaxStatus">
+						</a4j:commandButton></td>
+				</tr>
+			</table>
+		</rich:modalPanel>
+
+		<a4j:jsFunction name="submitDuplicar"
+			action="#{administrarTablasManaged.duplicar}"
+			reRender="idPanelResultados, modalPanel"
+			oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+			status="ajaxStatus" />
+
+		
+</h:form>
+</ui:composition>

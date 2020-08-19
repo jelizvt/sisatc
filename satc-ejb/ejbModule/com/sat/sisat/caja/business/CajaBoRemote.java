@@ -1,0 +1,502 @@
+package com.sat.sisat.caja.business;
+
+import java.math.BigDecimal;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.ejb.Remote;
+
+import com.sat.sisat.caja.dto.AgenciaOperacionDTO;
+import com.sat.sisat.caja.dto.AgenciaUsuarioDTO;
+import com.sat.sisat.caja.dto.CajaAperturaDTO;
+import com.sat.sisat.caja.dto.CajeroDTO;
+import com.sat.sisat.caja.dto.CajeroRecaudacionDTO;
+import com.sat.sisat.caja.dto.CjBenefBono;
+import com.sat.sisat.caja.dto.CjCajaCuadreEntity;
+import com.sat.sisat.caja.dto.CjCobranza;
+import com.sat.sisat.caja.dto.CjGenerico;
+import com.sat.sisat.caja.dto.CjMotivos;
+import com.sat.sisat.caja.dto.CjPapeletaDTO;
+import com.sat.sisat.caja.dto.CjPartidaEntity;
+import com.sat.sisat.caja.dto.CjPersona;
+import com.sat.sisat.caja.dto.CjReciboDetalleEntity;
+import com.sat.sisat.caja.dto.CjReciboEntity;
+import com.sat.sisat.caja.dto.CjReciboPagoEntity;
+import com.sat.sisat.caja.dto.CjTipoDocumento;
+import com.sat.sisat.caja.dto.CjTupaDTO;
+import com.sat.sisat.caja.dto.DeudaDTO;
+import com.sat.sisat.caja.dto.PagoTupaReferenciaDTO;
+import com.sat.sisat.caja.dto.ReciboPagoDTO;
+import com.sat.sisat.caja.dto.ReciboPagoDescuentoDetalleDTO;
+import com.sat.sisat.caja.dto.ReciboPagoDetalleDTO;
+import com.sat.sisat.caja.dto.ReciboPagoDetallePieDTO;
+import com.sat.sisat.caja.dto.ReciboPagoFormaPagoDTO;
+import com.sat.sisat.caja.dto.ReporteCuentaDTO;
+import com.sat.sisat.caja.dto.ResumenConceptosDTO;
+import com.sat.sisat.caja.dto.TramoSaldoDTO;
+import com.sat.sisat.caja.dto.consultaRecibojava;
+import com.sat.sisat.cobranzacoactiva.dto.ResumenDeudasCobranzaCoactivaDTO;
+import com.sat.sisat.common.dto.GenericDTO;
+import com.sat.sisat.estadocuenta.dto.CrConstanciaNoAdeudo;
+import com.sat.sisat.estadocuenta.dto.CrGeneralDTO;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.obligacion.dto.ResumenObligacionDTO;
+import com.sat.sisat.persistence.entity.CjAgencia;
+import com.sat.sisat.persistence.entity.CjAgenciaOperacion;
+import com.sat.sisat.persistence.entity.CjAgenciaUsuario;
+import com.sat.sisat.persistence.entity.CjCajaApertura;
+import com.sat.sisat.persistence.entity.CjPagoTupa;
+import com.sat.sisat.persistence.entity.CjReciboDetalle;
+import com.sat.sisat.persistence.entity.CjReciboPago;
+import com.sat.sisat.persistence.entity.GnTipoCambio;
+
+@Remote
+public interface CajaBoRemote {
+
+	/**
+	 * Permite aperturar y cerrar una agencia de para caja.
+	 * 
+	 * @param agenOper Datos de la apertura de agencia.
+	 * @return PK, generado.
+	 */
+	
+	public Integer temporal() throws SisatException; 
+	
+	
+		
+	
+	public abstract Integer aperturarCerrarAgencia(AgenciaOperacionDTO agenOper) throws SisatException;
+
+	/**
+	 * Obtiene datos de una agencia y su estado de apertura, si el usuario tiene acceso a la agencia.
+	 * 
+	 * @param agenciaId Identificador de agencia.
+	 * @param usuarioId Identificador de usuario.
+	 * @param terminal Terminal.
+	 * @return Datos de agencia y su estado.
+	 */
+	public abstract AgenciaOperacionDTO obtenerEstadoAgenSupervisor(int agenciaId, int usuarioId, String terminal);
+
+	/**
+	 * Permite aperturar o cerrar caja segun FlagOper (A=apertura, C=ciere).
+	 * 
+	 * @param cajAper Datos para apertura o cierre.
+	 * @return Identificador de apertura de caja.
+	 */
+	public abstract Integer aperturarCerrarCaja(CajaAperturaDTO cajAper);
+
+	/**
+	 * Obtiene el estado actual de un cajero si esta aperturado o cerrado.
+	 * 
+	 * @param agenciaId Identificador de agencia.
+	 * @param agenciaOperacionId Identificador de agencia operacion (agencia aperturada o cerrada).
+	 * @param usuarioId Identificador de usuario.
+	 * @param terminal Terminal de acceso.
+	 * @return Datos de la apertura de caja.
+	 */
+	public abstract CajaAperturaDTO obtenerEstadoActualCaja(int agenciaId, int agenciaOperacionId, int usuarioId, String terminal);
+
+	/**
+		 * 
+		 */
+	public abstract int guardarInicio(CjAgencia agencia);
+
+	/*
+	 * INSERT INTO satc.dbo.cj_agencia (agencia_id nombre_agencia nombre_corto
+	 * estado usuario_id fecha_registro terminal) VALUES (agencia_id int
+	 * nombre_agencia varchar(100) nombre_corto varchar(30) estado char(1)
+	 * usuario_id int fecha_registro datetime terminal varchar(20))
+	 */
+
+	public abstract int guardarFinalizarAgencia(CjAgencia agencia);
+
+	/**
+	 * Obtiene una lista de formas de pago.
+	 * 
+	 * @return Lista con formas de pago
+	 */
+	public abstract List<GenericDTO> obtenerFormaPago();
+	
+	/**
+	 * Obtiene una lista de formas de pago sin considerar bono cajamarquino.
+	 * 
+	 * @return Lista con formas de pago sin bono cajamarquino.
+	 */
+	public abstract List<GenericDTO> obtenerFormaPagoSinBonoCajam();
+
+	//Obtener de la Base de Datos tipo de moneda
+	public abstract List<CjCobranza> obtenerTipoMoneda();
+
+	// Obtener de la Base de Datos de Tipo de Banco
+	public abstract List<GenericDTO> obtenerTipoBanco();
+
+	//Obtener de la Base de Datos tipo Tarjeta
+	public abstract List<GenericDTO> obtenerTipoTarjeta();
+	
+	//obtener de la base de datos de tipo tasa de tupa
+	public abstract List<CjTupaDTO> ObtenerTasaTupa();
+
+	public abstract GnTipoCambio obtenerTipoCambioDia(int cmbValTipoMonedaId);
+	
+	public abstract CjPersona ObtenerDatosPersona(int personaId, int cajeroId);
+	 
+
+	/**CajaUbicaPersona
+		 * 
+		 */
+	public abstract ArrayList<CjPersona> obtenerPersona(int persona_id,String apellido_pat , String apellido_mat,String  primer_nombre, String segundo_nombre, String razon_social,
+			int tipo_docu_iden_id, String nro_documento, String nro_papeleta, String nro_placa, String apellidosNombres, String codAnterior);
+	
+	// Obtener de la Base de Datos
+	public abstract List<CjTipoDocumento> obtenerTipoDocumento();
+
+	/**
+	 * Obtiene los subconceptos que existen en las deudas de un contribuyente.
+	 * @param personaId Identificador del contribuyente.
+	 * @return Lista de subconceptos.
+	 */
+	public abstract List<GenericDTO> obtenerSubconceptoDeuda(int personaId);
+
+	public abstract List<GenericDTO> obtenerCuotas(int personaId);
+	public abstract List<GenericDTO> obtenerPlacas(int personaId);
+	
+	public abstract List<GenericDTO> obtenerPredios(int personaId);
+	public abstract List<GenericDTO> obtenerUso(int personaId);
+
+	/**
+	 * Obtiene una lista de años en los que existe deudas para un contribuyente.
+	 * 
+	 * @param personaId Identificador del contribuyente.
+	 * @return Lista de años.
+	 */
+	public abstract List<GenericDTO> obtenerAniosDeuda(int personaId);
+
+	public abstract ArrayList<CjGenerico> obtenerVehiculo(int personaId);
+
+	public abstract ArrayList<CjGenerico> obtenerPredio(int personaId);
+	
+	/**
+	 * Obtiene un resumen de una papeleta.
+	 * 
+	 * @param personaId Identificador de un contribuyente deudor por infracción de transito.
+	 * @param nroPapeleta Número de papeleta apicada.
+	 * @return Una lista con una o mas papeletas de un contribuyente.
+	 */
+	public abstract List<CjPapeletaDTO> obtenerPapeletaResumen(int personaId,String nroPapeleta);
+	
+	public abstract List<CjPapeletaDTO> obtenerPapeletaResumenPorDeudasId(String deudasId, Integer flagModulo) throws SisatException;
+	
+	public abstract List<ResumenObligacionDTO> obtenerResumenObligacionesPorDeudasId(String deudasId, Integer flagModulo) throws SisatException;
+	
+	/**
+	 * Obtiene toda la cuenta conrriente de un contribuyente.
+	 * 
+	 * @param cajeroId Identificador del usuario del sistema (cajero) que hace la consulta.
+	 * @param personaId Identificador del contribuyente.
+	 * @param fechaConsulta Fecha de consulta.
+	 * @return Lista de deudas de un contribuyente.
+	 * @throws SisatException Ocurre si hay un problema en el procedimiento almacenado stp_cj_buscardeuda
+	 */
+	public abstract List<DeudaDTO> obtenerDeuda(int cajeroId, int personaId, String listAnios, String listConceptos, String listSubconc, String listCuotas, Timestamp fechaConsulta) throws SisatException;
+	
+	public abstract List<DeudaDTO> obtenerDeudasPorDeudaId(int cajeroId, String listDeudasId,Timestamp fechaConsulta) throws SisatException;
+	
+	public abstract List<DeudaDTO> obtenerDeudaFiltrada(int cajeroId, int personaId, String listAnios, String listConceptos, String listSubconc, String listCuotas, String listPlacas, String listPredios, String listUso, Timestamp fechaConsulta) throws SisatException;
+
+	/**
+	 * Obtiene las deudas de un contribuyente aplicando un descuento, según la selección hecha para el pago.
+	 * 
+	 * @param deudas Identificadores de las deudas seleccionadas para pagar.
+	 * @param fechaPago Fecha en que se realiza el pago.
+	 * @param cajeroId Identificador del cajero que registra el pago.
+	 * @return
+	 */
+	public abstract List<DeudaDTO> obetenerDeudaConDsctos(String deudas, Date fechaPago, int cajeroId, Integer flagSimulador);
+	
+	public abstract int guardarInicio(CjAgenciaOperacion oAgenciaOperacion,
+			String estadoForm);
+
+	// guardarFinalizar
+	public abstract int guardarFinalizar(CjAgenciaOperacion oAgenciaOperacion);
+	
+	//caja cuadre
+	
+	public abstract ArrayList<CjCajaCuadreEntity> ObtenerOperacionesCuadre(int cajero_id) throws SisatException;
+	
+	/**
+	 *  Guarda el cuadre de caja en la base de datos.
+	 *  
+	 * @param listaCuadre Lista del cuadre de caja.
+	 * @return
+	 */
+	public abstract boolean grabarCuadre(ArrayList<CjCajaCuadreEntity> listaCuadre);
+	
+	//Extorno
+	
+	
+	public abstract ArrayList<CjReciboEntity> ObtenerListaOperacion(String nroRecibo,int personaId, int tipoDocumentoId, String nroDocumento,Timestamp fechaInicio, Timestamp fechaFin) throws SQLException;
+	
+	public abstract CjReciboEntity ObtenerDatosRecibo(int recibo_id);  
+	
+	public abstract ArrayList<CjReciboDetalleEntity>  ObtenerDatosReciboDetalle(int recibo_id);
+	
+	//cargar combo Motivo Extorno
+	public abstract List<CjMotivos> obtenerMotivoExtorno();
+		
+	//cargar combo Motivo CierreCaja  
+	public abstract List<CjMotivos> obtenerMotivoCuadre();
+	
+	/**
+	 * Obtiene todas las agencias operativas.
+	 * 
+	 * @return Lista con datos de agencias.
+	 */
+	public abstract List<AgenciaUsuarioDTO> getAllAgenciasActivas();
+	
+	//cargar combo Motivo CierreCaja  
+	public abstract List<CjAgencia> obtenerNombreAgencia();
+	
+	/**
+	 * Obtiene los datos principales de un recibo de pago
+	 * 
+	 * @param reciboId Identificador de recibo
+	 * @return Datos principales de recibo
+	 */
+	public abstract ReciboPagoDTO obtenerDatosReciboPago(int reciboId);
+
+	/**
+	 * Obtiene los datos principales de un recibo de pago tupa
+	 * 
+	 * @param reciboId Identificador de recibo
+	 * @return Datos principales de recibo
+	 */
+	public abstract ReciboPagoDTO obtenerDatosReciboPagoTupa(int reciboId);
+	
+	/**
+	 * Obtiene la(s) forma(s) de pago de un recibo.
+	 * 
+	 * @param reciboId Identificador de recibo.
+	 * @return
+	 */
+	public abstract List<ReciboPagoFormaPagoDTO> getFormasPagoRecibo(int reciboId);
+	
+	/**
+	 * Obtiene las deudas para una papeleta específica y los guarda en una tabla temporal.
+	 * 
+	 * @param cajeroId Identificador de usuario de sistema con perfil de cajero.
+	 * @param personaId Contribuyente con deuda de papeleta.
+	 * @param papeletaId Identificador de la papeleta.
+	 * @param fechaConsulta Fecha de consulta.
+	 */
+	public abstract void obtenerDeudaPapeleta(int cajeroId, int personaId, int papeletaId, Timestamp fechaConsulta);
+	
+	/**
+	 * Obtiene la lista de agencias que tiene un usuario dependiendo si es cajero o supervisor.
+	 * 
+	 * @param usuarioId Identificador de usuario.
+	 * @param tipoRol Supervisor (S) o Cajero (C)
+	 * @return Lista de agencias.
+	 */
+	public abstract List<GenericDTO> obtenerAgenciasUsuario(int usuarioId, String tipoRol);
+	
+	/**
+	 * Obtiene la agencia y el cajero (operación para el suario ingresado).
+	 * 
+	 * @param usuarioId Usuario con perfil de cajero.
+	 * @param terminal Terminal de donde se accede al sistema.
+	 * @return Datos de agencia operación.
+	 */
+	public abstract AgenciaOperacionDTO obtenerAgenciaOperacion(int usuarioId, String terminal);
+	
+	//public abstract ArrayList<CjGenerico> obtenerPapeletaResumen(int personaId,String nroPapeleta);
+	public abstract ArrayList<CjReciboPagoEntity> obtenerListadoOperaciones(int cajero_id,  Date fecha_inicio, Date fecha_fin) throws SisatException;
+	
+	public abstract ArrayList<consultaRecibojava> consultarRecibo(String nro_recibo ,int periodo ) throws SisatException;
+	
+	
+	
+
+	public String ValidarUsuarioCaja(int cajeroId, String terminal)throws SQLException;
+	
+	/**
+	 * Obtiene datos de agencia usuario que es cajero activo.
+	 * 
+	 * @param usuarioId Identificador de usuario.
+	 * @return Datos de agencia usuario.
+	 */
+	public abstract AgenciaUsuarioDTO getAgenUsuarioCajero(int usuarioId);
+	
+	/**
+	 * Permite saber si una agencia está aperturada o no.
+	 * 
+	 * @param agenciaId Identificador de la agencia.
+	 * @return Verdadero o falso, dependiendo de si la agencia está aperturada.
+	 */
+	public abstract boolean isAgenciaAperturada(int agenciaId);
+	
+	/**
+	 * Obtiene datos que permiten saber si la caja de un usuario esta aperturada o no.
+	 * 
+	 * @param usuarioId Identificador de usuario.
+	 * @param agenciaId Identificador de agencia.
+	 * @return Datos de caja aperturada.
+	 */
+	public abstract CjCajaApertura getCajaAperturada(int usuarioId, int agenciaId);
+	
+	public abstract ArrayList<CjReciboPagoEntity> ObtenerDatosReciboPago(int recibo_id);
+	
+	//extorno
+	public abstract int ExtornarPago(int recibo_id,int usuario_id, String obs_extorno,  String terminal) throws SQLException, SisatException;
+	
+	/*
+	
+	public int ExtornarPago(int recibo_id, int usuario_id, String obs_extorno, String terminal)  throws SQLException{
+		return getService().ExtornarPago(recibo_id,  usuario_id,  obs_extorno,  terminal);
+		
+	 */
+	
+	//partida
+   public abstract ArrayList<CjPartidaEntity> ObtenerReportePartidaDiaria(int cajero_id, Date fecha_inicio, Date fecha_fin) throws SQLException;
+   
+   /**
+	 * Guarda las deudas filtradas a una tabla temporal
+	 * 
+	 * @param lstDeudas Lista de deudas
+	 * @return verdadero o false segun el resultado de la acción
+	 */
+	public abstract boolean guardarTmpDeuda(List<DeudaDTO> lstDeudas);
+	
+	/**
+	 * Elimina las deudas temporales de un cajero cuando éste deja la aplicación.
+	 * @param cajeroId Identificador del cajero (usuario).
+	 * @return
+	 */
+	public abstract boolean eliminarTmpDeuda(int cajeroId);
+	
+	/**
+	 * Guarda pagos realizados en caja.
+	 * 
+	 * @param recibo Datos del recibo de pago.
+	 * @param detalle Datos del detalle del recibo.
+	 * @param cajeroId Identificador del cajero que registra la operación.
+	 * @return Identificador del recibo.
+	 * @throws SisatException
+	 */
+	public abstract Integer cobrarDeuda(String deudasId,
+			List<CjReciboDetalle> detalle,
+			int cajeroId,
+			int personaId,
+			BigDecimal montoACobrar,
+			BigDecimal montoIngresado,
+			BigDecimal montoVuelto,
+			String referencia,
+			String selectedFormasPago) throws SisatException;
+	
+	/**
+	 * Guarda pagos por conceptos tupa.
+	 * 
+	 * @param recibo Datos del recibo de pago.
+	 * @param detalle Detos del detalle del recibo.
+	 * @param listPagoTupa Lista con datos sobre el pago realizado.
+	 * @param cajeroId Identificador del cajero que registra la operación.
+	 * @return Identificador del recibo.
+	 * @throws SisatException
+	 */
+	public abstract Integer cobrarDeudaTupa(CjReciboPago recibo, List<CjReciboDetalle> detalle, List<CjPagoTupa> listPagoTupa, int cajeroId) throws SisatException;
+	
+	/**
+	 * Obtiene el detalle del recibo de pago
+	 * @param reciboId Identificador del recibo
+	 * @return Lista con el detalle del recibo de pago
+	 */
+	
+	public List<ReciboPagoDetallePieDTO> searchReciboDetalle(int reciboId) throws SisatException; 
+	/**
+	 * Obtiene el detalle del recibo de pago para los casos tupa.
+	 * 
+	 * @param reciboId PK. del recibo de pago.
+	 * @return Lista con el detalle del recibo.
+	 */
+	public abstract List<ReciboPagoDetalleDTO> searchReciboDetalleTupa(int reciboId);
+	
+	/**
+	 * Cambia el estado de agencia_usuario segun el usuario.
+	 * 
+	 * @param usuarioId PK. Usuario
+	 * @param estado.
+	 * @return
+	 */
+	public abstract boolean cambiarEstadoAgenciaUsuario(int usuarioId, String estado);
+	
+	/**
+	 * Registra o actualiza una agencia_usuario.
+	 * 
+	 * @param agenciaUsuario Datos a ingresar.
+	 */
+	public abstract void registrarAgenciaUsuario(List<CjAgenciaUsuario> listAgenUsers) throws SisatException;
+	
+	/**
+	 * Obtiene las agencias que tiene un suario.
+	 * 
+	 * @param usuarioId PK. Usuaroi
+	 * @return Lista con datos de agencias asignadas a un usuario.
+	 */
+	public abstract List<AgenciaUsuarioDTO> getAgenciaUsuario(int usuarioId);
+	
+	public abstract List<CajeroDTO> obtenerCajeros(Date fechaInicio, Date fechaFin) throws SisatException;
+	
+	public abstract List<CajeroRecaudacionDTO> obtenerCajerosRecaudacion(Date fechaInicio, Date fechaFin) throws SisatException;
+	
+	public abstract List<ReciboPagoDescuentoDetalleDTO> getDetalleDescuentoRecibo(int reciboId);
+	
+	public List<ResumenConceptosDTO> getResumenConcepto(String idDeudasACobrar,Integer personaId,Integer periodo);
+	
+	public Integer esBenefBonoCajam(Integer personaId,Integer periodo);
+	
+	//extorno Recibo
+	public abstract int buscarSupervisor(String usuarioSupervisor, String passwordSupervisor)  throws SisatException;
+	
+	public abstract int extornarRecibo(int reciboId, String observacion,int usuarioId, String terminal) throws SQLException, SisatException;
+	
+	public abstract List<ReporteCuentaDTO> obtenerReporteCuentas(Date fechaInicio, Date fechaFin) throws SisatException;
+	
+	public List<PagoTupaReferenciaDTO> buscarPersonaContribuyente(String p) throws SisatException;
+	//public List<String> buscarPersonaContribuyente(String p) throws SisatException;
+	
+	public void limpiarCjTmpDeudaCajero(int cajeroId) throws SisatException;
+	
+	
+	public void verificarRecibo(int reciboId) throws SisatException, SQLException;
+	
+	public CjPersona cargarContribuyentePorPlaca(String placa) throws SisatException;
+	
+	/**
+	 * Método que quitara las deudas que esten bloqueadas por cobranza coactiva para 
+	 * estas puedan levantan sus costas y gastos
+	 * */
+	public List<ResumenDeudasCobranzaCoactivaDTO> verificarDeudasEnCobranzaCoactiva(String deudas)throws SisatException;
+
+	public String busquedaContribEnAtencion(Integer usuarioId, Integer personaId, Integer deudaId)throws SisatException;
+	
+	public List<String> busquedaDeudaEnAtencion(String deudasId)throws SisatException;
+	
+	public List<CjReciboPagoEntity> busquedaRecibosPorReferencia(String referencia) throws SisatException;
+	
+	public void guardarBonoCajamarquino(CjBenefBono f);
+			
+	public CjBenefBono getCjBenefBonoById(Integer id,Integer anio)throws Exception;
+	
+	public List<TramoSaldoDTO> obtenerTramos();
+	
+	public Integer registrarConstancia(CrConstanciaNoAdeudo constancia)throws Exception;
+	
+	public List<CrGeneralDTO> obtenerAnio(Integer personaId, String tipoPredio)throws Exception;
+	
+	public List<CrGeneralDTO> obtenerPredios(Integer personaId, Integer annio)throws Exception;
+	
+	public int registrarRecord(int persona_id,String documento,String anio ,String predios_id,int tipo_record,int recibo_id,int usuario_id,String terminal) throws Exception;
+}
+

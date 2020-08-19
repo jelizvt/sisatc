@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<rich:panel>
+		<f:facet name="header">APERTURA Y CIERRE DE CAJA</f:facet>
+		<h:form id="frmCajaApertura">
+			<table cellpadding="5" cellspacing="5">
+				<tbody>
+					<tr>
+						<td>Fecha(dd/mm/aaaa) :</td>
+						<td><h:inputText readonly="true"
+								value="#{cajaAperturaManaged.fechaOperacion}"
+								style="width:180;border: none">
+								<f:convertDateTime locale="#{msg['param.localedate']}"
+									pattern="#{msg['param.datetimepattern']}"
+									timeZone="#{aplicationManaged.timeZone}" />
+							</h:inputText></td>
+					</tr>
+					<tr>
+						<td>Agencia :</td>
+						<td><h:inputText readonly="true"
+								value="#{cajaAperturaManaged.nombreAgencia}"
+								style="width:180px;border: none" /></td>
+					</tr>
+					<tr>
+						<td>Usuario :</td>
+						<td><h:inputText readonly="true"
+								value="#{cajaAperturaManaged.usuario}"
+								style="width:180px;border: none" /></td>
+					</tr>
+					<tr>
+						<td>Estado de caja :</td>
+						<td><h:inputText readonly="true"
+								value="#{cajaAperturaManaged.estadoCaja}"
+								style="width:180px;border: none; font-weight: bold;" /></td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="margin-top: 20px;">
+				<a4j:commandButton value="Aperturar Caja" status="ajaxStatus" 
+					disabled="#{cajaAperturaManaged.cajaAperturada}"
+					action="#{cajaAperturaManaged.aperturarCaja}"
+					reRender="frmCajaApertura,pnlMenuCaja"
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}"
+					style="width: 150px;">
+				</a4j:commandButton>
+				<a4j:commandButton value="Cerrar Caja" status="ajaxStatus" 
+					disabled="#{!cajaAperturaManaged.cajaAperturada}"
+					action="#{cajaAperturaManaged.cerrarCaja}"
+					reRender="frmCajaApertura,pnlMenuCaja"
+					oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}"
+					style="width: 150px; margin-left: 6px;">
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:panel>
+</ui:composition>

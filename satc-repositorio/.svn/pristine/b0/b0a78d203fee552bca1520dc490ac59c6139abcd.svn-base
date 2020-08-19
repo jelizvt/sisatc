@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model name="satcm:catalogue" xmlns="http://www.alfresco.org/model/dictionary/1.0">
+	<description>Definicion de los tipos de contenido para el SAT
+	</description>
+	<author>Miguel Macias</author>
+	<version>1.0</version>
+	<imports>
+		<import uri="http://www.alfresco.org/model/dictionary/1.0"
+			prefix="d" />
+		<import uri="http://www.alfresco.org/model/content/1.0" prefix="cm" />
+	</imports>
+	<namespaces>
+		<namespace uri="http://www.infoaxon.com/book/models/catalogue/1.0"
+			prefix="satcm" />
+	</namespaces>
+
+	<constraints>
+		<constraint name="satcm:productColors" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>Red</value>
+					<value>Green</value>
+					<value>Blue</value>
+				</list>
+			</parameter>
+			<parameter name="caseSensitive">
+				<value>false</value>
+			</parameter>
+		</constraint>
+		<constraint name="satcm:tipoInfraccion" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>Tipo 1</value>
+					<value>Tipo 2</value>
+					<value>Tipo 3</value>
+				</list>
+			</parameter>
+			<parameter name="caseSensitive">
+				<value>false</value>
+			</parameter>
+		</constraint>
+		<constraint name="satcm:tipo" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>Predio</value>
+					<value>Vehiculo</value>
+				</list>
+			</parameter>
+		</constraint>
+
+		<constraint name="satcm:tipoRecla" type="LIST">
+			<parameter name="allowedValues">
+				<list>
+					<value>RM</value>
+					<value>RD</value>
+					<value>RS</value>
+				</list>
+			</parameter>
+		</constraint>
+		<constraint name="satcm:lengthDNI" type="LENGTH">
+			<parameter name="minLength">
+				<value>8</value>
+			</parameter>
+			<parameter name="maxLength">
+				<value>8</value>
+			</parameter>
+		</constraint>
+
+		<constraint name="satcm:regexNroDoc" type="REGEX">
+			<parameter name="expression">
+				<value><![CDATA[^([0-9][0-9][0-9])(-([0-9][0-9][0-9]-[0-9]{8})){1}$]]></value>
+			</parameter>
+		</constraint>
+
+	</constraints>
+
+	<types>
+		<type name="satcm:Product">
+			<title>Retailer Product</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:sku">
+					<title>Product SKU</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:manufacturer">
+					<title>Manufacturer</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:color">
+					<title>Product Color</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+					<constraints>
+						<constraint ref="satcm:productColors" />
+					</constraints>
+				</property>
+				<property name="satcm:brand">
+					<title>Manufacturer Brand</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+				</property>
+				<property name="satcm:unitPrice">
+					<title>Product Unit Price</title>
+					<type>d:double</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:displayUntil">
+					<title>Date until Product should be displayed</title>
+					<type>d:datetime</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:competitorProducts">
+					<title>Competitor Products List</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+					<multiple>true</multiple>
+				</property>
+				<property name="satcm:competitorDetails">
+					<title>Details of Competitor Products</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+				</property>
+			</properties>
+		</type>
+
+		<type name="satcm:Prueba">
+			<title>Tipo de documento de prueba</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:titulo2">
+					<title>Titulo 2</title>
+					<type>d:text</type>
+				</property>
+			</properties>
+		</type>
+		<type name="satcm:papelInfraccTransito">
+			<title>Papeleta de Infraccion de Transito</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroPITInfra">
+					<title>Nro de PIT</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:nroPlacaInfra">
+					<title>Nro de Placa</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:tipoInfraccionInfra">
+					<title>Tipo de Infraccion</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:tipoInfraccion" />
+					</constraints>
+				</property>
+				<property name="satcm:dniInfra">
+					<title>Dni del infracctor</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:lengthDNI"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:fechaInfra">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:resSancion">
+			<title>Resolucion de Sancion</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroRes">
+					<title>Nro de Resolucion de Sancion</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:regexNroDoc"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:nroPIT">
+					<title>Nro de PIT</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:nroPlaca">
+					<title>Nro de Placa</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:tipoInfraccion">
+					<title>Tipo de Infraccion</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:tipoInfraccion" />
+					</constraints>
+				</property>
+				<property name="satcm:dni">
+					<title>Dni del infracctor</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:lengthDNI"></constraint>
+					</constraints>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:ordenPago">
+			<title>Orden de Pago</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroOP">
+					<title>Nro de Orden de Pago</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:codContribOP">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaOP">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:resMulta">
+			<title>Resolucion de Multa</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroRM">
+					<title>Nro de Resolucion de Multa</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:regexNroDoc"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:codContribRM">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaRM">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:resDeterminacion">
+			<title>Resolucion de Determinacion</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroRD">
+					<title>Nro de Resolucion de Determinacion</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:regexNroDoc"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:codContribRD">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaRD">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:resEjecCoactiva">
+			<title>Resolucion de Ejecucion Coactiva</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroREC">
+					<title>Nro de REC</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:regexNroDoc"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:codContribREC">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaREC">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:resReclamaciones">
+			<title>Resolucion de Reclamaciones</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroRecla">
+					<title>Nro de Res Reclamo</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:regexNroDoc"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:codContribRecla">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaRecla">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:resFraccionamiento">
+			<title>Resolucion de Fraccionamiento</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroRFracc">
+					<title>Nro de Res Fracc</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:regexNroDoc"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:codContribRFracc">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaRFracc">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:resControlDeuda">
+			<title>Resolucion de Control de Deuda</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroRCD">
+					<title>Nro de Res CD</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:regexNroDoc"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:codContribRCD">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaRCD">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:resCobraCoac">
+			<title>Resolucion de Cobranza Coactiva</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroRCC">
+					<title>Nro de Res de CC</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:regexNroDoc"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:codContribRCC">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaRCC">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:resDptoFisca">
+			<title>Resolucion del Dpto de Fiscalizacion</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroRDF">
+					<title>Nro de Res de Fisca</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:regexNroDoc"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:codContribRDF">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaRDF">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:reqFisca">
+			<title>Req de fiscalizacion</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroRFisca">
+					<title>Nro de Req de Fiscalizacion </title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:regexNroDoc"></constraint>
+					</constraints>
+				</property>
+				<property name="satcm:codContribRFisca">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaRFisca">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:docInscripDesc">
+			<title>Documento para Inscripcion o Descargo</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:tipoDoc">
+					<title>Tipo Documento</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:codContribInscripDesc">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaInscripDesc">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:nroDj">
+					<title>Nro de Dj</title>
+					<type>d:text</type>
+				</property>
+				<property name="satcm:tipo">
+					<title>Tipo</title>
+					<type>d:text</type>
+					<constraints>
+						<constraint ref="satcm:tipo" />
+					</constraints>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:solicDescargo">
+			<title>Solicitudes de Descargo(PIT)</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:nroRegMP">
+					<title>Nro de Registro de MP</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:codContribSD">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaSD">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:nroPITSD">
+					<title>Nro de PIT</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:recursoRecla">
+			<title>Recurso de Reclamacion</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:tipoRecla">
+					<title>Tipo</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+					<constraints>
+						<constraint ref="satcm:tipoRecla" />
+					</constraints>
+				</property>
+				<property name="satcm:codContribRecursoRecla">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaRecursoRecla">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:nroRecursoRecla">
+					<title>Nro de RD, RS</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:recursoApela">
+			<title>Recurso de Apelacion</title>
+			<parent>cm:content</parent>
+			<properties>
+				<property name="satcm:NroApela">
+					<title>Nro de Reclamo</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:codContribRecursoApela">
+					<title>Cod Contribuyente</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaRecursoApela">
+					<title>Fecha</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:nroRecursoApela">
+					<title>Nro de RD, RS que fue reclamada</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:anexoDjVehicular">
+			<title>Anexo DJ Vehicular</title>
+			<parent>cm:content</parent>
+			<properties>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+				<aspect>satcm:aspectAnexoTipoDoc</aspect>
+				<aspect>satcm:aspectAnexoNroDoc</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:anexoDjPredial">
+			<title>Anexo DJ Predial</title>
+			<parent>cm:content</parent>
+			<properties>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+				<aspect>satcm:aspectAnexoTipoDoc</aspect>
+				<aspect>satcm:aspectAnexoNroDoc</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:anexoPapeleta">
+			<title>Anexo Papeleta</title>
+			<parent>cm:content</parent>
+			<properties>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+				<aspect>satcm:aspectAnexoTipoDoc</aspect>
+				<aspect>satcm:aspectAnexoNroDoc</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:anexoAlcabala">
+			<title>Anexo Alcabala</title>
+			<parent>cm:content</parent>
+			<properties>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+				<aspect>satcm:aspectAnexoTipoDoc</aspect>
+				<aspect>satcm:aspectAnexoNroDoc</aspect>
+			</mandatory-aspects>
+		</type>
+
+		<type name="satcm:notificacion">
+			<title>Notificaciones</title>
+			<parent >cm:content</parent>
+			<properties>
+				<property name="satcm:personaId">
+					<title>Persona id</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:tipoActo">
+					<title>Tipo de acto</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:fechaNotificacion">
+					<title>Fecha de notificacion</title>
+					<type>d:date</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:notificadorId">
+					<title>Notificador id</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+				<property name="satcm:nroDocumento">
+					<title>Nro de Documento</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+			<mandatory-aspects>
+				<aspect>satcm:aspectId</aspect>
+			</mandatory-aspects>
+		</type>
+
+
+	</types>
+	<aspects>
+		<aspect name="satcm:aspectId">
+			<title>Identificador del Documento</title>
+			<properties>
+				<property name="satcm:id">
+					<title>ID</title>
+					<type>d:text</type>
+					<mandatory>true</mandatory>
+				</property>
+			</properties>
+		</aspect>
+		<aspect name="satcm:aspectAnexoTipoDoc">
+			<title>Tipo Documento</title>
+			<properties>
+				<property name="satcm:anexoTipoDoc">
+					<title>Tipo Documento</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+				</property>
+			</properties>
+		</aspect>
+		<aspect name="satcm:aspectAnexoNroDoc">
+			<title>Nro Documento</title>
+			<properties>
+				<property name="satcm:anexoNroDoc">
+					<title>Nro Documento</title>
+					<type>d:text</type>
+					<mandatory>false</mandatory>
+				</property>
+			</properties>
+		</aspect>
+
+	</aspects>
+</model>

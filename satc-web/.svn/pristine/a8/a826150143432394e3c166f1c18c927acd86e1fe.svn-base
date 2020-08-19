@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	<a4j:loadScript src="/js/sisat.js"/>
+	<style type="text/css">
+		.extdt-empty-cell {
+			width: 0;
+		}
+		th.extdt-empty-cell {
+			width: 0;
+		}
+		/* Disables resizing */
+		.extdt-hsep {
+			display: none;
+		}
+	</style>
+	<script type="text/javascript">
+		 function validaNroDocumento(nroDocumento){
+			 if(jQuery.trim(nroDocumento).length==8){
+			 	return true;
+			 }
+			 return false;
+		 }
+	</script>
+	
+	<h:form id="formRegistroPersonabasico">
+	<a4j:outputPanel id="id_panelprincipalregistropersona">
+	<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%"  >
+	<tr><td>
+			<table align="center" width="100%">
+			
+				<tr>
+					<td>
+						<table align="center" border="0" width="100%">
+						    <tr>
+						    	<td align="left">
+							    	<rich:panel style="width:100%;  height: 60px;" id="id_paneldatoscontribuyente">
+								    	<f:facet name="header">		
+												Datos del Contribuyente
+										</f:facet>
+	
+												<table border="0" width="100%"   >
+														<tr>
+														
+														<td align="left" width="130px" >
+															<h:outputText value="Tipo de Contrib." />
+															<span style="color: red;">*</span>
+														</td>
+														
+														<td align="left" width="150px" >
+														
+															<rich:comboBox width="150px" required="true"  requiredMessage="#{msg['mp.errortipocontribuyente']}"
+																  defaultLabel="Seleccione"  onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)" 
+																	 value="#{registroPersonaManaged.cmbValuetipopersona}"  
+															  	id="id_tipopersona" binding="#{registroPersonaManaged.cmbtipopersona}" 
+															  	valueChangeListener="#{registroPersonaManaged.loadTipoPersonaById}" >
+																<f:selectItems id="id_lstdesctipopersona" value="#{registroPersonaManaged.lsttipopersona}"/>
+																<a4j:support id="id_supportlsttipoper" reRender="id_paneldatoscontribuyente,id_datoscontribuyente,id_subtippersona,id_apepaternotxt,id_apellidopaterno" event="onchange" BypassUpdates="false" ajaxSingle="true"/>
+															</rich:comboBox>
+															 
+														</td>
+														<td align="left" width="130px" >
+															<h:panelGroup  rendered="#{registroPersonaManaged.isSubtipoPersona}">
+															<h:outputText value="Sub.Tipo de Contrib."  />
+															<span style="color: red;">*</span>
+															</h:panelGroup>
+														</td>
+														
+														<td align="left" width="150px" >
+														<h:panelGroup  rendered="#{registroPersonaManaged.isSubtipoPersona}">
+															<rich:comboBox width="150px" defaultLabel="Seleccione" onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)" required="true"  requiredMessage="#{msg['mp.errorsubtipocontribuyente']}"
+															 	value="#{registroPersonaManaged.cmbValuesubtipopersona}"  rendered="#{registroPersonaManaged.isSubtipoPersona}"
+															 	id="id_subtippersona" binding="#{registroPersonaManaged.cmbsubtipopersona}" valueChangeListener="#{registroPersonaManaged.loadSubtipoPersonaById}">
+																<f:selectItems id="id_lstsubtipopersona" value="#{registroPersonaManaged.lstsubtipopersona}" />		
+																<a4j:support id="id_supportlstsubtipopersona"  reRender="id_tipodocumento,id_datoscontribuyente" event="onchange" BypassUpdates="false" ajaxSingle="true"/>
+															</rich:comboBox>
+															</h:panelGroup>
+														</td>
+														
+													</tr>
+											</table>
+											
+									</rich:panel>	
+									<rich:panel style="width:100%;  height: 150px;" id="id_datoscontribuyente">
+								    	<f:facet name="header">		
+										</f:facet>		
+											<table border="0" width="100%"   >
+													
+												<tr>
+												<td align="left" width="130px"  >
+														<h:panelGroup rendered="#{registroPersonaManaged.isTipoDocumentoIdentidad}">
+														<h:outputText value="Tipo de Doc. Iden."  />
+														<span style="color: red;">*</span>
+														</h:panelGroup>
+													</td>
+													
+													<td>
+														<rich:comboBox width="150px" defaultLabel="Selecccione"
+																	onkeypress="return showListCbo(this,event);"
+																	onblur="validaInputCbo(this)" required="true"
+																	requiredMessage="#{msg['mp.errortipodocumento']}"
+																	value="#{registroPersonaManaged.cmbValuetipodocumentoidentidad}"
+																	rendered="#{registroPersonaManaged.isTipoDocumentoIdentidad}"
+																	id="id_tipodocumento"
+																	binding="#{registroPersonaManaged.cmbtipodocumentoidentidad}"
+																	valueChangeListener="#{registroPersonaManaged.loadTipoTipoDocumentoIdentidadById}">
+																	<f:selectItems id="id_lsttipodocumento"
+																		value="#{registroPersonaManaged.lsttipodocumentoidentidad}" />
+																	<a4j:support id="id_supportlsttipodocumento"
+																		reRender="id_busquedareniec,#{rich:clientId('id_documento')},#{rich:clientId('id_subtipdocideadi')},#{rich:clientId('inputnrodocideadi')},#{rich:clientId('textnrodocideadi')}"
+																		event="onchange" BypassUpdates="false"
+																		ajaxSingle="true" />
+																	<!-- reRender="#{rich:clientId('id_documento')},#{rich:clientId('id_subtipdocideadi')},#{rich:clientId('inputnrodocideadi')},#{rich:clientId('textnrodocideadi')}" -->
+														</rich:comboBox>
+													</td>
+													<td align="left" width="130px" >
+														<h:panelGroup rendered="#{registroPersonaManaged.isTipoDocumentoIdentidad}" >
+															<h:outputText value="Nro Doc. Ident. :" />
+															<span style="color: red;">*</span>
+														</h:panelGroup>
+													</td>
+													<td align="left" width="150px" >
+														<h:inputText id="id_documento" maxlength="12"
+																	required="true"
+																	requiredMessage="#{msg['mp.errornrodocumento']}"
+																	value="#{registroPersonaManaged.mpPersona.nroDocuIdentidad}"
+																	onkeypress="return validaEnteroPositivo(event)">
+																	<!--  <a4j:support event="onblur"  onsubmit="true" -->
+																	<!--  ajaxSingle="true"  immediate="true" -->
+																	<!--  status="ajaxStatus"   -->
+																	<!-- action="#{registroPersonaManaged.buscarPersonaDNI}"  -->
+																	<!-- reRender="id_datoscontribuyente" focus="id_fechadeclaracion"  -->
+																	<!-- oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };" -->
+																	<!-- > </a4j:support> -->
+																</h:inputText>
+															</td>
+													<td width="40" valign="top">
+														<a4j:commandLink
+																	id="id_busquedareniec" status="ajaxStatus"
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}"
+																	action="#{registroPersonaManaged.consultaReniec()}"
+																	reRender="segundoNombre,primerNombre,apellidoMaterno,id_apellidopaterno,id_datoscontribuyente"
+																	oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');return false;return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+  																    <h:graphicImage width="20" height="20"
+																		value="/images/modal/reniec.jpg" style="border:0" />
+																	<rich:toolTip for="id_busquedareniec"
+																		value="CONSULTA RENIEC EN LÍNEA" />
+														</a4j:commandLink>
+													</td>
+												</tr>
+												<tr>
+												<td align="left" width="130px">
+													<h:outputText value="Fecha de Const. o Nac." />
+														</td>
+													<td align="left" width="150px" >
+													 	<rich:calendar
+									                        locale="en/US"   converterMessage="Ingrese Fecha de Constitución o Nacimiento. Valido  "
+									                        datePattern="dd/MM/yyyy"
+									                        enableManualInput="true" inputClass="maskDate"
+									                           inputStyle="width:80px"
+									                         id="id_fechadeclaracion" value="#{registroPersonaManaged.fechaNacoConst}" >
+									                     </rich:calendar>
+									                        <rich:jQuery id="maskedo3" selector=".maskDate" query="mask('99/99/9999')" timing="onload" /> 
+													</td>
+												</tr>
+										
+												<tr>
+												<td  align="left" width="130px" >
+												
+												   <h:panelGroup id="id_apepaternotxt" rendered="#{registroPersonaManaged.istipopersonaNatural}"  >
+														<h:outputText value="Apellido Paterno"  />
+														<span style="color: red;">*</span>
+														</h:panelGroup>
+													</td>
+													<td align="left" width="150px" >
+														<h:inputText  id="id_apellidopaterno" 
+														binding = "#{registroPersonaManaged.txtApePaterno}" maxlength="50"  
+														value="#{registroPersonaManaged.mpPersona.apePaterno}" 
+														styleClass="textUpperCase" 
+														onkeypress="return validarCarateres(event)" 
+														rendered="#{registroPersonaManaged.istipopersonaNatural}">
+														<!-- required="true"  requiredMessage="#{msg['mp.apellidopaternosiningresar']}"   -->
+															<f:converter converterId="uppeCaseConverter"/>
+														</h:inputText>
+													</td>
+												<td align="left" width="130px" >
+												       <h:panelGroup rendered="#{registroPersonaManaged.istipopersonaNatural}"  >
+														<h:outputText value="Apellido Materno:" />
+														<span style="color: red;">*</span>
+														</h:panelGroup>
+													</td>
+													<td align="left" width="150px" >
+														<h:inputText id="apellidoMaterno" maxlength="50"  
+														binding = "#{registroPersonaManaged.txtApeMaterno}"  
+														value="#{registroPersonaManaged.mpPersona.apeMaterno}" 
+														styleClass="textUpperCase"  
+														onkeypress="return validarCarateres(event)" 
+														rendered="#{registroPersonaManaged.istipopersonaNatural}">
+														<!-- required="true"  requiredMessage="#{msg['mp.apellidomaternosiningresar']}"  -->
+														<f:converter converterId="uppeCaseConverter"/>
+														</h:inputText>
+													</td>
+												
+												</tr>
+												<tr>
+													<td align="left" width="130px" >
+													<h:panelGroup rendered="#{registroPersonaManaged.istipopersonaNatural}" >
+														<h:outputText value="Primer Nombre"  />
+														<span style="color: red;">*</span>
+														</h:panelGroup>
+													</td>
+													<td align="left" width="150px" >
+														<h:inputText id="primerNombre"
+																	binding="#{registroPersonaManaged.txtPrimerNombre}" maxlength="50"
+																	value="#{registroPersonaManaged.mpPersona.primerNombre}"
+																	styleClass="textUpperCase"
+																	onkeypress="return validarCarateres(event)"
+																	rendered="#{registroPersonaManaged.istipopersonaNatural}">
+																	<!-- required="true"  -->
+																	<!-- requiredMessage="#{msg['mp.primernombresiningresar']}" -->
+																	<f:converter converterId="uppeCaseConverter" />
+														</h:inputText>
+													</td>
+												    <td align="left" width="130px" >
+									                           	<h:outputText value="Segundo Nombre  :"  rendered="#{registroPersonaManaged.istipopersonaNatural}" />
+									                </td>
+									                <td align="left" width="150px" >
+										                 <h:inputText
+																		value="#{registroPersonaManaged.mpPersona.segundoNombre}"
+																		binding="#{registroPersonaManaged.txtSegundoNombre}"
+																		maxlength="50" id="segundoNombre"
+																		styleClass="textUpperCase"
+																		onkeypress="return validarCarateres(event)"
+																		rendered="#{registroPersonaManaged.istipopersonaNatural}">
+																		<f:converter converterId="uppeCaseConverter" />
+														</h:inputText>
+													</td>
+													
+												</tr>	
+												
+									           	      <tr>
+										     					<td align="left" width="130px"  >
+										     					<h:panelGroup rendered="#{registroPersonaManaged.issucesionindivisa}"	>
+									                           	   <h:outputText id="textpartdefu"  value="Partida de Defunción  :"   rendered="#{registroPersonaManaged.issucesionindivisa}"   />
+												                   <span  style="color: red;">*</span>      
+												                 </h:panelGroup>  	
+									                           	</td>
+									                  			<td align="left" width="150px" >
+									       						<h:inputText id="inputpartdefu" maxlength="20"  required="true"  requiredMessage="#{msg['mp.errornropartida']}"    value="#{registroPersonaManaged.mpPersona.nroPartidaDefuncion}"  rendered="#{registroPersonaManaged.issucesionindivisa}"   />
+																</td>
+																<td align="left" width="100px" >
+									       		 				<h:panelGroup rendered="#{registroPersonaManaged.issucesionindivisa}"	>
+									                           	   <h:outputText value="Fecha de Defunción :" rendered="#{registroPersonaManaged.issucesionindivisa}" />
+																   <span  style="color: red;">*</span>
+															 </h:panelGroup>
+																</td>
+																	<td align="left" width="100px" >
+																	
+																						 <rich:calendar rendered="#{registroPersonaManaged.issucesionindivisa}"
+																	                        locale="en/US" required="true"  requiredMessage="#{msg['mp.errorfechaDefuncion']}" 
+																	                        datePattern="dd/MM/yyyy"  converterMessage="Ingrese Fecha de Defunción Valido  "
+																	                        enableManualInput="true" inputClass="maskDate"
+																	                        id="id_fechadefuncion" value="#{registroPersonaManaged.fechaDefuncion}"
+																	                        inputStyle="width:80px" >
+																	                     </rich:calendar>
+																	                        <rich:jQuery id="maskedo6" selector=".maskDate" query="mask('99/99/9999')" timing="onload" />  
+																					
+																					</td>
+																	
+									           </tr> 
+									       
+									            <tr>
+									 	 <td align="left" width="130px"  >
+									 	  <h:panelGroup  rendered="#{registroPersonaManaged.israzonsocial}" >
+									 	  <h:outputText value="Razón Social:"/>
+									 	  <span  style="color: red;">*</span>
+									 	  </h:panelGroup>
+									 	  </td>
+									 	  <td align="left" >
+									 	  <h:inputText maxlength="200" style="width:100%" required="true"  requiredMessage="#{msg['mp.razonsocialiningresar']}"   styleClass="textUpperCase"  onkeypress="return validarCarateres(event)"
+														  value="#{registroPersonaManaged.mpPersona.razonSocial}" rendered="#{registroPersonaManaged.israzonsocial}" >
+														  	<f:converter converterId="uppeCaseConverter"/>
+														  </h:inputText>
+									 	  </td>
+									 	  </tr>
+									        
+									         
+									   
+											</table>
+									</rich:panel>	
+								</td>
+								
+							</tr>
+							<tr>
+									<td align="left">
+										<!-- 26/04/2012 cchaucca:ini -->
+										<rich:panel id="panelRegistroDireccion2" style="width:100%; height: 150px;">
+										<!-- 26/04/2012 cchaucca:ini -->
+										<f:facet name="header">		
+											Dirección(es) de Persona 
+											</f:facet>
+										<table border="0" width="100%">
+											<tr>
+												<td align="left" width="100px">
+												 	<a4j:commandButton id="nuevo_direccion" action="#{registroDireccionPersonaManaged.nuevo}" oncomplete="#{rich:component('panelRegistroDireccion')}.hide();#{rich:component('panelRegistroDireccion')}.show();" style="width:80px;"
+													 value="Nuevo" disabled="#{registroPersonaManaged.isDomiciliosIngresados || registroPersonaManaged.tipoAccion == null}"
+													 reRender="id_lsttipoedificio1,si00,panelRegistroDireccion,formRegistroDireccion,ubicaciondireccion,id_registrodireccion,id_tipoedificio" ajaxSingle="true"
+													 />
+												</td>
+											</tr>
+										</table>
+		
+							           <rich:extendedDataTable 
+										id="id_principal_direccion" value="#{registroPersonaManaged.recordsDireccion}" var="direccion" width="100%" height="70px"
+										selectionMode="single" 
+										rowKeyVar="row" enableContextMenu="false"	>
+											 <rich:column id="x111" width="5%">
+											  	<f:facet name="header" width="10%" >Edit</f:facet>
+							            		<a4j:commandLink ajaxSingle="true" id="newlink111" action="#{registroDireccionPersonaManaged.editMpDireccionPersona}" disabled="#{registroPersonaManaged.tipoAccion == null}"
+										            	oncomplete="#{rich:component('panelRegistroDireccion')}.hide();#{rich:component('panelRegistroDireccion')}.show();"
+										            	 style="width:80px;" reRender="formRegistroDireccion,ubicaciondireccion,id_registrodireccion">
+										                    <h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+										                <f:setPropertyActionListener value="#{direccion}" target="#{registroDireccionPersonaManaged.findMpDireccionItem}" id="r428"/>
+										        </a4j:commandLink>
+								                <rich:toolTip for="newlink111" value="Actualizar la Dirección" />
+									        </rich:column>
+											<rich:column id="x444" width="15%">
+								                <f:facet name="header">Tipo Domicilio</f:facet>
+								                <h:outputText value="#{direccion.tipoDomicilio}"/>
+								            </rich:column>
+								        	<rich:column id="x3" width="80%">
+								                <f:facet name="header">Dirección</f:facet>
+								                <h:outputText value="#{direccion.domicilioCompleto}"/>
+								            </rich:column>
+						   			</rich:extendedDataTable>
+										
+									</rich:panel>	
+								</td>
+							
+							</tr>
+						</table>	
+					</td>
+				</tr>
+				
+				<tr>
+					<td align="center">
+					 	<a4j:commandButton value="Guardar" style="width:100px;" id="id_btnguardar"	action="#{registroPersonaManaged.guardarBasico}" 
+					 	 	oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.hideModalPanel(\'modalRegistroPersonaBasico\'); return false;' : 'Richfaces.showModalPanel(\'mpErrors\');' };" 
+					 	 	reRender="#{registroPersonaManaged.destinoRefresh}"
+					 	 	status="ajaxStatus">
+						</a4j:commandButton>
+						<a4j:commandButton value="Salir" style="width:100px;"
+						    action="#{registroPersonaManaged.salirPersonaBasico}" 
+						    oncomplete="#{rich:component('modalRegistroPersonaBasico')}.hide(); return false">
+						</a4j:commandButton>
+					</td>
+				</tr>
+				
+			</table>
+	</td></tr>
+	
+</table>
+</a4j:outputPanel>
+</h:form>
+
+<!-- panelRegistroDireccion -->
+<rich:modalPanel id="panelRegistroDireccion"  moveable="true" resizeable="false" minWidth="700" minHeight="325">
+  <f:facet name="header">
+  	<h:outputText value="Registro Domicilio(s)"  />
+  </f:facet>
+  <f:facet name="controls">
+   	 <h:panelGroup>
+        <h:graphicImage value="/images/modal/close.png" id="hidelink3s"
+            styleClass="hidelink" />
+        <rich:componentControl for="panelRegistroDireccion" attachTo="hidelink3s"
+            operation="hide" event="onclick" />
+  	</h:panelGroup>
+  </f:facet>
+   
+  <h:panelGrid>
+	<a4j:include viewId="/sisat/persona/registrodireccion.xhtml" />
+  </h:panelGrid>
+</rich:modalPanel>
+
+<rich:modalPanel id="panelBuscarVia" moveable="true" resizeable="false" minWidth="740" minHeight="400">
+   <f:facet name="header" >BUSCAR VIA</f:facet>
+   <f:facet name="controls">
+   	 <h:panelGroup>
+         <h:graphicImage value="/images/modal/close.png" id="hidelink4s" styleClass="hidelink" />
+         <rich:componentControl for="panelBuscarVia" attachTo="hidelink4s" operation="hide" event="onclick" />
+     </h:panelGroup>
+   </f:facet>
+   <h:form id="formBuscarVia">
+		<h:panelGrid>
+			<a4j:include viewId="/sisat/persona/buscarvia.xhtml" />
+		</h:panelGrid>
+   </h:form>
+</rich:modalPanel>
+	
+</ui:composition>

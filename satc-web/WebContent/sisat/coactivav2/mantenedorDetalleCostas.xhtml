@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<style type="">
+		.classLeft {
+		    text-align: left;
+		}
+		.classCenter {
+		    text-align: right;
+		}
+	</style>
+	
+	<h:form id="formMantenedorDetalleCostas">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		
+		<rich:panel id="pnlheader">
+	        <f:facet name="header">
+	        	Lista de Costas
+	        </f:facet>
+	        
+	        <h:panelGrid width="30%" columnClasses="classLeft" columns="2" >
+	        	<h:outputText for="idPeriodo" value="Periodo :" />
+	            <h:inputText id="idPeriodo" value="#{manteDetalleCostasManaged.periodo}" readonly="true" />
+	        </h:panelGrid>
+	        
+		    <rich:extendedDataTable id="edtLista" value="#{manteDetalleCostasManaged.records}" width="100%" height="380px"
+				sortMode="single" selectionMode="single" enableContextMenu="false" var="record"
+				rowKeyVar="row" rows="20">
+				
+				<rich:column id="c0" style="text-align:center" width="4%" >
+		               <f:facet name="header" >Item</f:facet>
+		               <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		        </rich:column>
+				<rich:column id="c1" style="text-align:left" width="30%" >
+					<f:facet name="header" width="10%">Descripcion</f:facet>
+					<h:outputText value="#{record.descripcion}" />
+				</rich:column>
+				<rich:column id="c2" style="text-align:left" width="20%" >
+					<f:facet name="header" width="10%">Etiqueta</f:facet>
+					<h:outputText value="#{record.etiqueta}" />
+				</rich:column>
+				<rich:column id="c3" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Periodo</f:facet>
+					<h:outputText value="#{record.periodo}" />
+				</rich:column>
+				<rich:column id="c4" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Porcentaje UIT</f:facet>
+					<h:outputText value="#{record.porcentajeUit}" />
+				</rich:column>
+				<rich:column id="c5" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Valor</f:facet>
+					<h:outputText value="#{record.valor}" />
+				</rich:column>
+				<rich:column id="c6" style="text-align:center" width="6%" >
+					<f:facet name="header" width="10%">Estado</f:facet>
+					<h:outputText value="#{record.estado?'Activo':'InActivo'}" />
+				</rich:column>
+				
+				<rich:column id="c7" width="4%" style="text-align:center">
+					<a4j:commandLink ajaxSingle="true" id="clEditar"
+						action="#{manteDetalleCostasManaged.editar}"
+						oncomplete="#{rich:component('mpCostas')}.show();"
+						reRender="mpCostas" status="ajaxStatus">
+						<h:graphicImage value="/images/editar2.png" style="border:0;width:14px;height:14px;" />
+						<f:setPropertyActionListener value="#{record}"
+							target="#{manteDetalleCostasManaged.selected}"
+							id="pal1" />
+					</a4j:commandLink>
+				</rich:column>
+			</rich:extendedDataTable>
+			<rich:datascroller for="edtLista" maxPages="5" fastStep="3"/>
+		</rich:panel>
+	</h:form>    
+	
+	<rich:modalPanel id="mpCostas" autosized="true" width="400" height="180">
+		<f:facet name="header">
+			<h:outputText value="Datos de Costa" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					styleClass="hidelink" id="hidelink3" />
+				<rich:componentControl for="mpCostas" attachTo="hidelink3"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+        <h:form id="formEditarCostas">
+            <h:panelGrid columns="2" columnClasses="classCenter">
+            	<h:outputText for="idPeriodo" value="Periodo :" />
+	            <h:outputText id="idPeriodo" value="#{manteDetalleCostasManaged.selected.periodo}" />
+				
+				<h:outputText for="idDescripcion" value="Descripcion :" />
+	            <h:outputText id="idDescripcion" value="#{manteDetalleCostasManaged.selected.descripcion}" />
+	            
+	            <h:outputText for="idEtiqueta" value="Etiqueta :" />
+	            <h:outputText id="idEtiqueta" value="#{manteDetalleCostasManaged.selected.etiqueta}" />
+	            
+	            <h:outputText for="idValor" value="Valor :" />
+	            <h:inputText id="idValor" value="#{manteDetalleCostasManaged.selected.valor}" style="width:60px;" />
+	            
+	            <h:outputText for="idEstado" value="Estado :"/>	
+            	<h:selectBooleanCheckbox id="idEstado" value="#{manteDetalleCostasManaged.selected.estado}">
+					<a4j:support event="onchange" ajaxSingle="true" />
+				</h:selectBooleanCheckbox>
+            </h:panelGrid>
+            
+            <br></br>	            
+            <h:panelGrid columns="2" columnClasses="classCenter">
+	        	<h:commandButton value="Aceptar"
+					action="#{manteDetalleCostasManaged.guardar()}"
+					reRender="pnlheader"
+					oncomplete="#{rich:component('mpCostas')}.hide();"
+					status="ajaxStatus"
+				/>
+	        	<h:commandButton value="Cancelar" onclick="#{rich:component('mpCostas')}.hide(); return false;" />
+        	</h:panelGrid>
+	        	
+        </h:form>
+     </rich:modalPanel>
+
+</ui:composition>

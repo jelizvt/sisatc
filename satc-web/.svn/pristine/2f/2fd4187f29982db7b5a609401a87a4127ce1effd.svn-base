@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+	<rich:panel id="id_thispanelPreliminarOP" width="100%">
+
+		<rich:panel id="nuevo_lote1"
+			style="width:200px; font-weight:bold;float:left;">
+			<h:outputText value="Numero de Lote : "
+				rendered="#{!registroLoteOrdenPagoManaged.isAccionRealizada}" />
+			<h:outputText
+				rendered="#{registroLoteOrdenPagoManaged.isAccionRealizada}"
+				value="Numero de Lote : #{registroLoteOrdenPagoManaged.ccLote.loteId} - #{registroLoteOrdenPagoManaged.ccLote.annoLote}" />
+		</rich:panel>
+		<h:panelGrid columns="6" style="float:right;">
+			<h:outputText
+				rendered="#{registroLoteOrdenPagoManaged.findCcLoteItem.flag_generacion==2}"
+				value="Descargar Órdenes de Pago:" />
+			<h:commandLink
+				rendered="#{registroLoteOrdenPagoManaged.findCcLoteItem.flag_generacion==2}"
+				id="id_linknew"
+				action="#{registroLoteOrdenPagoManaged.generacionArchivos}"
+				immediate="true">
+				<h:graphicImage value="/images/modal/pdf.png" style="border:0"
+					title="Lista de OPs" />
+			</h:commandLink>
+		</h:panelGrid>
+		<table align="center" width="100%">
+			<tr>
+				<td><a4j:outputPanel id="outputrespreliminar">
+						<h:panelGrid  columns="2"
+							style="font-weight:bold;color:#0770D9; text-align:center;">
+							<h:commandLink id="exportar22"
+								action="#{registroLoteOrdenPagoManaged.exportarTablaExcel}">
+								<h:graphicImage value="/images/modal/excel.png"
+									style="border:0;width:25px;height:25px;" />
+								<rich:toolTip for="exportar22">Exportar Lista a Excel.</rich:toolTip>
+							</h:commandLink>
+							<h:commandLink id="exportar"
+								action="#{registroLoteOrdenPagoManaged.exportarConsolidadoTablaExcel}">
+								<h:graphicImage value="/images/modal/excel_agrupado.png"
+									style="border:0;width:20px;height:20px;" />
+								<rich:toolTip for="exportar">Exportar Lista Consolidada a Excel.</rich:toolTip>
+							</h:commandLink>
+						</h:panelGrid>
+						<rich:datascroller for="resultadofinal" maxPages="10"></rich:datascroller>
+						<rich:extendedDataTable id="resultadofinal"
+							value="#{registroLoteOrdenPagoManaged.lstlotePreliminar}"
+							var="lotePreliminar" width="100%" height="330px" rows="20"
+							selectionMode="single"
+							noDataLabel="No Se Encontró Información para esta Búsqueda"
+							rowKeyVar="row" enableContextMenu="false">
+							
+							<rich:column id="x1" width="5%" style="text-align:center"
+								filterBy="#{lotePreliminar.personaId}">
+								<f:facet name="header">Cod. Per.</f:facet>
+								<h:outputText value="#{lotePreliminar.personaId}" />
+							</rich:column>
+							
+							<rich:column id="x2" width="15%"
+								filterBy="#{lotePreliminar.descripcionPersona}">
+								<f:facet name="header">Apellidos Y Nombres/Razón Social</f:facet>
+								<h:outputText value="#{lotePreliminar.descripcionPersona}" />
+							</rich:column>
+							
+							<rich:column id="id_sector3" width="10%" style="text-align:center">
+								<f:facet name="header">Sector</f:facet>
+								<h:outputText value="#{lotePreliminar.sector}" />
+							</rich:column>
+							
+
+							<rich:column id="x3" width="15%" style="text-align:center">
+								<f:facet name="header">Dirección</f:facet>
+								<h:outputText value="#{lotePreliminar.direccion}" />
+							</rich:column>
+							
+							<rich:column id="x10" width="5%" style="text-align:center">
+								<f:facet name="header">Concepto</f:facet>
+								<h:outputText value="#{lotePreliminar.descripcionConcepto}" />
+							</rich:column>
+							<rich:column id="x6" width="5%" style="text-align:center">
+								<f:facet name="header">Año Deuda</f:facet>
+								<h:outputText value="#{lotePreliminar.anioCuota}" />
+							</rich:column>
+							<rich:column id="x7" width="5%" style="text-align:center">
+								<f:facet name="header">N° Cuota</f:facet>
+								<h:outputText value="#{lotePreliminar.nroCuota}" />
+							</rich:column>
+							<rich:column id="x8" width="5%" style="text-align:center">
+								<f:facet name="header">Total Deuda</f:facet>
+								<h:outputText value="#{lotePreliminar.deudaTotal}" />
+							</rich:column>
+							<rich:column id="x9" width="10%" style="text-align:center">
+								<f:facet name="header">Nro Valor</f:facet>
+								<h:outputText value="#{lotePreliminar.nroActo}" />
+							</rich:column>
+						</rich:extendedDataTable>
+					</a4j:outputPanel></td>
+			</tr>
+		</table>
+	</rich:panel>
+	<h:panelGrid align="center" columns="3" width="40%" border="0"
+		style="text-align:center">
+		<a4j:commandButton value="Guardar" style="width:100px;"
+			id="id_btnguardar" ajaxSingle="true"
+			action="#{registroLoteOrdenPagoManaged.guardar}"
+			disabled="#{registroLoteOrdenPagoManaged.findCcLoteItem.flag_generacion==2}"
+			reRender="nuevo_lote1,outputrespreliminar"
+			oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+		</a4j:commandButton>
+
+		<a4j:commandButton id="cmdGenerar" value="Generacion Valores"
+			style="width:150px;" immediate="true"
+			action="#{registroLoteOrdenPagoManaged.generacionValores}"
+			disabled="#{registroLoteOrdenPagoManaged.findCcLoteItem.flag_generacion==2}"
+			oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+			reRender="id_thispanelPreliminarOP,outputrespreliminar"
+			status="ajaxStatus">
+		</a4j:commandButton>
+		<!-- 	<a4j:commandButton value="Mostrar Valores" style="width:150px;"
+			immediate="true"
+			action="#{registroLoteOrdenPagoManaged.mostrarValores}"
+			disabled="#{registroLoteOrdenPagoManaged.findCcLoteItem.flag_generacion==1}"
+			oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+			reRender="id_thispanelPreliminarOP,outputrespreliminar"
+			status="ajaxStatus">
+		</a4j:commandButton>-->
+	</h:panelGrid>
+
+</h:panelGrid>
+
+

@@ -1,0 +1,285 @@
+<alfresco-config>
+	<config evaluator="string-compare" condition="Views">
+		<views>
+			<view-defaults>
+				<browse>
+					<!-- allowable values: list|details|icons -->
+					<view>details</view>
+					<page-size>
+						<list>20</list>
+						<details>20</details>
+						<icons>20</icons>
+					</page-size>
+				</browse>
+			</view-defaults>
+		</views>
+	</config>
+	<!-- Custom Content Type Settings -->
+	<config evaluator="string-compare" condition="Content Wizards">
+		<content-types>
+			<type name="ws:testproperties" />
+			<type name="satcm:Product" />
+			<type name="satcm:Prueba" />
+			<type name="satcm:papelInfraccTransito" />
+			<type name="satcm:resSancion" />
+			<type name="satcm:ordenPago" />
+			<type name="satcm:resMulta" />
+			<type name="satcm:resDeterminacion" />
+			<type name="satcm:resEjecCoactiva" />
+			<type name="satcm:resReclamaciones" />
+			<type name="satcm:resFraccionamiento" />
+			<type name="satcm:resControlDeuda" />
+			<type name="satcm:resCobraCoac" />
+			<type name="satcm:resDptoFisca" />
+			<type name="satcm:reqFisca" />
+			<type name="satcm:docInscripDesc" />
+			<type name="satcm:solicDescargo" />
+			<type name="satcm:recursoRecla" />
+			<type name="satcm:anexoDjVehicular" />
+			<type name="satcm:anexoDjPredial" />
+			<type name="satcm:anexoPapeleta" />
+			<type name="satcm:anexoAlcabala" />		
+			<type name="satcm:notificacion" />		
+		</content-types>
+	</config>
+
+	<config evaluator="string-compare" condition="Advanced Search">
+		<advanced-search>
+			<content-types>
+				<type name="ws:testproperties" />
+				<type name="satcm:Product" />
+				<type name="satcm:Prueba" />
+				<type name="satcm:papelInfraccTransito" />
+				<type name="satcm:resSancion" />
+				<type name="satcm:ordenPago" />
+				<type name="satcm:resMulta" />
+				<type name="satcm:resDeterminacion" />
+				<type name="satcm:resEjecCoactiva" />
+				<type name="satcm:resReclamaciones" />
+				<type name="satcm:resFraccionamiento" />
+				<type name="satcm:resControlDeuda" />
+				<type name="satcm:resCobraCoac" />
+				<type name="satcm:resDptoFisca" />
+				<type name="satcm:reqFisca" />
+				<type name="satcm:docInscripDesc" />
+				<type name="satcm:solicDescargo" />
+				<type name="satcm:recursoRecla" />
+				<type name="satcm:recursoApela" />
+				<type name="satcm:anexoDjVehicular" />
+				
+			</content-types>			
+			<custom-properties>
+				<meta-data aspect="satcm:aspectId" property="satcm:id"/>				
+			</custom-properties>			
+		</advanced-search>
+	</config>
+
+	<config evaluator="aspect-name" condition="ws:CustomerDetails">
+		<property-sheet>
+			<show-property name="ws:dateProp" />
+			<show-property name="ws:datetimeProp" />
+		</property-sheet>
+	</config>
+
+	<config evaluator="aspect-name" condition="satcm:aspectId">
+		<property-sheet>
+			<show-property name="satcm:id" />
+		</property-sheet>
+	</config>
+	
+	<config evaluator="aspect-name" condition="satcm:aspectAnexoTipoDoc">
+		<property-sheet>
+			<show-property name="satcm:anexoTipoDoc" />
+		</property-sheet>
+	</config>
+	
+	<config evaluator="aspect-name" condition="satcm:aspectAnexoNroDoc">
+		<property-sheet>
+			<show-property name="satcm:anexoNroDoc" />
+		</property-sheet>
+	</config>
+
+	<config evaluator="node-type" condition="ws:testproperties">
+		<property-sheet>
+			<show-property name="ws:dni" />
+		</property-sheet>
+
+	</config>
+
+	<config evaluator="node-type" condition="satcm:Product">
+		<property-sheet>
+			<show-property name="name" />
+			<show-property name="mimetype" display-label-id="content_type" component-generator="MimeTypeSelectorGenerator" />
+			<show-property name="encoding" display-label-id="encoding" ignore-if-missing="false"
+				component-generator="CharsetSelectorGenerator" />
+			<show-property name="size" display-label-id="size" converter="org.alfresco.faces.ByteSizeConverter"
+				show-in-editmode="false" />
+			<show-property name="title" display-label-id="title" ignoreif-missing="false" />
+			<show-property name="description" display-labelid="description" ignore-if-missing="false"
+				component-generator="MultilingualTextAreaGenerator" />
+			<show-property name="satcm:sku" />
+			<show-property name="satcm:manufacturer" />
+			<show-property name="satcm:color" />
+			<show-property name="satcm:brand" />
+			<show-property name="satcm:unitPrice" />
+			<show-property name="satcm:displayUntil" />
+			<show-property name="satcm:competitorProducts" />
+			<show-property name="satcm:competitorDetails" componentgenerator="TextAreaGenerator" />
+		</property-sheet>
+	</config>
+
+	<config evaluator="node-type" condition="satcm:Prueba">
+		<property-sheet>
+			<show-property name="satcm:titulo2" />
+		</property-sheet>
+	</config>
+
+
+
+
+	<config evaluator="node-type" condition="satcm:papelInfraccTransito">
+		<property-sheet>
+			<show-property name="satcm:nroPITInfra" />
+			<show-property name="satcm:nroPlacaInfra" />
+			<show-property name="satcm:tipoInfraccionInfra" />
+			<show-property name="satcm:tipoInfraccionInfra" />
+			<show-property name="satcm:dniInfra" />
+			<show-property name="satcm:fechaInfra" />
+		</property-sheet>
+	</config>
+
+
+
+	<config evaluator="node-type" condition="satcm:resSancion">
+		<property-sheet>
+			<show-property name="satcm:nroRes" />
+			<show-property name="satcm:nroResAspect" />
+			<show-property name="satcm:nroPIT" />
+			<show-property name="satcm:nroPIT" />
+			<show-property name="satcm:nroPlaca" />
+			<show-property name="satcm:tipoInfraccion" />
+			<show-property name="satcm:dni" />
+		</property-sheet>
+	</config>
+
+	<config evaluator="node-type" condition="satcm:ordenPago">
+		<property-sheet>
+			<show-property name="satcm:nroOP" />
+			<show-property name="satcm:codContribOP" />
+			<show-property name="satcm:fechaOP" />
+		</property-sheet>
+	</config>
+
+	<config evaluator="node-type" condition="satcm:resMulta">
+		<property-sheet>
+			<show-property name="satcm:nroRM" />
+			<show-property name="satcm:codContribRM" />
+			<show-property name="satcm:fechaRM" />
+		</property-sheet>
+	</config>
+	<config evaluator="node-type" condition="satcm:resDeterminacion">
+		<property-sheet>
+			<show-property name="satcm:nroRD" />
+			<show-property name="satcm:codContribRD" />
+			<show-property name="satcm:fechaRD" />
+		</property-sheet>
+	</config>
+	<config evaluator="node-type" condition="satcm:resEjecCoactiva">
+		<property-sheet>
+			<show-property name="satcm:nroREC" />
+			<show-property name="satcm:codContribREC" />
+			<show-property name="satcm:fechaREC" />
+		</property-sheet>
+	</config>
+	<config evaluator="node-type" condition="satcm:resReclamaciones">
+		<property-sheet>
+			<show-property name="satcm:nroRecla" />
+			<show-property name="satcm:codContribRecla" />
+			<show-property name="satcm:fechaRecla" />
+		</property-sheet>
+	</config>
+	<config evaluator="node-type" condition="satcm:resFraccionamiento">
+		<property-sheet>
+			<show-property name="satcm:nroRFracc" />
+			<show-property name="satcm:codContribRFracc" />
+			<show-property name="satcm:fechaRFracc" />
+		</property-sheet>
+	</config>
+	<config evaluator="node-type" condition="satcm:resControlDeuda">
+		<property-sheet>
+			<show-property name="satcm:nroRCD" />
+			<show-property name="satcm:codContribRCD" />
+			<show-property name="satcm:fechaRCD" />
+		</property-sheet>
+	</config>
+	<config evaluator="node-type" condition="satcm:resCobraCoac">
+		<property-sheet>
+			<show-property name="satcm:nroRCC" />
+			<show-property name="satcm:codContribRCC" />
+			<show-property name="satcm:fechaRCC" />
+		</property-sheet>
+	</config>
+	<config evaluator="node-type" condition="satcm:resDptoFisca">
+		<property-sheet>
+			<show-property name="satcm:nroRDF" />
+			<show-property name="satcm:codContribRDF" />
+			<show-property name="satcm:fechaRDF" />
+		</property-sheet>
+	</config>
+	<config evaluator="node-type" condition="satcm:reqFisca">
+		<property-sheet>
+			<show-property name="satcm:nroRFisca" />
+			<show-property name="satcm:codContribRFisca" />
+			<show-property name="satcm:fechaRFisca" />
+		</property-sheet>
+	</config>
+	<config evaluator="node-type" condition="satcm:docInscripDesc">
+		<property-sheet>
+			<show-property name="satcm:tipoDoc" />
+			<show-property name="satcm:codContribInscripDesc" />
+			<show-property name="satcm:fechaInscripDesc" />
+			<show-property name="satcm:nroDj" />
+			<show-property name="satcm:tipo" />
+			<show-property name="satcm:tipo" />
+		</property-sheet>
+	</config>
+	<config evaluator="node-type" condition="satcm:solicDescargo">
+		<property-sheet>
+			<show-property name="satcm:nroRegMP" />
+			<show-property name="satcm:codContribSD" />
+			<show-property name="satcm:fechaSD" />
+			<show-property name="satcm:nroPITSD" />
+		</property-sheet>
+	</config>
+
+	<config evaluator="node-type" condition="satcm:recursoRecla">
+		<property-sheet>
+			<show-property name="satcm:tipoRecla" />
+			<show-property name="satcm:codContribRecursoRecla" />
+			<show-property name="satcm:fechaRecursoRecla" />
+			<show-property name="satcm:nroRecursoRecla" />
+		</property-sheet>
+	</config>
+
+	<config evaluator="node-type" condition="satcm:recursoApela">
+		<property-sheet>
+			<show-property name="satcm:NroApela" />
+			<show-property name="satcm:codContribRecursoApela" />
+			<show-property name="satcm:fechaRecursoApela" />
+			<show-property name="satcm:nroRecursoApela" />
+		</property-sheet>
+	</config>
+	
+	<config evaluator="node-type" condition="satcm:notificacion">
+		<property-sheet>
+			<show-property name="satcm:personaId"/>
+			<show-property name="satcm:tipoActo"/>
+			<show-property name="satcm:fechaNotificacion"/>
+			<show-property name="satcm:notificadorId"/>
+			<show-property name="satcm:nroDocumento"/>
+		</property-sheet>
+	</config>
+
+</alfresco-config>
+
+

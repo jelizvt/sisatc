@@ -1,0 +1,973 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formBusquedaBeneficios">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+
+		<rich:panel id="pnlGenerar">
+			<f:facet name="header">
+      			BENEFICIO TRIBUTARIO (PENSIONISTA)
+   		   </f:facet>
+			<h:panelGrid  rendered="#{buscarBeneficioTributarioManaged.permisoAgregarRegistrar}" columns="2" align="center">
+				<a4j:commandButton id="btnNuevo" width="20px"
+					value="Registrar Requisitos"
+					oncomplete="#{rich:component('panelRequisito')}.show()"
+					reRender="panelRequisito" />
+				<!-- 				<a4j:commandButton id="btnResol" width="20px" -->
+				<!-- 					value="Generar Resolución" -->
+				<!-- 					oncomplete="#{rich:component('panelResolucion')}.show()" -->
+				<!-- 					action="#{buscarBeneficioTributarioManaged.obtenerDocumento}" -->
+				<!-- 					reRender="panelResolucion" /> -->
+
+			</h:panelGrid>
+		</rich:panel>
+
+		<rich:panel id="pnlDetalle">
+					<rich:datascroller for="tblSustento" maxPages="10"></rich:datascroller>
+					<rich:extendedDataTable id="tblSustento" rows="12"
+						value="#{buscarBeneficioTributarioManaged.lstRequerimientoCe}"
+						var="items" width="100%" height="350px">
+<!-- 						<rich:column width="130" style="text-align:center"> -->
+<!-- 							<f:facet name="header">Materia Tributaria</f:facet> -->
+<!-- 							<h:outputText value="#{items.materiaTributaria}" /> -->
+<!-- 						</rich:column> -->
+<!-- 						<rich:column  width="85" style="text-align:center"> -->
+<!-- 							<f:facet name="header">Doc.Completa?</f:facet> -->
+<!-- 							<h:outputText value="#{e.flagExpedienteCompleto eq 1?'Si':'No'}" /> -->
+<!-- 						</rich:column> -->
+						<rich:column width="200" style="text-align:center">
+							<f:facet name="header">Condición Especial</f:facet>
+							<h:outputText value="#{items.condicion}" />
+						</rich:column>
+						<rich:column width="100" style="text-align:center">
+							<f:facet name="header">Nro. Expediente</f:facet>
+							<h:outputText value="#{items.nroExpediente}" />
+						</rich:column>
+						<rich:column width="110" style="text-align:center">
+							<f:facet name="header">Estado Expediente</f:facet>
+							<h:outputText value="#{items.estadoDescripcionRequerimiento}" />
+						</rich:column>
+						<rich:column width="150" style="text-align:center">
+							<f:facet name="header"></f:facet>
+							<h:outputText value="#{items.nombreDocResol}" />
+						</rich:column>
+						<rich:column width="150" style="text-align:center">
+							<f:facet name="header">Nro. Resolución</f:facet>
+							<h:outputText value="#{items.nroDocResol}" />
+						</rich:column>
+						<rich:column width="70" style="text-align:center">
+							<f:facet name="header">Fec.Resol.</f:facet>
+							<div align="center">
+								<h:outputText value="#{items.fecDocResol}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</div>
+						</rich:column>
+						<rich:column width="70" style="text-align:center">
+							<f:facet name="header">Fec. Inicio</f:facet>
+							<div align="center">
+								<h:outputText value="#{items.fecIniDocResol}" >
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</div>
+						</rich:column>
+						<rich:column width="70" style="text-align:center">
+							<f:facet name="header">Fec. Fin</f:facet>
+							<div align="center">
+								<h:outputText value="#{items.fecFinDocResol}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</div>
+						</rich:column>
+						<rich:column width="90">
+							<f:facet name="header">
+								<h:outputLabel value="#{msg['gn.estado']}" />
+							</f:facet>
+							<h:outputText value="#{items.estadoDocResol}" />
+						</rich:column>
+						<rich:column width="70" style="text-align:center">
+							<f:facet name="header">Fec. Reg.</f:facet>
+							<div align="center">
+								<h:outputText value="#{items.fecRegDocResol}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+								</h:outputText>
+							</div>
+						</rich:column>
+						
+<!-- 						<rich:column width="2%" style="text-align:center"> -->
+<!-- 							<a4j:commandLink ajaxSingle="true" id="newlink0" -->
+<!-- 								rendered="#{items.fechaNotificacion!=null}" status="ajaxStatus" -->
+<!-- 								action="#{buscarBeneficioTributarioManaged.notificar}" -->
+<!-- 								oncomplete="#{rich:component('panelNotificar')}.hide();#{rich:component('panelNotificar')}.show();" -->
+<!-- 								reRender="frmNotificar,pnlDetalle"> -->
+<!-- 								<h:graphicImage id="imgGenNotifica" value="/images/notifica-16.png" height="15px" -->
+<!-- 										style="border:0" /> -->
+<!-- 								<f:setPropertyActionListener value="#{items}" id="al2" -->
+<!-- 									target="#{buscarBeneficioTributarioManaged.findRequerimientoItem}" /> -->
+<!-- 									<rich:toolTip for="newlink0">Notificar Exp.</rich:toolTip> -->
+<!-- 							</a4j:commandLink> -->
+<!-- 						</rich:column> -->
+
+
+						<rich:column width="2%">
+							<f:facet name="header"></f:facet>
+							<div align="center">
+								<h:commandLink id="newlink1" rendered="#{items.nroRequerimiento!=null and items.condicionRequerimientoId!=null}" status="ajaxStatus"
+									action="#{buscarBeneficioTributarioManaged.imprimirRequerimiento}"
+									immediate="true">
+									<h:graphicImage id="imgImpResultado" value="/images/imprimi2.png" height="15px"
+										style="border:0" />
+									<f:setPropertyActionListener value="#{items}" id="al1"
+										target="#{buscarBeneficioTributarioManaged.findRequerimientoItem}" />
+									<rich:toolTip for="newlink1" direction="top-right"> Descargar Requerimiento</rich:toolTip>
+								</h:commandLink>
+							</div>
+						</rich:column>
+						
+						<rich:column width="2%" style="text-align:center">
+						  <div align="center">
+							<a4j:commandLink ajaxSingle="true" id="newlink2"
+								rendered="#{items.nroDocResol==null and (items.estadoRequerimiento!=4)}"
+								status="ajaxStatus"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelResolucion\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								action="#{buscarBeneficioTributarioManaged.obtenerDocumento(items.estadoRequerimiento,items.flagRequerimiento,items.flagInspeccion,items.flagSituacion)}"
+								reRender="frmResolucion,panelResolucion">
+								<h:graphicImage id="imgGenResultado"
+									value="/images/desacumula.png" height="16px" style="border:0" />
+								<f:setPropertyActionListener value="#{items}" id="al3"
+									target="#{buscarBeneficioTributarioManaged.findRequerimientoItem}" />
+								<rich:toolTip for="newlink2"> Generar Resolución</rich:toolTip>
+							</a4j:commandLink>
+						   </div>
+						</rich:column>
+
+						<rich:column width="2%">
+							<f:facet name="header"></f:facet>
+							<div align="center">
+								<h:commandLink id="newlink3" rendered="#{items.nroDocResol!=null and items.condicionRequerimientoId!=null and items.estadoResolucion!=4}" status="ajaxStatus"
+									action="#{buscarBeneficioTributarioManaged.imprimirResolucion}"
+									immediate="true" title="Descargar Resolución">
+									<h:graphicImage id="imgImpResol" value="/images/imprimi2.png" height="15px"
+										style="border:0" />
+									<f:setPropertyActionListener value="#{items}" id="al1"
+										target="#{buscarBeneficioTributarioManaged.findRequerimientoItem}" />
+<!-- 									<rich:toolTip for="newlink3" direction="top-right"> Descargar Resolución</rich:toolTip> -->
+								</h:commandLink>
+								<h:commandLink id="clWrd0" rendered="#{items.nroDocResol!=null and items.condicionRequerimientoId!=null and items.estadoResolucion==4}" status="ajaxStatus"
+									action="#{buscarBeneficioTributarioManaged.imprimirResolucion}"
+									immediate="true" title="Descargar Resolución">
+									<h:graphicImage value="/images/modal/word6.png" height="15px" width="15px" style="border:0"/>
+									<f:setPropertyActionListener value="#{items}" id="al2"
+										target="#{buscarBeneficioTributarioManaged.findRequerimientoItem}" />
+<!-- 									<rich:toolTip for="newlink3" direction="top-right"> Descargar Resolución</rich:toolTip> -->
+								</h:commandLink>
+							</div>
+						</rich:column>
+	
+						<rich:column  width="2%">
+							<f:facet name="header"></f:facet>
+							<div align="center">
+								<a4j:commandLink ajaxSingle="false" id="newlink4" action="#{buscarBeneficioTributarioManaged.editarExpediente(items.condicionRequerimientoId,items.flagDocumentacion,items.flagInspeccion,items.estadoRequerimiento)}"
+								rendered="#{items.nroRequerimiento!=null and items.flagRequerimiento==0 and items.flagInspeccion==0}" status="ajaxStatus">
+									<h:graphicImage value="/images/modal/edit.gif" style="border:0" height="15px"/>
+									<a4j:support ajaxSingle="true" event="onclick"
+										reRender="idPanelFormulario" status="ajaxStatus"
+										oncomplete="#{rich:component('panelRequisito')}.show()">
+									</a4j:support>
+									<rich:toolTip for="newlink4" value="Actualizacion" />
+								</a4j:commandLink>
+							</div>
+						</rich:column>
+					
+						<rich:column width="5%" style="text-align:center">
+								 <div align="center">
+										<a4j:commandLink ajaxSingle="true" id="linkInsp_nueva"
+											rendered="#{items.flagInspeccion==0 and items.nroDocResol==null or (items.flagDocumentacion==0 and items.flagSituacion!=0 and items.fechaFinInspeccion!=null)}" status="ajaxStatus"
+											action="#{buscarBeneficioTributarioManaged.registraInspeccion(items.condicionRequerimientoId)}"
+											oncomplete="#{rich:component('panelInspeccion')}.hide();#{rich:component('panelInspeccion')}.show();"
+											reRender="tblSustento,panelInspeccion"
+											title="Inps.Ocular">
+											<h:graphicImage id="imgGenNotifica"
+												value="/images/insp_ocular.png" height="15px" style="border:0" />
+										</a4j:commandLink>
+	
+										<a4j:commandLink ajaxSingle="false" id="linkInsp_ab"
+											rendered="#{items.flagSituacion!=0 and items.flagInspeccion!=0}" status="ajaxStatus"
+											action="#{buscarBeneficioTributarioManaged.actualizaInspeccion(items.condicionRequerimientoId,items.flagDocumentacion,items.flagSituacion,items.flagRequerimiento,items.estadoRequerimiento)}"
+											oncomplete="#{rich:component('panelInspeccionCierre')}.hide();#{rich:component('panelInspeccionCierre')}.show();"
+											reRender="tblSustento,panelInspeccionCierre"
+											title="Inps.Ocular Abierta">
+											<h:graphicImage value="/images/insp_ocular_abierto.png"
+												style="border:0" height="15px" />
+										</a4j:commandLink>
+	
+										<a4j:commandLink id="linkInsp_ds"
+											title="Inps.Ocular Cerrada"
+											rendered="#{items.flagSituacion==0 and items.flagInspeccion!=0}" 
+											reRender="tblSustento">
+											<h:graphicImage value="/images/insp_ocular_cerrado.png" style="border:0" height="15px" />
+										</a4j:commandLink>
+									</div>
+						</rich:column>
+
+						<rich:column width="2%">
+						<div align="center">
+								<a4j:commandLink ajaxSingle="true" id="newlink5" rendered="#{items.nroDocResol!=null and items.condicionRequerimientoId!=null and items.estadoResolucion!=4}"
+								action="#{buscarBeneficioTributarioManaged.notificarResolucion}" status="ajaxStatus" disabled="true"
+								oncomplete="#{rich:component('panelNotificarResol')}.hide();#{rich:component('panelNotificarResol')}.show();"
+								reRender="panel" title="Notificar">
+								<h:graphicImage value="/images/notifica-16.png" style="border:0" />
+								<f:setPropertyActionListener value="#{items}"
+									target="#{buscarBeneficioTributarioManaged.findRequerimientoItem}" />
+							</a4j:commandLink>
+<!-- 							<rich:toolTip for="newlink5" value="Notificar" direction="top-left"  /> -->
+						</div>
+						</rich:column>
+			</rich:extendedDataTable>
+		</rich:panel>
+	</h:form>
+
+	<rich:modalPanel id="panelRequisito" autosized="true" width="500" height="250">
+			<f:facet name="header">
+				<h:outputText value="Requisitos de Beneficio Tributario" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink1" />
+					<rich:componentControl for="panelRequisito" attachTo="hidelink1"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+		<h:form>
+		<rich:panel id="idPanelFormulario">
+				<rich:panel id="a01">
+					<table border="0" width="100%" align="center">
+						<tr>
+							<td width="20%"><h:outputText value="Condición Especial :" /></td>
+							<td align="left" width="850px">
+								<rich:comboBox
+									id="id_cmbrequerimiento"
+									value="#{buscarBeneficioTributarioManaged.cmbValuetipocondicionespecial}"
+									valueChangeListener="#{buscarBeneficioTributarioManaged.loadTipoCondicion}"
+									defaultLabel="#{msg['obl.defaultLabelCmbSubConcepto']}"
+									width="220" tabindex="3"
+									onkeypress="return showListCbo(this,event);"
+									onblur="validaInputCbo(this)">
+									<f:selectItems
+										value="#{buscarBeneficioTributarioManaged.lsttipocondicionespecial}" />
+									<a4j:support reRender="idPanelFormulario"
+										event="onchange" bypassUpdates="false" ajaxSingle="true">
+									</a4j:support>
+								</rich:comboBox>
+							</td>
+						</tr>
+					</table>
+				</rich:panel>
+				<rich:panel id="id_panel_requisito"
+					style="width:99%; height: 400px;" align="left"
+					rendered="#{buscarBeneficioTributarioManaged.isPensionista}">
+					<!-- 		<h:form id="formEditarRequisitos"> -->
+					<rich:datascroller for="tblDocSusnten" maxPages="10"></rich:datascroller>
+					<rich:extendedDataTable id="tblDocSusnten" rows="12"
+						value="#{buscarBeneficioTributarioManaged.lstRequisito}"
+						var="item" width="680px" height="350px">
+						<rich:column width="25">
+							<h:selectBooleanCheckbox value="#{item.selected}" />
+						</rich:column>
+						<rich:column width="460">
+							<f:facet name="header">
+								<h:outputLabel value="#{msg['gn.descripciondoc']}" />
+							</f:facet>
+							<h:outputText value="#{item.descripcion}" />
+						</rich:column>
+						<rich:column width="200">
+							<f:facet name="header">
+								<h:outputLabel value="#{msg['rv.glosa']}" />
+							</f:facet>
+							<h:inputText value="#{item.glosa}" styleClass="textUpperCase"
+								style="width: 180px">
+								<f:converter converterId="uppeCaseConverter" />
+							</h:inputText>
+						</rich:column>
+					</rich:extendedDataTable>
+					<h:panelGrid columns="5" columnClasses="classCenter">
+					<h:panelGroup>
+						<a4j:commandButton value="#{msg['gn.agregar']}" rendered="#{buscarBeneficioTributarioManaged.isNuevo}"
+							actionListener="#{buscarBeneficioTributarioManaged.agregarSustento}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelRequisito\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							reRender="panelRequisito,tblSustento">
+						</a4j:commandButton>
+						<a4j:commandButton value="#{msg['gn.actualizar']}" rendered="#{buscarBeneficioTributarioManaged.isEdicion}"
+							actionListener="#{buscarBeneficioTributarioManaged.actualizarSustento}"
+							oncomplete="Richfaces.showModalPanel('panelError')"
+							reRender="panelError">
+						</a4j:commandButton>
+<!-- 						<a4j:commandButton value="#{msg['gn.actualizar']}" rendered="#{buscarBeneficioTributarioManaged.isEdicion and buscarBeneficioTributarioManaged.isInspeccion==false}" -->
+<!-- 						<a4j:commandButton value="#{msg['gn.avisocreardeclaj']}" rendered="#{buscarBeneficioTributarioManaged.isEdicion and buscarBeneficioTributarioManaged.isInspeccion}" -->
+<!-- 							actionListener="#{buscarBeneficioTributarioManaged.actualizarSustento}" -->
+<!-- 							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelRequisito\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };" -->
+<!-- 							reRender="panelRequisito,tblSustento"> -->
+<!-- 						</a4j:commandButton> -->
+						<a4j:commandButton value="#{msg['gn.cancelar']}" immediate="true"
+							onclick="Richfaces.hideModalPanel('panelRequisito')"
+							style="margin-left:4px;">
+						</a4j:commandButton>
+						</h:panelGroup>
+<!-- 							<h:panelGroup id="id_panel_cerrar"> -->
+<!-- 								<a4j:commandButton value="#{msg['gn.cerrar']}" rendered="#{buscarBeneficioTributarioManaged.isCierre}" -->
+<!-- 									actionListener="#{buscarBeneficioTributarioManaged.actualizarRequerimiento}" -->
+									
+<!-- 									reRender="panelRequisito,tblSustento" -->
+<!-- 									style="margin-left:4px;"> -->
+<!-- 								</a4j:commandButton> -->
+<!-- 							</h:panelGroup> -->
+					</h:panelGrid>
+				</rich:panel>
+			</rich:panel>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelResolucion" autosized="true" width="700" height="150">
+			<f:facet name="header">
+				<h:outputText value="Resolución" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink2" />
+					<rich:componentControl for="panelResolucion" attachTo="hidelink2"
+						operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+		<h:form id="frmResolucion">
+<!-- 			<a4j:outputPanel ajaxRendered="true"> -->
+			<rich:panel id="id_datos_condicion_contribuyente"
+				style="width:750px; height: 130px;" align="left">
+				<f:facet name="header">
+				</f:facet>
+				<table border="0" width="100%">
+					<tr>
+						<td align="left" width="130px">
+							<h:panelGroup>
+								<h:outputText value="Tipo de Documento:" />
+								<span style="color: red;">*</span>
+							</h:panelGroup>
+						</td>
+						<td align="left" width="200px">
+						  <rich:comboBox width="200px"
+								defaultLabel="Seleccione"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)"
+								requiredMessage="Seleccione Tipo de Doc." required="true"
+								value="#{buscarBeneficioTributarioManaged.cmbValuetipodocumentoCondicionEspecial}"
+								style="width:100%;border: none"
+								id="id_subtipodocumento"
+								binding="#{buscarBeneficioTributarioManaged.cmbtipodocumentoCondicionEspecial}"
+								valueChangeListener="#{buscarBeneficioTributarioManaged.loadMpTipoDocumentoCondicionEspecialById}">
+								<f:selectItems id="id_lsttipodocumento1"
+									value="#{buscarBeneficioTributarioManaged.lsttipodocumentoCondicionEspecial}" />
+<!-- 								<a4j:support id="id_supportlsttipodocumento1" event="onchange" -->
+<!-- 									reRender="id_pnlcorrelativo" -->
+<!-- 									BypassUpdates="false" ajaxSingle="true" /> -->
+							</rich:comboBox></td>
+						<td align="left" width="65px">
+							<h:panelGroup>
+								<h:outputText value="Porcentaje:" />
+							</h:panelGroup>
+						</td>
+						<td align="left" width="40px">
+							<h:inputText requiredMessage="Ingrese Porcentaje de Afectación." required="true" id="id_textporcentaje"
+								disabled="#{buscarBeneficioTributarioManaged.porcentaje!=null}"
+								value="#{buscarBeneficioTributarioManaged.porcentaje}"
+								maxlength="6" size="6">
+								<f:convertNumber maxFractionDigits="2" maxIntegerDigits="3"
+									pattern="###.00" locale="#{msg['param.localecurrency']}" />
+							</h:inputText> <h:outputText value="%" />
+						</td>
+
+					</tr>
+					<tr>
+						<td align="left" width="130px">
+							<h:panelGroup>
+								<h:outputText value="Nro. de Documento:" />
+								<span style="color: red;">*</span>
+							</h:panelGroup></td>
+						<td align="left" width="200px">
+						<!--id_pnlcorrelativo: Comentado,porque correlativo se registrará manualmente -->
+						<!--<h:panelGroup id="id_pnlcorrelativo"> -->
+						<h:inputText id="id_textcorrelativo"
+								value="#{buscarBeneficioTributarioManaged.nroDocumento}"
+								disabled="#{buscarBeneficioTributarioManaged.nroDocumento!=null}"
+								requiredMessage="Ingrese Nro. de Documento." required="true"
+								styleClass="correlativo" converter="uppeCaseConverter" 
+								maxlength="16" size="17"></h:inputText>
+								<rich:jQuery selector=".correlativo"
+								query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+						<!--</h:panelGroup> -->
+						</td>
+						<td align="left" width="100px"><h:panelGroup>
+								<h:outputText value="Fecha de Documento:" />
+								<span style="color: red;">*</span>
+							</h:panelGroup></td>
+						<td align="left" width="100px">
+							<rich:calendar locale="en/US"
+								direction="bottom-left"
+								converterMessage="Condición del Contribuyente Ingrese Fecha de Documento Valido"
+								datePattern="dd/MM/yyyy"
+								enableManualInput="true" inputClass="maskDate"
+								inputStyle="width:80px" id="id_fechadedocumento"
+								requiredMessage="Ingrese Fecha de la Resolución." required="true"
+								value="#{buscarBeneficioTributarioManaged.fechaDocumento}">
+							</rich:calendar> <rich:jQuery id="maskedo7" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" /></td>
+					</tr>
+					<tr>
+						<td align="left" width="130px">
+							 <h:panelGroup>
+								<h:outputText value="Fecha Inicio Cond.:" />
+								<span style="color: red;">*</span>
+							</h:panelGroup></td>
+						<td align="left" width="100px">
+							<rich:calendar locale="en/US"
+								requiredMessage="Ingrese Fecha de Inicio de Beneficio." required="true"
+								converterMessage="Condición del Contribuyente Ingrese Fecha de Inicio Valido"
+								datePattern="dd/MM/yyyy" enableManualInput="true"
+								inputClass="maskDate" inputStyle="width:80px"
+								id="id_fechainiciocondicion"
+								value="#{buscarBeneficioTributarioManaged.fechaInicioCond}">
+							</rich:calendar> <rich:jQuery id="maskedo13" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" /></td>
+						<td align="left" width="150px">
+							<h:panelGroup>
+								<h:outputText value="Fecha Fin Cond.:" />
+								<span style="color: red;">*</span>
+							</h:panelGroup>
+						</td>
+						<td align="left" width="100px">
+							<rich:calendar
+								requiredMessage="Ingrese Fecha Fin de Beneficio." required="true"
+								value="#{buscarBeneficioTributarioManaged.fechaFinCond}"
+								inputStyle="width:80px" locale="en/US" direction="bottom-left"
+								enableManualInput="true"
+								converterMessage="Condición del Contribuyente Ingrese Fecha Fin Valido  "
+								inputClass="maskDate" datePattern="dd/MM/yyyy"
+								id="id_fechafincondicion">
+							</rich:calendar> <rich:jQuery id="maskedo14" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" />
+						</td>
+					</tr>
+					<tr>
+					<td align="left" width="130px">
+							<h:panelGroup>
+								<h:outputText value="Resultado de Evaluación :" />
+								<span style="color: red;">*</span>
+							</h:panelGroup></td>
+						<td align="left" width="200px">
+						<rich:comboBox width="200px"
+								defaultLabel="Seleccione"
+								onkeypress="return showListCbo(this,event);"
+								onblur="validaInputCbo(this)"
+								requiredMessage="Seleccione Resultado de la evaluación." required="true"
+								value="#{buscarBeneficioTributarioManaged.cmbValueEstadoCondicionEspecial}"
+								style="width:100%;border: none" id="id_estadoResol"
+								binding="#{buscarBeneficioTributarioManaged.cmbtipoEstadoCondicionEspecial}"
+								valueChangeListener="#{buscarBeneficioTributarioManaged.loadEstadoCondicionEspecialById}">
+								<f:selectItems id="id_lstestado"
+									value="#{buscarBeneficioTributarioManaged.lstEstadoCondicionEspecial}" />
+								<a4j:support id="id_supportlstestado" event="onchange"
+									reRender="id_textporcentaje"
+									BypassUpdates="false" ajaxSingle="true" />
+							</rich:comboBox>
+						</td>
+					</tr>
+					<tr>
+							<td align="left" width="130px">
+							<h:panelGroup>
+								<h:outputText value="Sustento :" />
+							</h:panelGroup>
+							</td>
+							<td align="left" width="200px">
+								<h:inputTextarea 
+									value="#{buscarBeneficioTributarioManaged.sustento}"
+									style="width:220px;">
+									<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+								</h:inputTextarea>
+							</td>
+					</tr>
+				</table>
+			</rich:panel>
+			<h:panelGrid columns="2" columnClasses="classCenter">
+				<a4j:commandButton value="#{msg['gn.agregar']}"
+					actionListener="#{buscarBeneficioTributarioManaged.agregarCondicionEspecial}"
+					oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }" 
+					reRender="tblSustento,panelResolucion">
+				</a4j:commandButton>
+				<a4j:commandButton value="#{msg['gn.cancelar']}" immediate="true"
+							actionListener="#{buscarBeneficioTributarioManaged.cancelarCondicionEspecial}"
+							onclick="Richfaces.hideModalPanel('panelResolucion')"
+							style="margin-left:4px;">
+				</a4j:commandButton>
+			</h:panelGrid>
+<!-- 		  </a4j:outputPanel> -->
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelNotificar" width="400" autosized="true" onshow="ActiveModal.addModal(this)" onhide="ActiveModal.removeModal('x')" top="130" styleClass="sisatModalPanel">
+			<f:facet name="header">NOTIFICACION</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png" id="hlpNotif"
+						styleClass="hidelink" />
+					<rich:componentControl for="panelNotificar"
+						attachTo="hlpNotif" operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+		<h:form id="frmNotificar">
+			<a4j:outputPanel ajaxRendered="true">
+				<rich:panel id="p01">
+					<table border="0" width="100%">
+						<tr>
+							<td align="left" width="140px">
+								<h:outputText value="Condición de Administrado." /> <span style="color: red;">*</span></td>
+							<td align="left" width="100px">
+								<rich:comboBox width="127px"
+									defaultLabel="Seleccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									value="#{buscarBeneficioTributarioManaged.codicionAdministrado}"
+									requiredMessage="Seleccione la Condición del Administrado."
+									required="true" id="id_codicAdministrado"
+									binding="#{buscarBeneficioTributarioManaged.cmbCondicionAdministrado}"
+									valueChangeListener="#{buscarBeneficioTributarioManaged.loadFormaNotificacionById}">
+									<f:selectItem id="id_1" itemValue="Ubicables" itemLabel="1" />
+									<f:selectItem id="id_2" itemValue="Inubicables" itemLabel="2" />
+									<f:selectItem id="id_3" itemValue="No Hallados" itemLabel="3" />
+									<a4j:support id="idEventAdm" event="onchange"
+										BypassUpdates="false" reRender="id_formaNotificacion"
+										ajaxSingle="true" />
+								</rich:comboBox>
+							 </td>
+						</tr>
+						<tr>
+							<td align="left" width="140px"><h:outputText
+									value="Forma de Notificación:" /> <span style="color: red;">*</span></td>
+							<td><rich:comboBox width="250px" defaultLabel="Seleccione"
+									onblur="validaInputCbo(this)"
+									value="#{buscarBeneficioTributarioManaged.cmbValueNoNotificacion}"
+									requiredMessage="#{msg['cc.errormotivonotificacion']}"
+									required="true" id="id_formaNotificacion"
+									binding="#{buscarBeneficioTributarioManaged.cmbNoNotificacion}"
+									valueChangeListener="#{buscarBeneficioTributarioManaged.loadNotificacionById}">
+									<f:selectItems id="id_lsttiporelacion"
+										value="#{buscarBeneficioTributarioManaged.lstTipoNotificacion}" />
+								</rich:comboBox></td>
+						</tr>
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Notificador:" /> <span style="color: red;">*</span></td>
+							<td><h:panelGroup>
+									<rich:comboBox width="250px"
+										defaultLabel="Seleccione Notificador"
+										onblur="validaInputCbo(this)"
+										value="#{buscarBeneficioTributarioManaged.cmbNotificador}"
+										requiredMessage="Seleccione Un Notificador']}" required="true"
+										id="idCboNotificadores"
+										binding="#{buscarBeneficioTributarioManaged.cmbHtmlNotificador}"
+										valueChangeListener="#{buscarBeneficioTributarioManaged.loadNotificador}">
+										<f:selectItems id="id_lstNotificador"
+											value="#{buscarBeneficioTributarioManaged.lstSelectItemsNotificador}" />
+									</rich:comboBox>
+								</h:panelGroup></td>
+						</tr>
+						<tr>
+							<td align="left" width="100px"><h:outputText
+									value="Fecha de Notificación:" /> <span style="color: red;">*</span>
+							</td>
+							<td align="left" width="100px">
+								<rich:calendar
+									required="true" datePattern="dd/MM/yyyy HH:mm:ss"
+									showWeeksBar="false" enableManualInput="true"
+									inputStyle="width:100px" id="id_fechanotificacion"
+									value="#{buscarBeneficioTributarioManaged.fechaNotificacion}"
+									onchanged="this.value = this.value.replace('ss', '00')">
+									<f:attribute name="userFormat" value="dd/MM/yyyy HH:mm:ss" />
+								</rich:calendar>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="100px"><h:outputText
+									value="Observación(es):" /> <span style="color: red;">*</span>
+							</td>
+							<td align="left" width="200px">
+								<h:inputTextarea style="width: 245px;" rows="2" id="id_glosa" value="#{buscarBeneficioTributarioManaged.observacion}" />
+							</td>
+						</tr>
+					</table>
+					<h:panelGrid columns="2">
+						<a4j:commandButton value="Notificar" style="width:100px;"
+							action="#{buscarBeneficioTributarioManaged.notificarRequerimiento}"
+							reRender="tblSustento,panelNotificar"
+							oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }">
+						</a4j:commandButton>
+					</h:panelGrid>
+				</rich:panel>
+			</a4j:outputPanel>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelInspeccion" width="400" autosized="true"	onshow="ActiveModal.addModal(this)"	onhide="ActiveModal.removeModal('x')" top="130"	styleClass="sisatModalPanel">
+		<f:facet name="header">INSPECCIÓN OCULAR</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpInsp"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelInspeccion" attachTo="hlpInsp"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmInspeccion">
+			<a4j:outputPanel ajaxRendered="true">
+				<rich:panel id="p01">
+
+					<table border="0" width="100%">
+						<tr>
+							<td align="left" width="120px"><h:outputText
+									value="Motivo de la Inspección :" /><span style="color: red;">*</span>
+							</td>
+							<td align="left" width="100px"><h:inputTextarea
+									required="true"
+									requiredMessage="Sustente porqué esta Generando la Inspección Ocular."
+									value="#{buscarBeneficioTributarioManaged.motivo}"
+									style="width:220px;">
+									<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+								</h:inputTextarea></td>
+						</tr>
+					</table>
+<!-- 					pnlDetalle -->
+				<div align="center">
+					<h:panelGrid id="id_panel_inspeccion" columns="3">
+<!-- 					<h:panelGroup id="id_panel_inspeccion"> -->
+						<a4j:commandButton value="#{msg['gn.registrar']}"
+							disabled="#{buscarBeneficioTributarioManaged.isInspNuevo==true}"
+							actionListener="#{buscarBeneficioTributarioManaged.registrarInspeccion}"
+							oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+							reRender="id_panel_inspeccion,tblSustento">
+						</a4j:commandButton>
+						<h:commandLink id="linkInsp" status="ajaxStatus" 
+							rendered="#{buscarBeneficioTributarioManaged.isInspeccion}"
+							action="#{buscarBeneficioTributarioManaged.imprimirInspeccion}"
+							onclick="Richfaces.hideModalPanel('panelInspeccion')"
+							immediate="true" reRender="panelInspeccion,tblSustento">
+							<h:graphicImage id="imgImpResultado"
+								value="/images/modal/pdf.png" height="15px" style="border:0" />
+							<rich:toolTip for="linkInsp" direction="bottom-right">Descargar</rich:toolTip>
+						</h:commandLink>
+<!-- 					</h:panelGroup> -->
+					</h:panelGrid>
+				</div>
+				</rich:panel>
+			</a4j:outputPanel>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelInspeccionCierre" width="210" autosized="true" onshow="ActiveModal.addModal(this)" onhide="ActiveModal.removeModal('x')" top="130" styleClass="sisatModalPanel">
+		<f:facet name="header">INSPECCIÓN OCULAR</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpInspCierre"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelInspeccionCierre" attachTo="hlpInspCierre"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmInspeccionCierre">
+			<a4j:outputPanel ajaxRendered="true">
+				<rich:panel id="p01" rendered="#{(buscarBeneficioTributarioManaged.flagR==0 or buscarBeneficioTributarioManaged.flagR!=0) and buscarBeneficioTributarioManaged.inspOcular==null}" >
+					<table border="0" width="100%">
+						<tr>
+							<td align="center" width="120px"><h:outputText style="color:blue;"
+									value="¿Desea cerrar la inspección ocular?" />
+							</td>
+						</tr>
+					</table>
+					<center>
+					<h:panelGrid columns="2">
+						<a4j:commandButton value="#{msg['gn.si']}" style="width:40px;"
+							action="#{buscarBeneficioTributarioManaged.actualizarInspeccion}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelRequisito\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							reRender="tblSustento,panelInspeccionCierre,panelRequisito">
+						</a4j:commandButton>
+						<a4j:commandButton value="#{msg['gn.no']}" immediate="true" style="margin-left:4px; width:40px;"
+							 action="#{buscarBeneficioTributarioManaged.editarExpediente(buscarBeneficioTributarioManaged.requerimientoId,buscarBeneficioTributarioManaged.flagD,buscarBeneficioTributarioManaged.flagI,buscarBeneficioTributarioManaged.estado)}"
+							 oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelRequisito\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							 reRender="tblSustento,panelInspeccionCierre,panelRequisito" >
+						</a4j:commandButton>
+<!-- 						<a4j:commandButton value="#{msg['gn.no']}" immediate="true" -->
+<!-- 							onclick="Richfaces.hideModalPanel('panelInspeccionCierre')" -->
+<!-- 							style="margin-left:4px; width:40px;" > -->
+<!-- 						</a4j:commandButton> -->
+					</h:panelGrid>
+					</center>
+				</rich:panel>
+				
+				
+				<rich:panel id="p02"  rendered="#{buscarBeneficioTributarioManaged.flagR!=0 and buscarBeneficioTributarioManaged.inspOcular!=null}">
+					<table border="0" width="100%">
+						<tr>
+							<td align="left" width="120px"><h:outputText style="color:red;"
+									value="Debe cerrar la inspección ocular" />
+							</td>
+						</tr>
+					</table>
+					<center>
+					<h:panelGrid columns="2">
+						<a4j:commandButton value="#{msg['gn.aceptar']}" style="width:80px;"
+							action="#{buscarBeneficioTributarioManaged.actualizarInspeccion}"
+							oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+							reRender="panelInspeccionCierre,tblSustento">
+						</a4j:commandButton>
+					</h:panelGrid>
+					</center>
+				</rich:panel>
+			</a4j:outputPanel>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelCierre" width="210" autosized="true" onshow="ActiveModal.addModal(this)" onhide="ActiveModal.removeModal('x')" top="130" styleClass="sisatModalPanel">
+		<f:facet name="header">CIERRE REQUERIMIENTO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpReqCierre"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelCierre" attachTo="hlpReqCierre"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmReqCierre">
+			<a4j:outputPanel ajaxRendered="true">
+				
+				<rich:panel id="p01" rendered="#{buscarBeneficioTributarioManaged.inspOcular==null}">
+					<table border="0" width="100%">
+						<tr>
+							<td align="left" width="120px"><h:outputText style="color:blue;"
+									value="¿Desea cerrar el requerimiento de subsanación?" />
+							</td>
+						</tr>
+					</table>
+					<center>
+					<h:panelGrid columns="2">
+<!-- 						<a4j:commandButton value="#{msg['gn.si']}" style="width:40px;" -->
+<!-- 							actionListener="#{buscarBeneficioTributarioManaged.actualizarRequerimiento}" -->
+<!-- 							onclick="Richfaces.hideModalPanel('panelRequisito')" -->
+<!-- 							reRender="panelCierre,tblSustento"> -->
+<!-- 						</a4j:commandButton> -->
+						<a4j:commandButton value="#{msg['gn.si']}" style="width:40px;"
+							actionListener="#{buscarBeneficioTributarioManaged.actualizarRequerimiento}"
+								oncomplete="#{(buscarBeneficioTributarioManaged.flagR=='1' and buscarBeneficioTributarioManaged.flagI=='1' )  ? 'Richfaces.showModalPanel(\'panelInspeccionCierre\')' : 'Richfaces.hideModalPanel(\'panelRequisito\')'}"
+							reRender="panelCierre,tblSustento,panelInspeccionCierre">
+						</a4j:commandButton>
+						<a4j:commandButton value="#{msg['gn.no']}" immediate="true"
+							onclick="Richfaces.hideModalPanel('panelRequisito')"
+							style="margin-left:4px; width:40px;" 
+							reRender="panelCierre,tblSustento,panelInspeccionCierre">
+						</a4j:commandButton>
+					</h:panelGrid>
+					</center>
+				</rich:panel>
+				
+				
+				<rich:panel id="p02" rendered="#{buscarBeneficioTributarioManaged.inspOcular!=null}">
+					<table border="0" width="100%">
+						<tr>
+							<td align="center" width="120px"><h:outputText style="color:red;"
+									value="Debe cerrar el requerimiento de subsanación" />
+							</td>
+						</tr>
+					</table>
+					<center>
+					<h:panelGrid columns="2">
+						<a4j:commandButton value="#{msg['gn.aceptar']}" style="width:70px;"
+							actionListener="#{buscarBeneficioTributarioManaged.actualizarRequerimiento}"
+							onclick="Richfaces.hideModalPanel('panelRequisito')"
+							reRender="panelCierre,tblSustento">
+						</a4j:commandButton>
+					</h:panelGrid>
+					</center>
+				</rich:panel>
+				
+				
+			</a4j:outputPanel>
+		</h:form>
+	</rich:modalPanel>
+	
+	
+	<rich:modalPanel id="panelError" width="450" height="80" onshow="ActiveModal.addModal(this)" onhide="ActiveModal.removeModal('x')" top="130" styleClass="sisatModalPanel">
+		<f:facet name="header">Mensajes</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpError"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelError" attachTo="hlpError"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmError">
+			<a4j:outputPanel ajaxRendered="true">
+<!-- 				<rich:panel id="p01"> -->
+					<br></br>
+					<table border="0" width="100%">
+						<tr>
+							<td width="5px"></td>
+							<td align="left" width="120px">
+							<h:outputText style="color:red;" value="#{buscarBeneficioTributarioManaged.mensaje}" />
+							</td>
+						</tr>
+					</table>
+					<br></br>
+					<center>
+					<h:panelGrid columns="2">
+						<a4j:commandButton value="#{msg['gn.aceptar']}"
+							style="width:70px;"
+							oncomplete="#{(buscarBeneficioTributarioManaged.flagD=='0' and buscarBeneficioTributarioManaged.flagR!='1' and buscarBeneficioTributarioManaged.estado==2)  ? 'Richfaces.showModalPanel(\'panelCierre\')' : 'Richfaces.hideModalPanel(\'panelError\')'}"
+							reRender="panelError,panelRequisito,tblSustento">
+						</a4j:commandButton>
+<!-- 						onclick="#{buscarBeneficioTributarioManaged.lstRequerimientoCe.get(0).flagDocumentacion=='0' ? 'Richfaces.showModalPanel(\'panelCierre\')' : 'Richfaces.hideModalPanel(\'panelError\')'}" -->
+					</h:panelGrid>
+					</center>
+<!-- 				</rich:panel> -->
+			</a4j:outputPanel>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="panelNotificarResol" minWidth="400" minHeight="200">
+		<f:facet name="header">
+			<h:outputText value="Notificar" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelNotificarResol" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<h:form id="panel">
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<table border="0" width="100%">
+						<tr>
+							<td><h:outputText id="succ0" value="Nro. de Resolución" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ1"
+										value="#{buscarBeneficioTributarioManaged.findRequerimientoItem.nroDocResol}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ2" value="Cod. Administrado" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ3"
+										value="#{buscarBeneficioTributarioManaged.findRequerimientoItem.personaId}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td align="left" width="140px">
+								<h:outputText value="Condición de Administrado" /> 
+								<span style="color: red;">*</span>
+							</td>
+							<td align="left" width="100px">
+								<rich:comboBox width="127px"
+										defaultLabel="Seleccione" enableManualInput="false"
+										selectFirstOnUpdate="true" directInputSuggestions="false"
+										value="#{buscarBeneficioTributarioManaged.condicion}"
+										requiredMessage="Seleccione la Condición del Administrado."
+										required="true" id="id_codicAdministrado"
+										binding="#{buscarBeneficioTributarioManaged.cmbCondicion}"
+										valueChangeListener="#{buscarBeneficioTributarioManaged.notificacionById}">
+										<f:selectItem id="id_1" itemValue="Ubicables" itemLabel="1" />
+										<f:selectItem id="id_2" itemValue="Inubicables" itemLabel="2" />
+										<f:selectItem id="id_3" itemValue="No Hallados" itemLabel="3" />
+										<a4j:support id="idEventAdm" event="onchange"
+											BypassUpdates="false" reRender="id_formaNotificacion"
+											ajaxSingle="true" />
+								</rich:comboBox>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="140px"><h:outputText
+									value="Forma de Notificación:" /> <span style="color: red;">*</span></td>
+							<td><rich:comboBox width="250px" defaultLabel="Seleccione"
+									onblur="validaInputCbo(this)"
+									value="#{buscarBeneficioTributarioManaged.cmbMotivo}"
+									requiredMessage="#{msg['cc.errormotivonotificacion']}"
+									required="true" id="id_formaNotificacion"
+									binding="#{buscarBeneficioTributarioManaged.cmbxMotivo}"
+									valueChangeListener="#{buscarBeneficioTributarioManaged.motivoNotificacionById}">
+									<f:selectItems id="id_lsttiporelacion"
+										value="#{buscarBeneficioTributarioManaged.listaMotivoNotificacion}" />
+								</rich:comboBox></td>
+						</tr>
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Notificador:" /> <span style="color: red;">*</span></td>
+							<td><h:panelGroup>
+									<rich:comboBox width="250px"
+										defaultLabel="Seleccione Notificador"
+										onblur="validaInputCbo(this)"
+										value="#{buscarBeneficioTributarioManaged.cmbNotifica}"
+										requiredMessage="Seleccione Un Notificador']}" required="true"
+										id="id_notificador"
+										binding="#{buscarBeneficioTributarioManaged.cmbxNotificador}"
+										valueChangeListener="#{buscarBeneficioTributarioManaged.notificadorById}">
+										<f:selectItems id="id_lstNotificador"
+											value="#{buscarBeneficioTributarioManaged.listaNotificador}" />
+									</rich:comboBox>
+
+								</h:panelGroup></td>
+
+						</tr>
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Fecha de Notificación" /> <span style="color: red;">*</span>
+							</td>
+							<td align="left" width="100px"><rich:calendar locale="en/US"
+									required="true"
+									requiredMessage="#{msg['cc.errorfechanotificacion']}"
+									datePattern="dd/MM/yyyy HH:mm" direction="top-right"
+									enableManualInput="true" inputClass="maskDate"
+									inputStyle="width:100px" id="id_fechadeclaracion"
+									value="#{buscarBeneficioTributarioManaged.fechaNotifica}"
+									showApplyButton="true">
+								</rich:calendar> <rich:jQuery id="maskedo3" selector=".maskDate"
+									query="mask('99/99/9999 99:99')" timing="onload" /></td>
+						</tr>
+
+					</table>
+
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						action="#{buscarBeneficioTributarioManaged.notificaResolucion}"
+						reRender="datosactos,panel"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'panelNotificarResol\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						disabled="#{buscarBeneficioTributarioManaged.tipoAccion == null}">
+					</a4j:commandButton>
+					<a4j:commandButton value="Salir" style="width:100px;"
+						action="#{buscarBeneficioTributarioManaged.salir}"
+						status="ajaxStatus"
+						oncomplete="#{rich:component('panelNotificarResol')}.hide(); return false">
+					</a4j:commandButton>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

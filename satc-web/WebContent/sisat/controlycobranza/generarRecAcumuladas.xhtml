@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form>
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<style type="">
+.col1 {
+	width: 600px;
+}
+
+.col2 {
+	width: 600px;
+}
+</style>
+
+		<rich:panel>
+			<f:facet name="header">Acumulación de RECS</f:facet>
+			<h:panelGrid columns="2" columnClasses="col1, col2">
+				<rich:tree id="tree" value="#{generarRecAcumuladaManaged.root}" nodeSelectListener="#{generarRecAcumuladaManaged.selectionListener}" var="node"
+					reRender="out,detalleNodo" ajaxSubmitSelection="true" nodeFace="#{node.type}" >
+					<rich:treeNode type="recacum" icon="/images/icon_empresa.png" iconLeaf="/images/icon_empresa.png">
+						<h:outputText value="#{node.text}" />
+						<h:selectBooleanCheckbox disabled="#{node.nroRec!=null}" value="#{node.seleccionado}" />
+					</rich:treeNode>
+					<rich:treeNode type="rec" icon="/images/icon_empresa.png" iconLeaf="/images/icon_empresa.png">
+						<h:outputText value="#{node.text}" />
+						<h:commandLink  ajaxSingle="true" id="newlink1"  action="#{generarRecAcumuladaManaged.verActo}"   status="ajaxStatus"
+					  					disabled="#{node.contenId == 0}" >
+	                      <h:graphicImage value="/images/modal/lupa.gif" style="border:0" />
+	                        <f:setPropertyActionListener value="#{node}" target="#{generarRecAcumuladaManaged.itemRecAcumulada}" id="r4280"/>
+	                    </h:commandLink>
+	                <rich:toolTip for="newlink1" value="Ver Notificación" />
+					</rich:treeNode>
+				</rich:tree>				
+				<rich:panel id="out">
+					<h:outputText value="#{generarRecAcumuladaManaged.nodeTitle}" />
+				</rich:panel>
+			</h:panelGrid>
+		</rich:panel>
+		<rich:panel id="detalleNodo">
+			<f:facet name="header">Acumulación</f:facet>
+		
+			    <a4j:commandButton action="#{generarRecAcumuladaManaged.deSeleccionarTodo}" reRender="tree" value="DeSeleccionar Todo"></a4j:commandButton>
+				<a4j:commandButton action="#{generarRecAcumuladaManaged.seleccionarTodo}" reRender="tree" value="Seleccionar Todo"></a4j:commandButton>
+				<a4j:commandButton action="#{generarRecAcumuladaManaged.acumularExpedientes}" reRender="tree" value="Acumular"></a4j:commandButton>
+	
+		</rich:panel>
+	</h:form>
+</ui:composition>

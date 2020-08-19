@@ -1,0 +1,1127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<HEAD>
+		<title>Declaración jurada de predio</title>
+		<script language="javascript">
+			function irPagina(valor){
+				document.form1.hidProceso.value=valor;
+				document.form1.submit();  
+			}		
+			function ejecutarImpresion(){
+				window.print();
+			}
+			function imprimir(){
+				document.getElementById("Cabecera").style.display="none";
+				ejecutarImpresion();
+				document.getElementById("Cabecera").style.display="";			
+			}
+		</script>
+	</HEAD>
+	<body>	
+		<h:form  id="myform">
+		 	<rich:panel style="background-color : transparent">
+		 			<div id="Cabecera">
+			 			<table border="0" align="center">
+			 					<tr>
+			 						<td>
+			 							<input type="button" value="Imprimir" onclick="imprimir();" />	
+			 						</td>
+			 					</tr>
+			 			</table>
+			 		</div>
+					<table border="0" width="100%">
+						<tr>
+							<td align="center">
+								<table border="0" width="100%">
+									<tr>
+										<td align="center">
+											<h:outputText style="font-weight:bold" value="SERVICIO DE ADMINISTRACION TRIBUTARIA DE CAJAMARCA" />
+										</td>
+									</tr>
+									<tr>	
+										<td align="center">
+											<h:outputText style="font-weight:bold" value="Declaración jurada de predio - #{registroPredioManaged.rpDjpredial.annoDj}" />
+										</td>
+									</tr>
+									<tr>	
+										<td align="center">
+											<h:outputText value="Nro : #{registroPredioManaged.rpDjpredial.djId}" />
+										</td>	
+									</tr>
+								</table>	
+							</td>	
+						</tr>	
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="DATOS DEL CONTRIBUYENTE" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							 	<table border="0" width="100%">
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Codigo" />
+							 			</td>
+							 			<td width="60%">
+							 				<h:outputText style="font-weight:bold" value="Apellidos y Nombres / Razón Social" />
+							 			</td>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Nro Docu. Identidad" />
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText value="#{registroPredioManaged.persona.personaId}" />
+							 			</td>
+							 			
+							 			<td width="60%">
+							 				<h:outputText value="#{(registroPredioManaged.persona.tipoPersonaId==1 or registroPredioManaged.persona.tipoPersonaId==3 or registroPredioManaged.persona.tipoPersonaId==5)?registroPredioManaged.persona.apellidosNombres:registroPredioManaged.persona.razonSocial}" />
+							 			</td>
+							 			
+							 			<td width="20%">
+							 				<h:outputText value="#{registroPredioManaged.persona.denTipoDocIdentidad} : #{registroPredioManaged.persona.nroDocuIdentidad}" />
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%" align="left">
+							 				<h:outputText style="font-weight:bold" value="Tipo de Contribuyente" />
+							 			</td>
+							 			<td width="60%" align="left">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.persona.descTipoPersona}" />
+							 			</td>
+							 			<td width="20%" align="center">
+							 					
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%" align="left">
+							 				<h:outputText style="font-weight:bold" value="Sub Tipo de Contribuyente" />
+							 			</td>
+							 			<td width="60%" align="left">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.persona.descSubTipoPersona}" />
+							 			</td>
+							 			<td width="20%" align="center">
+							 				
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%" align="left">
+							 				<h:outputText style="font-weight:bold" value="Domicilio Fiscal" />
+							 			</td>
+							 			<td width="60%" align="left" colspan="2">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="(Vía Nro - Int - Letra / Mza - Lote - Block Zona Urbana Distrito )" />
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%" align="left" colspan="3">
+							 				<h:outputText value="#{registroPredioManaged.persona.direccionCompleta}" />
+							 			</td>
+							 		</tr>
+							 	</table>
+							</td>
+						</tr>
+						<!--  SE CODIFICARA LOS  RELACIONADOS -->
+						
+						<a4j:outputPanel rendered="#{empty registroPredioManaged.listRelacionados}">
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="SIN RELACIONADOS" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						</a4j:outputPanel>
+						
+						
+						<a4j:outputPanel rendered="#{not empty registroPredioManaged.listRelacionados}">
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="RELACIONADOS" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+							 	<table width="100%" border="1" cellspacing="0">
+				 					<tr>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="Item" /></td>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="Tipo Relación" /></td>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="Nombre/Razón Social" /></td>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="Tipo Documento" /></td>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="N° Documento" /></td>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="% Partic." /></td>
+				 					</tr>
+				 					<ui:repeat value="#{registroPredioManaged.listRelacionados}" var="record" varStatus="loop" >
+								 						<tr>
+								 							<td align="center">#{registroPredioManaged.listRelacionados.indexOf(record)+1}</td>
+									 						<td align="center" ><h:outputText value="#{record.relacion}" /></td>
+									 						<td align="left"><h:outputText value="#{record.nombres}" /></td>
+									 						<td align="center"><h:outputText value="#{record.tipoDoc}" /></td>
+									 						<td align="center"><h:outputText value="#{record.numeroDocuIdentidad}" /></td>
+									 						<td align="center"><h:outputText value="#{record.porcParticipacion==null?'':record.porcParticipacion}" /></td>
+								 						</tr>
+								 					</ui:repeat>
+							 	</table>
+							</td>
+						</tr>
+						
+						</a4j:outputPanel>
+						<!-- TERMINA RELACIONADOS -->
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="DATOS DEL TRANSFERENTE" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							 	<table border="0" width="100%">
+							 		<tr>
+							 			<td width="20%" align="left">
+							 				<h:outputText style="font-weight:bold" value="Notaria" />
+							 			</td>
+							 			<td width="60%" align="left">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.mapIGnNotaria[registroPredioManaged.rpDjpredial.notariaId]}" />
+							 			</td>
+							 			<td width="20%" align="center">
+							 					
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%" align="left">
+							 				<h:outputText style="font-weight:bold" value="Transferente" />
+							 			</td>
+							 			<td width="60%" align="left">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText
+							 					rendered="#{registroPredioManaged.transferente.personaId>0}"
+							 				 	value="Código: #{registroPredioManaged.transferente.personaId} #{registroPredioManaged.transferente.tipoDocIdentidad} : #{registroPredioManaged.transferente.nroDocuIdentidad} - #{registroPredioManaged.transferente.tipoPersonaId==2?registroPredioManaged.transferente.razonSocial:registroPredioManaged.transferente.apellidosNombres}" />
+							 				<h:outputText 
+												style="width:100%"
+												value=""
+												rendered="#{registroPredioManaged.transferente==null or registroPredioManaged.transferente.personaId==0}"
+											/>
+							 			</td>
+							 			<td width="20%" align="center">
+							 			</td>
+							 		</tr>
+							 	</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="DATOS DEL PREDIO" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							 	<table border="0" width="100%">
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Código Predio" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.rpDjpredial.predioId}" />
+							 			</td>
+							 			<td width="20%"> 
+							 				<h:outputText style="font-weight:bold" value="Motivo Declaración" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.mapIRvMotivoDecla[registroPredioManaged.rpDjpredial.motivoDeclaracionId]}" />
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Tipo Predio" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{(registroPredioManaged.rpDjpredial.tipoPredio=='U')?'Urbano':'Rustico'}" />
+							 			</td>
+							 			<td width="20%">
+							 				<!-- <h:outputText style="font-weight:bold" value="Código Predio Fisca." /> -->
+							 			</td>
+							 			<td width="30%">
+							 				<!-- 
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="" />
+							 				 -->
+							 			</td>
+							 		</tr>
+							 		
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Condicion Propiedad" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.mapIRpCondicionPropiedad[registroPredioManaged.rpDjpredial.condicionPropiedadId]}" />
+							 			</td>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Porc. Propiedad" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.rpDjpredial.porcPropiedad}" >
+							 					<f:convertNumber  pattern="#0.00" />
+							 				</h:outputText>
+							 				<h:outputText style="font-weight:bold" value="%" />
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Tipo Adquisición" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.mapIRpTipoAdquisicion[registroPredioManaged.rpDjpredial.tipoAdquisicionId]}" />
+							 			</td>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Fecha Adquisición" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.rpDjpredial.fechaAdquisicion}" >
+							 					<f:convertDateTime pattern="dd/MM/yyyy" />
+							 				</h:outputText>
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%" >
+							 				
+							 			</td>
+							 			<td colspan="3">
+							 			</td>
+							 		</tr>
+							 	</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="DIRECCION DEL PREDIO" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+							 	<table border="0" width="100%">
+							 		
+							 		<tr>
+							 			<td width="100%" colspan="4">
+							 				<h:outputText style="font-weight:bold" value="Dirección del Predio (Vía Nro - Int - Letra / Mza - Lote - Block Zona Urbana Distrito )" />
+							 			</td>
+							 		</tr>
+							 		
+							 		<tr>
+							 			<td width="100%" colspan="4">
+							 				<h:outputText value="#{registroPredioManaged.rpDjdireccion.direccionCompleta}" />
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="100%" colspan="4">
+							 				<h:outputText style="font-weight:bold" value="#{(registroPredioManaged.rpDjpredial.tipoPredio=='R')?'Nombre del Predio:':''}" />
+							 			</td>							 			
+							 		</tr>
+							 		<tr>
+							 			<td width="100%" colspan="4">
+							 				<h:outputText value="#{(registroPredioManaged.rpDjpredial.tipoPredio=='R')?registroPredioManaged.rpDjdireccion.nombreEdificiacion:''}" />
+							 			</td>
+							 		</tr>
+							 		
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Sector Catastral" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.rpDjdireccion.sectorCatastral}" />
+							 			</td>
+							 			<td width="20%">
+							 				
+							 			</td>
+							 			<td width="30%">
+							 				
+							 			</td>
+							 		</tr>
+							 		
+							 	</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="CARACTERISTICAS DEL PREDIO" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+							 	<table border="0" width="100%">
+							 		<tr>
+							 			<td width="20%" >
+							 				<h:outputText rendered="#{registroPredioManaged.rpDjpredial.tipoPredio=='U'}" style="font-weight:bold" value="Area Terreno (m2)" />
+							 				<h:outputText rendered="#{registroPredioManaged.rpDjpredial.tipoPredio=='R'}" style="font-weight:bold" value="Area Terreno (Has)" />
+							 			</td>
+							 			
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				
+							 				<h:outputText rendered="#{registroPredioManaged.rpDjpredial.tipoPredio=='U'}" value="#{registroPredioManaged.rpDjpredial.areaTerreno}" >
+							 					<f:convertNumber  pattern="#0.00" />
+							 				</h:outputText>
+							 				
+							 				<h:outputText rendered="#{registroPredioManaged.rpDjpredial.tipoPredio=='R'}" value="#{registroPredioManaged.rpDjpredial.areaTerrenoHas}" >
+							 					<f:convertNumber  pattern="#0.000000" />
+							 				</h:outputText>
+							 				
+							 			</td>
+							 			<td width="20%">
+							 				<h:outputText  style="font-weight:bold" 
+							 					value="Area Terreno Común (m2)" 
+							 					rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaComunTerreno and registroPredioManaged.rpDjpredial.tipoPredio=='U'}"
+							 				/>
+							 				
+							 				<h:outputText  style="font-weight:bold" 
+							 					value="Area Terreno Común (has)" 
+							 					rendered="#{registroPredioManaged.rpDjpredial.tipoPredio=='R'}"
+							 				/>
+							 				
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " 
+							 				rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaComunTerreno and registroPredioManaged.rpDjpredial.tipoPredio=='U'}"
+							 				/>
+							 				
+							 				<h:outputText style="font-weight:bold" value=": " 
+							 				rendered="#{registroPredioManaged.rpDjpredial.tipoPredio=='R'}"
+							 				/>
+							 				
+											<h:outputText value="#{registroPredioManaged.rpDjpredial.areaTerrenoComun}" 
+											rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaComunTerreno and registroPredioManaged.rpDjpredial.tipoPredio=='U'}" 
+												>
+												<f:convertNumber  pattern="#0.00" />
+											</h:outputText>	
+											
+											<h:outputText value="#{registroPredioManaged.rpDjpredial.areaTerrenoComunHas}" 
+												rendered="#{registroPredioManaged.rpDjpredial.tipoPredio=='R'}" 
+												>
+												<f:convertNumber  pattern="#0.000000" />
+											</h:outputText>
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Frente (mts)" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.rpDjpredial.frente}" >
+							 					<f:convertNumber  pattern="#0.00" />
+							 				</h:outputText>
+							 			</td>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Ancho de la vía de acceso (mts)" rendered="#{(registroPredioManaged.ubicacionPredioId eq 4) or (registroPredioManaged.ubicacionPredioId eq 8)}"/>
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " rendered="#{(registroPredioManaged.ubicacionPredioId eq 4) or (registroPredioManaged.ubicacionPredioId eq 8)}"/>
+							 				<h:outputText value="#{registroPredioManaged.rpDjpredial.frenteAreaComun}" rendered="#{(registroPredioManaged.ubicacionPredioId eq 4) or (registroPredioManaged.ubicacionPredioId eq 8)}">
+							 					<f:convertNumber  pattern="#0.00" />
+							 				</h:outputText>
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Ubicación Predio" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.mapIRpUbicacionPredio[registroPredioManaged.rpDjpredial.ubicacionPredioId]}" />
+							 			</td>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Distancia al predio (mts)" rendered="#{(registroPredioManaged.ubicacionPredioId eq 4) or (registroPredioManaged.ubicacionPredioId eq 8)}" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " rendered="#{(registroPredioManaged.ubicacionPredioId eq 4) or (registroPredioManaged.ubicacionPredioId eq 8)}"/>
+							 				<h:outputText value="#{registroPredioManaged.rpDjpredial.distanciaAPredio}" rendered="#{(registroPredioManaged.ubicacionPredioId eq 4) or (registroPredioManaged.ubicacionPredioId eq 8)}"/>
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Condición Especial" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{registroPredioManaged.mapIMpCondiEspePredio[registroPredioManaged.rpDjpredial.condEspePredioId]}" />
+							 			</td>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Porcentaje de Participación" rendered="#{(registroPredioManaged.ubicacionPredioId eq 4)}"/>
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " rendered="#{(registroPredioManaged.ubicacionPredioId eq 4)}"/>
+							 				<h:outputText value="#{registroPredioManaged.rpDjpredial.porcentajeParticipacion}" rendered="#{(registroPredioManaged.ubicacionPredioId eq 4)}" />
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%">
+							 				<h:outputText style="font-weight:bold" value="Situación Predio" />
+							 			</td>
+							 			<td width="30%">
+							 				<h:outputText style="font-weight:bold" value=": " />
+							 				<h:outputText value="#{(registroPredioManaged.rpDjpredial.esHabitable=='A')?'Predio Habitable':'Predio No Habitable'}" />
+							 			</td>
+							 			<td width="20%">
+							 				
+							 			</td>
+							 			<td width="30%">
+							 				
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="100%" colspan="4" >
+							 				<h:outputText style="font-weight:bold" value="Uso(s) del Predio" />
+							 			</td>
+							 		</tr>
+							 		<tr>
+							 			<td width="20%" colspan="4">
+							 				<hr width="100%" />
+							 			</td>
+							 		</tr>
+							 		
+							 		<tr>
+							 		
+							 			<td width="100%" colspan="4">
+							 			
+							 				<a4j:outputPanel rendered="#{!registroPredioManaged.esConstruccion}">
+								 				<table width="100%" border="1" cellspacing="0">
+								 					<tr>
+								 						<td><h:outputText style="font-weight:bold" value="Tipo Uso" /></td>
+								 						<td align="right"><h:outputText style="font-weight:bold" value="Area Uso(m2)" /></td>
+								 						<td align="center"><h:outputText style="font-weight:bold" value="Periodo" /></td>
+								 						<td align="center"><h:outputText style="font-weight:bold" value="Mes Inicio" /></td>
+								 						<td align="center"><h:outputText style="font-weight:bold" value="Mes Fin" /></td>
+								 					</tr>
+								 					<ui:repeat value="#{registroPredioManaged.recordsUsosDelPredio}" var="record" varStatus="loop">
+								 						<tr>
+									 						<td><h:outputText value="#{record.tipoUsoDescripcion}" /></td>
+									 						<td align="right" ><h:outputText value="#{record.areaUso}" /></td>
+									 						<td align="center"><h:outputText value="#{record.annoAfectacion}" /></td>
+									 						<td align="center"><h:outputText value="#{record.mesInicio}" /></td>
+									 						<td align="center"><h:outputText value="#{record.mesFin}" /></td>
+								 						</tr>
+								 					</ui:repeat>
+								 				</table>
+								 			</a4j:outputPanel>	
+							 				
+							 				<a4j:outputPanel rendered="#{registroPredioManaged.esConstruccion}">
+								 				<table width="100%" border="1" cellspacing="0">
+								 					<tr>
+								 						<td align="center"><h:outputText style="font-weight:bold" value="Item" /></td>
+								 						<td><h:outputText style="font-weight:bold" value="Tipo Uso" /></td>
+								 						<td align="right"><h:outputText style="font-weight:bold" value="Area Uso(m2)" /></td>
+								 						<td align="center"><h:outputText style="font-weight:bold" value="Periodo" /></td>
+								 					</tr>
+								 					
+								 					<ui:repeat value="#{registroPredioManaged.recordsUsosDelPredio}" var="record" varStatus="loop">
+								 						<tr>
+								 							<td align="center"><h:outputText value="#{record.item}" /></td>
+									 						<td><h:outputText value="#{record.tipoUsoDescripcion}" /></td>
+									 						<td align="right"><h:outputText value="#{record.areaUso}" /></td>
+									 						<td align="center"><h:outputText value="#{record.annoAfectacion}" /></td>
+								 						</tr>
+								 						<tr>
+								 							<td colspan="4" align="right">
+								 								<table border="0" cellspacing="0">
+								 									<tr>
+									 									<td width="30px" align="center"><h:outputText style="font-weight:bold" value="Nivel" /></td>
+												 						<td width="90px" ><h:outputText style="font-weight:bold" value="Denominacion" /></td>
+												 						<td width="95px" align="right"><h:outputText style="font-weight:bold" value="Area Construida" /></td>
+												 						<td width="80px" align="right"><h:outputText style="font-weight:bold" value="Area Usada" /></td>
+												 						<td width="90px" align="right"><h:outputText style="font-weight:bold" value="Area Asignada" /></td>
+												 						<td width="70px" align="center"><h:outputText style="font-weight:bold" value="Mes inicio" /></td>
+												 						<td width="70px" align="center"><h:outputText style="font-weight:bold" value="Mes fin" /></td>
+												 						<td width="220px" align="center"><h:outputText style="font-weight:bold" value="Referencia" /></td>
+												 					</tr>	
+								 									<ui:repeat value="#{registroPredioManaged.recordsUsosDelPredioxNivel[record.djusoId]}" var="detail" varStatus="loop">
+												 						<tr>
+												 							
+													 						<td align="center"><h:outputText value="#{detail.numeronivel}" /></td>
+													 						<td ><h:outputText value="#{detail.descripcionnivel}" /></td>
+													 						<td align="right"><h:outputText value="#{detail.areaConstruccion}" /></td>
+													 						<td align="right"><h:outputText value="#{detail.areaUsada} " /></td>													 						
+													 						<td align="right"><h:outputText value="#{detail.areaUso}" /></td>
+													 						<td align="center"><h:outputText value="#{registroPredioManaged.mapRjMes[detail.mesInicio]}" /></td>
+													 						<td align="center"><h:outputText value="#{registroPredioManaged.mapRjMes[detail.mesFin]}" /></td>
+													 						<td align="center"><h:outputText value="#{detail.glosa} " />	</td>
+												 						</tr>
+												 						
+												 					</ui:repeat>
+								 								</table>	
+								 							</td>
+								 						</tr>
+								 									
+								 					</ui:repeat>
+								 				</table>
+								 			</a4j:outputPanel>	
+							 			</td>
+							 		</tr>
+							 	</table>
+							</td>
+						</tr>
+						
+						<a4j:outputPanel rendered="#{!registroPredioManaged.esConstruccion}">
+						<tr>
+							<td>
+								<br/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="SIN DATOS DE CONSTRUCCION" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						</a4j:outputPanel>
+						
+						<a4j:outputPanel rendered="#{registroPredioManaged.esConstruccion}">
+						<tr>
+							<td>
+								<br/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="CARACTERISTICAS DE CONSTRUCCION" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+							
+							 	<table  cellspacing="0" border="1" width="100%">
+							 		<tr>
+							 			<td align="center">
+							 				<h:outputText style="font-weight:bold" value="Item" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="Tipo" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="Nivel" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="Seccion" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="Año Const." />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="Año Act." />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="Mes" />
+							 			</td>
+							 			<td  align="right">
+							 				<h:outputText style="font-weight:bold" value="AC" />
+							 			</td>
+							 			<td  align="right">
+							 				<h:outputText style="font-weight:bold" value="ACC" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="MP" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="EC" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="Clasif" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="MC" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="T" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="P" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="PV" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="R" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="B" />
+							 			</td>
+							 			<td  align="center">
+							 				<h:outputText style="font-weight:bold" value="I.E." />
+							 			</td>
+							 			<td  >
+							 				<h:outputText style="font-weight:bold" value="Referencia" />
+							 			</td>
+							 		</tr>
+							 		<ui:repeat value="#{registroPredioManaged.records}" var="record" varStatus="loop">
+								 		<tr>
+								 			<td align="center" >
+								 				<h:outputText value="#{record.item}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{construccionManaged.mapIRpTipoNivel[record.tipoNivelId]}" /> 
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.nroNivel}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.seccion}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.annoConstruccion}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.annoActualizacion}" />
+								 			</td>
+								 			<td  align="center">
+								 				<!-- <h:outputText value="#{registroPredioManaged.mapRjMes[record.mesConstruccion]}" /> -->
+								 				<h:outputText value="#{construccionManaged.mapIRjMes[record.mesConstruccion.trim()]}" />
+								 			</td>
+								 			<td  align="right">
+								 				<h:outputText value="#{record.areaConstruccion}" />
+								 			</td>
+								 			
+								 			<td  align="right">
+								 				<h:outputText value="#{record.areaComunConstruccion}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.denmatpredominante}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.denestadoconservacion}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{construccionManaged.mapIRjTipoDepreciacion[record.clasiDepreciacionId]}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.denmuros}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.dentecho}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.denpisos}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.denpuertas}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.denrevestimiento}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.denbannos}" />
+								 			</td>
+								 			<td  align="center">
+								 				<h:outputText value="#{record.denelectrico}" />
+								 			</td >
+								 			<td  >
+								 				<h:outputText value="#{record.referencia}" />
+								 			</td>
+								 		</tr>
+								 	</ui:repeat>	
+							 	</table>
+							</td>
+						</tr>
+						
+						<tr>
+							<td >
+								<h:outputText style="font-weight:bold" value="Leyenda" />
+							</td>
+						</tr>						
+						<tr>
+							<td>
+								<table  cellspacing="0" border="1" width="60%">
+									<tr><td>
+									
+									<table border="0" width="100%" cellpadding="0" cellspacing="0">
+										<tr>
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Area Construida" />
+											</td>
+											<td width="10%">
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="AC" />
+											</td>
+											
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Muros y Columnas" />
+											</td>
+											<td width="10%">	
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="MC" />
+											</td>
+										</tr>	
+										<tr>
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Area Común Construida" />
+											</td>
+											<td width="10%">
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="ACC" />
+											</td>
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Techos" />
+											</td>
+											<td width="10%">
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="T" />
+											</td>
+											
+										</tr>	
+										<tr>
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Material Predominante" />
+											</td>
+											<td width="10%">
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="MP" />
+											</td>
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Pisos" />
+											</td>
+											<td width="10%">
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="P" />
+											</td>
+											
+										</tr>	
+										<tr>
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Clasificación Depreciación" />
+											</td>
+											<td width="10%">
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="Clasif" />
+											</td>
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Instalaciones Electricas" />
+											</td>
+											<td width="10%">
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="I.E." />
+											</td>
+										</tr>
+										<tr>
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Baños" />
+											</td>
+											<td width="10%">
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="B" />
+											</td>
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Revestimientos" />
+											</td>
+											<td width="10%">
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="R" />
+											</td>
+										</tr>
+										<tr>
+											<td width="40%">
+												<h:outputText style="font-size: xx-small;" value="Puertas y Ventana" />
+											</td>
+											<td width="10%">
+												<h:outputText style="font-size: xx-small;" value=": " />
+												<h:outputText style="font-size: xx-small;" value="PV" />
+											</td>
+											<td width="40%">
+											</td>
+											<td width="10%">
+											</td>	
+										</tr>	
+									</table>
+								</td></tr>
+							 </table>	
+							</td>		
+						</tr>
+						</a4j:outputPanel>
+						
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						
+						<a4j:outputPanel rendered="#{empty registroPredioManaged.recordsOtrasInsta}">
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="SIN OTRAS INSTALACIONES" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						</a4j:outputPanel>
+						
+						<a4j:outputPanel rendered="#{not empty registroPredioManaged.recordsOtrasInsta}">
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="OTRAS INSTALACIONES" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+							 	<table width="100%" border="1" cellspacing="0">
+				 					<tr>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="Item" /></td>
+				 						<td><h:outputText style="font-weight:bold" value="Tipo Obra" /></td>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="Año" /></td>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="Mes" /></td>
+				 						<td align="right"><h:outputText style="font-weight:bold" value="Valor de Obra (S/.)" /></td>
+				 						
+				 						<td align="center"><h:outputText style="font-weight:bold" value="Nro nivel" /></td>
+				 						<td align="right"><h:outputText style="font-weight:bold" value="Area" /></td>
+				 					</tr>
+				 					<ui:repeat value="#{registroPredioManaged.recordsOtrasInsta}" var="record" varStatus="loop">
+				 						<tr>
+					 						<td align="center"><h:outputText value="#{record.item}" /></td>
+					 						<td><h:outputText value="#{record.tipoInstalacion}" /></td>
+					 						<td align="center"><h:outputText value="#{record.annoInstalacion}" /></td>
+					 						<td align="center"><h:outputText value="#{record.mes}" /></td>
+					 						<td align="right"><h:outputText value="#{record.valorInstalacion}" /></td>
+					 						
+					 						<td align="center"><h:outputText value="#{record.nroNivel}" /></td>
+					 						<td align="right"><h:outputText value="#{record.areaTerreno}" /></td>
+				 						</tr>
+				 					</ui:repeat>
+							 	</table>
+							</td>
+						</tr>
+						</a4j:outputPanel>
+						
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="OTROS FRENTES" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+							 	<table width="100%" border="1" cellspacing="0">
+				 					<tr>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="Item" /></td>
+				 						<td><h:outputText style="font-weight:bold" value="Tipo Via" /></td>
+				 						<td><h:outputText style="font-weight:bold" value="Nombre Via" /></td>
+				 						<td><h:outputText style="font-weight:bold" value="Número" /></td>
+				 						<td><h:outputText style="font-weight:bold" value="Frente (mts)" /></td>
+				 					</tr>
+				 					<ui:repeat value="#{registroPredioManaged.recordsOtrosFrentes}" var="record" varStatus="loop">
+				 						<tr>
+					 						<td align="center"><h:outputText value="#{record.item}" /></td>
+					 						<td><h:outputText value="#{record.tipoVia}" /></td>
+					 						<td><h:outputText value="#{record.nombreVia}" /></td>
+					 						<td><h:outputText value="#{record.numero1}" /></td>
+					 						<td><h:outputText value="#{record.frente}" /></td>
+				 						</tr>
+				 					</ui:repeat>
+							 	</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<h:outputText style="font-weight:bold" value="DOCUMENTOS ANEXOS" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							   <hr width="100%" />
+							</td>
+						</tr>
+						
+						<tr>
+							<td>
+							 	<table width="100%" border="1" cellspacing="0">
+							 		<tr>
+				 						<td align="center"><h:outputText style="font-weight:bold" value="Item" /></td>
+				 						<td><h:outputText style="font-weight:bold" value="Tipo Documento" /></td>
+				 						<td><h:outputText style="font-weight:bold" value="Numero Documento" /></td>
+				 						<td><h:outputText style="font-weight:bold" value="Referencia" /></td>
+				 					</tr>
+				 					<ui:repeat value="#{registroPredioManaged.recordsDocAnexos}" var="record" varStatus="loop">
+				 						<tr>
+					 						<td align="center"><h:outputText value="#{record.item}" /></td>
+					 						
+					 						<td><h:outputText value="#{record.tipoDocumento}" /></td>
+					 						<td><h:outputText value="#{record.numeroDocumento}" /></td>
+					 						<td><h:outputText value="#{record.referencia}" /></td>
+				 						</tr>
+				 					</ui:repeat>
+							 	</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							 	<table border="0" width="30%" align="center">
+							 		<tr align="center">	
+							 			<td width="20%">
+							 				<h:outputText value="Cajamarca, #{registroPredioManaged.fechaPalabras}" />
+							 			</td>
+							 		</tr>
+							 	</table>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<br />
+							</td>
+						</tr>
+						<tr>
+							<td>
+							 	<table border="0" width="30%" align="center">
+							 		<tr align="center">
+							 			<td width="20%">
+							 				<hr width="100%" style="border:1px dotted;" />
+							 			</td>
+							 		</tr>
+							 		<tr align="center">	
+							 			<td width="20%">
+							 				<h:outputText value="#{(registroPredioManaged.persona.tipoPersonaId==1 or registroPredioManaged.persona.tipoPersonaId==3 or registroPredioManaged.persona.tipoPersonaId==5 )?registroPredioManaged.persona.apellidosNombres:registroPredioManaged.persona.razonSocial}" />
+							 			</td>
+							 		</tr>
+							 	</table>
+							</td>
+						</tr>
+						
+						<tr>
+							<td align="left">
+								<span id="lblContribuyente" class="clsLetraPreliminar">									
+										<h:outputText value="Emitido por : " />
+										<h:outputText value="#{registroPredioManaged.usuario}" />
+									<br />
+										<h:outputText value="Fecha       : " />
+										<h:outputText value="#{registroPredioManaged.fechaActual}" />									
+								</span>
+							</td>
+						</tr>
+					</table>
+			</rich:panel>
+		</h:form>	
+	</body>
+</html>
+

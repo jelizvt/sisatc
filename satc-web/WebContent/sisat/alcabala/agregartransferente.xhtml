@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<style type="text/css">
+.extdt-empty-cell {
+	width: 0;
+}
+
+th.extdt-empty-cell {
+	width: 0;
+}
+/* Disables resizing */
+.extdt-hsep {
+	display: none;
+}
+</style>
+
+	<script type="text/javascript">
+	 function validaNroDocumento(nroDocumento){
+		 if(jQuery.trim(nroDocumento).length==8){
+				 return true;
+		 }
+		 return false;
+	 }
+	</script>
+	<h:form id="formRegistroPersona">
+		<a4j:outputPanel id="id_panelprincipalregistropersona">
+			<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+			<td>
+			<table align="center" width="100%">
+				<tr>
+				<td></td>
+				</tr>
+				<tr>
+				<td>
+				<table align="center" border="0" width="100%">
+				<tr>
+				<td align="left">
+				<rich:panel	style="width:100%;  height: 60px;" id="id_paneldatoscontribuyente">
+					<table border="0" width="100%">
+					<tr>
+					<td align="left" width="130px">
+					<h:outputText value="Tipo de Contrib." /> 
+					<span style="color: red;">*</span>
+					</td>
+					
+					<td align="left" width="150px">
+					<rich:comboBox	width="150px" defaultLabel="Seleccione"	onblur="validaInputCbo(this)"  value="#{agregarTransferenteAlcabalaManaged.cmbValuetipopersona}"
+					disabled="#{agregarTransferenteAlcabalaManaged.tipoAccion!=1}" id="id_tipopersona" binding="#{agregarTransferenteAlcabalaManaged.cmbtipopersona}"
+					valueChangeListener="#{agregarTransferenteAlcabalaManaged.loadTipoPersonaById}" immediate="true">
+					<f:selectItems id="id_lsttipopersona" value="#{agregarTransferenteAlcabalaManaged.lsttipopersona}" />
+					<a4j:support id="id_supportlsttipoper" reRender="id_paneldatoscontribuyente,id_datoscontribuyente,id_subtippersona,id_apepaternotxt,id_apellidopaterno,apellidoMaterno"
+					event="onchange" BypassUpdates="false" ajaxSingle="true" />
+					</rich:comboBox>
+					</td>
+					
+					<td align="left" width="130px">
+					<h:panelGroup rendered="#{agregarTransferenteAlcabalaManaged.isSubtipoPersona}">
+					<h:outputText value="Sub.Tipo de Contrib." />
+					<span style="color: red;">*</span>
+					</h:panelGroup>
+					</td>
+
+					<td align="left" width="150px">
+					<h:panelGroup rendered="#{agregarTransferenteAlcabalaManaged.isSubtipoPersona}">
+					<rich:comboBox width="150px" defaultLabel="Seleccione" onblur="validaInputCbo(this)" value="#{agregarTransferenteAlcabalaManaged.cmbValuesubtipopersona}"
+					rendered="#{agregarTransferenteAlcabalaManaged.isSubtipoPersona}" id="id_subtippersona"
+																		binding="#{agregarTransferenteAlcabalaManaged.cmbsubtipopersona}"
+							valueChangeListener="#{agregarTransferenteAlcabalaManaged.loadSubtipoPersonaById}">
+							<f:selectItems id="id_lstsubtipopersona"
+								value="#{agregarTransferenteAlcabalaManaged.lstsubtipopersona}" />
+							<a4j:support id="id_supportlstsubtipopersona"
+								reRender="id_datoscontribuyente,panelregistroderelacionados"
+								event="onchange" BypassUpdates="false"
+								ajaxSingle="true" />
+					</rich:comboBox>
+					</h:panelGroup></td>
+
+						</tr>
+					</table>
+
+				</rich:panel> <rich:panel style="width:100%;  height: 220px;"
+					id="id_datoscontribuyente">
+					<f:facet name="header">
+					</f:facet>
+					<table border="0" width="100%">
+
+						<tr>
+							<td align="left" width="130px"><h:panelGroup
+									rendered="#{agregarTransferenteAlcabalaManaged.isTipoDocumentoIdentidad}">
+									<h:outputText value="Tipo de Doc. Iden." />
+									<span style="color: red;">*</span>
+								</h:panelGroup></td>
+
+							<td><rich:comboBox width="150px"
+									defaultLabel="Selecccione"
+						onblur="validaInputCbo(this)" required="true"
+						requiredMessage="#{msg['mp.errortipodocumento']}"
+						value="#{agregarTransferenteAlcabalaManaged.cmbValuetipodocumentoidentidad}"
+						rendered="#{agregarTransferenteAlcabalaManaged.isTipoDocumentoIdentidad}"
+						id="id_tipodocumento"
+						binding="#{agregarTransferenteAlcabalaManaged.cmbtipodocumentoidentidad}"
+						valueChangeListener="#{agregarTransferenteAlcabalaManaged.loadTipoTipoDocumentoIdentidadById}"
+						disabled="#{agregarTransferenteAlcabalaManaged.tipoAccion!=1}">
+						<f:selectItems id="id_lsttipodocumento"
+							value="#{agregarTransferenteAlcabalaManaged.lsttipodocumentoidentidad}" />
+
+
+						<a4j:support id="id_supportlsttipodocumento"
+							reRender="#{rich:clientId('id_documento')},#{rich:clientId('id_subtipdocideadi')},#{rich:clientId('inputnrodocideadi')},#{rich:clientId('textnrodocideadi')}"
+							event="onchange" BypassUpdates="false"
+							ajaxSingle="true" />
+
+					</rich:comboBox></td>
+				<td align="left" width="130px"><h:panelGroup
+						rendered="#{agregarTransferenteAlcabalaManaged.isTipoDocumentoIdentidad}">
+						<h:outputText value="Nro Doc. Ident. :" />
+						<span style="color: red;">*</span>
+					</h:panelGroup></td>
+				<td align="left" width="150px">
+				<h:inputText id="id_documento" maxlength="12" required="true"
+					requiredMessage="#{msg['mp.errornrodocumento']}"
+					value="#{agregarTransferenteAlcabalaManaged.mpPersona.nroDocuIdentidad}"
+					rendered="#{agregarTransferenteAlcabalaManaged.isTipoDocumentoIdentidad}"
+					binding="#{agregarTransferenteAlcabalaManaged.txtNumDocumento}"
+					onkeypress="return validaEnteroPositivo(event)"
+					disabled="#{agregarTransferenteAlcabalaManaged.tipoAccion!=1}">
+
+					<a4j:support event="onblur" onsubmit="true" ajaxSingle="true" immediate="true" status="ajaxStatus"
+								action="#{agregarTransferenteAlcabalaManaged.buscarPersonaDNI}" reRender="id_datoscontribuyente"
+								focus="id_fechadeclaracion"	oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:support>
+				</h:inputText>
+				</td>
+				</tr>
+
+				<tr>
+				<td align="left" width="130px">
+				<h:outputText value="Fecha de Const. o Nac." />
+				</td>
+				<td align="left" width="150px"><rich:calendar
+								locale="en/US"
+								converterMessage="Ingrese Fecha de Constitución o Nacimiento. Valido  "
+								datePattern="dd/MM/yyyy" enableManualInput="true"
+								inputClass="maskDate" inputStyle="width:80px"
+								id="id_fechadeclaracion"
+								value="#{agregarTransferenteAlcabalaManaged.fechaNacoConst}">
+							</rich:calendar> <rich:jQuery id="maskedo3" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" /></td>
+					</tr>
+
+			<tr>
+				<td align="left" width="130px">
+				<h:panelGroup id="id_apepaternotxt"
+						rendered="#{agregarTransferenteAlcabalaManaged.istipopersonaNatural}">
+						<h:outputText value="Apellido Paterno" />
+						<span style="color: red;">*</span>
+					</h:panelGroup></td>
+				<td align="left" width="150px"><h:inputText
+						id="id_apellidopaterno" 
+						binding="#{agregarTransferenteAlcabalaManaged.txtApePaterno}"
+						maxlength="50" required="true"
+						requiredMessage="#{msg['mp.apellidopaternosiningresar']}"
+						value="#{agregarTransferenteAlcabalaManaged.mpPersona.apePaterno}"
+						styleClass="textUpperCase"
+						onkeypress="return validarCarateres(event)"
+						rendered="#{agregarTransferenteAlcabalaManaged.istipopersonaNatural}">
+							<f:converter converterId="uppeCaseConverter"/>
+						</h:inputText>
+				</td>
+				<td align="left" width="130px">
+				<h:panelGroup 
+						rendered="#{agregarTransferenteAlcabalaManaged.istipopersonaNatural}">
+						<h:outputText value="Apellido Materno:" />
+						<span style="color: red;">*</span>
+				</h:panelGroup></td>
+				<td align="left" width="150px"><h:inputText
+						id="apellidoMaterno" maxlength="50"
+						binding="#{agregarTransferenteAlcabalaManaged.txtApeMaterno}"
+						required="true"
+						requiredMessage="#{msg['mp.apellidomaternosiningresar']}"
+						value="#{agregarTransferenteAlcabalaManaged.mpPersona.apeMaterno}"
+						styleClass="textUpperCase"
+						onkeypress="return validarCarateres(event)"
+						rendered="#{agregarTransferenteAlcabalaManaged.istipopersonaNatural}">
+							<f:converter converterId="uppeCaseConverter"/>
+						</h:inputText>
+				</td>
+
+			</tr>
+			<tr>
+				<td align="left" width="130px">
+				<h:panelGroup rendered="#{agregarTransferenteAlcabalaManaged.istipopersonaNatural}">
+				<h:outputText value="Primer Nombre" />
+				<span style="color: red;">*</span>
+				</h:panelGroup>
+				</td>
+													
+				<td align="left" width="150px">
+				<h:inputText	id="primerNombre"
+				binding="#{agregarTransferenteAlcabalaManaged.txtPrimerNombre}"
+				required="true" maxlength="50"
+				requiredMessage="#{msg['mp.primernombresiningresar']}"
+				value="#{agregarTransferenteAlcabalaManaged.mpPersona.primerNombre}"
+				styleClass="textUpperCase"
+				onkeypress="return validarCarateres(event)"
+				rendered="#{agregarTransferenteAlcabalaManaged.istipopersonaNatural}" >
+					<f:converter converterId="uppeCaseConverter"/>
+				</h:inputText>
+				</td>
+				
+				<td align="left" width="130px">
+				
+				<h:outputText value="Segundo Nombre  :"  rendered="#{agregarTransferenteAlcabalaManaged.istipopersonaNatural}" />
+				</td>
+				<td align="left" width="150px"><h:inputText
+						value="#{agregarTransferenteAlcabalaManaged.mpPersona.segundoNombre}"
+						binding="#{agregarTransferenteAlcabalaManaged.txtSegundoNombre}"
+						maxlength="50" id="segundoNombre"
+						styleClass="textUpperCase"
+						onkeypress="return validarCarateres(event)"
+						rendered="#{agregarTransferenteAlcabalaManaged.istipopersonaNatural}">
+							<f:converter converterId="uppeCaseConverter"/>
+						</h:inputText>
+				</td>
+
+			</tr>
+					<tr>
+
+						<td align="left" width="130px"><h:outputText
+								value="Teléfono :" /></td>
+						<td align="left"><h:inputText id="id_telefono"
+								value="#{agregarTransferenteAlcabalaManaged.mpPersona.telefono}"
+								maxlength="12"
+								onkeypress="return validaEnteroPositivo(event)" /></td>
+
+					</tr>
+					<tr>
+						<td align="left" width="130px"><h:panelGroup
+								rendered="#{agregarTransferenteAlcabalaManaged.issucesionindivisa}">
+								<h:outputText id="textpartdefu"
+									value="Partida de Defunción  :"
+									rendered="#{agregarTransferenteAlcabalaManaged.issucesionindivisa}" />
+								<span style="color: red;">*</span>
+							</h:panelGroup></td>
+						<td align="left" width="150px"><h:inputText
+								id="inputpartdefu" maxlength="20" required="true"
+								requiredMessage="#{msg['mp.errornropartida']}"
+								value="#{agregarTransferenteAlcabalaManaged.mpPersona.nroPartidaDefuncion}"
+								rendered="#{agregarTransferenteAlcabalaManaged.issucesionindivisa}" />
+						</td>
+						<td align="left" width="100px"><h:panelGroup
+								rendered="#{agregarTransferenteAlcabalaManaged.issucesionindivisa}">
+								<h:outputText value="Fecha de Defunción :"
+									rendered="#{agregarTransferenteAlcabalaManaged.issucesionindivisa}" />
+							<span style="color: red;">*</span>
+						</h:panelGroup></td>
+					<td align="left" width="100px"><rich:calendar
+							rendered="#{agregarTransferenteAlcabalaManaged.issucesionindivisa}"
+							locale="en/US" required="true"
+							requiredMessage="#{msg['mp.errorfechaDefuncion']}"
+							datePattern="dd/MM/yyyy"
+							converterMessage="Ingrese Fecha de Defunción Valido  "
+							enableManualInput="true" inputClass="maskDate"
+							id="id_fechadefuncion"
+							value="#{agregarTransferenteAlcabalaManaged.fechaDefuncion}"
+							inputStyle="width:80px">
+						</rich:calendar> <rich:jQuery id="maskedo6" selector=".maskDate"
+							query="mask('99/99/9999')" timing="onload" /></td>
+
+				</tr>
+
+				<tr>
+					<td align="left" width="130px"><h:panelGroup
+							rendered="#{agregarTransferenteAlcabalaManaged.israzonsocial}">
+							<h:outputText value="Razón Social:" />
+							<span style="color: red;">*</span>
+						</h:panelGroup></td>
+					<td align="left"><h:inputText maxlength="200"
+							style="width:100%" required="true"
+							requiredMessage="#{msg['mp.razonsocialiningresar']}"
+							styleClass="textUpperCase"
+							onkeypress="return validarCarateres(event)"
+							value="#{agregarTransferenteAlcabalaManaged.mpPersona.razonSocial}"
+							rendered="#{agregarTransferenteAlcabalaManaged.israzonsocial}">
+								<f:converter converterId="uppeCaseConverter"/>
+							</h:inputText>
+					</td>
+				</tr>
+
+					<tr>
+
+						<td align="left" width="130px"><h:outputText
+								value="email  :" /></td>
+						<td align="left"><h:inputText id="id_email"
+								maxlength="100" style="width:100%"
+								value="#{agregarTransferenteAlcabalaManaged.mpPersona.email}"
+								validatorMessage="email invalido">
+								<rich:jQuery selector="#id_email" query="mask('em')"
+									timing="onload" />
+							</h:inputText></td>
+
+
+					</tr>
+					<tr>
+
+						<td align="left" width="130px"><h:outputText
+								value="Dirección  :" /></td>
+						<td align="left"><h:inputText id="id_direccion"
+								maxlength="100" style="width:100%"
+								value="#{agregarTransferenteAlcabalaManaged.direccionTransferente}">
+							</h:inputText></td>
+
+
+					</tr>
+
+
+				</table>
+						</rich:panel></td>
+
+				</tr>
+							</table>
+								</td>
+							</tr>
+
+						</table>
+
+					</td>
+				</tr>
+
+			</table>
+
+
+
+			<table width="100%" align="center">
+				<tr>
+					<td align="right"><a4j:commandButton
+							id="agregarTransferente_id" style="width: 100px;" value="Agregar"
+							actionListener="#{agregarTransferenteAlcabalaManaged.agregarTransferente}"
+							reRender="#{rich:clientId('tblTransferente')}, id_panelprincipalregistropersona"
+							oncomplete="#{rich:component('id_panelAgregarTransferente')}.hide()"></a4j:commandButton>
+					</td>
+
+					<td align="left"><a4j:commandButton id="cancelarAgregar_id"
+							value="Cancelar" style="width: 100px;"
+							reRender="formCalculoAlcabala"
+							oncomplete="#{rich:component('id_panelAgregarTransferente')}.hide()">
+						</a4j:commandButton></td>
+				</tr>
+
+			</table>
+
+
+		</a4j:outputPanel>
+	</h:form>
+
+
+
+
+
+
+
+</ui:composition>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+		<style type="text/css">
+		  .body3 {
+		   height: 300px;
+		   overflow: auto;
+		  }
+		</style>
+	<h:form id="frmHistorico">
+	
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<rich:hotKey key="return" handler="#{rich:element('cmdBuscarLote')}.click()" selector="#frm"/>
+		<rich:panel id="p01">
+			
+			<table border="0" width="50%">
+				<tr>
+					<td align="left" width="100px">
+						<h:outputText value="Nro. de Expediente :" />
+					</td>
+					<td width="150px">
+						<h:inputText maxlength="50" styleClass="placa"
+							value="#{multasTransito2013Managed.placa}" 
+							style="width:50%; text-transform:uppercase;"  onkeyup="validaPlacaMotor(this)" converter="#{upperCaseConverter}"
+							/>
+							<rich:jQuery id="maskPlaca" selector=".placa" query="mask('******?**',{placeholder:' '})" timing="onload" />
+					</td>
+					<td align="left" width="100px">
+						<h:outputText value="Tipo REC :" />
+					</td>
+					<td width="140px">
+						<h:inputText maxlength="50" style="width:50%" styleClass="papeleta"
+							value="#{multasTransito2013Managed.papeleta}" />
+							<rich:jQuery id="mask12" selector=".papeleta" query="mask('*99999-99')" timing="onload" />
+					</td>
+					<td align="left" width="100px">
+						<h:outputText value="Medida Cautelar :" />
+					</td>
+					<td width="100px">
+						<h:panelGroup>
+							<h:inputText id="inputnrovalor"
+								value="#{multasTransito2013Managed.nroValor}"
+								styleClass="prueba" style="text-align:center" size="17"
+								maxlength="16" >
+							</h:inputText>
+							<rich:jQuery id="maskedo0010" selector=".prueba" query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+						</h:panelGroup>
+					</td>
+					<td>
+						<h:outputText id="idXlsLista" value=" " />
+						<h:commandLink id="downloadXLS" immediate="true" action="#{multasTransito2013Managed.exportHtmlTableToExcel}" >
+					       <h:graphicImage value="/images/modal/excel.png" style="border:0" width="22" height="22" />
+					    </h:commandLink>
+					</td>
+				</tr>
+			</table>
+		</rich:panel>
+		
+		<h:panelGrid columns="3" align="center">
+			<a4j:commandButton value="Generar REC" style="width:100px;" id="cmdBuscarLote"
+				action="#{multasTransito2013Managed.buscar}" status="ajaxStatus"
+				reRender="principal" />
+		</h:panelGrid>
+			<rich:panel bodyClass="body3" style="width:900px;" id="principal">
+				<rich:extendedDataTable id="cctable"
+						value="#{multasTransito2013Managed.lista}" var="r"
+						 selectionMode="single"
+						 width="900px"
+						 height="280px"
+						noDataLabel="No se encontró registros"
+						enableContextMenu="false" rowKeyVar="idx">
+					<!-- BLOQUEADOS NO PERMITE ACTUALIZACION ::INICIO -->
+		
+				</rich:extendedDataTable>
+			</rich:panel>		
+	</h:form>
+</ui:composition>

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+	<rich:panel id="id_thispanelPreliminarDE" width="100%">
+
+
+		<table align="center" width="100%">
+			<tr>
+				<td><a4j:outputPanel id="outputDePreliminar">
+						<rich:datascroller for="resultadofinal" maxPages="10"></rich:datascroller>
+						<rich:extendedDataTable id="resultadofinal"
+							value="#{registroDeudaExigible.lstlotePreliminar}"
+							var="lotePreliminar" width="100%" height="330px" rows="20"
+							selectionMode="single"
+							noDataLabel="No Se Encontro Información para esta Busqueda"
+							rowKeyVar="row" enableContextMenu="false">
+							<rich:column id="x1" width="30%" style="text-align:center"
+								filterBy="#{lotePreliminar.descripcion}">
+								<f:facet name="header">Tipo Acto.</f:facet>
+								<h:outputText value="#{lotePreliminar.descripcion}" />
+							</rich:column>
+							<rich:column id="x2" width="30%"
+								filterBy="#{lotePreliminar.nro_acto}">
+								<f:facet name="header">Nro Valor</f:facet>
+								<h:outputText value="#{lotePreliminar.nro_acto}" />
+							</rich:column>
+
+							<rich:column id="x3" width="15%" style="text-align:center">
+								<f:facet name="header">Año Deuda</f:facet>
+								<h:outputText value="#{lotePreliminar.anno_lote}" />
+							</rich:column>
+							<rich:column id="x10" width="20%" style="text-align:center"
+								filterBy="#{lotePreliminar.persona_id}">
+								<f:facet name="header">PersonaId</f:facet>
+								<h:outputText value="#{lotePreliminar.persona_id}" />
+							</rich:column>
+						</rich:extendedDataTable>
+					</a4j:outputPanel></td>
+			</tr>
+		</table>
+	</rich:panel>
+	<h:panelGrid align="center" columns="3" width="40%" border="0"
+		style="text-align:center">
+		<a4j:commandButton value="Guardar Lote" style="width:100px;"
+			id="id_btnguardar" ajaxSingle="true"
+			action="#{registroDeudaExigible.guardarLote}"
+			oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+		</a4j:commandButton>
+		<a4j:commandButton id="cmdGenerar" value="Generacion Valores"
+			style="width:150px;" immediate="true"
+			action="#{registroDeudaExigible.generarValores}"
+			oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+			status="ajaxStatus">
+		</a4j:commandButton>
+	</h:panelGrid>
+
+</h:panelGrid>
+
+

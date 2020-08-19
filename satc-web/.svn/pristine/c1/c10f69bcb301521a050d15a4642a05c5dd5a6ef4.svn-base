@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="frmBuscarTransferente">
+	
+		<rich:hotKey key="return"
+		handler="#{rich:element('cmdBuscarPersona')}.click()"
+		selector="#frmBuscarTransferente" />
+	
+		<h:panelGroup id="pnlBuscarPersona">
+			<h:panelGrid columns="2">
+				<h:selectOneRadio 
+					value="#{buscarPersonaManaged.selectedOptBusc}"
+					layout="pageDirection">
+					<f:selectItem itemLabel="Cod. Persona" itemValue="4" />
+					<f:selectItem itemLabel="#{msg['mp.apellidosnombres']}"
+						itemValue="1" />
+					<f:selectItem itemLabel="#{msg['mp.razonsocial']}" itemValue="2" />
+					<f:selectItem itemLabel="#{msg['mp.docidentidad']}" itemValue="3" />
+					<a4j:support event="onchange"
+						actionListener="#{buscarPersonaManaged.changeOpcionBusc}"
+						oncomplete="jQuery('#txtApePatBusc').focus()"
+						reRender="pnlBuscarPersona"></a4j:support>
+				</h:selectOneRadio>
+
+				<h:panelGrid columns="1">
+					<h:inputText id="txtCodigoBusc" style="height:12px;"
+						value="#{buscarPersonaManaged.codigoPersBusc}"
+						disabled="#{buscarPersonaManaged.selectedOptBusc==4 ? 'false' : 'true'}"
+						styleClass="textUpperCase">
+						<f:converter converterId="uppeCaseConverter" />
+					</h:inputText>
+
+					<h:panelGrid columns="6">
+						<h:outputLabel value="#{msg['mp.paterno']}" style="height:12px;"/>
+						<h:inputText id="txtApePatBusc" style="height:12px;"
+							value="#{buscarPersonaManaged.apePatBusc}"
+							disabled="#{buscarPersonaManaged.selectedOptBusc==1 ? 'false' : 'true'}"
+							styleClass="textUpperCase">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText>
+						<h:outputLabel value="#{msg['mp.materno']}" style="height:12px;"/>
+						<h:inputText value="#{buscarPersonaManaged.apeMatBusc}" style="height:12px;"
+							disabled="#{buscarPersonaManaged.selectedOptBusc==1 ? 'false' : 'true'}"
+							styleClass="textUpperCase">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText>
+						<h:outputLabel value="#{msg['mp.nombres']}" style="height:12px;"/>
+						<h:inputText value="#{buscarPersonaManaged.nombresBusc}" style="height:12px;"
+							disabled="#{buscarPersonaManaged.selectedOptBusc==1 ? 'false' : 'true'}"
+							styleClass="textUpperCase">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText>
+					</h:panelGrid>
+					<h:inputText value="#{buscarPersonaManaged.razonSocialBusc}"
+						disabled="#{buscarPersonaManaged.selectedOptBusc==2 ? 'false' : 'true'}"
+						styleClass="textUpperCase" style="width: 100%; height:12px;">
+						<f:converter converterId="uppeCaseConverter" />
+					</h:inputText>
+					<h:panelGrid columns="3">
+						<rich:comboBox style="width: 150px; height:12px;"
+							value="#{buscarPersonaManaged.selectedTipoDocBusc}"
+							defaultLabel="#{msg['param.defaultlabelcombo']}"
+							disabled="#{buscarPersonaManaged.selectedOptBusc==3 ? 'false' : 'true'}"
+							onkeypress="return showListCbo(this,event)"
+							onblur="validaInputCbo(this)">
+							<f:selectItems value="#{buscarPersonaManaged.lstTipoDoc}" />
+						</rich:comboBox>
+						<h:outputText value="N° de Documento" style="height:12px;"/>
+						<h:inputText value="#{buscarPersonaManaged.nroDocBusc}" style="height:12px;"
+							disabled="#{buscarPersonaManaged.selectedOptBusc==3 ? 'false' : 'true'}" />
+					</h:panelGrid>
+				</h:panelGrid>
+
+			</h:panelGrid>
+			<a4j:commandButton id="cmdBuscarPersona" value="#{msg['gn.buscar']}"
+				action="#{buscarPersonaManaged.buscarPersona}"
+				reRender="frmBuscarTransferente" status="ajaxStatus"></a4j:commandButton>
+		</h:panelGroup>
+		<!-- 
+		<div style="margin-top: 20px; margin-bottom: 2px;">
+			<a4j:commandButton value="#{msg['mp.registrarnuevapersona']}"
+				onclick="Richfaces.showModalPanel('modalRegistroPersona')">
+			</a4j:commandButton>
+		</div>
+		 -->
+		<a4j:region>
+			<div id="Layer1" style="height: 500px; overflow: scroll;">
+				<table id="tableper" width="100%" cellpadding="1" border="0">
+					<tr>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="" /></th>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="#{msg['gn.id']}" /></th>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="#{msg['gn.tipodoc']}" /></th>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="#{msg['gn.nrodoc']}" /></th>
+						<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+								value="#{msg['gn.apenomorazonsocial']}" /></th>
+					</tr>
+					<a4j:repeat id="tblPersonas"
+						value="#{buscarPersonaManaged.lstPersonas}" var="record"
+						width="720" height="330px"
+						noDataLabel="#{msg['gn.noexistendatos']}">
+						<tr>
+
+							<rich:column>
+								<a4j:commandButton title="#{msg['gn.seleccionar']}"
+									image="/images/check.gif"
+									actionListener="#{buscarPersonaManaged.seleccionarPersona}"
+									reRender="#{buscarPersonaManaged.destinoRefresh}"
+									style="width: 20px; height: 20px;">
+								</a4j:commandButton>
+							</rich:column>
+							<td><h:outputText value="#{record.personaId}" /></td>
+							<td><h:outputText value="#{record.tipoDocIdentidad}" /></td>
+							<td><h:outputText value="#{record.nroDocuIdentidad}" /></td>
+							<td><h:outputText
+									value="#{record.apellidosNombres} #{record.apellidosNombres != null ? record.razonSocial != null ? ' - ': '' : ''} #{record.razonSocial}" />
+							</td>
+						</tr>
+					</a4j:repeat>
+				</table>
+			</div>
+		</a4j:region>
+
+	</h:form>
+
+	<!-- 
+	<rich:modalPanel id="modalRegistroPersona" autosized="true" width="600" height="200">
+		<f:facet name="header">#{msg['rv.registrarpersona']}</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideIconRP"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalRegistroPersona"
+					attachTo="hideIconRP" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<a4j:include viewId="/sisat/vehicular/registropersona.xhtml" />
+	</rich:modalPanel>
+ 	-->
+</ui:composition>

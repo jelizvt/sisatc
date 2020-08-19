@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+	<h:form id="frmRegistroVehicularLectura" prependId="false">
+		<rich:panel id="pnlDatosDJ" style="min-width: 1000px;">
+			<f:facet name="header">#{msg['rv.titulodatosdeclaracion']}</f:facet>
+			<table cellpadding="6">
+				<tbody>
+					<tr>
+						<td width="150"><h:outputLabel
+								value="#{msg['rv.nrodeclaracion']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td width="250"><h:inputText id="txtNroDecla"
+								value="#{descargoVehicularManaged.numeroDecla}" disabled="true" /></td>
+						<td width="150"><h:outputLabel
+								value="#{msg['rv.fechadeclaracion']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><h:panelGroup>
+								<rich:calendar value="#{descargoVehicularManaged.fechaDecla}"
+									locale="#{msg['param.localedate']}"
+									datePattern="#{msg['param.datepattern']}"
+									timeZone="#{aplicationManaged.timeZone}" disabled="true"></rich:calendar>
+							</h:panelGroup></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.motivo']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedMotivoDecla}"
+								disabled="true" width="200">
+								<f:selectItems id="itmMotivoDecla"
+									value="#{descargoVehicularManaged.lstMotivoDecla}" />
+							</rich:comboBox></td>
+						<td><h:outputLabel value="#{msg['rv.aniodeclaracion']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><h:inputText
+								value="#{descargoVehicularManaged.anioDecla}" maxlength="4"
+								disabled="true" style="width: 60px;" /></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.motivodescargo']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedMotivoDescargo}"
+								width="200" disabled="true">
+								<f:selectItems id="itmMotivoDescargo"
+									value="#{descargoVehicularManaged.lstMotivoDescargo}" />
+							</rich:comboBox></td>
+						<td><h:outputLabel value="F.Descargo">
+								<span style="color: red;">*</span>
+						</h:outputLabel></td>							
+						<td width="250">
+							<h:outputText value="#{descargoVehicularManaged.fechaDescargo}" disabled="true" >
+									 <f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+							</h:outputText>
+					</td>
+												
+							
+					</tr>
+				</tbody>
+			</table>
+		</rich:panel>
+		<div style="width: 100%; height: 4px;"></div>
+		<rich:panel id="pnlDatosVehiculo" style="min-width: 1000px;">
+			<f:facet name="header">#{msg['rv.titulodatosvehiculo']}</f:facet>
+			<table cellpadding="6">
+				<tbody>
+					<tr>
+						<td width="150"><h:outputLabel value="#{msg['rv.placa']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td width="250"><h:inputText id="txtPlaca"
+								value="#{descargoVehicularManaged.placaVehic}" disabled="true"></h:inputText></td>
+						<td width="150"><h:outputLabel
+								value="#{msg['rv.nromotor']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td width="250"><h:inputText id="txtNumMotor"
+								value="#{descargoVehicularManaged.nroMotorVehic}"
+								disabled="true"></h:inputText></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.fechaprimerainsreg']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:calendar
+								value="#{descargoVehicularManaged.fechaPrimeraInsReg}"
+								locale="#{msg['param.localedate']}"
+								datePattern="#{msg['param.datepattern']}"
+								timeZone="#{aplicationManaged.timeZone}" disabled="true"></rich:calendar>
+						</td>
+						<td><h:outputLabel value="#{msg['rv.aniofabricacion']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><h:inputText
+								value="#{descargoVehicularManaged.anioFabricVehic}"
+								disabled="true" style="width: 60px;" /></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.clase']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedClaseVehic}"
+								width="200" disabled="true">
+								<f:selectItems id="itmClase"
+									value="#{descargoVehicularManaged.lstClaseVehiculo}" />
+							</rich:comboBox></td>
+						<td><h:outputLabel value="#{msg['rv.categoria']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedCategoriaVehic}"
+								width="200" disabled="true">
+								<f:selectItems id="itmCategoria"
+									value="#{descargoVehicularManaged.lstCategoriaVehiculo}" />
+							</rich:comboBox></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{msg['rv.marca']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox id="cboMarcaVehic"
+								value="#{descargoVehicularManaged.selectedMarcaVehic}"
+								width="200" disabled="true">
+								<f:selectItems id="itmMarca"
+									value="#{descargoVehicularManaged.lstMarcaVehiculo}" />
+							</rich:comboBox></td>
+						<td><h:outputLabel value="#{msg['rv.modelo']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox id="cboModeloVehic"
+								value="#{descargoVehicularManaged.selectedModeloVehic}"
+								width="200" disabled="true">
+								<f:selectItems id="itmModelo"
+									value="#{descargoVehicularManaged.lstModelo}" />
+							</rich:comboBox></td>
+					</tr>
+
+					<tr>
+						<td><h:outputLabel
+								value="#{msg['rv.condicionespecialvehic']}: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel></td>
+						<td><rich:comboBox id="cboCondicionEspecial"
+								value="#{descargoVehicularManaged.selectedCondicionVehic}"
+								width="200" disabled="true">
+								<f:selectItems id="itmCondicionEspecial"
+									value="#{descargoVehicularManaged.lstCondicionVehic}" />
+							</rich:comboBox></td>
+					</tr>
+				</tbody>
+			</table>
+		</rich:panel>
+		<div style="width: 100%; height: 4px;"></div>
+		<rich:panel id="pnlTransferente"
+			style="height:220px; min-width: 1000px;">
+			<f:facet name="header">#{msg['rv.titulodatosadquiriente']}</f:facet>
+			<table cellpadding="6" width="100%">
+				<tbody>
+					<tr>
+						<td width="180"><label>#{msg['rv.notaria']}: </label></td>
+						<td><rich:comboBox
+								value="#{descargoVehicularManaged.selectedNotaria}" width="300"
+								disabled="true">
+								<f:selectItems value="#{descargoVehicularManaged.lstNotarias}"></f:selectItems>
+							</rich:comboBox></td>
+					</tr>
+				</tbody>
+			</table>
+			<a4j:commandButton value="#{msg['rv.agregarnuevoadquiriente']}"
+				disabled="true"></a4j:commandButton>
+			<rich:extendedDataTable id="tblTransferentes"
+				value="#{descargoVehicularManaged.lstTransferentes}" var="record"
+				width="100%" height="120px" sortMode="single" selectionMode="single"
+				enableContextMenu="false"
+				noDataLabel="#{msg['rv.noexistentransferentes']}">
+
+				<rich:column width="15%">
+					<f:facet name="header">#{msg['gn.id']}</f:facet>
+					<h:outputText value="#{record.personaId}" />
+				</rich:column>
+
+				<rich:column width="30%">
+					<f:facet name="header">#{msg['gn.tipodoc']}</f:facet>
+					<h:outputText value="#{record.tipoDocIdentidad}" />
+				</rich:column>
+
+				<rich:column width="15%">
+					<f:facet name="header">#{msg['gn.nrodoc']}</f:facet>
+					<h:outputText value="#{record.nroDocuIdentidad}" />
+				</rich:column>
+
+				<rich:column width="40%">
+					<f:facet name="header">#{msg['gn.apenomorazonsocial']}</f:facet>
+					<h:outputText
+						value="#{record.apellidosNombres} #{record.apellidosNombres != null ? record.razonSocial != null ? ' - ': '' : ''} #{record.razonSocial}" />
+				</rich:column>
+			</rich:extendedDataTable>
+		</rich:panel>
+		<div style="width: 100%; height: 4px;"></div>
+		<rich:panel id="pnlAnexos" style="height: 250px; min-width: 1000px;">
+			<f:facet name="header">#{msg['rv.tituloanexos']}</f:facet>
+			<a4j:commandButton value="#{msg['rv.agregardocs']}" disabled="true"></a4j:commandButton>
+			<rich:extendedDataTable id="tblAnexos"
+				value="#{descargoVehicularManaged.lstAnexos}" var="record"
+				width="100%" height="150px" sortMode="single" selectionMode="single"
+				enableContextMenu="false" noDataLabel="#{msg['rv.noexistenanexos']}">
+
+				<rich:column width="50%">
+					<f:facet name="header">#{msg['gn.descripciondoc']}</f:facet>
+					<h:outputText value="#{record.descripcionDoc}" />
+				</rich:column>
+
+				<rich:column width="20%">
+					<f:facet name="header">#{msg['rv.glosa']}</f:facet>
+					<h:inputText value="#{record.glosaDoc}"
+						styleClass="textUpperCase" converter="uppeCaseConverter" style="width: 100%" />
+				</rich:column>
+
+				<rich:column width="30%">
+					<f:facet name="header">#{msg['gn.docadjunto']}</f:facet>
+					<h:outputText value="#{record.nomDocAdjunto}" />
+				</rich:column>
+			</rich:extendedDataTable>
+		</rich:panel>
+
+		<div style="width: 100%; text-align: center; margin-top: 20px;">
+			<a4j:commandButton value="#{msg['gn.cancelar']}"
+				action="#{sessionManaged.sendRedirectPrincipal}" immediate="true"
+				style="width: 150px; margin-left:2px;">
+				<f:setPropertyActionListener
+					value="/sisat/vehicular/historicovehiculodj.xhtml"
+					target="#{sessionManaged.page}" />
+			</a4j:commandButton>
+		</div>
+	</h:form>
+
+</ui:composition>

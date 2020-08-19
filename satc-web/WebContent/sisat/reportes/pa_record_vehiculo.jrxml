@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cc_esquela" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="49"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\report\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_expedicion" class="java.lang.String"/>
+	<parameter name="hora_expedicion" class="java.lang.String"/>
+	<parameter name="nombre_infractor" class="java.lang.String"/>
+	<parameter name="tipo_documento" class="java.lang.String"/>
+	<parameter name="numero_documento" class="java.lang.String"/>
+	<parameter name="numero_licencia" class="java.lang.String"/>
+	<parameter name="placa" class="java.lang.String"/>
+	<parameter name="nombre_propietario" class="java.lang.String"/>
+	<parameter name="direccion_propietario" class="java.lang.String"/>
+	<parameter name="ruta_image" class="java.lang.String"/>
+	<parameter name="p_responsable" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[exec dbo.stp_pa_reporte_record_vehiculo  $P{placa}]]>
+	</queryString>
+	<field name="fecha" class="java.lang.String"/>
+	<field name="hora" class="java.lang.String"/>
+	<field name="placa_anterior" class="java.lang.String"/>
+	<field name="propietario" class="java.lang.String"/>
+	<field name="direccion" class="java.lang.String"/>
+	<field name="marca" class="java.lang.String"/>
+	<field name="modelo" class="java.lang.String"/>
+	<field name="papeleta_id" class="java.lang.Integer"/>
+	<field name="placa" class="java.lang.String"/>
+	<field name="nro_papeleta" class="java.lang.String"/>
+	<field name="fecha_infraccion" class="java.lang.String"/>
+	<field name="nombre_infractor" class="java.lang.String"/>
+	<field name="nombre_propietario" class="java.lang.String"/>
+	<field name="direccion_propietario" class="java.lang.String"/>
+	<field name="infraccion" class="java.lang.String"/>
+	<field name="nivel_gravedad" class="java.lang.String"/>
+	<field name="puntos_acum" class="java.lang.Integer"/>
+	<field name="monto_multa" class="java.math.BigDecimal"/>
+	<field name="reincidente" class="java.lang.Integer"/>
+	<field name="estado_papeleta" class="java.lang.String"/>
+	<field name="numero_resolucion" class="java.lang.String"/>
+	<field name="estado_resolucion" class="java.lang.String"/>
+	<field name="persona_infractor_id" class="java.lang.Integer"/>
+	<field name="res_descargo" class="java.lang.String"/>
+	<variable name="SUB_TOTAL" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{monto_multa}]]></variableExpression>
+	</variable>
+	<variable name="sumimporte" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{estado_papeleta}.equals( "Pendiente" )?$F{monto_multa}:0.00]]></variableExpression>
+	</variable>
+	<background>
+		<band height="802" splitType="Stretch">
+			<image scaleImage="FillFrame">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="59" width="555" height="743" isRemoveLineWhenBlank="true"/>
+				<imageExpression><![CDATA[$P{ruta_image}+"sello_agua.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="352" width="555" height="20" isRemoveLineWhenBlank="true" forecolor="#E6E6E6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[EL PRESENTE DOCUMENTO NO TIENE VALIDEZ SI PRESENTA ENMENDADURA]]></text>
+			</staticText>
+		</band>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="134" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="65" width="54" height="13"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PLACA        :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="22" y="120" width="47" height="11"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAPELETA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="76" y="120" width="42" height="11"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="161" y="120" width="164" height="11"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONDUCTOR DEL VEHICULO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="324" y="120" width="35" height="11"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INFRACC.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="358" y="120" width="47" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IMPORTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="405" y="120" width="52" height="11"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO PA.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="130" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="67" y="65" width="53" height="13"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{placa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="120" width="22" height="11"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ITEM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="117" y="120" width="45" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CODIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="128" y="65" width="70" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Placa Anterior :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="202" y="65" width="100" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{placa_anterior}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="364" y="65" width="70" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Marca]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="364" y="82" width="70" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Modelo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="82" width="54" height="13"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Propietario :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="98" width="54" height="13"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección   :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="67" y="82" width="287" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{propietario}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="67" y="98" width="287" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="449" y="65" width="100" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{marca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="449" y="82" width="100" height="13"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{modelo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="456" y="120" width="93" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="46" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="301" y="29" width="3" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="309" y="29" width="75" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{p_responsable}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="6" y="1" width="80" height="40"/>
+				<imageExpression><![CDATA[$P{ruta_image}+"logosatcaj.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="206" y="28" width="57" height="10"/>
+				<textElement verticalAlignment="Middle">
+					<font size="7" isBold="false" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Fecha Emisión ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="86" y="7" width="365" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="15" isBold="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[RECORD DE VEHÍCULO]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a" isBlankWhenNull="false">
+				<reportElement key="textField" mode="Transparent" x="260" y="29" width="39" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="7" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="450" y="6" width="100" height="40"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="65">
+					<jr:codeExpression><![CDATA[$F{placa}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="22" y="1" width="55" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_papeleta}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="76" y="1" width="42" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_infraccion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="161" y="1" width="164" height="13"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombre_infractor}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="324" y="1" width="35" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{infraccion}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true">
+				<reportElement x="358" y="1" width="47" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{monto_multa}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="404" y="1" width="50" height="13"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado_papeleta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="1" width="22" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="117" y="1" width="42" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{persona_infractor_id}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="456" y="2" width="110" height="11"/>
+				<textElement verticalAlignment="Top">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{estado_papeleta}.equals( "Cancelado" )?$F{numero_resolucion}.equals( null )?"":"Desc.Res.Dep."+$F{numero_resolucion}:$F{res_descargo}.equals( "-" )?$F{numero_resolucion}.equals( null )?"":$F{numero_resolucion}:$F{res_descargo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement x="208" y="32" width="338" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[de lunes a viernes de 09:00 a.m. a 01:00 p.m. y de 03:00 p.m. a 06:00 p.m. – sábados de 09:00 a.m. a 12:00 m.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="313" y="14" width="187" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[de lunes a viernes de 08:00 a.m.  a 05:00 p.m.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="157" y="23" width="81" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[C.C. El Quinde – 2° piso ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="5" width="201" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Horarios y Centros de Atención:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="145" y="5" width="1" height="35" forecolor="#000000"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="158" y="14" width="176" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Av. Alameda de los Incas S/N – complejo Qhapac Ñan ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="18" width="147" height="14" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[         www.satcajamarca.gob.pe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="32" width="65" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Jr. Junín N° 1031 ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="227" y="23" width="282" height="8" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[de lunes a viernes de 01:00 p.m.  a 08:00 p.m. – sábados de 01:00 p.m. a 06:00 p.m.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="1" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement x="6" y="25" width="28" height="13"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ Nota :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="0" width="82" height="11"/>
+				<box>
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Pendiente     :]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="357" y="0" width="47" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumimporte}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="35" y="25" width="506" height="21" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Justified">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[1).-El presente Record de Vehículo, únicamente registra las infracciones cometidas dentro de la Provincia de Cajamarca.
+2).-El presente Record no registra las papeletas de infracción de tránsito aun no remitidas por la PNP a la fecha.]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

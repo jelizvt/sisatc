@@ -1,0 +1,207 @@
+package com.sat.sisat.usuario.business;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
+
+import org.jboss.security.auth.spi.Util;
+
+import com.sat.sisat.cobranzacoactiva.dto.PerfilCoactivo;
+import com.sat.sisat.common.dto.PermisoDTO;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.persistence.entity.SgRol;
+import com.sat.sisat.persistence.entity.SgRolUsuario;
+import com.sat.sisat.persistence.entity.SgUsuario;
+import com.sat.sisat.persistence.entity.SgUsuarioAcceso;
+import com.sat.sisat.predial.business.BaseBusiness;
+import com.sat.sisat.usuario.dao.UsuarioDao;
+import com.sat.sisat.usuario.dto.CajaPermisosDTO;
+import com.sat.sisat.usuario.dto.MenusPermisosDTO;
+import com.sat.sisat.usuario.dto.RolesUsuarioDTO;
+import com.sat.sisat.usuario.dto.UsuarioDTO;
+
+@Stateless
+public class UsuarioBo extends BaseBusiness implements UsuarioBoRemote {
+
+	private static final long serialVersionUID = -8302299678574876556L;
+	
+	private UsuarioDao userDao;
+
+	public UsuarioBo() {
+		
+	}
+
+	@PostConstruct
+	public void initialize() {
+		this.userDao = new UsuarioDao();
+    	setDataManager(this.userDao);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public UsuarioDTO getUsuarioLoginData(String userName) throws SisatException{
+		return userDao.getUsuarioLoginData(userName);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Map<Integer,String> getRolesUsuario(int userId){
+		return userDao.getRolesUsuario(userId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Set<PermisoDTO> getPermisos(int userId) throws SisatException {
+		return userDao.getPermisos(userId);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<MenusPermisosDTO> getMenusPermisos(int userId,int tipoMenuId) throws SisatException {
+		return userDao.getMenusPermisos(userId,tipoMenuId);
+	}
+	
+	@Override
+	public List<MenusPermisosDTO> getSubmenusPermisos(int userId,int tipoMenuId) throws SisatException {
+		return userDao.getSubmenusPermisos(userId,tipoMenuId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<SgUsuario> getAllSgUsuario() {
+		return userDao.getAllSgUsuario();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<SgRol> getAllSgRol(){
+		return userDao.getAllSgRol();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<RolesUsuarioDTO> getRolesHabilitados(int userId){
+		return userDao.getRolesHabilitados(userId);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Integer crearUsuario(SgUsuario us) throws SisatException {
+		/** Cifrando la nueva clave */
+		String clave = Util.createPasswordHash("SHA", Util.BASE64_ENCODING, null, null, us.getClave());
+		us.setClave(clave);
+		return userDao.crearUsuario(us);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean actualizaUsuario(SgUsuario us) {
+		return userDao.actualizaUsuario(us);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean guardarRolUsuario(int userId, Set<RolesUsuarioDTO> roles, String terminal){
+		// if ADMIN then always arrives one 
+		for(RolesUsuarioDTO rol : roles){
+			String estado = userDao.getEstadoRolUsuario(userId, rol.getRolId());
+			SgRolUsuario ru = new SgRolUsuario();
+			
+			if(estado == null){
+				if(rol.isHabilitado()){
+					ru.setUsuarioId(userId);
+					ru.setRolId(rol.getRolId());
+					ru.setEstado(Constante.ESTADO_ACTIVO);
+					ru.setFechaRegistro(DateUtil.getCurrentDate());
+					ru.setTerminal(terminal);
+					userDao.guardarRolUsuario(ru);
+				}
+			}else{
+				userDao.actualizarEstadoRolUsuario(userId, rol.getRolId(), rol.isHabilitado() ? Constante.ESTADO_ACTIVO : Constante.ESTADO_INACTIVO);
+			}
+			
+			/*if(rol.getRolId() == Constante.ROL_ADMIN_ID){
+				// Active role ADMIN and inactive other.
+				if(rol.isHabilitado()){
+					userDao.cambiarEstadoMenosAdmin(userId, rol.getRolId(), Constante.ESTADO_INACTIVO);
+				}
+			}*/
+		}
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<SgUsuarioAcceso> getUsuarioAcceso(int usuarioId, int rolId) {
+		Integer id = userDao.getRolUsuarioId(usuarioId, rolId);
+		if(id==null){
+			return null;
+		}
+		return userDao.getUsuarioAcceso(id);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Integer crearUsuarioAcceso(SgUsuarioAcceso ua, int rolId, int usuarioId) {
+		Integer id = userDao.getRolUsuarioId(usuarioId, rolId);
+		ua.setRolUsuarioId(id);
+		Integer uac = userDao.crearUsuarioAcceso(ua);
+		if(uac!=null){
+			userDao.inactivarUsuarioAcceso(ua.getRolUsuarioId(), uac);
+		}
+		return uac;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean changePassword(int userId, String claveActual, String claveNueva) throws SisatException, Exception{
+		/** Cifrando la nueva clave */
+		claveNueva = Util.createPasswordHash("SHA", Util.BASE64_ENCODING, null, null, claveNueva);
+		claveActual = Util.createPasswordHash("SHA", Util.BASE64_ENCODING, null, null, claveActual);
+		return userDao.changePassword(userId, claveActual, claveNueva);
+	}
+	
+	/**
+	 * Obtiene el perfil relacionado al modulo de coactiva
+	 */
+	public PerfilCoactivo getCargoUsuario(Integer usuarioId) throws Exception{
+		return userDao.getCargoUsuario(usuarioId);
+	}
+
+	@Override
+	public CajaPermisosDTO getPermisosCaja(int usuarioId) throws SisatException, Exception{
+		return userDao.getPermisosCaja(usuarioId);
+	}
+}

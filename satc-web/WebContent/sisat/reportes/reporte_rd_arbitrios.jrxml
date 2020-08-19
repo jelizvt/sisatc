@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporte_rd_arbitrios" language="groovy" pageWidth="2200" pageHeight="595" orientation="Landscape" columnWidth="2160" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true">
+	<property name="ireport.zoom" value="0.5644739300537792"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="p_lote_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[DECLARE @periodo INTEGER;
+select @periodo=anno_lote from dbo.cc_lote where lote_id=1953 and estado='1'
+
+DECLARE @fecha_emision DATETIME;
+select @fecha_emision=fecha_lote from dbo.cc_lote where lote_id=1953 and estado='1'
+
+select p.persona_id,isnull(p.nro_docu_identidad,'') nro_docu_identidad,p.apellidos_nombres,'RD ARBITRIOS' valor,acto.nro_acto,sc.descripcion tributo, @periodo periodo,@fecha_emision fecha_emision,
+ sum(l.insoluto) total_insoluto,sum(l.interes_capitalizado) total_interes_capitalizado,sum(l.interes_simple) total_interes_simple,sum(l.total_deuda) total_deuda_arbitrios,
+ pd.domicilio_completo,t.descripcion sector,tv.descripcion tipo_via,v.descripcion via, l.subconcepto_id ,
+ LEFT(CONVERT(VARCHAR, max(noti.fecha_notificacion), 103), 10) fecha_notificacion,max(motivo.descripcion) motivo_notificacion,max(ndor.apellidos_nombres) notificador
+ from dbo.mp_persona p
+ inner join dbo.cc_acto acto on (acto.persona_id=p.persona_id)
+ inner join dbo.mp_persona_domicilio pd on (pd.persona_id=p.persona_id and pd.estado='1')
+ inner join dbo.mp_direccion d on (d.persona_id=p.persona_id and pd.direccion_id=pd.direccion_id and d.estado='1')
+ inner join dbo.gn_ubicacion u on (u.ubicacion_id=d.ubicacion_id)
+ inner join dbo.gn_sector_lugar s on (s.sector_lugar_id=u.sector_lugar_id)
+ inner join dbo.gn_sector t on (t.sector_id=s.sector_id)
+ inner join dbo.gn_via v on (v.via_id=u.via_id)
+ inner join dbo.gn_tipo_via tv on (tv.tipo_via_id=v.tipo_via_id)
+ inner join (
+	 select ad.persona_id,sum(ad.insoluto) insoluto,sum(ad.interes_capitalizado) interes_capitalizado,sum(ad.interes_simple) interes_simple,sum(ad.total_deuda)total_deuda,
+	 ad.subconcepto_id
+	 from dbo.cc_acto_deuda ad where ad.concepto_id=3 and ad.lote_id=$P{p_lote_id}
+	 group by ad.persona_id,ad.subconcepto_id
+ ) l on (l.persona_id=p.persona_id)
+ inner join dbo.gn_subconcepto sc on (sc.subconcepto_id=l.subconcepto_id)
+ left join dbo.no_notificacion noti on (noti.acto_id=acto.acto_id and noti.estado='1')
+ left join dbo.no_motivo_notificacion motivo on (motivo.motivo_notificacion_id=noti.motivo_notificacion_id)
+ left join dbo.no_notificador ndor on (ndor.notificador_id=noti.notificador_id)
+ where p.estado='1' and acto.lote_id=$P{p_lote_id}
+ group by p.persona_id,l.subconcepto_id,sc.descripcion,p.nro_docu_identidad,p.apellidos_nombres,pd.domicilio_completo,t.descripcion,tv.descripcion,v.descripcion,acto.nro_acto,d.numero,u.ubicacion_id
+ order by t.descripcion,tv.descripcion,v.descripcion,d.numero,p.persona_id]]>
+	</queryString>
+	<field name="persona_id" class="java.lang.Integer"/>
+	<field name="nro_docu_identidad" class="java.lang.String"/>
+	<field name="apellidos_nombres" class="java.lang.String"/>
+	<field name="valor" class="java.lang.String"/>
+	<field name="nro_acto" class="java.lang.String"/>
+	<field name="tributo" class="java.lang.String"/>
+	<field name="periodo" class="java.lang.Integer"/>
+	<field name="fecha_emision" class="java.sql.Timestamp"/>
+	<field name="total_insoluto" class="java.math.BigDecimal"/>
+	<field name="total_interes_capitalizado" class="java.math.BigDecimal"/>
+	<field name="total_interes_simple" class="java.math.BigDecimal"/>
+	<field name="total_deuda_arbitrios" class="java.math.BigDecimal"/>
+	<field name="domicilio_completo" class="java.lang.String"/>
+	<field name="sector" class="java.lang.String"/>
+	<field name="tipo_via" class="java.lang.String"/>
+	<field name="via" class="java.lang.String"/>
+	<field name="subconcepto_id" class="java.lang.Integer"/>
+	<field name="fecha_notificacion" class="java.lang.String"/>
+	<field name="motivo_notificacion" class="java.lang.String"/>
+	<field name="notificador" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="67" height="20"/>
+				<textElement/>
+				<text><![CDATA[Codigo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="67" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Nro Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="177" y="0" width="182" height="20"/>
+				<textElement/>
+				<text><![CDATA[Apellidos y Nombres / Razon Social]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="359" y="0" width="81" height="20"/>
+				<textElement/>
+				<text><![CDATA[Valor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Nro Valor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="550" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Tributo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="660" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Periodo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="770" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Fecha de emision]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="880" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Total Insoluto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="990" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Total Interes Simple]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1100" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Total Deuda Arbitrios]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1210" y="0" width="220" height="20"/>
+				<textElement/>
+				<text><![CDATA[Domicilio Fiscal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1430" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Sector]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1540" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Tipo Via]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1650" y="0" width="110" height="20"/>
+				<textElement/>
+				<text><![CDATA[Via]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1760" y="0" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[Fecha Notificación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1860" y="0" width="119" height="20"/>
+				<textElement/>
+				<text><![CDATA[Tipo Notificación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1979" y="0" width="181" height="20"/>
+				<textElement/>
+				<text><![CDATA[Notificador]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="67" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{persona_id}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="67" y="0" width="110" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_docu_identidad}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="177" y="0" width="182" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellidos_nombres}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="359" y="0" width="81" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="440" y="0" width="110" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_acto}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="550" y="0" width="110" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tributo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="660" y="0" width="110" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{periodo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="770" y="0" width="110" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_emision}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="880" y="0" width="110" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_insoluto}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="990" y="0" width="110" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_interes_simple}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1100" y="0" width="110" height="10"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_deuda_arbitrios}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1210" y="0" width="220" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{domicilio_completo}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1430" y="0" width="110" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sector}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1540" y="0" width="110" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_via}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="1650" y="0" width="110" height="10"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{via}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="1760" y="0" width="100" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_notificacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="1860" y="0" width="119" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{motivo_notificacion}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="1979" y="0" width="181" height="10" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{notificador}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

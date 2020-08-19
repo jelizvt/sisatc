@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+	<h:form id="formRegistroNotificacionLotes">
+		<a4j:outputPanel id='outputregistrooficio'>
+		 <rich:panel style="width:100%;" id="outpanelcarga">
+			<f:facet name="header">		
+				Digitalizar Notificaciones
+			</f:facet>
+				<table width="100%" border="0" cellpadding="4" cellspacing="4">
+					<tr>
+						<td>
+							<a4j:commandButton value="Cargar Notificaciones Digitalizadas" rendered="#{!notificarLoteOrdinarioManaged.cargarImagenes}" 
+								style="width:300px;"  disabled="#{notificarLoteOrdinarioManaged.mostraResultadosDigitalizacion}"
+								action="#{notificarLoteOrdinarioManaged.procesarnotificacionesDigitalizadas}"
+								oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								reRender="datosResultadosdigitalizados,formRegistroNotificacionLotes" status="ajaxStatus"	/>
+						</td>
+						<td>
+							<h:outputText  rendered="#{!notificarLoteOrdinarioManaged.mostraResultadosDigitalizacion}"  style="font-weight:bold;color:green" value="Verifique que las Imágenes esten Actualizadas en la Ruta: #{notificarLoteOrdinarioManaged.directorio}" />
+						</td>
+						<td>
+							<a4j:commandButton value="Cargar Notificaciones Digitalizadas Duplicadas" rendered="#{notificarLoteOrdinarioManaged.cargarImagenes}" 
+								style="width:300px;" 
+								action="#{notificarLoteOrdinarioManaged.digitalizarPendientes}"
+								oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								reRender="datosResultadosdigitalizados,formRegistroNotificacionLotes" status="ajaxStatus"	/>
+						</td>
+					</tr>
+				</table>
+			</rich:panel>
+				
+			
+		<rich:panel style="width:100%;" id="datosResultadosdigi" rendered="#{notificarLoteOrdinarioManaged.mostraResultadosDigitalizacion}"  > 	
+				<f:facet name="header">		
+				  Resultado Notificaciones Digitalizadas
+				</f:facet>
+				<rich:dataTable  style="width:100%;" id="datosResultadosdigi1" value="#{notificarLoteOrdinarioManaged.noMasivaDigiNotif}" var="itemresul" 
+						rowKeyVar="row">
+					<rich:column id="x15" style="text-align:center;width:8%"  >
+		                <f:facet name="header">Cant. Correctos</f:facet>
+		                 <h:commandLink  ajaxSingle="true" id="newlink55" value="#{itemresul.cantCorrectos}" action="#{notificarLoteOrdinarioManaged.mostrarCorrecto}"
+		                    reRender="datosResultadosdetalle,formRegistroNotificacionLotes" >
+		            		 <f:setPropertyActionListener value="#{itemresul}" target="#{notificarLoteOrdinarioManaged.noMasivaDigiNotif}" id="mnd"/>
+		                </h:commandLink>
+		            </rich:column>
+					<rich:column id="x16" style="text-align:center;width:7%" >
+		                <f:facet name="header"  >Cant. Duplicadas</f:facet>
+		                <h:commandLink  ajaxSingle="true" id="newlink66" value="#{itemresul.cantDuplicado}" action="#{notificarLoteOrdinarioManaged.mostrarPendientes}"
+		                    reRender="datosResultadosdetalle,formRegistroNotificacionLotes" >
+		            		 <f:setPropertyActionListener value="#{itemresul}" target="#{notificarLoteOrdinarioManaged.noMasivaDigiNotif}" id="mnd"/>
+		                </h:commandLink>
+		            </rich:column>
+		            <rich:column id="x17" style="text-align:center;width:6%" >
+		                <f:facet name="header"  >Cant. Errores</f:facet>
+		                   <h:commandLink  ajaxSingle="true" id="newlink6" value="#{itemresul.cantErrores}" action="#{notificarLoteOrdinarioManaged.mostrarErrores}"
+		                    reRender="datosResultadosdetalle,formRegistroNotificacionLotes" >
+		            		 <f:setPropertyActionListener value="#{itemresul}" target="#{notificarLoteOrdinarioManaged.noMasivaDigiNotif}" id="mnd"/>
+		                </h:commandLink>
+		            </rich:column>
+		       </rich:dataTable>
+		</rich:panel>
+		
+				<rich:panel style="width:100%;" id="datosResulDetalledigitalizados" rendered="#{notificarLoteOrdinarioManaged.mostraDetalleResulDigit}"  > 	
+				<f:facet name="header">		
+				   Detalle de Acto/Rec Digitalizados
+				</f:facet>
+				<rich:dataTable  style="width:100%;" id="datosResulDetalledigitalizados1" value="#{notificarLoteOrdinarioManaged.listaDetalleMasivaDigiNot}" var="itemdigi" 
+						rowKeyVar="row">
+					<rich:column id="x19" style="text-align:center;width:8%"  >
+		                <f:facet name="header">Acto/Rec</f:facet>
+		                <h:outputText value="#{itemdigi.nroDocumento}"/>
+		            </rich:column>
+					<rich:column id="x20" style="text-align:center;width:7%" >
+		                <f:facet name="header"  >Fecha de Notificación</f:facet>
+		                <h:outputText value="#{itemdigi.fechaNotificacion}" />
+		            </rich:column>
+		            <rich:column id="x21" style="text-align:center;width:6%" >
+		                <f:facet name="header"  >Cod. Notif.</f:facet>
+		                <h:outputText value="#{itemdigi.notificacionId}"/>
+		            </rich:column>
+		            <rich:column id="x22" style="text-align:center;width:5%" >
+		                <f:facet name="header"  >Error Message</f:facet>
+		                <h:outputText value="#{itemdigi.errorMessage}"/>
+		            </rich:column>
+		            <rich:column id="x23" style="text-align:center;width:5%" rendered="#{notificarLoteOrdinarioManaged.cargarImagenes}"  >
+		                <f:facet name="header">
+		                <h:panelGroup>
+			                <h:commandLink  ajaxSingle="true" id="newlink16" action="#{notificarLoteOrdinarioManaged.seleccionarTodosPendientes}"
+			                    reRender="datosResultadosdetalle,formRegistroNotificacionLotes" >
+			                     <h:graphicImage value="/images/select_multiple.gif" height="20px" width="20px" style="border:0" />
+			                </h:commandLink>
+			                <rich:toolTip for="newlink16" value="Seleccionar Todos" ></rich:toolTip>
+			                <h:commandLink  ajaxSingle="true" id="newlink666" action="#{notificarLoteOrdinarioManaged.deSeleccionarTodosPendientes}"
+			                    reRender="datosResultadosdetalle,formRegistroNotificacionLotes" >
+			                     <h:graphicImage value="/images/deselect_multiple.gif" height="20px" width="20px" style="border:0" />
+			                </h:commandLink>
+			                <rich:toolTip for="newlink666" value="Deseleccionar Todos" ></rich:toolTip>
+		                </h:panelGroup>
+		                </f:facet>
+		                <h:selectBooleanCheckbox value="#{itemdigi.cargarImagen}" />
+		            </rich:column>
+		           
+				</rich:dataTable>
+		</rich:panel>
+	</a4j:outputPanel>		 			
+	</h:form>
+	
+	
+</ui:composition>

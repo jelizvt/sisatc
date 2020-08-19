@@ -1,0 +1,281 @@
+package com.sat.sisat.descargo.business;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import javax.persistence.Query;
+
+import com.sat.sisat.caja.dto.CjGenerico;
+import com.sat.sisat.caja.dto.DeudaDTO;
+import com.sat.sisat.caja.dto.ReciboPagoDetalleDTO;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.descargo.dao.DescargoDao;
+import com.sat.sisat.descargo.dto.ReciboPagoDescargo;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.papeleta.dto.FindPapeletas;
+import com.sat.sisat.persistence.entity.CdDescargo;
+import com.sat.sisat.persistence.entity.CjReciboPago;
+import com.sat.sisat.persistence.entity.GnTipoDocumento;
+import com.sat.sisat.persistence.entity.PaDescargoDe;
+import com.sat.sisat.predial.business.BaseBusiness;
+import com.sat.sisat.tramitedocumentario.dto.BusquedaExpedienteDTO;
+import com.sat.sisat.tramitedocumentario.dto.ItemBandejaEntradaDTO;
+
+
+@Stateless
+@TransactionManagement(value=TransactionManagementType.CONTAINER)
+public class DescargoBo extends BaseBusiness implements DescargoBoRemote {
+	
+	private static final long serialVersionUID = 3157204222828169427L;
+	
+	private DescargoDao service;
+	
+	@Resource
+	private SessionContext context;
+	
+    public DescargoDao getService() {
+    	return this.service;
+	}
+    
+    @PostConstruct
+    public void initialize(){
+    	this.service=new DescargoDao();
+    	setDataManager(this.service);
+    }
+    
+    /**
+	 * {@inheritDoc}
+	 */
+	
+    public  List<FindPapeletas> buscarPapeletasCriteria(FindPapeletas findPapeleta) throws Exception{
+		return getService().buscarPapeletasCriteria(findPapeleta);
+	}
+    
+    public  List<FindPapeletas> buscarPapeletasCriteriaDE(FindPapeletas findPapeleta) throws Exception{
+		return getService().buscarPapeletasCriteriaDE(findPapeleta);
+	}
+    
+    @Override
+	public List<DeudaDTO> obtenerTodaDeuda(int personaId ) throws SisatException{
+		return getService().obtenerTodaDeuda(personaId);
+	}
+    
+    @Override
+	public List<DeudaDTO> obtenerTodaDeudaConFecha(int personaId, Date fechaCompensacion ) throws SisatException{
+		return getService().obtenerTodaDeudaConFecha(personaId, fechaCompensacion);
+	}
+	
+    public List<DeudaDTO> obtenerTodaDeudaPapeletas(Integer personaId,Integer papeletaId) throws SisatException{
+		return getService().obtenerTodaDeudaPapeletas(personaId,papeletaId);
+	}
+    
+    public  List<DeudaDTO> obtenerTodaDeudaConFiltro(Integer personaId, Date fechaCompensacion,
+			Integer anioDeuda, Integer subConceptoId, Integer nroCuota) throws SisatException{
+    	return getService().obtenerTodaDeudaConFiltro(personaId, fechaCompensacion, anioDeuda,  subConceptoId, nroCuota);
+    }
+    
+    /**
+   	 * {@inheritDoc}
+   	 */
+   	
+//       @Override
+//   	public void descargarDeudas(String deudasAEliminar, int usuarioId) throws SisatException{
+//   		getService().descargarDeuda(deudasAEliminar, usuarioId);
+//   	}
+//      
+   /**
+  	 * {@inheritDoc}
+  	 */
+    
+    
+    @Override
+    public void descargarDeudas(CdDescargo cdDescargo, List<DeudaDTO> listaDeudasAEliminar,Date fechaCompensacion, Integer persona_transferencia, String espedientesIds
+    			, String descargarDeudas, List<ReciboPagoDescargo> recibos) throws SisatException {
+        try {
+            cdDescargo.setTerminal(getUser().getTerminal());
+            
+            String deudaId="";
+
+            for (DeudaDTO de : listaDeudasAEliminar) {
+            	deudaId=deudaId+","+String.valueOf(de.getDeudaId());    
+            }
+            getService().descargarDeuda(cdDescargo,deudaId,fechaCompensacion,persona_transferencia, espedientesIds, descargarDeudas,recibos);
+        
+        } catch (Exception ex) {
+            String msg = "No se ha podido eliminar la deuda.".concat(ex.getMessage());
+            throw new SisatException(msg);
+        }
+    }
+  	
+      @Override
+      public void descargarDeudas(CdDescargo cdDescargo, List<DeudaDTO> listaDeudasAEliminar) throws SisatException{
+    	  
+    	  try{
+	        	cdDescargo.setUsuarioId(getUser().getUsuarioId());
+	        	cdDescargo.setTerminal(getUser().getTerminal());
+	        	  
+	    		for (DeudaDTO de : listaDeudasAEliminar) {
+	    				
+					Integer Id=getService().ObtenerCorrelativoTabla("cd_descargo", 1);
+					cdDescargo.setDescargoId(Id);
+					cdDescargo.setDeudaId(de.getDeudaId());
+					cdDescargo.setInteres(de.getInteres());
+					cdDescargo.setReajuste(de.getReajuste());
+					cdDescargo.setTotalDeuda(de.getTotalDeuda());
+					cdDescargo.setFechaRegistroDeuda(de.getFechaRegistro());
+					
+					getService().descargarDeuda(cdDescargo, de.getDeudaId());
+	    		}
+    	  }catch (Exception ex) {
+  			String msg = "No se ha podido eliminar la deuda.".concat(ex.getMessage());  			
+  			throw new SisatException(msg);
+  		}
+  	}   
+  	public void rectificarDeuda(CdDescargo cdDescargo, DeudaDTO deudaARectificar) throws SisatException{
+  		Integer Id=getService().ObtenerCorrelativoTabla("cd_descargo", 1);
+		cdDescargo.setDescargoId(Id);
+  		getService().rectificarDeuda(cdDescargo,deudaARectificar);    	  
+  	}   
+    
+      @Override
+      public void descargarPapeletas(CdDescargo cdDescargo, List<DeudaDTO> listaDeudasAEliminar, Integer papeletaId) throws SisatException{
+    	  
+    	  try{
+    		  
+        	cdDescargo.setUsuarioId(getUser().getUsuarioId());
+        	cdDescargo.setTerminal(getUser().getTerminal());
+        	  
+    		for (DeudaDTO de : listaDeudasAEliminar) {
+				Integer Id=getService().ObtenerCorrelativoTabla("cd_descargo", 1);
+				cdDescargo.setDescargoId(Id);
+				cdDescargo.setDeudaId(de.getDeudaId());
+				cdDescargo.setInteres(de.getInteres());
+				cdDescargo.setReajuste(de.getReajuste());
+				cdDescargo.setTotalDeuda(de.getTotalDeuda());
+				cdDescargo.setFechaRegistroDeuda(de.getFechaRegistro());
+				getService().descargarDeuda(cdDescargo, de.getDeudaId());
+    		}
+    		
+    		String estadoPapeleta=Constante.ESTADO_PAPELETA_DESCARGADO;
+    		if(cdDescargo.getTipoDescargo()==Constante.TIPO_DESCARGO_PRESCRIPCION){
+    			estadoPapeleta=Constante.ESTADO_PAPELETA_PRESCRITO;
+    		}else if(cdDescargo.getTipoDescargo()==Constante.TIPO_DESCARGO_DESCARGO){
+    			estadoPapeleta=Constante.ESTADO_PAPELETA_DESCARGADO;
+    		}
+    		
+    		getService().actualizarEstadoPapeleta(papeletaId,estadoPapeleta);
+    		
+    		// Reseteando los puntos en proceso y puntos firmes
+    		getService().actualizarPuntosEnProcesoYFirmesPapeleta(papeletaId);
+    		
+    	  }catch (Exception ex) {
+  			String msg = "No se ha podido eliminar la deuda. ".concat(ex.getMessage());  			
+  			throw new SisatException(msg);
+  		  }
+  	}   
+      
+      @Override
+      public void descargarPapeletasDE(PaDescargoDe paDescargo,Integer papeletaId) throws SisatException{
+    	  try{
+    		    paDescargo.setUsuarioId(getUser().getUsuarioId());
+    		    paDescargo.setTerminal(getUser().getTerminal());
+          	  
+				Integer Id=getService().ObtenerCorrelativoTabla("pa_descargode", 1);
+				paDescargo.setDescargoId(Id);
+				
+				Integer result=getService().actualizarEstadoPapeleta(papeletaId,Constante.ESTADO_PAPELETA_DESCARGADO);
+				if(result>Constante.RESULT_PENDING){
+					em.merge(paDescargo);	
+				}
+    		    
+    	  }catch (Exception ex) {
+				String msg = "No se ha podido eliminar la deuda. ".concat(ex.getMessage());				
+				throw new SisatException(msg);
+  		  }
+  	 }
+      
+    /**
+    * {@inheritDoc}
+    */
+      	
+    @Override
+    public void modificarDeudas(int deudaId,BigDecimal insolutoCancelado, BigDecimal derechoEmisionCancelado, BigDecimal totalDeudaCancelada,int usuarioId) throws SisatException{
+      		getService().modificarDeudas( deudaId, insolutoCancelado, derechoEmisionCancelado, totalDeudaCancelada, usuarioId);
+      	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<GnTipoDocumento> obtenerTipoDocumentos() throws SisatException {
+		
+		List<GnTipoDocumento> result  = null;
+		try{
+			Query q = em.createQuery("from GnTipoDocumento"); 
+			
+			result = q.getResultList();
+				
+		}catch (Exception e) {
+			throw new SisatException(e.getMessage(),e);
+		}
+
+		return result;
+	}      
+    
+	// -=CRAMIREZ=-
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<GnTipoDocumento> obtenerTipoDocumentosDescargo() throws SisatException {
+		
+		List<GnTipoDocumento> result  = null;
+		try{
+			Query q = em.createQuery("from GnTipoDocumento where flag_descargo =1"); 
+			
+			result = q.getResultList();
+				
+		}catch (Exception e) {
+			throw new SisatException(e.getMessage(),e);
+		}
+
+		return result;
+	} 
+	
+	@Override
+	public List<ItemBandejaEntradaDTO> obtenerExpedientesContibuyente(int persona_id, String tipos_tramite)
+			throws SisatException {
+		List<ItemBandejaEntradaDTO> list = new ArrayList<ItemBandejaEntradaDTO>();
+		list = service.obtenerExpedientesContibuyente(persona_id, tipos_tramite);
+		return list;
+	}
+	
+	@Override
+	public ArrayList<ReciboPagoDescargo> obtenerRecibosPagoDescargo(int personaId)throws Exception{
+		return service.obtenerRecibosPagoDescargo(personaId);
+	}
+
+	@Override
+	public ArrayList<ReciboPagoDetalleDTO> obtenerDeudasRecibo(int reciboId) throws Exception {
+		// TODO Auto-generated method stub
+		return service.obtenerDeudasRecibo(reciboId);
+	}
+	
+	@Override
+	public int validaNumeroDocumento(String nroDocumento) throws Exception {
+		// TODO Auto-generated method stub
+		return service.validaNumeroDocumento(nroDocumento);
+	}
+	
+	/*@Override
+	public int validarComseptosdescargar(int reciboId) throws Exception {
+		// TODO Auto-generated method stub
+		return service.obtenerDeudasRecibo(reciboId);
+	}*/
+   
+}
+	

@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:form id="formReportePartidas">
+	<style>
+.col1 {
+	vertical-align: top;
+	width: 480px;
+}
+
+.col2 {
+	vertical-align: top;
+	width: 260px;
+}
+
+.col3 {
+	vertical-align: top;
+	width: 260px;
+}
+.col1recaudacion{
+	width: 160px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+	height: 25px;
+}
+
+.col2recaudacion{
+	width: 88px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+}
+</style>
+<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<rich:panel>
+		<f:facet name="header"> REPORTE CONSOLIDADO CAJA</f:facet>
+		<h:panelGrid columns="6">
+						<h:outputLabel value="Fecha Inicio">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{generarPartidasManaged.fechaInicioCJ}" datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Ingrese una fecha de inicio" enableManualInput="true" inputStyle="width: 60px;padding-left: 5px;" inputClass="maskDate"></rich:calendar>
+			<h:outputLabel value="Fecha fin">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{generarPartidasManaged.fechaFinCJ}" datePattern="dd/MM/yyyy" inputSize="8" required="true" 
+				requiredMessage="Ingrese una fecha fin" enableManualInput="true" inputStyle="width: 60px;padding-left: 5px;" inputClass="maskDate"></rich:calendar>
+			<a4j:commandButton id="id_buttonDescargaReporteConsolidado" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.reporteConsolidadoCaja\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>									
+							
+	<!-- XLS-->
+	
+	<a4j:commandButton id="id_buttonDescargaReporteConsolidadoXLS" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar en Excel"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.reporteConsolidadoCajaXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>									
+													
+					</h:panelGrid>
+					
+										<h:commandLink id="linkId11" styleClass="reporteConsolidadoCaja" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesConsolidadoCaja}" />
+<!-- 					<a4j:commandLink styleClass="reporteConsolidadoCaja" value="sasas" style="display: none;" -->
+<!-- 						action="#{generarPartidasManaged.generarReportesConsolidadoCaja}" />	 -->
+					<h:commandLink id="linkId10" styleClass="reporteConsolidadoCajaXLS" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesConsolidadoCajaXLS}" />
+<!-- 					<a4j:commandLink styleClass="reporteConsolidadoCaja" value="sasas" style="display: none;" -->
+<!-- 						action="#{generarPartidasManaged.generarReportesConsolidadoCaja}" />	 -->
+					
+	</rich:panel>
+
+
+	<rich:panel id="idPanelReportePartidas">
+		<f:facet name="header">GENERAR REPORTE DE PARTIDAS</f:facet>
+		<h:panelGrid columns="5">
+			<h:outputLabel value="Fecha Inicio">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{generarPartidasManaged.fechaInicio}" datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Ingrese una fecha de inicio" enableManualInput="true" inputStyle="width: 60px;padding-left: 5px;" inputClass="maskDate"></rich:calendar>
+			<h:outputLabel value="Fecha fin">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{generarPartidasManaged.fechaFin}" datePattern="dd/MM/yyyy" inputSize="8" required="true" 
+				requiredMessage="Ingrese una fecha fin" enableManualInput="true" inputStyle="width: 60px;padding-left: 5px;" inputClass="maskDate"></rich:calendar>
+			<a4j:commandButton value="Buscar" action="#{generarPartidasManaged.buscar}"
+				oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')':''}"
+				reRender="richDataTableCajeros,dataTableCajerosRecaudacion, panelButtons" status="ajaxStatus" >
+				<rich:jQuery id="maskedo3" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" />
+			</a4j:commandButton>
+		</h:panelGrid>
+		<h:panelGrid columns="3" columnClasses="col1, col2, col3">
+			<rich:dataTable id="richDataTableCajeros" value="#{generarPartidasManaged.listaCajeros}" var="item" width="462px">
+				<f:facet name="header"> Reporte Cajas Aperturadas y Cerradas</f:facet>
+				<rich:column style="background-color:#{item.estado == 1?'yellow':'#FFFFFF'}" width="95px">
+					<f:facet name="header">Usuario Cajero</f:facet>
+					<h:outputText value="#{item.nombreUsuario}" />
+				</rich:column>
+				<rich:column style="background-color:#{item.estado == 1?'yellow':'#FFFFFF'}" width="110px">
+					<f:facet name="header">Fecha de apertura</f:facet>
+					<div align="center">
+					<h:outputText value="#{item.fechaApertura}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+					</h:outputText>
+					</div>
+				</rich:column>
+				<rich:column style="background-color:#{item.estado == 1?'yellow':'#FFFFFF'}" width="110px">
+					<f:facet name="header">Fecha Cierre</f:facet>
+					<div align="center">
+					<h:outputText value="#{item.fechaCierre}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+					</h:outputText>
+					</div>
+				</rich:column>
+				<rich:column style="background-color:#{item.estado == 1?'yellow':'#FFFFFF'}" width="60px">
+					<f:facet name="header">Apertura ID</f:facet>
+					<div align="center">
+					<h:outputText value="#{item.aperturaId}" />
+					</div>
+				</rich:column>
+				<rich:column style="background-color:#{item.estado == 1?'yellow':'#FFFFFF'}" width="40px">
+					<f:facet name="header">Estado</f:facet>
+					<div align="center">
+					<h:outputText value="#{item.estadoDescripcion}" />
+					</div>
+				</rich:column>
+			</rich:dataTable>
+			<h:panelGroup id="dataTableCajerosRecaudacion">
+			<rich:dataTable  value="#{generarPartidasManaged.listaCajeroRecaudacion}" var="iter" width="250px" first="1">
+				<f:facet name="header"> Reporte de recaudacion</f:facet>
+				<rich:column style="background-color:#{iter.estado == '1'?'yellow':'#FFFFFF'}" width="81px">
+					<f:facet name="header">Usuario Cajero</f:facet>
+					<h:outputText value="#{iter.nombreUsuario}" />
+				</rich:column>
+				<rich:column style="background-color:#{iter.estado == '1'?'yellow':'#FFFFFF'}" width="62px">
+					<f:facet name="header">Apertura ID</f:facet>
+					<div align="center">
+					<h:outputText value="#{iter.aperturaId}" />
+					</div>
+				</rich:column>
+				<rich:column style="background-color:#{iter.estado == '1'?'yellow':'#FFFFFF'}" width="81px">
+					<f:facet name="header">Monto</f:facet>
+					<div align="right">
+						<h:outputText value="#{iter.monto}">
+							<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="#{msg['param.localecurrency']}" />
+						</h:outputText>
+					</div>
+				</rich:column>
+			</rich:dataTable>
+				<h:panelGrid columns="2" columnClasses="col1recaudacion, col2recaudacion" cellpadding="0" cellspacing="0" rendered="#{not empty generarPartidasManaged.listaCajeros}">
+					<h:outputText value="Total Recaudado" />
+					<h:outputText value="#{generarPartidasManaged.listaCajeroRecaudacion.get(0).monto}">
+						<f:convertNumber minFractionDigits="2" maxFractionDigits="2" locale="#{msg['param.localecurrency']}" />
+					</h:outputText>
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGrid columns="1" id="panelButtons">
+				<a4j:outputPanel rendered="#{not empty generarPartidasManaged.listaCajeros}">
+					<h:panelGrid columns="1" cellspacing="0" cellpadding="0">
+					<a4j:commandButton id="id_buttonPartidaXLS" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar Reporte de partidas en XLS"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+					<a4j:commandButton id="id_buttonPartidaPDF" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar Reporte de partidas en PDF"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaPDF\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+					
+					<h:panelGroup >
+						<h:panelGrid columns="2" cellspacing="0" cellpadding="0">
+							<h:selectOneMenu value="#{generarPartidasManaged.partidaId}">
+							<f:selectItem itemValue="124" itemLabel="Reporte Derechos y Obligaciones"/>
+							<f:selectItem itemValue="125" itemLabel="Reporte Guardianía - Depósito de Vehículos"/>
+							<f:selectItem itemValue="126" itemLabel="Reporte Derecho de Permiso de Operaciones	"/>
+							<f:selectItem itemValue="127" itemLabel="Reporte Derecho de Inscripcion-Transportes" />
+							<f:selectItem itemValue="128" itemLabel="Reporte Otros Permisos Provicionales Trans.Gener." />
+							<f:selectItem itemValue="129" itemLabel="Reporte Formularios" />
+							<a4j:support event="onchange" ajaxSingle="true"></a4j:support>
+							</h:selectOneMenu> 
+							<a4j:commandButton id="id_buttonReportePartidaDetalle" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.reportePartidaDetallado\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+						</h:panelGrid>				
+					</h:panelGroup>
+					
+					
+					<a4j:commandButton id="id_buttonReporteSinReparticion" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar Reporte de partidas sin reparticion"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.prueba2\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+					<a4j:commandButton id="id_buttonReporteCuentas" action="#{generarPartidasManaged.verCuentas}" value="Ver Cuentas"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'window.open(\'/satc/sisat/caja/ReporteCuentas.jsf\',\'Reporte Cuentas\',\'height= 750px, width=800px\');return false; ': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+					
+					<a4j:commandButton id="id_buttonPartidaSOATXLS" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar Reporte de partidas SOAT en XLS"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+					<a4j:commandButton id="id_buttonPartidaSOATPDF" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar Reporte de partidas SOAT en PDF"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATPDF\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+					
+					<a4j:commandButton id="id_buttonPartidaDRTPEXLS" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar Reporte de partidas MT en XLS"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaMTXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+					
+					<a4j:commandButton id="id_buttonPartidaDRTPEPDF" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar Reporte de partidas MT en PDF"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaMTPDF\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+			
+					<a4j:commandButton id="id_buttonPartidaDRTCXLS" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar Reporte de partidas DRTC en XLS"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaMTDRTCXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+					
+					<a4j:commandButton id="id_buttonPartidaDRTCPDF" action="#{generarPartidasManaged.previewPartidas}"
+						value="Generar Reporte de partidas DRTC en PDF"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaMTDRTCPDF\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+
+<!-- 					<h:panelGrid columns="4"> -->
+<!-- 						<h:outputLabel value="Reporte Consolidado: " /> -->
+<!-- 						<h:selectOneMenu value="#{generarPartidasManaged.anhoSeleccionado}"> -->
+<!-- 							<f:selectItem noSelectionOption="true" itemLabel="Seleccione"/> -->
+<!-- 							<f:selectItems value="#{generarPartidasManaged.listadoAnhos}" var="ite" itemLabel="#{ite.value}" itemValue="#{ite.key}" /> -->
+<!-- 							<a4j:support event="onchange" reRender="panelDias" action="#{generarPartidasManaged.cambioAnho}" ajaxSingle="true"></a4j:support> -->
+<!-- 						</h:selectOneMenu> -->
+<!-- 						<a4j:outputPanel id="panelDias">					 -->
+<!-- 						<h:selectOneMenu value="#{generarPartidasManaged.mesSeleccionado}"> -->
+<!-- 							<f:selectItems value="#{generarPartidasManaged.listadoMeses}" var="item" ></f:selectItems>												 -->
+<!-- 						</h:selectOneMenu> -->
+<!-- 						</a4j:outputPanel> -->
+<!-- 						<a4j:commandButton id="id_buttonDescargaReporteConsolidado" action="#{generarPartidasManaged.previewPartidas}" -->
+<!-- 						value="Generar" -->
+<!-- 						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.reporteConsolidadoCaja\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };"> -->
+<!-- 					</a4j:commandButton>									 -->
+<!-- 					</h:panelGrid> -->
+					
+					<h:panelGrid>					
+					<h:commandLink id="linkIdPDF" styleClass="pruebaPDF" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasPDF}" />
+					<h:commandLink id="linkIdXLS" styleClass="pruebaXLS" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasXLS}" />
+						
+					<h:commandLink id="linkIdSOATPDF" styleClass="pruebaSOATPDF" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasSOATPDF}" />
+					<h:commandLink id="linkIdSOATXLS" styleClass="pruebaSOATXLS" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasSOATXLS}" />
+					
+					<h:commandLink id="linkIdMTPDF" styleClass="pruebaMTPDF" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasMTPDF}" />
+					<h:commandLink id="linkIdMTXLS" styleClass="pruebaMTXLS" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasMTXLS}" />
+							
+					<h:commandLink id="linkId2" styleClass="prueba2" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasSinReparticion}" />
+						
+					<h:commandLink id="linkId3" styleClass="reportePartidaDetallado" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidaDetalle}" />
+					
+					<h:commandLink id="linkIdMTMPCXLS" styleClass="pruebaMTMPCXLS" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasMPCXLS}" />
+					<h:commandLink id="linkIdMTMPCPDF" styleClass="pruebaMTMPCPDF" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasMPCPDF}" />
+						
+					<h:commandLink id="linkIdMTDRTCXLS" styleClass="pruebaMTDRTCXLS" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasDRTCXLS}" />
+					<h:commandLink id="linkIdMTDRTCPDF" styleClass="pruebaMTDRTCPDF" value="sasas" style="display: none;"
+						action="#{generarPartidasManaged.generarReportesPartidasDRTCPDF}" />
+					</h:panelGrid>
+					</h:panelGrid>					
+				</a4j:outputPanel>
+			</h:panelGrid>
+		</h:panelGrid>
+	</rich:panel>
+</h:form>
+</html>

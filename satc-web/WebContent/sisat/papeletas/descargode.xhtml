@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+<style type="">
+
+.classTblDeuda tr:nth-child(odd) {
+background-color: #F2F2F2;
+color: #000000;
+}
+
+.footerDeudas {
+	text-align: right;
+	margin-left: 100px;
+}
+
+.col1tblDeuda{
+	border-right: solid 1px silver;
+	border-bottom: solid 1px silver;
+	padding: 4px 4px 4px 4px;
+	font-size: 11px;
+	color: black;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.classTblDeuda{
+	border-spacing: 0px;
+	border-left: solid 1px silver;
+
+}
+.headerTblDeudas{
+border-right: solid 1px silver;
+border-bottom: solid 1px silver;
+padding: 4px 4px 4px 4px;
+text-align: center;
+font-size: 11px;
+color: black;
+font-family: Arial,Verdana,sans-serif;
+white-space: nowrap;
+background-color: #EAF0F8;
+}
+
+.richPanelBodyOnlyZoneRefresh{
+	padding: 0px;
+}
+.richPanelOnlyZoneRefresh{
+	border-width: 0px;
+	border-style: solid;
+	padding: 0px;
+	background-color: white;
+	border-color: silver;
+}
+</style>	
+		<h:form id="frmDescargoPapeletas" >
+			<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+			<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+			<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		
+		
+			<rich:hotKey key="return"
+				handler="#{rich:element('id_commandbuscar')}.click()"
+				selector="#frmDescargoPapeletas" />
+					
+			<rich:panel id="panelPapeletas">
+		
+				<f:facet  name="header">		
+					DESCARGO DE PAPELETAS
+				</f:facet>
+				<table border="0" width="100%;" >
+					<tr>
+						<td align="left" width="150px" >
+								<h:outputText value="Numero de papeleta :" />
+						</td>
+						<td width="150px" >
+							 <h:inputText id="id_inputnumeropapeleta" maxlength="50" style="width:100px;" 
+							 value="#{descargoDEManaged.numeroPapeleta}" 
+							 onkeypress = "return soloNumeros(event);"
+							 >
+							 </h:inputText>
+						</td>
+						<td width="150px" >
+							<a4j:commandButton id="id_commandbuscar" value="Buscar" style="width:100px;"	
+							action="#{descargoDEManaged.buscar}" status="ajaxStatus" reRender="panelPapeletas" />		
+						</td>
+						<td>
+						</td>
+					</tr>		
+				</table>
+				
+				<table  width="100%;" cellpadding="0" cellspacing="0" border="1" align="center">
+					<tbody>
+						<tr><td class="headerTblDeudas" align="center" style="font-size: 18px">LISTA DE PAPELETAS - DOSAJE ETILICO</td></tr>
+						<tr>
+							<td>
+								<rich:panel id="col1tblDeuda" style="bgcolor:white" bodyClass="richPanelBodyOnlyZoneRefresh" styleClass="richPanelOnlyZoneRefresh">	
+								<!-- HEADER TABLE  h:datatable que contiene solo las cabecera de la tabla de deudas en cada elemento del header de esta se inserto un div que contiene la dimension de la columna acorde a las columnas
+								de la tabla de datos de deuda-->
+									<h:dataTable var="itemTemp"
+										styleClass="classTblDeuda" headerClass="headerTblDeudas" cellpadding="0" cellspacing="0" width="100%" >
+										<h:column>
+											<f:facet name="header">
+												<div style="width: 30px; text-align: center;">Item</div>
+											</f:facet>
+										</h:column>
+										<h:column>
+											<f:facet name="header">
+												<div style="width: 40px; text-align: center;">Nro Papeleta</div>
+											</f:facet>
+										</h:column>
+										<h:column>
+											<f:facet name="header">
+												<div style="width: 100px; text-align: center;">Fecha Infraccion</div>
+											</f:facet>
+										</h:column>
+										
+										<h:column>
+											<f:facet name="header">
+												<div style="width: 50px; text-align: center;">Código</div>
+											</f:facet>
+										</h:column>
+										<h:column >
+											<f:facet name="header">
+												<div style="width: 150px; text-align: center;">Infractor</div>
+											</f:facet>
+										</h:column>	
+										<h:column>
+											<f:facet name="header">
+												<div style="width: 40px; text-align: center;">Tipo Doc.</div>
+											</f:facet>
+										</h:column>
+										<h:column>									
+											<f:facet name="header">
+												<div style="width: 40px; text-align: center;">Num. Doc.</div>
+											</f:facet>
+										</h:column>									
+										<h:column>
+											<f:facet name="header">
+												<div style="width: 40px; text-align: center;">Licencia</div>
+											</f:facet>
+										</h:column>
+										<h:column>
+											<f:facet name="header">
+												<div style="width: 40px; text-align: center;">Placa</div>
+											</f:facet>
+										</h:column>
+										<h:column>
+											<f:facet name="header">
+												<div style="width: 30px; text-align: center;">Infraccion</div>
+											</f:facet>
+										</h:column>
+										<h:column>
+											<f:facet name="header">
+												<div style="width: 50px; text-align: center;">Estado Pa.</div>
+											</f:facet>
+										</h:column>	
+										<h:column>
+											<f:facet name="header">
+												<div style="width: 20px; text-align: center;">Sel</div>
+											</f:facet>
+										</h:column>
+									</h:dataTable>
+									
+									<div style="max-height: 550px; width:100%; overflow: overlay">
+										<h:dataTable id="tblDeudasPer" value="#{descargoDEManaged.listCtaCte}" var="item" height="250"
+											sortMode="single" rowKeyVar="index" headerClass="headerTblDeudas" footerClass="footerDeudas"
+											styleClass="classTblDeuda" cellpadding="0" cellspacing="0" binding="#{table}" width="100%" >
+											<h:column>
+												<div style="width: 30px; text-align: center;">
+													<h:outputText value="#{table.rowIndex + 1}" />
+												</div>
+											</h:column>
+											<h:column>
+												<div style="width: 40px; text-align: center;">
+													<h:outputText value="#{item.numPapeleta}" />
+												</div>
+											</h:column>
+											<h:column>
+												<div style="width: 100px; text-align: center;">
+													<h:outputText value="#{item.fechaInfraccion }" >
+														<f:convertDateTime locale="#{msg['param.localedate']}" timeZone="#{aplicationManaged.timeZone}"
+															pattern="#{msg['param.datepattern']}" />
+													</h:outputText>
+												</div>
+											</h:column>									
+											<h:column>
+												<div style="width: 50px" align="center">
+													<h:outputText value="#{item.infractorId}" />
+												</div>
+											</h:column>
+											<h:column >
+												<div style="width: 150px; text-align: center;">
+													<h:outputText value="#{item.infractor}" />
+												</div>
+											</h:column>
+											<h:column>
+												<div style="width: 40px; text-align: center;">
+													<h:outputText value="#{item.descTipoDocumento}">
+													</h:outputText>
+												</div>
+											</h:column>
+											<h:column>
+												<div style="width: 40px; text-align: right;">
+													<h:outputText value="#{item.numeroDocumento}" />
+												</div>
+											</h:column>
+											<h:column>
+												<div style="width: 40px; text-align: right;">
+													<h:outputText value="#{item.numeroLicencia}" />
+												</div>
+											</h:column>
+											<h:column>
+												<div style="width: 40px; text-align: right;">
+													<h:outputText value="#{item.placa}" />
+												</div>
+											</h:column>
+											<h:column>
+												<div style="width: 30px; text-align: right;">
+													<h:outputText value="#{item.infraccion}" />
+												</div>
+											</h:column>
+											
+											<h:column>
+												<div style="width: 50px; text-align: right;">
+													<h:outputText value="#{item.estadoPapeleta}" />
+												</div>
+											</h:column>
+											<h:column>
+												<div style="width: 20px; text-align: center;">
+													<h:selectBooleanCheckbox value="#{item.selected}" valueChangeListener="#{descargoDEManaged.valueChangeListenerItem(item)}" >													
+														<a4j:support event="onchange" ajaxSingle="true"/>
+													</h:selectBooleanCheckbox>
+												</div>
+											</h:column>
+										</h:dataTable>
+									</div>
+									<div align="right" style="background-color: #CCCCCC;">
+										<h:panelGrid columns="9" styleClass="buttons"
+											columnClasses="col9">
+											
+											<a4j:commandLink value="Descargo" action="#{descargoDEManaged.inicioDescargo}" 
+												oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'paneldescargo\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+												reRender="col1tblDeuda,panelPapeletas,paneldescargo" styleClass="buttonRed"
+												status="ajaxStatus"  >
+												
+											</a4j:commandLink>
+										</h:panelGrid>
+									</div>
+								</rich:panel>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+		 </rich:panel>
+	</h:form>	 			
+	
+	<!-- PANEL DE DESCARGOS -->
+	<rich:modalPanel id="paneldescargo" autosized="true" moveable="true" resizeable="false" minWidth="450" minHeight="250">
+		<f:facet name="header">DESCARGO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepaneldescargo"
+					styleClass="hidelink" />
+				<rich:componentControl for="paneldescargo" attachTo="iconclosepaneldescargo" 
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmDescargo">	
+			<rich:panel style="width:100%;"	id="id_descargoDescargo"> 
+				<table border="0" width="100%">
+					<tr>
+						<td align="left" width="130px">							
+							<h:outputText value="Tipo de Documento "/><span style="color: red">*</span>
+						</td>
+						
+						<td width="320px" colspan="3">
+							<rich:comboBox 
+							width="530px" defaultLabel="Seleccione"			
+							value="#{descargoDEManaged.tipoDocumento}"
+							style="width:530px; border: none"
+							id="cmbTipoDocumento" valueChangeListener="#{descargoDEManaged.changeListenerCmbTipoDocumento}"
+							immediate="true"
+							required="true" requiredMessage="Seleccione el Tipo de Documento"
+							>
+							<f:selectItems id="id_lsttipodocumento" value="#{descargoDEManaged.lstTipoDocumento}"/>
+							<a4j:support id="id_supportlsttipodocumento1" event="onchange" ajaxSingle="true" />						
+							</rich:comboBox>
+						</td>
+					</tr>
+					<tr>
+						<td align="left" width="130px">							
+							<h:outputText value="Nro de Documento" /><span style="color: red">*</span>
+						</td>
+						<td align="left" width="320px" colspan="3">
+							<h:inputText size="100" value="#{descargoDEManaged.nroDocumento}" maxlength="100"
+							required="true" requiredMessage="Indique el Numero de Documento"
+							/>
+						</td>
+					</tr>
+					<tr>
+						<td align="left" width="130px">
+							<h:outputText value="Fecha de Documento" /><span style="color: red">*</span>
+						</td>
+						<td width="320px" >
+							<rich:calendar
+								locale="en/US" direction="bottom-right"						
+								datePattern="dd/MM/yyyy"						
+								enableManualInput="true" inputClass="maskDate"
+								inputStyle="width:100px" id="id_fechadedocumento"
+								value="#{descargoDEManaged.fechaDocumento}"
+								required="true" requiredMessage="Indique la Fecha de Documento"
+								>
+							</rich:calendar> 
+							<rich:jQuery id="maskedo1" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" />
+						</td>
+						<td>
+							<h:outputText value="Total a Descargar" style="font-weight:bold"/>	
+						</td>
+						
+						<td>
+							<h:outputText value="#{descargoDEManaged.totalDescargo}" style="color: red; font-weight:bold; font-size:14px;" />
+						</td>
+					</tr>
+					<tr>
+						<td align="left" width="130px">							
+							<h:outputText value="Observacion" /><span style="color: red">*</span>
+						</td>
+						<td align="left" width="320px" colspan="3">
+							<h:inputTextarea value="#{descargoDEManaged.observacion}" cols="100" rows="5" maxlength="500"
+							required="true" requiredMessage="Indique la Observacion"
+							>
+							</h:inputTextarea>
+						</td>
+					</tr>			
+			
+				</table>
+			</rich:panel>			
+			
+			<br />
+				<h:outputText id="succ2" style="font-weight:bold;color:green" value="#{msg['des.messageMPConfirmDescargo']}" />
+			<br />
+				
+			<h:panelGrid id="buttons2" columns="2" columnClasses="coldialogbutton1, coldialogbutton2" width="100%">
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelSi']}" style="width:100px;"
+						action="#{descargoDEManaged.descargo}"
+						reRender="panelPapeletas"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'paneldescargo\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};     " >						
+				</a4j:commandButton>
+				
+				<a4j:commandButton value="#{msg['elm.MPConfirmLabelNo']}" style="width:100px;"
+						onclick="#{rich:component('paneldescargo')}.hide();return false;" />
+			</h:panelGrid>
+		</h:form>	
+	</rich:modalPanel>
+	
+	<h:panelGrid columns="2" align="center" width="100%">
+		<a4j:commandButton value="Salir" style="width:150px;"
+			action="#{descargoDEManaged.salir}" reRender="panelinclude">
+			<f:setPropertyActionListener value="/sisat/principal.xhtml" target="#{sessionManaged.page}" />
+		</a4j:commandButton>
+	</h:panelGrid>
+
+</ui:composition>

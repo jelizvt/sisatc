@@ -1,0 +1,149 @@
+package com.sat.sisat.predial.managed;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+import com.sat.sisat.calculo.predial.GeneracionMasiva;
+import com.sat.sisat.calculo.vehicular.GeneracionMasivaVehicular;
+import com.sat.sisat.common.business.GeneralBoRemote;
+import com.sat.sisat.common.util.BaseManaged;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.determinacion.vehicular.business.DeterminacionVehicularBoRemote;
+import com.sat.sisat.predial.business.CalculoPredialBoRemote;
+import com.sat.sisat.predial.business.RegistroPrediosBoRemote;
+
+@ManagedBean
+@ViewScoped
+public class GeneracionMasivaManaged extends BaseManaged{
+	
+	@EJB
+	CalculoPredialBoRemote calculoPredialBo;
+	
+	@EJB
+	GeneralBoRemote generalBo;
+	
+	@EJB
+	RegistroPrediosBoRemote registroPredioBo;
+	
+	@EJB
+	DeterminacionVehicularBoRemote determinacionVehicularBo;
+	
+	private Integer personaInicioDjId; 
+	private Integer personaFinDjId;
+	private Integer periodo=2019;
+	
+	public GeneracionMasivaManaged(){
+		
+	}
+	
+	@PostConstruct
+	public void init(){
+		
+	}
+	
+	public void generar(){
+		try{
+			if(getPersonaInicioDjId()!=null&&getPersonaInicioDjId()>=0&&getPersonaFinDjId()!=null&&getPersonaFinDjId()>=0){
+				GeneracionMasiva generacion=new GeneracionMasiva(registroPredioBo,calculoPredialBo,generalBo);
+				generacion.setAnnioDj(periodo);
+				generacion.setUsuarioId(Constante.MOTIVO_DECLARACION_MASIVA);
+				generacion.registroDjMasiva(getPersonaInicioDjId(),getPersonaFinDjId());	
+			}
+			//generarDeterminacion();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void generarDeterminacion(){
+		try{
+			if(getPersonaInicioDjId()!=null&&getPersonaInicioDjId()>=0&&getPersonaFinDjId()!=null&&getPersonaFinDjId()>=0){
+				GeneracionMasiva generacion=new GeneracionMasiva(registroPredioBo,calculoPredialBo,generalBo);
+				generacion.setAnnioDj(2017);
+				generacion.setUsuarioId(Constante.MOTIVO_DECLARACION_MASIVA);
+				//Aquí se genera la determinación
+				generacion.determinacionMasiva(getPersonaInicioDjId(),getPersonaFinDjId());	
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void generarDeterminacionPredial(){
+		try{
+			if(getPersonaInicioDjId()!=null&&getPersonaInicioDjId()>=0&&getPersonaFinDjId()!=null&&getPersonaFinDjId()>=0){
+				GeneracionMasiva generacion=new GeneracionMasiva(registroPredioBo,calculoPredialBo,generalBo);
+				generacion.setAnnioDj(periodo);
+				generacion.setUsuarioId(Constante.MOTIVO_DECLARACION_MASIVA);
+				generacion.determinacionPredialMasiva(getPersonaInicioDjId(),getPersonaFinDjId());	
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}	
+	
+	public void generarDeterminacionCorrigeArbitrios(){
+		try{
+			if(getPersonaInicioDjId()!=null&&getPersonaInicioDjId()>=0&&getPersonaFinDjId()!=null&&getPersonaFinDjId()>=0){
+				GeneracionMasiva generacion=new GeneracionMasiva(registroPredioBo,calculoPredialBo,generalBo);
+				generacion.setAnnioDj(2019);
+				generacion.setUsuarioId(Constante.MOTIVO_DECLARACION_MASIVA);
+				generacion.determinacionMasivaCorrigeArbitrios(getPersonaInicioDjId(),getPersonaFinDjId());	
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void generarDeterminacionVehicular(){
+		try{
+			
+			GeneracionMasivaVehicular generacion=new GeneracionMasivaVehicular(determinacionVehicularBo);
+			generacion.setAnnioDj(periodo);
+			generacion.setUsuarioId(Constante.MOTIVO_DECLARACION_MASIVA);
+			generacion.duplicarDjVehicular(personaInicioDjId,personaFinDjId);	
+			
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	//inicio arb. 2017
+	public void generarDeterminacionArbitrios(){
+		try{
+			if(getPersonaInicioDjId()!=null&&getPersonaInicioDjId()>=0&&getPersonaFinDjId()!=null&&getPersonaFinDjId()>=0){
+				GeneracionMasiva generacion=new GeneracionMasiva(registroPredioBo,calculoPredialBo,generalBo);
+				generacion.setAnnioDj(periodo);
+				generacion.setUsuarioId(Constante.MOTIVO_DECLARACION_MASIVA);
+				generacion.determinacionArbitriosMasiva(getPersonaInicioDjId(),getPersonaFinDjId());	
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	@PreDestroy
+	public void clear(){
+					
+	}
+
+
+	public Integer getPersonaInicioDjId() {
+		return personaInicioDjId;
+	}
+
+	public void setPersonaInicioDjId(Integer personaInicioDjId) {
+		this.personaInicioDjId = personaInicioDjId;
+	}
+
+	public Integer getPersonaFinDjId() {
+		return personaFinDjId;
+	}
+
+	public void setPersonaFinDjId(Integer personaFinDjId) {
+		this.personaFinDjId = personaFinDjId;
+	}
+}

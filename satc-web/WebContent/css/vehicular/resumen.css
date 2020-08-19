@@ -1,0 +1,28 @@
+@CHARSET "UTF-8";
+
+#divCabecera {
+	width: 800px;
+	margin: 0 auto;
+}
+
+#divResumen {
+	width: 800px;
+	margin: 0 auto;
+}
+
+.tituloResumen {
+	text-align: center;
+	padding-top: 15px;
+	font-weight: bold;
+}
+
+.subTituloResumen {
+	text-align: center;
+	padding-top: 15px;
+	font-weight: bold;
+}
+
+.tituloSeccion {
+	font-weight: bold;
+	padding-top: 20px;
+}

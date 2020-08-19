@@ -1,0 +1,68 @@
+package com.sat.sisat.persona.managed;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+import com.sat.sisat.common.util.BaseManaged;
+import com.sat.sisat.common.util.WebMessages;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.persistence.entity.MpPersona;
+import com.sat.sisat.persona.business.PersonaBoRemote;
+import com.sat.sisat.persona.dto.PersonaEditTelEmailDTO;
+import com.sat.sisat.vehicular.dto.BuscarPersonaDTO;
+
+@ManagedBean
+@ViewScoped
+public class EditarCorreoTelefonoPersonaManaged  extends BaseManaged {
+	@EJB
+	PersonaBoRemote personaBo;
+	
+	
+	private PersonaEditTelEmailDTO persona;
+	
+	@PostConstruct
+	public void init(){
+		try {
+			//System.out.println("mira por aca");
+			//persona = personaBo.findPaPersona(getSessionManaged().getContribuyente().getPersonaId());
+			//persona = findPersona(getSessionManaged().getContribuyente().getPersonaId(),null, null,null);
+			persona = personaBo.finPersonaEditTelEmail(getSessionManaged().getContribuyente().getPersonaId());
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void guardar() {
+		System.out.println(persona.getEmail());
+		
+		try {
+			personaBo.editarCorreoTelefono(persona, getSessionManaged().getUsuarioLogIn().getUsuarioId() ,getSessionManaged().getTerminalLogIn());
+			
+			persona = personaBo.finPersonaEditTelEmail(getSessionManaged().getContribuyente().getPersonaId());
+			
+		} catch (SisatException e) {
+			e.printStackTrace();
+			WebMessages.messageFatal(e);	
+		} catch (Exception e) {
+			e.printStackTrace();
+			WebMessages.messageFatal(e);	
+		}
+	}
+	
+	public String salir(){
+		return sendRedirectPrincipal();
+	}
+	
+	public PersonaEditTelEmailDTO getPersona() {
+		return persona;
+	}
+
+	public void setPersona(PersonaEditTelEmailDTO persona) {
+		this.persona = persona;
+	}
+
+}

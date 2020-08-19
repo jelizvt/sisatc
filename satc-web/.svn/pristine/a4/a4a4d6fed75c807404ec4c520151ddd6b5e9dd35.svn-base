@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+	<a4j:loadStyle src="/css/principal.css"></a4j:loadStyle>
+	<a4j:loadScript src="/js/principal.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+
+	<h:form id="formSimuladorCalculoAlcabala">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />	
+		
+		<style type="">
+		.colform {
+			width: 20%;
+		}
+		.textform{
+			font-size:11px;
+			font-family: Arial, Verdana, sans-serif;
+		}
+		.textform2{
+			font-size:13px;
+			font-family: Arial, Verdana, sans-serif;
+			font-weight:bold;
+		}
+		
+		</style>
+		
+	 <rich:panel  id="id_panelDatosAlcabala">
+			<f:facet name="header"> DATOS PARA ALCABALA </f:facet>    
+			<a4j:region>
+				<a4j:region>
+					<h:panelGrid id="id_panelDatosAlcabalaPredio" columns="5"
+								columnClasses="colform colform colform colform colform" style="width:100%" styleClass="textform"> 
+						<h:outputLabel value="Ingresar el Código del Transferente:" ><span class="requiredField">*</span></h:outputLabel>
+						<h:inputText id="id_personaId" value="#{simuladorAlcabalaManaged.personaId}"/>
+						<a4j:commandButton value="Buscar Predio" action="#{simuladorAlcabalaManaged.buscarPredios}"
+							oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+							reRender="id_panelDatosAlcabalaPredio" status="ajaxStatus"></a4j:commandButton>	
+						<h:outputLabel value="Seleccionar el Código del Predio:" ><span class="requiredField">*</span></h:outputLabel>
+						<rich:comboBox id="idComboBoxPredio"
+								value="#{simuladorAlcabalaManaged.cmbPredioId}"
+								selectFirstOnUpdate="false" defaultLabel="Seleccione Predio"
+								valueChangeListener="#{simuladorAlcabalaManaged.changeListenerComboBoxPredio}"
+								width="170" tabindex="1" >
+								<f:selectItems
+									value="#{simuladorAlcabalaManaged.lstSelectItemPredios}" />
+							</rich:comboBox>									
+					</h:panelGrid>
+				</a4j:region>
+				<a4j:region>
+					<h:panelGrid id="id_panelDatosAlcabalaFecha" columns="5"
+								columnClasses="colform colform colform colform colform" style="width:100%" styleClass="textform">						
+						<h:outputLabel  value="Ingresar la Fecha Transferencia:"><span class="requiredField">*</span></h:outputLabel>
+						<rich:calendar required="true" requiredMessage="#{msg['ra.errorFechaTransferencia']}" inputStyle="width:100px"
+									locale="en/US" datePattern="dd/MM/yyyy" enableManualInput="true" 
+									inputClass="maskDate" id="idFechaTransferencia" value="#{simuladorAlcabalaManaged.fechaTransferencia}">
+							
+							<a4j:support id="id_supportCalen" event="onchanged" ajaxSingle="true" action="#{simuladorAlcabalaManaged.otenerAutovaluo}" reRender="id_Autovaluo"  
+							oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"/>		
+						</rich:calendar> <rich:jQuery id="maskedo5" selector=".maskDate" query="mask('99/99/9999')" timing="onload" />
+						
+						<h:outputLabel  value="Porcentaje de Transferencia (%):"></h:outputLabel>
+						<h:inputText id="id_porcentaje" value="#{simuladorAlcabalaManaged.porcentaje}" >
+							<a4j:support id="id_supportCalen2" event="onchange" ajaxSingle="true" action="#{simuladorAlcabalaManaged.otenerAutovaluo}" reRender="id_Autovaluo"  
+							oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+							/>
+						</h:inputText>			
+					</h:panelGrid>
+				</a4j:region>		
+			</a4j:region>		
+		</rich:panel>
+		<rich:panel id="id_panelcalculo" >
+		<f:facet name="header">
+	      CALCULO DEL IMPUESTO
+    	</f:facet>
+			<div style="width: 100%;" align="center">
+				<table>
+					<tr>
+						<td width="170px"><h:outputLabel value="Tipo Moneda:" styleClass="textform">
+								<span class="requiredField">*</span>
+							</h:outputLabel></td>
+						<td align="left" width="160px" style="padding-left: 4px"><rich:comboBox width="125px" required="true"
+								requiredMessage="#{msg['ra.errorMoneda']}" defaultLabel="Selecccione" selectFirstOnUpdate="true"
+								id="id_tipomoneda" binding="#{simuladorAlcabalaManaged.cmbTipoMoneda}" immediate="true"
+								valueChangeListener="#{simuladorAlcabalaManaged.loadMonedaById}"
+								value="#{simuladorAlcabalaManaged.cmbTipoMonedaValor}">
+								<f:selectItems id="id_lsttipomoneda2" value="#{simuladorAlcabalaManaged.lstTipoMoneda}" />
+								<a4j:support id="id_supportlsttimoneda" event="onchange" BypassUpdates="false" ajaxSingle="true" />
+							</rich:comboBox></td>
+						<td style="padding-left: 0px;" width="120px;"><h:outputLabel value="Valor de Autovalúo:" styleClass="textform">
+								<span class="requiredField">*</span>
+							</h:outputLabel></td>
+						<td width="160px;"><h:inputText id="id_Autovaluo" maxlength="20" styleClass="textform"
+								required="true"
+								requiredMessage="#{msg['ra.errorValorAutovaluo']}" style="width:120px; text-align: right;"
+								value="#{simuladorAlcabalaManaged.autovaluo}" size="20">
+							</h:inputText></td>
+						<td width="150px"><h:outputText value="Valor de Autovalúo ajustado :" styleClass="textform"/></td>
+						<td><h:inputText id="id_AutovaluoAjuste" maxlength="10" disabled="true" style="text-align: right;"
+								value="#{simuladorAlcabalaManaged.autovaluoAjuste}">
+							</h:inputText></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="Valor de Transferencia:" styleClass="textform">
+								<span class="requiredField">*</span>
+							</h:outputLabel></td>
+						<td><h:inputText id="id_Transferencia" maxlength="18" required="true"
+								requiredMessage="#{msg['ra.errorValorTransferencia']}" value="#{simuladorAlcabalaManaged.valorTransferencia}"
+								style="text-align: right;" onkeypress="return validaEnteroPositivo2(event)">								
+							</h:inputText></td>
+						<td><h:outputText value="Valor UIT :" styleClass="textform" /></td>
+						<td><h:inputText id="id_ValorUIT" maxlength="10" disabled="true" style="width:120px; text-align: right;"
+								value="#{simuladorAlcabalaManaged.valorUIT}">
+							</h:inputText></td>
+						<td><h:outputText value="Factor de Ajuste :" styleClass="textform"/></td>
+						<td><h:inputText id="id_FactorAjuste" maxlength="10" disabled="true" style="width:60%; text-align: right;"
+								value="#{simuladorAlcabalaManaged.factorAjuste}">
+							</h:inputText></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Tipo de Cambio :" styleClass="textform"/></td>
+						<td><h:inputText id="id_tipoCambio" value="#{simuladorAlcabalaManaged.tipoCambio}" disabled="true"
+								style="text-align: right;" /></td>
+						<td><h:outputText value="IPM " styleClass="textform"/> <h:outputText value="#{simuladorAlcabalaManaged.textoIPM1}" styleClass="textform"/></td>
+						<td><h:inputText id="id_ipmMes1" value="#{simuladorAlcabalaManaged.iPMmesAnte}" disabled="true"
+								style="text-align: right;" /></td>
+						<td><h:outputText value="Ajuste :" styleClass="textform"/></td>
+						<td><h:inputText id="id_ajuste" value="#{simuladorAlcabalaManaged.ajuste}" disabled="true"
+								style="text-align: right;" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="Valor de Transferencia en Soles :" styleClass="textform"/></td>
+						<td><h:inputText id="id_TransferenciaSoles" maxlength="10" disabled="true" style="text-align: right;"
+								value="#{simuladorAlcabalaManaged.valorTransferenciaSoles}">
+							</h:inputText></td>
+						<td><h:outputText value="IPM Diciembre " styleClass="textform"/> <h:outputText value="#{simuladorAlcabalaManaged.textoIPM2}" styleClass="textform"/></td>
+						<td><h:inputText id="id_ipmMes2" value="#{simuladorAlcabalaManaged.iPMdicAnte}" disabled="true"
+								style="text-align: right;" /></td>
+						<td><h:outputText value="Nro. de UIT de Deducción :" styleClass="textform"/></td>
+						<td><h:inputText id="id_NroUITdeduc" disabled="true" style="width:60%; text-align: right;"
+								value="#{simuladorAlcabalaManaged.nroUitDeduc}">
+							</h:inputText></td>
+					</tr>
+					<tr>
+						<td align="left"><h:outputText value="Primera Venta :" styleClass="textform"/></td>
+						<td colspan="6"><h:selectBooleanCheckbox valueChangeListener="#{simuladorAlcabalaManaged.checkPrimeraVenta}"
+								style="align:right;text-align:right;" value="#{simuladorAlcabalaManaged.primeraVEnta}" immediate="true"
+								reRender="id_panelcalculo">
+								<a4j:support event="onchange" />
+							</h:selectBooleanCheckbox></td>
+					</tr>
+				</table>
+			</div>
+			<table align="center" border="0">
+				<tr>
+					<td><a4j:commandButton id="cmdCalcularAlcabala"
+							rendered="#{!simuladorAlcabalaManaged.inafectoImpuesto}"
+							
+							image="/images/calculo.png" size="500" status="ajaxStatus"
+							
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							actionListener="#{simuladorAlcabalaManaged.realizarCalculo}"
+							reRender="id_panelcalculo,id_guardarGroup,cmdCalcularAlcabala">
+							
+							<rich:toolTip value="Calcular" />
+						</a4j:commandButton>
+					</td>
+
+					<td><a4j:commandButton id="cmdLimpiarCalculo" action="#{simuladorAlcabalaManaged.limpiarCalculo}" immediate="true" status="ajaxStatus"
+							image="/images/limpiar.png" size="500" 
+							reRender="#{rich:clientId('id_panelcalculo')}"
+							>
+							<rich:toolTip value="Limpiar Calculo" />
+					</a4j:commandButton></td>
+				</tr>
+			</table>
+
+			<br />
+
+			<table border="0" width="80%" align="center">
+				<tr>
+					<td><h:outputText value="Mayor Valor Comparado :" styleClass="textform"/></td>
+					<td><h:inputText id="id_MayorValorComparado" maxlength="10"
+							style="width:80%; text-align: right;"
+							value="#{simuladorAlcabalaManaged.mayorValorComparado}"
+							disabled="true">
+							
+						</h:inputText></td>
+
+					<td><h:outputText value="Valor Deducción :" styleClass="textform"/></td>
+					<td><h:inputText id="id_ValorDeduc" maxlength="10"
+							style="width:80%; text-align: right;"
+							value="#{simuladorAlcabalaManaged.valorDeduccion}" disabled="true">
+							
+						</h:inputText></td>
+
+					<td><h:outputText value="Base imponible :" styleClass="textform"/></td>
+					<td><h:inputText id="id_Baseimponible" maxlength="10"
+							style="width:80%; text-align: right;" value="#{simuladorAlcabalaManaged.baseImponible}"
+							disabled="true">
+						</h:inputText></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Base Exonerada :" styleClass="textform"/></td>
+					<td><h:inputText id="id_BaseExonerada" maxlength="10"
+							style="width:80%; text-align: right;" value="#{simuladorAlcabalaManaged.baseExonerada}"
+							disabled="true">
+					    </h:inputText></td>
+
+					<td><h:outputText value="Base Afecta :" styleClass="textform"/></td>
+					<td><h:inputText id="id_BaseAfecta" maxlength="10"
+							style="width:80%; text-align: right;" value="#{simuladorAlcabalaManaged.baseAfecta}"
+							disabled="true">
+						</h:inputText></td>
+
+					<td><h:outputText value="Tasa (%) :" styleClass="textform"/></td>
+					<td><h:inputText id="id_Tasa" maxlength="10" style="width:80%; text-align: right;"
+							value="#{simuladorAlcabalaManaged.tasa}" disabled="true">
+						</h:inputText></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Impuesto a Pagar :" styleClass="textform"/></td>
+					<td><h:inputText id="id_ImpuestoPagarc" maxlength="10"
+							style="width:80%; text-align: right;" value="#{simuladorAlcabalaManaged.impuestoPagar}"
+							disabled="true">
+						</h:inputText></td>
+
+					<td><h:outputText value="Interés Moratorio :" styleClass="textform"/></td>
+					<td><h:inputText id="id_InteresMoratorio" maxlength="10"
+							style="width:80%; text-align: right;" value="#{simuladorAlcabalaManaged.interesMora}"
+							disabled="true">
+						</h:inputText></td>
+
+					<td><h:outputText value="Total a Pagar :" styleClass="textform2"/></td>
+					<td><h:inputText id="id_TotalPagar" maxlength="10" styleClass="textform2"
+							style="width:80%; text-align: right;" value="#{simuladorAlcabalaManaged.totalPagar}"
+							disabled="true">
+						</h:inputText></td>
+				</tr>
+			</table>
+			<br />
+		</rich:panel>
+	</h:form>
+
+
+	<!-- <rich:modalPanel id="id_panelBuscarPredio" autosized="true"
+		width="1000" height="500">
+		<f:facet name="header">Buscar Predios</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddPredio" styleClass="hidelink" />
+				<rich:componentControl for="id_panelBuscarPredio"
+					attachTo="hideIconAddPredio" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/consultasreportes/simuladorBusquedaPredioAlcabala.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel> -->
+	<br />
+
+	
+
+	<rich:modalPanel id="id_panelAgregarTransferente" autosized="true"
+		width="1000" height="420">
+		<f:facet name="header">Agregar Transferentes</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddTransferent" styleClass="hidelink" />
+				<rich:componentControl for="id_panelAgregarTransferente"
+					attachTo="hideIconAddTransferent" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/alcabala/agregartransferente.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="id_panelUbicacionPredio" autosized="true"
+		width="1000" height="400">
+		<f:facet name="header">Ubicación Predio</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddUbicacion" styleClass="hidelink" />
+				<rich:componentControl for="id_panelUbicacionPredio"
+					attachTo="hideIconAddUbicacion" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/alcabala/ubicacionpredioalcabala.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="mpErrors" autosized="true" width="450">
+
+		<f:facet name="header">
+			<h:outputText value="#{msg['gn.mensajes']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink3ss"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpErrors" attachTo="hidelink3ss"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton id="btnReturn" value="#{msg['gn.aceptar']}">
+					<rich:componentControl for="mpErrors" attachTo="btnReturn"
+						operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

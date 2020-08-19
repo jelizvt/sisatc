@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
+		<item value="false" key="isRegEx"/>
+		<item value="Fecha" key="selection"/>
+		<item value="false" key="casesensitive"/>
+		<item value="false" key="incremental"/>
+		<item value="false" key="wrap"/>
+		<item value="false" key="wholeword"/>
+		<list key="findhistory">
+			<item value="fecha"/>
+			<item value="setCorrelativoActualDJ1(tramiteDocumentarioBo."/>
+			<item value="correlativoActualDJ1"/>
+			<item value="reinicio"/>
+			<item value="reinicioComponentes"/>
+			<item value="folios"/>
+			<item value="filtar"/>
+			<item value="down"/>
+			<item value="valor adq"/>
+			<item value="impri"/>
+			<item value="imprimir"/>
+			<item value="se act"/>
+			<item value="se"/>
+			<item value="se actualizo"/>
+			<item value="imprimirResolucionDjAdult"/>
+		</list>
+		<list key="replacehistory">
+			<item value="lstRequisito"/>
+			<item value=""/>
+			<item value="pst.setString(1, p."/>
+			<item value="pst.setInt(1, p."/>
+		</list>
+	</section>
+	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
+		<item value="300" key="DIALOG_WIDTH"/>
+		<item value="1|Segoe UI|9.75|0|WINDOWS|1|-13|0|0|0|400|0|0|0|0|3|2|1|34|Segoe UI" key="DIALOG_FONT_NAME"/>
+		<item value="343" key="DIALOG_HEIGHT"/>
+		<item value="66" key="DIALOG_X_ORIGIN"/>
+		<item value="246" key="DIALOG_Y_ORIGIN"/>
+	</section>
+</section>

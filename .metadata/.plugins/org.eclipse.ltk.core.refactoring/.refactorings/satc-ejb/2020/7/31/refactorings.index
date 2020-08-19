@@ -1,0 +1,7 @@
+1596048145021	Encapsulate field 'nroExpedienteAnterior'
+1596048310428	Encapsulate field 'nombreContribuyente'
+1596048769753	Encapsulate field 'procedimientoAsString'
+1596048852303	Encapsulate field 'tipoTramite'
+1596048888311	Encapsulate field 'referenciaOrDocumentoTramiteAsString'
+1596049035644	Encapsulate field 'area'
+1596049084248	Encapsulate field 'usuarioAsString'

@@ -1,0 +1,2124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" hideDelay="0"
+	submitMode="client">
+	<style type="text/css">
+.body3 {
+	height: 300px;
+	overflow: auto;
+}
+</style>
+	<style type="">
+.collabel {
+	width: 100px;
+}
+
+.collabel1 {
+	width: 70px;
+}
+
+.colfield {
+	width: 120px;
+}
+
+.col-factor-multi1 {
+	width: 40px;
+}
+
+.col-factor-multi2 {
+	width: 60px;
+}
+
+.col-factor-multi3 {
+	width: 6px;
+}
+
+.col-factor-multi4 {
+	width: 35px;
+}
+
+.col-factor-multi5 {
+	width: 6px;
+}
+
+.col-factor-multi6 {
+	width: 120px;
+}
+
+.panelselectmontoautomanualcol1 {
+	width: 180px;
+}
+
+.p2col1 {
+	width: 55px;
+}
+
+.p2col2 {
+	width: 90px;
+}
+
+.row {
+	vertical-align: top;
+}
+
+.row2 {
+	height: 35px;
+}
+
+.rich-fileupload-name {
+	width: 100%;
+	height: 20px;
+	padding: 2px 10px 2px 10px;
+}
+
+.rich-fileupload-toolbar-decor {
+	border-bottom: 1px solid;
+	border-top: 1px solid;
+	border-left: 1px solid;
+	padding: 0px;
+	background-color: #F0F0F0;
+	border-bottom-color: silver;
+	border-top-color: white;
+	border-left-color: white;
+	width: 100%;
+}
+
+.panelsubconceptocol1 {
+	width: 85px
+}
+
+.panelsubconceptocol2 {
+	width: 210px
+}
+
+.panelrefereciacol2 {
+	width: 300px
+}
+
+.textoMontoTotal {
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.panelcomboscol1 {
+	width: 150px;
+	vertical-align: top;
+	text-align: right;
+}
+
+.panelcomboscol2 {
+	width: 310px;
+	vertical-align: top;
+	text-align: right;
+}
+
+.panelcomboscol3 {
+	width: 800px;
+	padding-left: 5px;
+}
+
+.panelinputanhocol1 {
+	width: 95px;
+	text-align: left;
+	padding-left: 5px;
+}
+
+.panelinputanhocol2 {
+	width: 50px;
+	text-align: right;
+}
+
+.panelinputanhocol3 {
+	width: 303px;
+	text-align: right;
+}
+
+.rowclasspanelinputanho {
+	height: 40px;
+}
+
+.panelbusquedavehiprediocol1 {
+	width: 50px;
+	padding-left: 10px;
+}
+
+.panelbusquedavehiprediocol2 {
+	width: 120px;
+}
+
+.panelbusquedavehiprediocol3 {
+	width: 20px;
+}
+
+.coldialogconfirm {
+	text-align: center;
+}
+
+.coldialogbutton1 {
+	text-align: right;
+}
+
+.coldialogbutton2 {
+	text-align: left;
+}
+
+.requiredField {
+	color: red;
+}
+
+.row-odd {
+	background-color: #F2F2F2;
+}
+
+.row-even {
+	background-color: #FFFFFF;
+}
+</style>
+
+	<h:form id="frm">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<rich:hotKey key="F2"
+			handler="#{rich:element('cmdVerExpedientes')}.click()"
+			selector="#frm" />
+		<rich:panel bodyClass="body3" style="width:1320px;height:250px"
+			id="principalExigibles">
+			<h:panelGrid rendered="#{acumulacionExpedienteManaged.permisoBuscar}" columns="10">
+				<h:outputText style="font-weight:bold;font-size:11px;"
+					value="Código de Contribuyente:" />
+				<h:inputText style="width:50px;" id="idTxtCod"
+					title="F2 PARA BUSCAR"
+					value="#{acumulacionExpedienteManaged.codigoPersonaBuscar}"
+					valueChangeListener="#{acumulacionExpedienteManaged.changeListenerTxtBuscarAdministrado}"
+					immediate="true" maxlength="8">
+					<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+				</h:inputText>
+				<rich:toolTip for="idTxtCod" value="PRESIONE F2 PARA BUSCAR."></rich:toolTip>
+				<h:outputText style="font-weight:bold;font-size:11px;"
+					value="Búsqueda por Placa:" />
+				<h:inputText style="width:50px;" title="F2 PARA BUSCAR"
+					id="idTxtPlaca"
+					value="#{acumulacionExpedienteManaged.placaVehiculoBuscar}"
+					valueChangeListener="#{acumulacionExpedienteManaged.changeListenerTxtBuscarXPlaca}"
+					immediate="true" maxlength="8">
+					<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+				</h:inputText>
+				<rich:toolTip for="idTxtPlaca" value="PRESIONE F2 PARA BUSCAR."></rich:toolTip>
+				<h:outputText style="font-weight:bold;font-size:11px;"
+					value="Código Anterior:" />
+				<h:inputText style="width:50px;" title="F2 PARA BUSCAR"
+					id="idTxtCodAnt"
+					value="#{acumulacionExpedienteManaged.codigoAnteriorPersona}"
+					valueChangeListener="#{acumulacionExpedienteManaged.changeListenerTxtAnteriorAdministrado}"
+					immediate="true" maxlength="8">
+					<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+				</h:inputText>
+				<rich:toolTip for="idTxtCodAnt" value="PRESIONE F2 PARA BUSCAR."></rich:toolTip>
+				<a4j:commandButton id="cmdVerExpedientes" value="Ver Expedientes"
+					action="#{acumulacionExpedienteManaged.verRecExpedienteAgrupados}"
+					style="width:150px;" immediate="true"
+					reRender="modalResumenExpedientes,tablaExpAgrupados"
+					oncomplete="#{rich:component('modalResumenExpedientes')}.hide();#{rich:component('modalResumenExpedientes')}.show();"
+					status="ajaxStatus">
+					<rich:toolTip for="cmdVerExpedientes"
+						value="Listar Todos los Expedientes por Contribuyente o x Placa."></rich:toolTip>
+				</a4j:commandButton>
+			</h:panelGrid>
+			<rich:datascroller for="cctableExig" maxPages="5"></rich:datascroller>
+
+			<rich:extendedDataTable id="cctableExig"
+				value="#{acumulacionExpedienteManaged.lotes}" var="e"
+				selectionMode="single" rows="5" width="100%" height="210px"
+				noDataLabel="No se encontró registros" enableContextMenu="false"
+				rowKeyVar="idx">
+				<f:facet name="header">
+					<h:outputLabel value="LISTA DE LOTES CON DEUDAS EXIGIBLES" />
+				</f:facet>
+				<rich:column rendered="#{acumulacionExpedienteManaged.permisoVerDetalle}"
+					style="background-color:#{e.styleSelected};text-align:center;"
+					id="x2" width="4%">
+					<f:facet name="header">Ver</f:facet>
+					<a4j:commandLink ajaxSingle="true" id="newlnk3"
+						action="#{acumulacionExpedienteManaged.selectUsuarioAction}"
+						status="ajaxStatus" reRender="principal">
+						<h:graphicImage value="/images/ver2.png" style="border:0" />
+						<f:setPropertyActionListener value="#{e}"
+							target="#{acumulacionExpedienteManaged.findCcLoteItem}"
+							id="r4253" />
+					</a4j:commandLink>
+					<rich:toolTip for="newlnk3"
+						value="Visualizar Abajo Detalle del Lote." />
+				</rich:column>
+				<rich:column filterBy="#{e.tipoActoAnterior}" id="idcam1"
+					width="15%"
+					style="background-color:#{e.styleSelected};text-align:left;">
+					<f:facet name="header">TIPO VALOR</f:facet>
+					<h:outputText value="#{e.descripcionCorta} - #{e.tipoActoAnterior}" />
+				</rich:column>
+				<rich:column filterBy="#{e.annoLote}" id="idcam2" width="8%"
+					style="background-color:#{e.styleSelected};text-align:center;">
+					<f:facet name="header">AÑO</f:facet>
+					<h:outputText value="#{e.annoLote}" />
+				</rich:column>
+				<rich:column id="idcam3" width="10%" filterBy="#{e.loteId}"
+					style="background-color:#{e.styleSelected};text-align:center;">
+					<f:facet name="header">NRO. LOTE</f:facet>
+					<h:outputText value="#{e.loteId}" />
+				</rich:column>
+				<rich:column id="idcam4" width="10%"
+					style="background-color:#{e.styleSelected};text-align:center;">
+					<f:facet name="header">TOTAL EXIGIBLE</f:facet>
+					<h:outputText value="S/. #{e.montoDeuda}" />
+				</rich:column>
+				<rich:column id="idcam5" width="10%"
+					style="background-color:#{e.styleSelected};text-align:center;">
+					<f:facet name="header">FECHA RECEPCION</f:facet>
+					<h:outputText value="#{e.fechaRegistro}" />
+				</rich:column>
+				<rich:column id="idcam6"
+					style="background-color:#{e.styleSelected};text-align:center;"
+					width="8%">
+					<f:facet name="header">HORA</f:facet>
+					<h:outputText value="#{e.horaRegistro}" />
+				</rich:column>
+				<rich:column id="idcam7" width="10%" filterBy="#{e.usuario}"
+					style="background-color:#{e.styleSelected};text-align:center;">
+					<f:facet name="header">USUARIO</f:facet>
+					<h:outputText value="#{e.usuario}" />
+				</rich:column>
+				<rich:column id="idcam8"
+					style="background-color:#{e.styleSelected};text-align:center;">
+					<f:facet name="header">NRO. REGISTROS</f:facet>
+					<h:outputText value="#{e.cantidadValores}" />
+				</rich:column>
+				<rich:column id="idcam9" width="10%"
+					style="background-color:#{e.styleSelected};text-align:center;">
+					<f:facet name="header">CON EXPEDIENTE</f:facet>
+					<h:outputText value="#{e.nroRegConExpediente}" />
+				</rich:column>
+				<rich:column id="idcam10" width="10%"
+					style="background-color:#{e.styleSelected};text-align:center;">
+					<f:facet name="header">SIN EXPEDIENTE</f:facet>
+					<h:outputText
+						value="#{(e.cantidadValores-e.nroRegConExpediente) lt 0 ? 0:e.cantidadValores-e.nroRegConExpediente}" />
+				</rich:column>
+			</rich:extendedDataTable>
+		</rich:panel>
+		<rich:panel bodyClass="body3" style="width:1320px;height:305px"
+			id="principal">
+			<h:panelGroup style="float:right;">
+
+				<a4j:commandButton  id="cmdVerRecInicio" value="Generar REC Inicio"
+					style="width:150px;" immediate="true"
+					rendered="#{acumulacionExpedienteManaged.desactivaRecsInicio and acumulacionExpedienteManaged.permisoGenerarRECInicio}"
+					oncomplete="#{rich:component('modalRecInicio')}.hide();#{rich:component('modalRecInicio')}.show();"
+					reRender="principal" status="ajaxStatus">
+					<rich:toolTip for="cmdVerRecInicio"
+						value="Ver Formas de Generar RECs de Inicio Masivas ."></rich:toolTip>
+				</a4j:commandButton>
+				<a4j:commandButton id="cmdOtrasRecs" value="Generar (+) RECs"
+					action="#{acumulacionExpedienteManaged.verRecMasiva}" 
+					rendered="#{acumulacionExpedienteManaged.booleanRecsMasiva and acumulacionExpedienteManaged.permisoGenerarMasRECs}"
+					style="width:150px;" immediate="true" reRender="modalOtrasRec"
+					oncomplete="#{rich:component('modalOtrasRec')}.hide();#{rich:component('modalOtrasRec')}.show();"
+					status="ajaxStatus">
+					<rich:toolTip for="cmdOtrasRecs" value="Generar mas RECs Masivas."></rich:toolTip>
+				</a4j:commandButton>
+			</h:panelGroup>
+			<h:panelGrid columns="2"
+				style="font-weight:bold; width:85%; color:#black; text-align:center;">
+				<h:outputText
+					value="DETALLE DE DEUDAS EXIGIBLES DEL LOTE SELECCIONADO: #{acumulacionExpedienteManaged.findCcLoteItem.loteId}" />
+				<h:commandLink id="exportarLstExc"
+					rendered="#{acumulacionExpedienteManaged.lista.size()>0}"
+					action="#{acumulacionExpedienteManaged.exportarTablaExcel}"
+					styleClass="button1">
+					<h:graphicImage value="/images/modal/excel.png"
+						style="border:0;width:25px;height:25px;" />
+					<rich:toolTip for="exportarLstExc">Descargar Lista en Excel.</rich:toolTip>
+				</h:commandLink>
+			</h:panelGrid>
+			<rich:datascroller for="cctable" maxPages="20"></rich:datascroller>
+			<rich:extendedDataTable id="cctable"
+				value="#{acumulacionExpedienteManaged.lista}" var="r" rows="7"
+				selectionMode="single" width="1270px" height="225px"
+				selection="#{acumulacionExpedienteManaged.simpleSelectedRol}"
+				noDataLabel="No se encontró registros" enableContextMenu="false"
+				rowKeyVar="idx">
+				<rich:column rendered="#{acumulacionExpedienteManaged.permisoModificarActualizar}"  width="3%" style="text-align:center;">
+					<rich:toolTip for="newlinka"
+						value="Historial de Rec por Expediente."></rich:toolTip>
+					<a4j:commandLink ajaxSingle="true" id="newlinka"
+						rendered="#{r.nroExpediente!=null}" status="ajaxStatus"
+						action="#{acumulacionExpedienteManaged.mostrar}"
+						oncomplete="#{rich:component('modalHistorial')}.hide();#{rich:component('modalHistorial')}.show();"
+						reRender="modalHistorial,panel">
+						<h:graphicImage value="/images/editable.jpg" style="border:0" />
+						<f:setPropertyActionListener value="#{r}"
+							target="#{acumulacionExpedienteManaged.findCcActoItem}" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="idcampo1" width="6%" filterBy="#{r.personaId}"
+					style="background-color:#{r.styleSelected};text-align:center">
+					<f:facet name="header">CODIGO</f:facet>
+					<h:outputText value="#{r.personaId}" />
+				</rich:column>
+				<rich:column id="idcampo2" width="18%"
+					filterBy="#{r.apellidosNombres}"
+					style="background-color:#{r.styleSelected};text-align:left">
+					<f:facet name="header">CONTRIBUYENTE</f:facet>
+					<h:outputText value="#{r.apellidosNombres}" />
+				</rich:column>
+				<rich:column id="idcampo3" width="7%"
+					filterBy="#{r.tipoActoDescripcionCorta}- #{r.concepto}"
+					style="background-color:#{r.styleSelected};text-align:center">
+					<f:facet name="header">TIPO_VALOR</f:facet>
+					<h:outputText value="#{r.tipoActoDescripcionCorta}- #{r.concepto}" />
+				</rich:column>
+				<rich:column id="idcampo4" width="9%" filterBy="#{r.nroActo}"
+					style="background-color:#{r.styleSelected};text-align:center">
+					<f:facet name="header">NRO_VALOR</f:facet>
+					<h:outputText value="#{r.nroActo}" />
+				</rich:column>
+				<rich:column id="idcampo5" width="8%" filterBy="#{r.montoDeuda}"
+					style="background-color:#{r.styleSelected};text-align:center">
+					<f:facet name="header">TOT. REC1</f:facet>
+					<h:outputText value="#{r.montoDeuda}" />
+				</rich:column>
+				<rich:column id="idcampo6" width="22%" filterBy="#{r.direccion}"
+					style="background-color:#{r.styleSelected};text-align:left">
+					<f:facet name="header">DIRECCION FISCAL</f:facet>
+					<h:outputText value="#{r.direccion}" />
+				</rich:column>
+				<rich:column width="10%" filterBy="#{r.nroPapeleta}"
+					rendered="#{acumulacionExpedienteManaged.lista.get(0).nroPapeleta!=null}"
+					style="background-color:#{r.styleSelected};text-align:center">
+					<f:facet name="header">
+						NRO PAPELETA
+					</f:facet>
+					<h:outputText value="#{r.nroPapeleta}" />
+				</rich:column>
+
+				<rich:column width="10%" sortBy="#{r.sector}"
+					rendered="#{acumulacionExpedienteManaged.lista.get(0).sector!='-'}"
+					style="background-color:#{r.styleSelected};text-align:center">
+					<f:facet name="header">
+				 		SECTOR
+					</f:facet>
+					<h:outputText value="#{r.sector}" />
+				</rich:column>
+				<rich:column id="idcampo8" width="12%" sortBy="#{r.nroExpediente}"
+					filterBy="#{r.nroExpediente}"
+					style="background-color:#{r.styleSelected};text-align:center">
+					<f:facet name="header">NRO_EXPEDIENTE</f:facet>
+					<h:outputText value="#{r.nroExpediente}" />
+					<rich:toolTip id="idToolRec" for="idcampo8"
+						rendered="#{r.nroExpediente!=null}"
+						value="La Rec Actual es : #{r.ultimaRecEmitida}">
+					</rich:toolTip>
+				</rich:column>
+				<rich:column id="idcampo9" width="7%" filterBy="#{r.estado_deuda}"
+					style="background-color:#{r.styleSelected};text-align:center">
+					<f:facet name="header">ESTADO</f:facet>
+					<h:outputText value="#{r.estado_deuda}" />
+					<rich:toolTip id="idTooltip" for="idcampo9"
+						rendered="#{r.estado_deuda=='CANCELADA'}"
+						value="Fecha de Pago: #{r.fechaPago}">
+					</rich:toolTip>
+				</rich:column>
+			</rich:extendedDataTable>
+		</rich:panel>
+		<!-- pop up historico recs -->
+	</h:form>
+	<rich:modalPanel id="modalHistorial" width="950" autosized="true"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" top="110"
+		styleClass="sisatModalPanel">
+		<f:facet name="header">HISTORIAL DE RESOLUCIONES DE EJECUCION COACTIVA</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalHistorial" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="panel">
+			<rich:panel id="p01">
+				<table border="0" width="800px">
+					<tr>
+						<td align="left" width="100px"><h:outputText
+								id="tdDescripcion" value="Contribuyente :" /></td>
+						<td width="400px"><h:panelGrid columns="2">
+								<h:outputText id="tdNombre" style="font-weight:bold;"
+									value="#{acumulacionExpedienteManaged.findCcActoItem.personaId ==null? acumulacionExpedienteManaged.findCcActoAgrupadoItem.personaId:acumulacionExpedienteManaged.findCcActoItem.personaId} - #{acumulacionExpedienteManaged.findCcActoItem.apellidosNombres==null?acumulacionExpedienteManaged.findCcActoAgrupadoItem.apellidosNombres:acumulacionExpedienteManaged.findCcActoItem.apellidosNombres}" />
+								<!-- 									#{acumulacionExpedienteManaged.findCcActoAgrupadoItem.personaId} - #{acumulacionExpedienteManaged.findCcActoAgrupadoItem.apellidosNombres} -->
+							</h:panelGrid></td>
+						<td align="left" width="100px"><h:outputText id="succ2"
+								value="Nro. de Expediente :" /></td>
+						<td width="150px"><h:panelGrid columns="2">
+								<h:outputText id="succ3" style="font-weight:bold;"
+									value="#{acumulacionExpedienteManaged.findCcActoItem.nroExpediente==null? acumulacionExpedienteManaged.findCcActoAgrupadoItem.nroExpediente:acumulacionExpedienteManaged.findCcActoItem.nroExpediente}" />
+							</h:panelGrid></td>
+					</tr>
+					<tr>
+						<td align="left" width="100px"><h:outputText
+								value="Tipo REC :" /></td>
+						<td width="140px"><rich:comboBox defaultLabel="Seleccione"
+								enableManualInput="false" width="400"
+								value="#{acumulacionExpedienteManaged.cmbTipoRec}"
+								required="true"
+								requiredMessage="Porfavor seleccione un Tipo de REC."
+								id="id_tiporelacion"
+								binding="#{acumulacionExpedienteManaged.cmbNoTipoRec}"
+								valueChangeListener="#{acumulacionExpedienteManaged.loadTipoRecById}">
+								<f:selectItems
+									value="#{acumulacionExpedienteManaged.listaTipoRec}" />
+							</rich:comboBox></td>
+						<td align="left" width="100px"><a4j:commandButton
+								value="Ver Deudas Detenidas" ajaxSingle="true" id="newlinkgb2"
+								status="ajaxStatus"
+								action="#{acumulacionExpedienteManaged.verDeudasDetenidas}"
+								oncomplete="#{rich:component('panelQuitarDetencionPagoDeuda')}.hide();#{rich:component('panelQuitarDetencionPagoDeuda')}.show();"
+								reRender="panelQuitarDetencionPagoDeuda">
+							</a4j:commandButton></td>
+						<td width="100px"></td>
+					</tr>
+				</table>
+			</rich:panel>
+			<h:panelGrid id="pnlGenerar" columns="3" align="center">
+				<a4j:commandButton value="Generar REC" style="width:100px;"
+					id="cmdRecIndividual"
+					rendered="#{acumulacionExpedienteManaged.disableBtnGeneraRec==false}"
+					action="#{acumulacionExpedienteManaged.generarRec}"
+					oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+					reRender="pnlGenerar,ccHistoricoRec" status="ajaxStatus"/> 
+			</h:panelGrid>
+			<rich:extendedDataTable id="ccHistoricoRec"
+				value="#{acumulacionExpedienteManaged.historico}" var="h" rows="8"
+				selectionMode="single" width="1020px" height="280px"
+				noDataLabel="No se encontró registros" enableContextMenu="false"
+				rowKeyVar="idx">
+				<rich:column id="idcampo1" width="29%"
+					filterBy="#{h.descripcionRec}" style="text-align:left">
+					<f:facet name="header">TIPO DE EJECUCIÓN COACTIVA</f:facet>
+					<h:outputText value="#{h.descripcionRec}" />
+				</rich:column>
+				<rich:column id="idcampo2" width="13%" filterBy="#{h.fechaRegistro}"
+					style="text-align:center">
+					<f:facet name="header">FECHA EMISION</f:facet>
+					<h:outputText value="#{h.fechaEmision}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss a" timeZone="EST" />
+					</h:outputText>
+					<a4j:commandLink value="Fecha Emision" ajaxSingle="true"
+						id="newlnkx3" rendered="#{h.fechaEmision==null}"
+						status="ajaxStatus"
+						oncomplete="#{rich:component('modalEmisionRec')}.hide();#{rich:component('modalEmisionRec')}.show();"
+						reRender="frmIngresaFechaEmision">
+						<f:setPropertyActionListener value="#{h}" id="cml1"
+							target="#{acumulacionExpedienteManaged.findCcRecs}" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="idcampo3" width="13%"
+					filterBy="#{h.fechaNotificacion}" style="text-align:center">
+					<f:facet name="header">FECHA NOTIFICACION</f:facet>
+					<a4j:commandLink ajaxSingle="true" id="idInsertNotif"
+						status="ajaxStatus"
+						action="#{acumulacionExpedienteManaged.notificar}"
+						oncomplete="#{rich:component('modalNotificacionRec')}.hide();#{rich:component('modalNotificacionRec')}.show();">
+						<h:outputText value="#{h.fechaNotificacion}">
+							<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss a" timeZone="EST" />
+						</h:outputText>
+						<f:setPropertyActionListener value="#{h}"
+							target="#{acumulacionExpedienteManaged.findCcRecs}" />
+						<rich:toolTip for="idInsertNotif" direction="top-left"> Actualizar Notificación Bajo Responsibilidad.</rich:toolTip>
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="idcampo4" width="9%" filterBy="#{h.nombreUsuario}"
+					style="text-align:center">
+					<f:facet name="header">INGRESÓ NOTIF.</f:facet>
+					<h:outputText value="#{h.usuarioNotificacion}" />
+				</rich:column>
+				<rich:column id="idcampo5" width="13%" filterBy="#{h.nroExpediente}"
+					style="text-align:center">
+					<f:facet name="header">NRO. EXPEDIENTE</f:facet>
+					<h:outputText value="#{h.nroExpediente}" />
+				</rich:column>
+				<rich:column id="idcampo6" width="9%" filterBy="#{h.nombreUsuario}"
+					style="text-align:center">
+					<f:facet name="header">GENERADO POR</f:facet>
+					<h:outputText value="#{h.nombreUsuario}" />
+				</rich:column>
+				<rich:column id="idcampo7" width="6%" style="text-align:center">
+
+					<a4j:commandLink value="Notificar" ajaxSingle="true" id="newlink9"
+						rendered="#{h.fechaNotificacion==null}" status="ajaxStatus"
+						action="#{acumulacionExpedienteManaged.notificar}"
+						oncomplete="#{rich:component('modalNotificacionRec')}.hide();#{rich:component('modalNotificacionRec')}.show();"
+						reRender="frmNotificar,pnlGenerar">
+						<f:setPropertyActionListener value="#{h}" id="al2"
+							target="#{acumulacionExpedienteManaged.findCcRecs}" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="idcampo8" width="5%" style="text-align:center">
+					<a4j:commandLink value="Costas" ajaxSingle="true" id="newlinkb"
+						status="ajaxStatus" rendered="#{h.fechaNotificacion!=null }"
+						action="#{acumulacionExpedienteManaged.verCostas}"
+						oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'modalCostas\');': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="modalCostas,formobligacion,panelconcepto,panelsubconcepto,panelObligaGeneradas">
+						<f:setPropertyActionListener value="#{h}" id="al3"
+							target="#{acumulacionExpedienteManaged.findCcRecs}" />
+						<rich:toolTip for="newlinkb" direction="top-left">Podra generar Costas al dia siguiente de la Fecha de Notificacion.</rich:toolTip>
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column width="3%" style="text-align:center">
+					<f:facet name="header"></f:facet>
+					<h:commandLink id="newlink22"
+						action="#{acumulacionExpedienteManaged.imprimirRecxTipo}"
+						immediate="true">
+						<h:graphicImage id="img1" value="/images/modal/pdf.png"
+							style="border:0" />
+						<f:setPropertyActionListener value="#{h}" id="al1"
+							target="#{acumulacionExpedienteManaged.findCcRecs}" />
+						<rich:toolTip for="newlink22" direction="top-left"> Descargar Rec en Pdf.</rich:toolTip>
+					</h:commandLink>
+				</rich:column>
+			</rich:extendedDataTable>
+		</h:form>
+
+	</rich:modalPanel>
+	<rich:modalPanel id="modalCostas" width="900" autosized="true" top="10"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" styleClass="sisatModalPanel">
+		<f:facet name="header">COSTAS Y GASTOS</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconf4"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalCostas" attachTo="hlpconf4"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formobligacion">
+			<rich:panel>
+				<h:panelGrid id="panel0">
+					<h:panelGrid id="panelcabecera" cellpadding="0" cellspacing="0"
+						columns="1">
+						<h:panelGrid id="panelinputanho" columns="5"
+							style="float:right; width:100%;">
+							<h:outputLabel value="#{msg['obl.labelAnhoAfectacion']}" />
+
+							<h:outputLabel value="#{acumulacionExpedienteManaged.anioRec}" />
+							<h:outputLabel value="PersonaId" />
+							<h:outputLabel
+								value="#{acumulacionExpedienteManaged.findCcActoItem.personaId ==null? acumulacionExpedienteManaged.findCcActoAgrupadoItem.personaId:acumulacionExpedienteManaged.findCcActoItem.personaId} - #{acumulacionExpedienteManaged.findCcActoItem.apellidosNombres==null?acumulacionExpedienteManaged.findCcActoAgrupadoItem.apellidosNombres:acumulacionExpedienteManaged.findCcActoItem.apellidosNombres}" />
+						</h:panelGrid>
+						<!-- Seccion de combobox -->
+
+						<h:panelGrid id="panelcombos" columns="8" cellpadding="0"
+							cellspacing="0"
+							columnClasses="panelcomboscol1, panelcomboscol2, panelcomboscol3">
+
+							<h:panelGrid id="panelconcepto" columns="2"
+								columnClasses="p2col1, p2col2">
+
+								<h:outputLabel value="#{msg['obl.labelConcepto']} "
+									for="cmbconcepto" />
+								<rich:comboBox id="cmbconcepto" selectFirstOnUpdate="false"
+									valueChangeListener="#{acumulacionExpedienteManaged.changeListenerValueCmbConcepto}"
+									value="#{acumulacionExpedienteManaged.cmbConcepto}" width="120"
+									enableManualInput="false">
+									<f:selectItems
+										value="#{acumulacionExpedienteManaged.listSelectItems}"></f:selectItems>
+									<a4j:support
+										reRender="panelinputanho, panelsubconcepto,  paneldetalle"
+										event="onchange" bypassUpdates="false" ajaxSingle="true"
+										oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+										status="ajaxStatus">
+									</a4j:support>
+								</rich:comboBox>
+							</h:panelGrid>
+
+							<h:panelGrid id="panelsubconcepto" columns="2">
+								<h:outputLabel value="#{msg['obl.labelSubConcepto']} "
+									for="cmbsubconcepto" />
+								<rich:comboBox id="cmbsubconcepto" selectFirstOnUpdate="false"
+									value="#{acumulacionExpedienteManaged.cmbSubConcepto}"
+									valueChangeListener="#{acumulacionExpedienteManaged.changeListenerSubConcepto}"
+									width="210" tabindex="3">
+									<f:selectItems
+										value="#{acumulacionExpedienteManaged.listSubConceptoDTOItems}" />
+									<a4j:support
+										reRender="paneldetalle, panelsubconceptodescripcion"
+										event="onchange" bypassUpdates="false" ajaxSingle="true"></a4j:support>
+								</rich:comboBox>
+								<!-- 																<a4j:commandButton value="Ver Deudas Detenidas" -->
+								<!-- 																	id="id_deudasDet" -->
+								<!-- 																	action="#{acumulacionExpedienteManaged.verDeudasDetenidas}" -->
+								<!-- 																	oncomplete="#{rich:component('panelQuitarDetencionPagoDeuda')}.hide();#{rich:component('panelQuitarDetencionPagoDeuda')}.show();" -->
+								<!-- 																	reRender="panelQuitarDetencionPagoDeuda" status="ajaxStatus"> -->
+								<!-- 																</a4j:commandButton> -->
+
+							</h:panelGrid>
+
+							<h:panelGrid id="panelsubconceptodescripcion">
+								<h:outputText
+									value="#{msg['obl.descripcionSubConcepto']} #{acumulacionExpedienteManaged.subConceptoDTO.descripcion}"
+									rendered="#{not empty acumulacionExpedienteManaged.subConceptoDTO}" />
+							</h:panelGrid>
+						</h:panelGrid>
+					</h:panelGrid>
+
+					<rich:separator height="1" lineType="solid" width="100%" />
+					<h:panelGrid id="paneldetalle" cellpadding="0" cellspacing="0">
+						<h:panelGrid cellpadding="0" cellspacing="0"
+							rendered="#{acumulacionExpedienteManaged.flagViewDetalle}">
+
+							<!--******************************************** Panel para Costas   ******************************-->
+
+							<h:panelGrid id="panelCostas"
+								rendered="#{acumulacionExpedienteManaged.cmbConcepto == 'COSTAS' and acumulacionExpedienteManaged.subConceptoDTO != null}"
+								rowClasses="row2" cellpadding="0" cellspacing="0">
+
+								<h:panelGrid id="panelselectmontoautomanual" columns="3"
+									columnClasses="panelselectmontoautomanualcol1">
+									<h:selectOneRadio id="selectOneRadioCosta"
+										value="#{acumulacionExpedienteManaged.modoGastoMonto}"
+										valueChangeListener="#{acumulacionExpedienteManaged.changeListenerSelectOneRadioCosta}"
+										tabindex="4">
+										<f:selectItem
+											itemLabel="#{msg['obl.labelSelectOneRadioAutomatico']}"
+											itemValue="1" />
+										<!-- 										<f:selectItem -->
+										<!-- 											itemLabel="#{msg['obl.labelSelectOneRadioManual']}" -->
+										<!-- 											itemValue="0" /> -->
+										<a4j:support reRender="panelMonto" event="onchange"
+											bypassUpdates="false" ajaxSingle="true"></a4j:support>
+									</h:selectOneRadio>
+
+									<h:panelGrid id="panelMonto" columns="6"
+										columnClasses="col-factor-multi1, col-factor-multi2, col-factor-multi3, col-factor-multi4, col-factor-multi5, col-factor-multi6">
+										<h:outputLabel value="#{msg['obl.labelMonto']}"
+											for="inputmontotasacostas">
+											<span class="requiredField">*</span>
+										</h:outputLabel>
+										<h:inputText id="inputmontotasacostas"
+											value="#{acumulacionExpedienteManaged.obligacionDTO.tasa}"
+											tabindex="5"
+											readonly="#{acumulacionExpedienteManaged.modoGastoMonto == 1}"
+											onkeypress="return validaEnteroPositivo2(event)"
+											maxlength="8" style="text-align:right;padding-right: 4px;"
+											requiredMessage="#{msg['obl.requiredMonto']}" size="6"
+											required="true"
+											valueChangeListener="#{acumulacionExpedienteManaged.changeListenerInputIdTasa}">
+											<a4j:support ajaxSingle="true" event="onkeyup"
+												reRender="panelMonto" focus="inputmontotasacostas"
+												requestDelay="700"></a4j:support>
+										</h:inputText>
+										<h:outputText value="x" />
+										<h:inputText id="inputIdFactor"
+											value="#{acumulacionExpedienteManaged.factor}"
+											valueChangeListener="#{acumulacionExpedienteManaged.changeListenerInputIdFactor}"
+											onkeypress="return validaEnteroPositivo2(event)"
+											maxlength="3" style="text-align:center" size="1">
+											<a4j:support ajaxSingle="true" event="onkeyup"
+												reRender="panelMonto" focus="inputIdFactor"
+												requestDelay="600"></a4j:support>
+										</h:inputText>
+										<h:outputText value="=" />
+										<h:inputText
+											value="#{acumulacionExpedienteManaged.obligacionDTO.monto}"
+											readonly="true" style="text-align:right;padding-right: 4px;"
+											size="6" maxlength="8">
+											<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+												locale="#{msg['param.localecurrency']}" />
+										</h:inputText>
+									</h:panelGrid>
+									<!-- <h:panelGrid columns="2"  >
+									<h:outputLabel value="#{msg['obl.labelReferenciaRec']} "
+										for="inputreferenciareccostas">
+										<span class="requiredField">*</span>
+									</h:outputLabel>
+									<h:panelGroup>
+										<h:inputText id="inputreferenciareccostas"
+											value="#{acumulacionExpedienteManaged.obligacionDTO.referenciaREC}"
+											requiredMessage="#{msg['obl.requiredReferenciaRec']}" required="true"
+											size="17" maxlength="16" styleClass="prueba" tabindex="6"
+											style="text-align:center">
+											<f:validator validatorId="nroValorValidator" />
+										</h:inputText>
+										<rich:jQuery id="maskedo0021" selector=".prueba"
+											query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+									</h:panelGroup>
+								</h:panelGrid> -->
+								</h:panelGrid>
+
+								<h:panelGrid columns="4"
+									columnClasses="collabel, colfield, collabel1, colfield"
+									rowClasses="row2">
+									<h:outputLabel value="#{msg['obl.labelFechaLiquidacion']}"
+										for="calendarfechaliquidacioncostas">
+										<span class="requiredField">*</span>
+									</h:outputLabel>
+									<h:panelGroup>
+										<rich:calendar id="calendarfechaliquidacioncostas"
+											value="#{acumulacionExpedienteManaged.obligacionDTO.fechaEmision}"
+											locale="#{msg['param.localedate']}" inputClass="maskDate"
+											datePattern="#{msg['param.datepattern']}"
+											enableManualInput="true"
+											requiredMessage="#{msg['obl.requiredFechaEmision']}"
+											inputSize="10"
+											converterMessage="#{msg['obl.converterFecha']}"
+											required="true" tabindex="6" inputStyle="text-align:center">
+											<!-- <a4j:support event="onchanged" ajaxSingle="true"
+											bypassUpdates="false"
+											reRender="panelgroupcalendarvencimientocostas"
+											action="#{acumulacionExpedienteManaged.changeListenerFechaEmisionCostas}" 
+											oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};" />
+										 <a4j:support event="oninputblur" ajaxSingle="true"
+											bypassUpdates="false"
+											reRender="panelgroupcalendarvencimientocostas"
+											action="#{acumulacionExpedienteManaged.changeListenerFechaEmisionCostas}" 
+											oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};" /> -->
+										</rich:calendar>
+										<rich:jQuery id="maskedo004" selector=".maskDate"
+											query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+									</h:panelGroup>
+
+									<!-- <h:outputLabel value="#{msg['obl.labelFechaVencimiento']}"
+									for="calendarfechavencimientocostas">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<h:panelGroup id="panelgroupcalendarvencimientocostas">
+									<script type="text/javascript">					
+							        														
+								        function disablementFunction1(day){
+								        	
+									        fechaemisioncostas = #{rich:component('calendarfechaemisioncostas')}.getSelectedDate();
+									        								           
+								            if (fechaemisioncostas==undefined){
+								            	fechaemisioncostas = day.date.getDate;								                
+								            }
+								            if (fechaemisioncostas.getTime() - day.date.getTime() &lt; 0) return true; else return false;  
+								        }        
+								    </script>
+									<rich:calendar id="calendarfechavencimientocostas"
+										value="#{acumulacionExpedienteManaged.obligacionDTO.fechaVencimiento}"
+										locale="#{msg['param.localedate']}" inputClass="maskDate"
+										datePattern="#{msg['param.datepattern']}"
+										enableManualInput="true" tabindex="7"
+										requiredMessage="#{msg['obl.requiredFechaVencimiento']}"
+										inputSize="10" required="true"
+										isDayEnabled="disablementFunction1"
+										converterMessage="#{msg['obl.converterFecha']}"
+										disabled="#{acumulacionExpedienteManaged.obligacionDTO.fechaEmision==null}" inputStyle="text-align:center">
+										<f:validator validatorId="fechaVencimientoValidator" />
+									</rich:calendar>
+									<rich:jQuery id="maskedo005" selector=".maskDate"
+										query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+								</h:panelGroup>
+								 -->
+								</h:panelGrid>
+
+							</h:panelGrid>
+
+							<!--*********************** Panel para Espectaculos Publicos No Deportivos EPND *******************-->
+
+							<h:panelGrid id="panelEPND"
+								rendered="#{acumulacionExpedienteManaged.cmbConcepto == 'EPND' and acumulacionExpedienteManaged.subConceptoDTO != null}"
+								columns="8"
+								columnClasses="collabel1, colfield, collabel, colfield, collabel, colfield, collabel, colfield"
+								rowClasses="row2">
+
+								<h:outputLabel value="#{msg['obl.labelFechaVencimiento']} "
+									for="calendarfechavencimientoepnd">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<h:panelGroup>
+									<rich:calendar id="calendarfechavencimientoepnd"
+										value="#{acumulacionExpedienteManaged.obligacionDTO.fechaVencimiento}"
+										locale="#{msg['param.localedate']}" inputClass="maskDate"
+										datePattern="#{msg['param.datepattern']}"
+										enableManualInput="true"
+										requiredMessage="#{msg['obl.requiredFechaVencimiento']}"
+										converterMessage="#{msg['obl.converterFecha']}" inputSize="10"
+										required="true" tabindex="4" inputStyle="text-align:center"></rich:calendar>
+									<rich:jQuery id="maskedo006" selector=".maskDate"
+										query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+								</h:panelGroup>
+
+								<h:outputLabel value="#{msg['obl.labelBaseImponible']} "
+									for="inputbaseimponibleepnd">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<h:inputText id="inputbaseimponibleepnd"
+									value="#{acumulacionExpedienteManaged.obligacionDTO.baseImponible}"
+									valueChangeListener="#{acumulacionExpedienteManaged.changeListenerInputBaseImponibleEPND}"
+									onkeypress="return validaEnteroPositivo2(event)"
+									style="text-align:right" required="true"
+									requiredMessage="#{msg['obl.requiredBaseImponible']}" size="15"
+									maxlength="16" tabindex="5">
+
+									<a4j:support reRender="inputimpuestoepnd" event="onchange"
+										bypassUpdates="false" ajaxSingle="true"></a4j:support>
+
+								</h:inputText>
+
+								<h:outputLabel value="#{msg['obl.labelTasa']} "
+									for="cmbtasaepnd">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<rich:comboBox id="cmbtasaepnd"
+									value="#{acumulacionExpedienteManaged.cmbTasa}"
+									defaultLabel="#{msg['obl.defaultLabelCmbTasa']}"
+									valueChangeListener="#{acumulacionExpedienteManaged.changeListenerCmbTasaEPND}"
+									required="true" requiredMessage="#{msg['obl.requiredTasa']}"
+									width="100" tabindex="6"
+									onkeypress="return showListCbo(this,event);"
+									onblur="validaInputCbo(this)">
+									<f:selectItem itemLabel="1" itemValue="5%" />
+									<f:selectItem itemLabel="2" itemValue="10%" />
+									<f:selectItem itemLabel="3" itemValue="15%" />
+
+									<a4j:support reRender="inputimpuestoepnd" event="onchange"
+										bypassUpdates="false" ajaxSingle="true"></a4j:support>
+								</rich:comboBox>
+
+
+								<h:outputLabel value="#{msg['obl.labelImpuesto']} "
+									for="inputimpuestoepnd">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<h:inputText id="inputimpuestoepnd"
+									value="#{acumulacionExpedienteManaged.obligacionDTO.monto}"
+									readonly="true" maxlength="16" style="text-align:right"
+									required="true" size="15">
+									<f:convertNumber locale="#{msg['param.localecurrency']}"
+										pattern="#0.00" />
+								</h:inputText>
+
+							</h:panelGrid>
+
+							<!--*********************** Panel para GASTOS*******************-->
+
+							<h:panelGrid id="panelGastos"
+								rendered="#{acumulacionExpedienteManaged.cmbConcepto == 'GASTOS' and acumulacionExpedienteManaged.subConceptoDTO != null}"
+								columns="4"
+								columnClasses="collabel1, colfield, collabel1, colfield"
+								rowClasses="row2">
+
+
+								<h:outputLabel value="#{msg['obl.labelMonto']} "
+									for="inputmontogastos">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<h:panelGroup>
+									<h:inputText id="inputmontogastos"
+										value="#{acumulacionExpedienteManaged.obligacionDTO.tasa}"
+										valueChangeListener="#{acumulacionExpedienteManaged.changeListenerInputIdTasa}"
+										onkeypress="return validaEnteroPositivo2(event)"
+										style="text-align:right" required="true" maxlength="8"
+										requiredMessage="#{msg['obl.requiredMonto']}" size="6"
+										tabindex="4">
+										<a4j:support ajaxSingle="true" event="onkeyup"
+											reRender="panelGastos" focus="inputmontogastos"
+											requestDelay="600"></a4j:support>
+									</h:inputText>
+									<h:outputText value="x" />
+									<h:inputText id="inputIdFactorGastos"
+										value="#{acumulacionExpedienteManaged.factor}"
+										valueChangeListener="#{acumulacionExpedienteManaged.changeListenerInputIdFactor}"
+										onkeypress="return validaEnteroPositivo2(event)" maxlength="3"
+										style="text-align:center" size="1">
+										<a4j:support ajaxSingle="true" event="onkeyup"
+											reRender="panelGastos" focus="inputIdFactorGastos"
+											requestDelay="600"></a4j:support>
+									</h:inputText>
+									<h:outputText value="=" />
+									<h:inputText
+										value="#{acumulacionExpedienteManaged.obligacionDTO.monto}"
+										readonly="true" style="text-align:right;padding-right: 4px;"
+										size="6" maxlength="8">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+											locale="#{msg['param.localecurrency']}" />
+									</h:inputText>
+								</h:panelGroup>
+								<h:outputLabel value="#{msg['obl.labelFechaLiquidacion']} "
+									for="calendarfechaliquidaciongastos">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<h:panelGroup>
+									<rich:calendar id="calendarfechaliquidaciongastos"
+										value="#{acumulacionExpedienteManaged.obligacionDTO.fechaLiquidacion}"
+										enableManualInput="true" inputClass="maskDate"
+										locale="#{msg['param.localedate']}"
+										datePattern="#{msg['param.datepattern']}"
+										requiredMessage="#{msg['obl.requiredFechaLiquidacion']}"
+										required="true"
+										converterMessage="#{msg['obl.converterFecha']}" inputSize="10"
+										tabindex="5" inputStyle="text-align:center">
+
+									</rich:calendar>
+									<rich:jQuery id="maskedo001" selector=".maskDate"
+										query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+								</h:panelGroup>
+
+
+								<!-- <h:outputLabel value="#{msg['obl.labelReferenciaRec']} "
+								for="inputreferenciarecgastos">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<h:inputText id="inputreferenciarecgastos"
+									value="#{acumulacionExpedienteManaged.obligacionDTO.referenciaREC}"
+									requiredMessage="#{msg['obl.requiredReferenciaRec']}" required="true"
+									size="17" maxlength="16" styleClass="prueba" tabindex="6" style="text-align:center">
+									<f:validator validatorId="nroValorValidator" />
+								</h:inputText>
+								<rich:jQuery id="maskedo0011" selector=".prueba"
+									query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+							</h:panelGroup> -->
+
+							</h:panelGrid>
+
+							<!--*********************** Panel para MULTAS DRTPE *******************-->
+
+							<h:panelGrid id="panelMULTASDRTPE"
+								rendered="#{acumulacionExpedienteManaged.cmbConcepto == 'MULTA DRTPE' and acumulacionExpedienteManaged.subConceptoDTO != null}"
+								columns="4"
+								columnClasses="collabel1, colfield, collabel1, colfield"
+								rowClasses="row2">
+
+
+								<h:outputLabel value="#{msg['obl.labelMonto']} "
+									for="inputmontogastos">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<h:panelGroup>
+									<!-- 								<h:inputText id="inputmontomultasdrtpe" value="#{acumulacionExpedienteManaged.obligacionDTO.tasa}" -->
+									<!-- 									 valueChangeListener="#{acumulacionExpedienteManaged.changeListenerInputIdTasa}" -->
+									<!-- 									onkeypress="return validaEnteroPositivo2(event)" style="text-align:right" required="true" maxlength="8" -->
+									<!-- 									requiredMessage="#{msg['obl.requiredMonto']}" size="6" tabindex="4" > -->
+									<!-- 									<a4j:support ajaxSingle="true" event="onkeyup" reRender="panelGastos" focus="inputmontogastos" requestDelay="600"></a4j:support> -->
+									<!-- 									</h:inputText> -->
+									<!-- 								<h:outputText value="x" />	 -->
+									<!-- 								<h:inputText id="inputIdFactorGastos" value="#{acumulacionExpedienteManaged.factor}" -->
+									<!-- 									valueChangeListener="#{acumulacionExpedienteManaged.changeListenerInputIdFactor}" -->
+									<!-- 									onkeypress="return validaEnteroPositivo2(event)" maxlength="3" style="text-align:center" size="1"> -->
+									<!-- 									<a4j:support ajaxSingle="true" event="onkeyup" reRender="panelGastos" focus="inputIdFactorGastos" requestDelay="600"></a4j:support> -->
+									<!-- 								</h:inputText> -->
+									<!-- 								<h:outputText value="=" /> -->
+									<h:inputText
+										value="#{acumulacionExpedienteManaged.obligacionDTO.monto}"
+										style="text-align:right;padding-right: 4px;" size="6"
+										maxlength="8">
+										<f:convertNumber minFractionDigits="2" maxFractionDigits="2"
+											locale="#{msg['param.localecurrency']}" />
+									</h:inputText>
+								</h:panelGroup>
+								<h:outputLabel value="#{msg['obl.labelFechaLiquidacion']} "
+									for="calendarfechaliquidaciongastos">
+									<span class="requiredField">*</span>
+								</h:outputLabel>
+								<h:panelGroup>
+									<rich:calendar id="calendarfechaliquidacionmultadrtpe"
+										value="#{acumulacionExpedienteManaged.obligacionDTO.fechaLiquidacion}"
+										enableManualInput="true" inputClass="maskDate"
+										locale="#{msg['param.localedate']}"
+										datePattern="#{msg['param.datepattern']}"
+										requiredMessage="#{msg['obl.requiredFechaLiquidacion']}"
+										required="true"
+										converterMessage="#{msg['obl.converterFecha']}" inputSize="10"
+										tabindex="5" inputStyle="text-align:center">
+									</rich:calendar>
+									<rich:jQuery id="maskedo3" selector=".maskDate"
+										query="mask('99/99/9999')" timing="onload" />
+								</h:panelGroup>
+								<!-- <h:outputLabel value="#{msg['obl.labelReferenciaRec']} "
+								for="inputreferenciarecgastos">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:panelGroup>
+								<h:inputText id="inputreferenciarecgastos"
+									value="#{acumulacionExpedienteManaged.obligacionDTO.referenciaREC}"
+									requiredMessage="#{msg['obl.requiredReferenciaRec']}" required="true"
+									size="17" maxlength="16" styleClass="prueba" tabindex="6" style="text-align:center">
+									<f:validator validatorId="nroValorValidator" />
+								</h:inputText>
+								<rich:jQuery id="maskedo0011" selector=".prueba"
+									query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+							</h:panelGroup> -->
+							</h:panelGrid>
+							<h:panelGrid id="panelButtons">
+								<a4j:commandButton
+									action="#{acumulacionExpedienteManaged.agregar}" 
+									value="#{msg['obl.labelAgregar']}" style="width:100px;"
+									reRender="panelGridData, panelButtonAceptar"
+									oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+									tabindex="10">
+								</a4j:commandButton>
+							</h:panelGrid>
+						</h:panelGrid>
+					</h:panelGrid>
+				</h:panelGrid>
+			</rich:panel>
+		</h:form>
+		<h:form>
+			<rich:panel id="panelObligaGeneradas">
+				<rich:datascroller for="gridG1" maxPages="20"></rich:datascroller>
+				<rich:dataTable id="gridG1"
+					value="#{acumulacionExpedienteManaged.listObligGeneradasDTOs}"
+					var="item" rows="5" height="150px" rowKeyVar="row">
+					<f:facet name="header">Lista de Obligaciones Generadas</f:facet>
+					<rich:column width="100px">
+						<f:facet name="header">Concepto</f:facet>
+						<h:outputText value="#{item.conceptoDescripcion}" />
+					</rich:column>
+					<rich:column width="240px">
+						<f:facet name="header">Sub Concepto</f:facet>
+						<h:outputText value="#{item.subConceptoDescripcion}" />
+					</rich:column>
+					<rich:column width="80px">
+						<f:facet name="header">Fecha Emisión</f:facet>
+						<h:outputText value="#{item.fechaEmision}">
+							<f:convertDateTime pattern="dd/MM/yyyy"
+								timeZone="#{msg['param.timezone']}" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="80px">
+						<f:facet name="header">Fecha Vencimiento.</f:facet>
+						<h:outputText value="#{item.fechaVencimiento}">
+							<f:convertDateTime pattern="dd/MM/yyyy"
+								timeZone="#{msg['param.timezone']}" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="50px">
+						<f:facet name="header">Costa Generada Por.</f:facet>
+						<h:outputText value="#{item.responsable}" />
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">Total Deuda</f:facet>
+						<h:outputText value="#{item.monto}" />
+					</rich:column>
+				</rich:dataTable>
+
+			</rich:panel>
+			<rich:panel id="panelGridData">
+				<rich:datascroller for="grid" maxPages="20"></rich:datascroller>
+				<rich:extendedDataTable id="grid" width="100%"
+					value="#{acumulacionExpedienteManaged.listObligacionDTOs}"
+					var="item" rows="5" height="150px" rowKeyVar="row"
+					selectionMode="single"
+					noDataLabel="No hay Costas y/o Gastos Agregados"
+					selection="#{acumulacionExpedienteManaged.selectObligacionDTO}">
+					<f:facet name="header">#{msg['obl.headerObligacionesAgregadas']}</f:facet>
+					<rich:column width="30px">
+						<f:facet name="header">#{msg['obl.extDataLblColQuit']}</f:facet>
+						<a4j:commandLink ajaxSingle="true" id="newlinkc3"
+							onclick="#{rich:component('panelpregunta')}.show();return false">
+							<h:graphicImage value="/images/modal/delete.gif" style="border:0"
+								id="xm11" />
+						</a4j:commandLink>
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">#{msg['obl.extDataLblColConcepto']}</f:facet>
+						<h:outputText value="#{item.conceptoDescripcion}" />
+					</rich:column>
+					<rich:column width="240px">
+						<f:facet name="header">#{msg['obl.extDataLblColSubConcepto']}</f:facet>
+						<h:outputText value="#{item.subConceptoDescripcion}" />
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">#{msg['obl.extDataLblColFecEmision']}</f:facet>
+						<h:outputText value="#{item.fechaEmision}">
+							<f:convertDateTime pattern="#{msg['param.datepattern']}"
+								locale="#{msg['param.localedate']}" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">#{msg['obl.extDataLblColFecVencimiento']}</f:facet>
+						<h:outputText value="#{item.fechaVencimiento}">
+							<f:convertDateTime pattern="#{msg['param.datepattern']}"
+								locale="#{msg['param.localedate']}" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="100px">
+						<f:facet name="header">#{msg['obl.extDataLblColFecInfraccion']}</f:facet>
+						<h:outputText value="#{item.fechaInfraccion}">
+							<f:convertDateTime pattern="#{msg['param.datepattern']}"
+								locale="#{msg['param.localedate']}" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="130px">
+						<f:facet name="header">#{msg['obl.extDataLblColFecLiquidacion']}</f:facet>
+						<h:outputText value="#{item.fechaLiquidacion}">
+							<f:convertDateTime pattern="#{msg['param.datepattern']}"
+								locale="#{msg['param.localedate']}" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="80px" style="text-align:right">
+						<f:facet name="header">#{msg['obl.extDataLblColMonto']}</f:facet>
+						<h:outputText value="#{item.monto}">
+							<f:convertNumber locale="#{msg['param.localecurrency']}"
+								pattern="#0.00" />
+						</h:outputText>
+					</rich:column>
+				</rich:extendedDataTable>
+				<rich:datascroller id="tableDataScroller" align="center" for="grid"
+					renderIfSinglePage="false" status="ajaxStatus" />
+				<br />
+				<h:outputText value="#{msg['obl.labelMontoTotal']} "
+					styleClass="textoMontoTotal" />
+				<h:outputText value="#{acumulacionExpedienteManaged.montoTotal}"
+					styleClass="textoMontoTotal">
+					<f:convertNumber locale="#{msg['param.localecurrency']}"
+						currencySymbol="S/." type="currency" />
+				</h:outputText>
+			</rich:panel>
+
+			<center>
+				<rich:panel id="panelButtonAceptar">
+					<a4j:commandButton value="Generar"
+						action="#{acumulacionExpedienteManaged.guardarItemsObligacion}"
+						rendered="#{not empty acumulacionExpedienteManaged.listObligacionDTOs}"
+						reRender="modalGeneracionSatisfactoria,panelGridData, panelButtonAceptar,panelObligaGeneradas"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'modalGeneracionSatisfactoria\');': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+						status="ajaxStatus" style="width:100px;" />
+				</rich:panel>
+			</center>
+
+
+			<!-- ***************** INICIO MODAL PANELS ********************* -->
+
+			<rich:modalPanel id="modalPanelVerVehiculos" width="1100"
+				onshow="ActiveModal.addModal(this)"
+				onhide="ActiveModal.removeModal('x')" height="430">
+				<f:facet name="header">
+					<h:outputText value="#{msg['obl.headerModalListadoVehi']}" />
+				</f:facet>
+
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/images/modal/close.png"
+							styleClass="hidelink" id="hidelink2" />
+						<rich:componentControl for="modalPanelVerVehiculos"
+							attachTo="hidelink2" operation="hide" event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<div align="center">
+					<h3>
+						<h:outputText value="#{msg['obl.labelVehiculos']}" />
+					</h3>
+				</div>
+
+				<rich:extendedDataTable id="tblListaDJVehicular"
+					value="#{acumulacionExpedienteManaged.listVehicularDTOs}"
+					var="record" width="100%" height="250px" sortMode="single"
+					selectionMode="single" noDataLabel="No existen vehiculos"
+					enableContextMenu="false">
+
+					<rich:column id="x1" width="40px" style="text-align: center;">
+						<f:facet name="header">Selec</f:facet>
+
+						<a4j:commandLink ajaxSingle="true"
+							oncomplete="#{rich:component('modalPanelVerVehiculos')}.hide();"
+							reRender="panelRefenciaObligacion">
+							<h:graphicImage value="/images/ver2.png" style="border: 0px;" />
+							<f:setPropertyActionListener
+								target="#{acumulacionExpedienteManaged.obligacionDTO.codigoPlacaReferencia}"
+								value="#{record.placa}" />
+							<f:setPropertyActionListener
+								target="#{acumulacionExpedienteManaged.obligacionDTO.djReferencia}"
+								value="#{record.djVehicularId}" />
+						</a4j:commandLink>
+					</rich:column>
+					<rich:column width="70px;">
+						<f:facet name="header">#{msg['rv.placa']}</f:facet>
+						<h:outputText value="#{record.placa}" />
+					</rich:column>
+					<rich:column width="100">
+						<f:facet name="header">#{msg['rv.nromotor']}</f:facet>
+						<h:outputText value="#{record.nroMotor}" />
+					</rich:column>
+					<rich:column width="200">
+						<f:facet name="header">#{msg['rv.categoria']}</f:facet>
+						<h:outputText value="#{record.categoria}" />
+					</rich:column>
+					<rich:column width="150">
+						<f:facet name="header">#{msg['rv.marca']}</f:facet>
+						<h:outputText value="#{record.marca}" />
+					</rich:column>
+					<rich:column width="210">
+						<f:facet name="header">#{msg['rv.modelo']}</f:facet>
+						<h:outputText value="#{record.modelo}" />
+					</rich:column>
+					<rich:column width="110">
+						<f:facet name="header">#{msg['rv.fechaadquisicion']}</f:facet>
+						<h:outputText value="#{record.fechaAdquisicion}">
+							<f:convertDateTime pattern="#{msg['param.datepattern']}"
+								timeZone="#{aplicationManaged.timeZone}" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="80">
+						<f:facet name="header">#{msg['rv.fechaDJ']}</f:facet>
+						<h:outputText value="#{record.fecha}">
+							<f:convertDateTime pattern="#{msg['param.datepattern']}"
+								timeZone="#{aplicationManaged.timeZone}" />
+						</h:outputText>
+					</rich:column>
+					<rich:column width="120">
+						<f:facet name="header">#{msg['gn.estado']}</f:facet>
+						<h:outputText value="#{msg['estado.activo']}"
+							rendered="#{record.estado==msg['param.rv.estadoactivo']}" />
+						<h:outputText value="#{msg['estado.anulado']}"
+							rendered="#{record.estado==msg['param.rv.anulado']}" />
+					</rich:column>
+				</rich:extendedDataTable>
+			</rich:modalPanel>
+			<rich:modalPanel id="modalPanelPredios" width="660" height="430"
+				onshow="ActiveModal.addModal(this)"
+				onhide="ActiveModal.removeModal('x')">
+				<f:facet name="header">
+					<h:outputText value="#{msg['obl.headerModalListadoPred']}" />
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/images/modal/close.png"
+							styleClass="hidelink" id="hidelink3" />
+						<rich:componentControl for="modalPanelPredios"
+							attachTo="hidelink3" operation="hide" event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<div align="center">
+					<h3>
+						<h:outputText value="#{msg['obl.labelPredios']}" />
+					</h3>
+				</div>
+				<rich:extendedDataTable id="datosConstruccion"
+					value="#{acumulacionExpedienteManaged.listDjPredials}"
+					var="recordPredial" width="635px" height="330px" sortMode="single"
+					selectionMode="single" enableContextMenu="false" rowKeyVar="row">
+					<rich:column id="x14" width="30px">
+						<a4j:commandLink ajaxSingle="true"
+							oncomplete="#{rich:component('modalPanelPredios')}.hide();"
+							reRender="panelRefenciaObligacion">
+							<h:graphicImage value="/images/ver2.png" style="border: 0px;" />
+							<f:setPropertyActionListener
+								target="#{acumulacionExpedienteManaged.obligacionDTO.codigoPlacaReferencia}"
+								value="#{recordPredial.codigoPredio}" />
+							<f:setPropertyActionListener
+								target="#{acumulacionExpedienteManaged.obligacionDTO.djReferencia}"
+								value="#{recordPredial.djId}" />
+						</a4j:commandLink>
+					</rich:column>
+					<rich:column id="x8" width="95px">
+						<f:facet name="header">Codigo Predio</f:facet>
+						<h:outputText value="#{recordPredial.codigoPredio}" />
+					</rich:column>
+					<rich:column id="x11" width="400px">
+						<f:facet name="header">#{msg['rp.direccion']}</f:facet>
+						<h:outputText value="#{recordPredial.direccionCompleta}" />
+					</rich:column>
+					<rich:column id="x7" width="110px">
+						<f:facet name="header">Tipo Predio</f:facet>
+						<h:outputText value="#{recordPredial.tipoPredio}" />
+					</rich:column>
+				</rich:extendedDataTable>
+			</rich:modalPanel>
+			<rich:modalPanel id="panelpregunta" autosized="true" width="300"
+				onshow="ActiveModal.addModal(this)"
+				onhide="ActiveModal.removeModal('x')">
+				<f:facet name="header">
+					<h:outputText value="#{msg['obl.headerMPConfirm']}" />
+				</f:facet>
+				<f:facet name="controls">
+					<h:panelGroup>
+						<h:graphicImage value="/images/modal/close.png"
+							id="iconclosepanelpregunta" styleClass="hidelink" />
+						<rich:componentControl for="panelpregunta"
+							attachTo="iconclosepanelpregunta" operation="hide"
+							event="onclick" />
+					</h:panelGroup>
+				</f:facet>
+				<h:panelGrid columns="1" columnClasses="coldialogconfirm"
+					width="100%">
+					<br />
+					<h:outputText id="succ" style="font-weight:bold;color:green"
+						value="#{msg['obl.messageMPConfirm']}" />
+					<br />
+					<h:panelGrid id="buttons" columns="2"
+						columnClasses="coldialogbutton1, coldialogbutton2" width="100%">
+
+						<a4j:commandButton value="#{msg['obl.MPConfirmLabelSi']}"
+							style="width:100px;"
+							action="#{acumulacionExpedienteManaged.quitar}"
+							reRender="panelGridData, panelButtonAceptar"
+							oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'panelpregunta\');return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};     " />
+
+						<a4j:commandButton value="#{msg['obl.MPConfirmLabelNo']}"
+							style="width:100px;"
+							onclick="#{rich:component('panelpregunta')}.hide();return false;" />
+					</h:panelGrid>
+				</h:panelGrid>
+			</rich:modalPanel>
+		</h:form>
+		<rich:modalPanel id="panelIncompatibleType" autosized="true"
+			onshow="ActiveModal.addModal(this)"
+			onhide="ActiveModal.removeModal('x')" width="300">
+
+			<f:facet name="header">
+				<h:outputText value="#{msg['obl.headerMPIncopatible']}" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						id="iconcloseincompatibletype" styleClass="hidelink" />
+					<rich:componentControl for="panelIncompatibleType"
+						attachTo="iconcloseincompatibletype" operation="hide"
+						event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+
+			<h:panelGrid columns="1" columnClasses="coldialogconfirm"
+				width="100%">
+
+				<h:panelGrid columns="1" columnClasses="coldialogconfirm"
+					width="100%">
+					<h:outputText id="incompatibletypemessage"
+						style="font-weight:bold;color:green"
+						value="#{msg['obl.messageMPIncopatible']}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="1" columnClasses="coldialogconfirm"
+					width="100%">
+					<a4j:commandButton value="#{msg['obl.MPIncopatibleLabelAceptar']}"
+						style="width:100px;"
+						onclick="#{rich:component('panelIncompatibleType')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</rich:modalPanel>
+		<rich:modalPanel id="modalGeneracionSatisfactoria" autosized="true"
+			onshow="ActiveModal.addModal(this)"
+			onhide="ActiveModal.removeModal('x')" width="300">
+			<f:facet name="header">
+				<h:outputText value="#{msg['obl.headerMPIncopatible']}" />
+			</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						id="iconclosegeneracionsatisfactoria" styleClass="hidelink" />
+					<rich:componentControl for="modalGeneracionSatisfactoria"
+						attachTo="iconclosegeneracionsatisfactoria" operation="hide"
+						event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+			<h:panelGrid columns="1" columnClasses="coldialogconfirm"
+				width="100%">
+				<h:panelGrid columns="1" columnClasses="coldialogconfirm"
+					width="100%">
+					<!-- 					<h:outputText style="font-weight:bold;color:green" -->
+					<!-- 						value="Se ha generado satisfactoriamente las obligaciones, ¿Desea quitar la detención de deudas para el pago?" /> -->
+					<h:outputText style="font-weight:bold;color:green"
+						value="Se ha generado satisfactoriamente las obligaciones." />
+				</h:panelGrid>
+				<h:panelGrid columns="2" columnClasses="coldialogconfirm"
+					width="100%">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						onclick="#{rich:component('modalGeneracionSatisfactoria')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</rich:modalPanel>
+	</rich:modalPanel>
+	<rich:modalPanel id="panelQuitarDetencionPagoDeuda" width="850"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" height="450">
+		<f:facet name="header">
+			<h:outputText style="font-weight:bold;font-size:14px;"
+				value="DEUDAS EN COACTIVA DEL CONTRIBUYENTE: #{acumulacionExpedienteManaged.personaId} - #{acumulacionExpedienteManaged.findCcActoItem.apellidosNombres==null?acumulacionExpedienteManaged.findCcActoAgrupadoItem.apellidosNombres:acumulacionExpedienteManaged.findCcActoItem.apellidosNombres}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="iconclosepanelQuitarDetencionPagoDeuda" styleClass="hidelink" />
+				<rich:componentControl for="panelQuitarDetencionPagoDeuda"
+					attachTo="iconclosepanelQuitarDetencionPagoDeuda" operation="hide"
+					event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmLstDeudasCoactiva">
+			<rich:extendedDataTable id="tabDeudasDetenidas"
+				value="#{acumulacionExpedienteManaged.lstDetencionDeudaDTOs}"
+				var="itemDetencion" selectionMode="single"
+				noDataLabel="No se encontró registros" enableContextMenu="false"
+				rowKeyVar="idy">
+				<rich:column width="10%" style="text-align:center;">
+					<f:facet name="header">Concepto</f:facet>
+					<h:outputText value="#{itemDetencion.descripcionConcepto}" />
+				</rich:column>
+				<rich:column width="10%" filterBy="#{itemDetencion.anho}"
+					style="text-align:center;">
+					<f:facet name="header">Año Deuda</f:facet>
+					<h:outputText value="#{itemDetencion.anho}" />
+				</rich:column>
+				<rich:column width="10%" filterBy="#{itemDetencion.placa}"
+					style="text-align:center;">
+					<f:facet name="header">Placa</f:facet>
+					<h:outputText value="#{itemDetencion.placa}"
+						rendered="#{itemDetencion.placa != null}" />
+					<h:outputText value="--" rendered="#{itemDetencion.placa == null}" />
+				</rich:column>
+				<rich:column width="90px" filterBy="#{itemDetencion.nroPapeleta}"
+					style="text-align:center;">
+					<f:facet name="header">Nro. Papeleta</f:facet>
+					<h:outputText value="#{itemDetencion.nroPapeleta}"
+						rendered="#{itemDetencion.nroPapeleta != null}" />
+					<h:outputText value="--"
+						rendered="#{itemDetencion.nroPapeleta == null}" />
+				</rich:column>
+				<rich:column width="115px" style="text-align:center;">
+					<f:facet name="header">Fecha Detención</f:facet>
+					<h:outputText value="#{itemDetencion.fechaDetencion}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+							timeZone="#{msg['param.timezone']}" />
+					</h:outputText>
+				</rich:column>
+				<rich:column width="115px" style="text-align:center;">
+					<f:facet name="header">Fecha Actualización</f:facet>
+					<h:outputText value="#{itemDetencion.fechaActualizacion}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss"
+							timeZone="#{msg['param.timezone']}" />
+					</h:outputText>
+				</rich:column>
+				<rich:column width="115px" style="text-align:center;">
+					<f:facet name="header">Usuario</f:facet>
+					<h:outputText value="#{itemDetencion.usuarioActualizacion}" />
+				</rich:column>
+				<rich:column width="75px" style="text-align:center;">
+					<f:facet name="header">Estado</f:facet>
+					<h:outputText
+						value="#{itemDetencion.estado == 1?'Habilitado':(itemDetencion.estado == 2?'Dehabilitado':'--') }" />
+				</rich:column>
+				<rich:column width="50px" style="text-align:center;">
+					<f:facet name="header"> Modif.</f:facet>
+					<!-- 					<a4j:commandLink id="commandButtonDesactivar" ajaxSingle="true" -->
+					<!-- 						status="ajaxStatus" -->
+					<!-- 						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'pnlDesbloqueo\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };" -->
+					<!-- 						reRender="pnlDesbloqueo"> -->
+					<!-- 						<h:graphicImage value="/images/bloqueado.gif" -->
+					<!-- 							style="border:0;width: 25px;" id="xm11" /> -->
+					<!-- 					</a4j:commandLink> -->
+					<a4j:commandLink ajaxSingle="true" id="commandButtonDesactivar"
+						action="#{acumulacionExpedienteManaged.activarFlagJustificacion}"
+						status="ajaxStatus" rendered="#{itemDetencion.estado == 1}"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'pnlDesbloqueo\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="pnlDesbloqueo">
+						<h:graphicImage value="/images/bloqueado.gif"
+							style="border:0;width: 25px;" id="xm11" />
+						<f:setPropertyActionListener value="#{itemDetencion}"
+							target="#{acumulacionExpedienteManaged.detencionesDeudasItem}"
+							id="r254" />
+					</a4j:commandLink>
+					<a4j:commandLink id="commandButtonActivar" ajaxSingle="true"
+						rendered="#{itemDetencion.estado == 2}" status="ajaxStatus"
+						action="#{acumulacionExpedienteManaged.activarDetencion(itemDetencion.personaId,itemDetencion.conceptoId,itemDetencion.subConceptoId,itemDetencion.anho, itemDetencion.determinacionId)}"
+						reRender="frmLstDeudasCoactiva"
+						oncomplete="#{facesContext.maximumSeverity == null ? '' :'Richfaces.showModalPanel(\'mpErrors\');' };">
+						<h:graphicImage value="/images/desbloqueado.gif"
+							style="border:0;width: 25px;" />
+					</a4j:commandLink>
+					<rich:toolTip for="commandButtonActivar" direction="top-left"> Click para activar bloqueo</rich:toolTip>
+					<rich:toolTip for="commandButtonDesactivar" direction="top-left"> Click para desactivar bloqueo</rich:toolTip>
+				</rich:column>
+			</rich:extendedDataTable>
+		</h:form>
+	</rich:modalPanel>
+	<rich:modalPanel id="modalNotificacionRec" width="400" autosized="true"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" top="130"
+		styleClass="sisatModalPanel">
+		<f:facet name="header">NOTIFICACION</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi2"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalNotificacionRec"
+					attachTo="hlpconfi2" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmNotificar">
+			<a4j:outputPanel ajaxRendered="true">
+				<rich:panel id="p01">
+					<table border="0" width="100%">
+						<tr>
+							<td align="left" width="140px"><h:outputText
+									value="Condición de Administrado." /> <span
+								style="color: red;">*</span></td>
+							<td align="left" width="100px"><rich:comboBox width="127px"
+									defaultLabel="Seleccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									value="#{acumulacionExpedienteManaged.codicionAdministrado}"
+									requiredMessage="Seleccione la Condición del Administrado."
+									required="true" id="id_codicAdministrado"
+									binding="#{acumulacionExpedienteManaged.cmbCondicionAdministrado}"
+									valueChangeListener="#{acumulacionExpedienteManaged.loadFormaNotificacionById}">
+									<f:selectItem id="id_1" itemValue="Ubicables" itemLabel="1" />
+									<f:selectItem id="id_2" itemValue="Inubicables" itemLabel="2" />
+									<f:selectItem id="id_3" itemValue="No Hallados" itemLabel="3" />
+									<a4j:support id="idEventAdm" event="onchange"
+										BypassUpdates="false" reRender="id_formaNotificacion"
+										ajaxSingle="true" />
+								</rich:comboBox></td>
+						</tr>
+						<tr>
+							<td align="left" width="140px"><h:outputText
+									value="Forma de Notificación:" /> <span style="color: red;">*</span></td>
+							<td><rich:comboBox width="250px" defaultLabel="Seleccione"
+									onblur="validaInputCbo(this)"
+									value="#{acumulacionExpedienteManaged.cmbValueNoNotificacion}"
+									requiredMessage="#{msg['cc.errormotivonotificacion']}"
+									required="true" id="id_formaNotificacion"
+									binding="#{acumulacionExpedienteManaged.cmbNoNotificacion}"
+									valueChangeListener="#{acumulacionExpedienteManaged.loadNotificacionById}">
+									<f:selectItems id="id_lsttiporelacion"
+										value="#{acumulacionExpedienteManaged.lstTipoNotificacion}" />
+								</rich:comboBox></td>
+						</tr>
+						<!-- 						<tr> -->
+						<!-- 							<td align="left" width="130px"><h:outputText -->
+						<!-- 									value="Tipo Notificacion:" /> <span style="color: red;">*</span></td> -->
+						<!-- 							<td><rich:comboBox width="250px" defaultLabel="Seleccione" -->
+						<!-- 									onblur="validaInputCbo(this)" -->
+						<!-- 									value="#{acumulacionExpedienteManaged.cmbValueNoNotificacion}" -->
+						<!-- 									required="true" -->
+						<!-- 									requiredMessage="#{msg['cc.errormotivonotificacion']}" -->
+						<!-- 									id="id_tiporelacion1" -->
+						<!-- 									binding="#{acumulacionExpedienteManaged.cmbNoNotificacion}" -->
+						<!-- 									valueChangeListener="#{acumulacionExpedienteManaged.loadNotificacionById}"> -->
+						<!-- 									<f:selectItems id="idTipNotificac" -->
+						<!-- 										value="#{acumulacionExpedienteManaged.lstTipoNotificacion}" /> -->
+						<!-- 								</rich:comboBox></td> -->
+						<!-- 						</tr> -->
+
+
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Notificador:" /> <span style="color: red;">*</span></td>
+							<td><h:panelGroup>
+									<rich:comboBox width="250px"
+										defaultLabel="Seleccione Notificador"
+										onblur="validaInputCbo(this)"
+										value="#{acumulacionExpedienteManaged.cmbNotificador}"
+										requiredMessage="Seleccione Un Notificador']}" required="true"
+										id="idCboNotificadores"
+										binding="#{acumulacionExpedienteManaged.cmbHtmlNotificador}"
+										valueChangeListener="#{acumulacionExpedienteManaged.loadNotificador}">
+										<f:selectItems id="id_lstNotificador"
+											value="#{acumulacionExpedienteManaged.lstSelectItemsNotificador}" />
+									</rich:comboBox>
+								</h:panelGroup></td>
+						</tr>
+						<tr>
+							<td align="left" width="100px"><h:outputText
+									value="Fecha de Notificación:" /> <span style="color: red;">*</span>
+							</td>
+							<td align="left" width="100px"><rich:calendar
+									required="true" datePattern="dd/MM/yyyy HH:mm:ss"
+									showWeeksBar="false" enableManualInput="true"
+									inputStyle="width:100px" id="id_fechanotificacion"
+									value="#{acumulacionExpedienteManaged.fechaNotificacion}"
+									onchanged="this.value = this.value.replace('ss', '00')">
+									<f:attribute name="userFormat" value="dd/MM/yyyy HH:mm:ss" />
+								</rich:calendar></td>
+						</tr>
+					</table>
+					<h:panelGrid columns="2">
+						<a4j:commandButton value="Notificar" style="width:100px;"
+							action="#{acumulacionExpedienteManaged.notificarRec}"
+							reRender="ccHistoricoRec,modalNotificacionRec"
+							oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }">
+						</a4j:commandButton>
+					</h:panelGrid>
+				</rich:panel>
+			</a4j:outputPanel>
+		</h:form>
+	</rich:modalPanel>
+	<rich:modalPanel id="modalEmisionRec" width="400" autosized="true"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" top="300"
+		styleClass="sisatModalPanel">
+		<f:facet name="header">INGRESAR FECHA EMISION PARA RECS MIGRADAS</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi9"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalEmisionRec" attachTo="hlpconfi9"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmIngresaFechaEmision">
+			<a4j:outputPanel ajaxRendered="true">
+				<rich:panel id="p01">
+					<table border="0" width="100%">
+						<tr>
+							<td align="left" width="100px"><h:outputText
+									value="Fecha de Emisión REC:" /> <span style="color: red;">*</span>
+							</td>
+							<td align="left" width="100px"><rich:calendar
+									required="true" datePattern="dd/MM/yyyy HH:mm:ss"
+									showWeeksBar="false" direction="top-right"
+									enableManualInput="true" inputStyle="width:100px"
+									id="idFechaEmision"
+									value="#{acumulacionExpedienteManaged.fechaEmisionRecMigradas}"
+									onchanged="this.value = this.value.replace('ss', '00')">
+									<f:attribute name="userFormat" value="dd/MM/yyyy HH:mm:ss" />
+								</rich:calendar></td>
+						</tr>
+					</table>
+					<h:panelGrid columns="2">
+						<a4j:commandButton value="Aceptar" style="width:100px;"
+							action="#{acumulacionExpedienteManaged.ingresarFechaEmisionMigrados}"
+							reRender="ccHistoricoRec,modalEmisionRec"
+							oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }">
+						</a4j:commandButton>
+					</h:panelGrid>
+				</rich:panel>
+			</a4j:outputPanel>
+		</h:form>
+	</rich:modalPanel>
+	<rich:modalPanel id="modalOtrasRec" width="1000" autosized="true"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" top="100">
+		<f:facet name="header">GENERAR RECs MASIVAS</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconf3"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalOtrasRec" attachTo="hlpconf3"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmGenerarOtrasRecs">
+			<h:panelGrid columns="2">
+				<h:outputText value="Tipo REC :" />
+				<rich:comboBox defaultLabel="Seleccione" width="400"
+					enableManualInput="false"
+					value="#{acumulacionExpedienteManaged.cmbTipoRec}"
+					binding="#{acumulacionExpedienteManaged.cmbNoTipoRecMasivo}"
+					required="true"
+					requiredMessage="Porfavor seleccione un Tipo de REC."
+					id="id_recMasivo"
+					valueChangeListener="#{acumulacionExpedienteManaged.loadTipoRecById}">
+					<f:selectItems value="#{acumulacionExpedienteManaged.listaTipoRec}" />
+					<a4j:support reRender="idDescripcionTipoRec" event="onchange"
+						bypassUpdates="false" ajaxSingle="true"></a4j:support>
+				</rich:comboBox>
+			</h:panelGrid>
+			<br />
+			<h:outputText id="idDescripcionTipoRec"
+				style="font-weight:bold;font-size:14px;"
+				value="#{msg['obl.descripcionSubConcepto']} #{acumulacionExpedienteManaged.cmbTipoRec}" />
+			<h:panelGrid columns="3" align="center">
+				<br />
+				<a4j:commandButton id="btnGenerarOtrasRecs" value="RECs Masiva"
+					action="#{acumulacionExpedienteManaged.generarRecMasiva}"
+					immediate="true"
+					reRender="pnlRecsMasivas,tablaRecsMasiva,principal"
+					oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+					style="width:100px;" status="ajaxStatus" />
+				<rich:toolTip for="btnGenerarOtrasRecs"
+					value="Generar RECs Masiva según Selección."></rich:toolTip>
+			</h:panelGrid>
+
+			<!-- Inicio de rec masiva -->
+
+			<rich:panel bodyClass="body3" style="width:1000px;height:320px"
+				id="pnlRecsMasivas">
+				<rich:datascroller for="tablaRecsMasiva" maxPages="10"></rich:datascroller>
+
+				<rich:extendedDataTable id="tablaRecsMasiva"
+					value="#{acumulacionExpedienteManaged.listaRecMasiva}" var="recmas"
+					rows="10" width="100%" height="290px"
+					noDataLabel="No se encontró registros" enableContextMenu="false"
+					rowKeyVar="mas1">
+					<f:facet name="header">
+						<h:outputLabel value="LISTA DE RECs MASIVA POR LOTE." />
+					</f:facet>
+					<rich:column id="idColum1" width="10%" style="text-align:center">
+						<f:facet name="header">LOTE REC</f:facet>
+						<h:outputText value="#{recmas.loteId}" />
+					</rich:column>
+					<rich:column id="idColum5" width="15%" style="text-align:center">
+						<f:facet name="header">FECHA LOTE</f:facet>
+						<h:outputText value="#{recmas.fechaEmisionRec}">
+							<f:convertDateTime pattern="dd/MM/yyyy"
+								timeZone="#{msg['param.timezone']}" />
+						</h:outputText>
+					</rich:column>
+					<rich:column id="idcolum2" style="text-align:center" width="53%">
+						<f:facet name="header">TIPO REC</f:facet>
+						<h:outputText value="#{recmas.descripcionTipoRec}" />
+					</rich:column>
+
+					<rich:column id="idcolum3" style="text-align:center" width="18%">
+						<f:facet name="header">NRO. RECs GENERADAS</f:facet>
+						<h:outputText value="#{recmas.nroRecsGeneradas}" />
+					</rich:column>
+					<rich:column id="idcolum4" style="text-align:center" width="4%">
+						<h:commandLink id="newBtnRecsMasivaPdf"
+							action="#{acumulacionExpedienteManaged.imprimirRecMasivaxTipo}"
+							immediate="true">
+							<h:graphicImage value="/images/modal/pdf.png" style="border:0"
+								title="Descargar Total de RECs por tipo Seleccionado." />
+							<f:setPropertyActionListener value="#{recmas}" id="al1"
+								target="#{acumulacionExpedienteManaged.findCcTipoRecs}" />
+							<rich:toolTip for="newlink22" direction="top-left"> Descargar Rec en Pdf.</rich:toolTip>
+						</h:commandLink>
+						<!-- 						<h:commandLink id="newBtnRecsPdf" -->
+						<!-- 							rendered="#{acumulacionExpedienteManaged.lista.get(0).nroExpediente!=null}" -->
+						<!-- 							action="#{acumulacionExpedienteManaged.generacionRecInicioPdf}" -->
+						<!-- 							immediate="true"> -->
+						<!-- 							<h:graphicImage value="/images/modal/pdf.png" style="border:0" -->
+						<!-- 								title="Lista de Rec" /> -->
+						<!-- 							<rich:toolTip id="tltp" for="newBtnRecsPdf" -->
+						<!-- 								value="Descargar RECs de Inicio."></rich:toolTip> -->
+						<!-- 						</h:commandLink> -->
+					</rich:column>
+				</rich:extendedDataTable>
+			</rich:panel>
+
+			<!-- Fin de rec Masiva -->
+		</h:form>
+	</rich:modalPanel>
+	<rich:modalPanel id="modalResumenExpedientes" width="1120"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" autosized="true" top="190">
+		<f:facet name="header">
+			<h:outputLabel
+				value="EXPEDIENTES AGRUPADOS POR CRITERIO DE BUSQUEDA." />
+		</f:facet>
+		<f:facet name="controls">
+
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="img1"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalResumenExpedientes" attachTo="img1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="3" style="left:300px; position:relative;">
+				<h:outputLabel id="id1" value="CANCELADA"
+					style="background-color:#FF8F8F;width:50px;" />
+				<h:outputLabel id="id3" value="PENDIENTE"
+					style="background-color:#FFFFFF;" />
+				<h:outputLabel id="id5" value="SUSPENDIDO TEMPORALMENTE"
+					style="background-color:#FDCFA0;" />
+				<h:outputLabel id="id4" value="REDETERMINADO"
+					style="background-color:#FFE7F3;" />
+				<h:outputLabel id="id2" value="PRESCRITA"
+					style="background-color:#EBC5FF; border:2px;" />
+				<h:outputLabel id="id6" value="SUSPENDIDO DEFINITIVAMENTE"
+					style="background-color:#FF8F8F;" />
+				<rich:toolTip for="id1" value="Indica Deuda Cancelada." />
+				<rich:toolTip for="id2"
+					value="Indica Deuda Prescrita x Control de la Deuda." />
+				<rich:toolTip for="id3" value="Indica Deuda Pendiente." />
+				<rich:toolTip for="id4"
+					value="Indica que la deuda asociada al Expediente fue REDETERMINADA." />
+				<rich:toolTip for="id5"
+					value="Indica que C. Coactiva Suspendio Temporalmente el Expediente." />
+				<rich:toolTip for="id6"
+					value="Indica que C. Coactiva Suspendio Definitivamente el Expediente." />
+			</h:panelGrid>
+			<rich:datascroller for="tablaExpAgrupados" maxPages="5"></rich:datascroller>
+			<!-- 			<rich:extendedDataTable  -->
+			<rich:extendedDataTable id="tablaExpAgrupados"
+				value="#{acumulacionExpedienteManaged.listaExpedienteAgrupados}"
+				var="agrup" rows="6" width="1154" height="250px"
+				selectionMode="single" noDataLabel="No se encontró registros"
+				enableContextMenu="false" rowKeyVar="mas2">
+				<f:facet name="header">
+					<h:outputLabel
+						value="LISTA DE EXPEDIENTES AGRUPADOS POR CONTRIBUYENTE: #{acumulacionExpedienteManaged.codigoPersonaBuscar}" />
+				</f:facet>
+				<rich:column
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					id="x2" width="3%">
+					<f:facet name="header">Ver</f:facet>
+					<a4j:commandLink ajaxSingle="true" id="lnk1"
+						action="#{acumulacionExpedienteManaged.selectRowSelection}"
+						status="ajaxStatus" reRender="principal">
+						<h:graphicImage value="/images/ver2.png" style="border:0" />
+						<f:setPropertyActionListener value="#{agrup}"
+							target="#{acumulacionExpedienteManaged.findCcActoAgrupadoItem}"
+							id="r5100" />
+					</a4j:commandLink>
+					<rich:toolTip for="lnk1"
+						value="Visualizar Abajo Detalle de Busqueda." />
+				</rich:column>
+				<rich:column id="idX1" width="4%"
+					style="background-color:#{agrup.styleSelected2};text-align:center;">
+					<f:facet name="header">LOTE</f:facet>
+					<h:outputText value="#{agrup.loteIdAnterior}" />
+				</rich:column>
+				<rich:column id="id2"
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					width="7%">
+					<f:facet name="header">TIPO ACTO</f:facet>
+					<h:outputText value="#{agrup.tipoActoDescripcionCorta}" />
+				</rich:column>
+				<rich:column id="idx2" filterBy="#{agrup.nroActo}"
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					width="11%">
+					<f:facet name="header">NRO. ACTO</f:facet>
+					<rich:toolTip for="linkSuspension"
+						value="Suspensión por Expediente."></rich:toolTip>
+					<a4j:commandLink ajaxSingle="true" id="linkSuspension"
+						disabled="#{agrup.estado_deuda.equals('CANCELADA')?true:false or agrup.estadoExpediente.equals('SUSP. DEFINITIVAMENTE')?true:false}"
+						status="ajaxStatus" reRender="modalSuspension"
+						action="#{acumulacionExpedienteManaged.verSuspensionXExpediente}"
+						oncomplete="#{rich:component('modalSuspension')}.hide();#{rich:component('modalSuspension')}.show();">
+						<h:outputText value="#{agrup.nroActo}" />
+						<f:setPropertyActionListener value="#{agrup}"
+							target="#{acumulacionExpedienteManaged.findCcActoAgrupadoItem}" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="id11"
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					width="17%">
+					<f:facet name="header">ADMINISTRADO</f:facet>
+					<h:outputText value="#{agrup.apellidosNombres}" />
+				</rich:column>
+				<rich:column id="id3" width="6%"
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					filterBy="#{agrup.annoDeuda}">
+					<f:facet name="header">AÑO DEUDA</f:facet>
+					<h:outputText value="#{agrup.annoDeuda}" />
+				</rich:column>
+				<rich:column id="id4" width="14%"
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					filterBy="#{agrup.nroExpediente}">
+					<f:facet name="header">Nº EXPEDIENTE</f:facet>
+					<rich:toolTip for="linkHistory"
+						value="Historial de RECs por Expediente."></rich:toolTip>
+					<a4j:commandLink ajaxSingle="true" id="linkHistory"
+						status="ajaxStatus"
+						action="#{acumulacionExpedienteManaged.mostrarHistoricoRECsXExpediente}"
+						oncomplete="#{rich:component('modalHistorial')}.hide();#{rich:component('modalHistorial')}.show();"
+						reRender="modalHistorial,panel">
+						<h:outputText value="#{agrup.nroExpediente}" />
+						<!-- 						<h:graphicImage value="/images/editable.jpg" style="border:0" /> -->
+						<f:setPropertyActionListener value="#{agrup}"
+							target="#{acumulacionExpedienteManaged.findCcActoAgrupadoItem}" />
+					</a4j:commandLink>
+					<!-- 					<h:outputText value="#{agrup.nroExpediente}" /> -->
+				</rich:column>
+				<rich:column id="id5" width="13%"
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					filterBy="#{agrup.placa}">
+					<f:facet name="header">PLACA</f:facet>
+					<h:outputText value="#{agrup.placa}" />
+				</rich:column>
+				<rich:column id="id6" width="7%"
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					filterBy="#{agrup.nroPapeleta}">
+					<f:facet name="header">N° PAPELETA</f:facet>
+					<h:outputText value="#{agrup.nroPapeleta}" />
+				</rich:column>
+				<rich:column id="id7"
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					width="7%">
+					<f:facet name="header">DEUDA (REC1)</f:facet>
+					<h:outputText value="#{agrup.montoDeuda}" />
+				</rich:column>
+				<rich:column id="id8" filterBy="#{agrup.estadoExpediente}"
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					width="6%">
+					<f:facet name="header">EST. EXPED.</f:facet>
+					<h:outputText value="#{agrup.estadoExpediente}" />
+					<rich:toolTip for="id8" value="Estado del Expediente."
+						direction="top-left"></rich:toolTip>
+				</rich:column>
+				<rich:column id="id9" filterBy="#{agrup.estado_deuda}"
+					style="background-color:#{agrup.styleSelected2};text-align:center;"
+					width="8%">
+					<f:facet name="header">EST. DEUDA</f:facet>
+					<h:outputText
+						value="#{agrup.estado_deuda==null?'REDETERMINADO':agrup.estado_deuda}" />
+					<rich:toolTip for="id9" value="Estado de la Deuda."
+						direction="top-left"></rich:toolTip>
+				</rich:column>
+
+			</rich:extendedDataTable>
+		</h:form>
+	</rich:modalPanel>
+	<rich:modalPanel id="modalRecInicio" width="280" autosized="true"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" top="250">
+		<f:facet name="header">
+			<h:outputText style="font-weight:bold; font-size:13px;"
+				value="Generar RECs Inicio Masivas en Sub Lotes" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="imgx1"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalRecInicio" attachTo="imgx1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Nº de Registros a Generar." />
+				<h:inputText
+					value="#{acumulacionExpedienteManaged.nroRegistrosGenerar}"
+					style="width:60px;">
+					<a4j:support ajaxSingle="true" event="onkeyup" requestDelay="700"></a4j:support>
+				</h:inputText>
+			</h:panelGrid>
+			<a4j:commandButton id="cmdRecInicio" value="Generar REC Inicio"
+				action="#{acumulacionExpedienteManaged.generarRecInicio}"
+				immediate="true"
+				reRender="principalExigibles,principal,cctable,cmdRecInicio,cmdOtrasRecs,modalRecInicio"
+				oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+				status="ajaxStatus">
+				<rich:toolTip for="cmdRecInicio"
+					value="Generar RECs de Inicio Masivas ."></rich:toolTip>
+			</a4j:commandButton>
+		</h:form>
+	</rich:modalPanel>
+	<rich:modalPanel id="pnlDesbloqueo" width="250" autosized="true"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" height="120" top="160">
+		<f:facet name="header">Advertencia!!!!!!!</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="closeImag"
+					styleClass="hidelink" />
+				<rich:componentControl for="pnlDesbloqueo" attachTo="closeImag"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:outputText style="font-weight:bold;"
+				value="Está seguro que desea desbloquear Deuda #{sessionManaged.user.usuario} ?." />
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Justificación:"
+					rendered="#{acumulacionExpedienteManaged.flagJustificacion}" />
+				<h:inputTextarea id="txtJustifique"
+					rendered="#{acumulacionExpedienteManaged.flagJustificacion}"
+					value="#{acumulacionExpedienteManaged.justificacionDesbloqueo}"
+					required="true" style="width:250px;">
+					<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+				</h:inputTextarea>
+				<h:outputLabel value="" />
+				<rich:message for="txtJustifique" style="color:red;"></rich:message>
+			</h:panelGrid>
+			<h:panelGroup
+				style=" text-align: center; width:100%; position:absolute;">
+				<a4j:commandButton id="commandBtnDesactivar" value="Desbloquear"
+					ajaxSingle="true" status="ajaxStatus"
+					action="#{acumulacionExpedienteManaged.desactivarDetencion(acumulacionExpedienteManaged.detencionesDeudasItem.personaId,
+					acumulacionExpedienteManaged.detencionesDeudasItem.conceptoId,
+					acumulacionExpedienteManaged.detencionesDeudasItem.subConceptoId,
+					acumulacionExpedienteManaged.detencionesDeudasItem.anho, 
+					acumulacionExpedienteManaged.detencionesDeudasItem.determinacionId)}"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					reRender="frmLstDeudasCoactiva">
+					<!-- 					<h:graphicImage value="/images/bloqueado.gif" -->
+					<!-- 						style="border:0;width: 25px;" id="idDesb" /> -->
+					<rich:componentControl for="pnlDesbloqueo"
+						attachTo="commandBtnDesactivar" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</h:panelGroup>
+		</h:form>
+	</rich:modalPanel>
+	<rich:modalPanel id="modalSuspension" width="400" autosized="true"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" top="190">
+		<f:facet name="header">
+			<h:outputLabel
+				value="SUSPENSION DE EXPEDIENTES BAJO RESPONSABILIDAD." />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="imgX"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalSuspension" attachTo="imgX"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Nro. Expediente :" />
+				<h:outputText id="idExpedienteSusp" style="font-weight:bold;"
+					value="#{acumulacionExpedienteManaged.findCcActoAgrupadoItem.nroExpediente}" />
+				<h:outputLabel value="Administrado :" />
+				<h:outputText id="nombreAdministrado" style="font-weight:bold;"
+					value="#{acumulacionExpedienteManaged.findCcActoAgrupadoItem.personaId} - #{acumulacionExpedienteManaged.findCcActoAgrupadoItem.apellidosNombres}" />
+				<h:outputLabel value="Nro. Acto :" />
+				<h:outputText id="idNroActoSusp" style="font-weight:bold;"
+					value="#{acumulacionExpedienteManaged.findCcActoAgrupadoItem.nroActo}" />
+				<h:outputLabel value="Motivo Suspensión :" />
+				<h:inputTextarea id="txtJustifique"
+					value="#{acumulacionExpedienteManaged.motivoCancelacion}"
+					required="true" style="width:250px;"
+					requiredMessage="*****Ingrese Justificación***">
+					<a4j:support ajaxSingle="true" event="onblur"></a4j:support>
+					<f:validateLength for="txtJustifique" maximum="200" />
+				</h:inputTextarea>
+				<h:outputLabel value="Acto que Suspende :" />
+				<h:panelGroup>
+					<h:inputText value="#{acumulacionExpedienteManaged.nroResolucion}"
+						required="true" styleClass="nroResol" maxlength="16">
+						<a4j:support ajaxSingle="true" event="onblur" />
+					</h:inputText>
+					<rich:jQuery id="maskResol" selector=".nroResol"
+						query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+				</h:panelGroup>
+				<h:outputLabel value="Fecha Suspensión :" />
+				<h:outputText id="txtFecha"
+					value="#{acumulacionExpedienteManaged.findCcActoAgrupadoItem.fechaCancelacion}">
+					<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss a" />
+				</h:outputText>
+				<h:outputLabel value="Responsable :" />
+				<h:outputText id="txtResponsable"
+					value="#{acumulacionExpedienteManaged.findCcActoAgrupadoItem.usuarioCancelacion}">
+				</h:outputText>
+				<h:outputLabel value="Estado :" />
+				<rich:comboBox id="idEstadosSusp" width="150px"
+					defaultLabel="Selecccione"
+					binding="#{acumulacionExpedienteManaged.cmbHtmlEstadoSusp}"
+					onblur="validaInputCbo(this)"
+					value="#{acumulacionExpedienteManaged.estadoCancelacion}"
+					valueChangeListener="#{acumulacionExpedienteManaged.loadSeleccion}"
+					enableManualInput="false" selectFirstOnUpdate="true"
+					directInputSuggestions="true" immediate="false">
+					<f:selectItem id="idA1" itemValue="Susp. Definitiva" />
+					<f:selectItem id="idA2" itemValue="Susp. Temporal" />
+					<f:selectItem id="idA3" itemValue="Activo" />
+					<!-- 					<f:selectItems -->
+					<!-- 						value="#{acumulacionExpedienteManaged.listEstadosCancelacion}" /> -->
+					<a4j:support id="idEventSusp" event="onchange"
+						BypassUpdates="false" ajaxSingle="true" />
+				</rich:comboBox>
+				<a4j:commandButton id="cmdSuspender" value="Suspender"
+					action="#{acumulacionExpedienteManaged.suspenderExpediente}"
+					reRender="tablaExpAgrupados,modalSuspension,idEstadosSusp"
+					oncomplete="#{facesContext.maximumSeverity == null ?'Richfaces.showModalPanel(\'panelconfirma\');':'Richfaces.showModalPanel(\'mpErrors\');' }"
+					style="width:150px;" immediate="true" status="ajaxStatus">
+				</a4j:commandButton>
+				<h:outputLabel value="" />
+				<rich:message for="txtJustifique" style="color:red;"></rich:message>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

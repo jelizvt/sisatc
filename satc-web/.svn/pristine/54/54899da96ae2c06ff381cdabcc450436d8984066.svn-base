@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formRematarVehiculo">
+
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<rich:hotKey key="F2" disableInInput="false"
+			handler="Richfaces.showModalPanel('pnlNuevoRemate'); return true;" />
+		<rich:hotKey key="esc"
+			handler="if(ActiveModal.activeModalPanel){Richfaces.hideModalPanel(ActiveModal.activeModalPanel);}" />
+		<rich:panel id="id_panelRemates" style="width:100%;">
+			<f:facet name="header">		
+			VEHICULOS REMATADOS
+			</f:facet>
+			<h:panelGroup>
+				<a4j:commandButton rendered="#{remateVehiculosManaged.permisoAgregarRegistrar}" id="id_commandbuscar" value="Nuevo Remate"
+					reRender="pnlNuevoRemate" style="width:100px;"
+					action="#{remateVehiculosManaged.nuevoRemate}"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'pnlNuevoRemate\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					status="ajaxStatus"></a4j:commandButton>
+			</h:panelGroup>
+			<rich:datascroller for="tabRemates" maxPages="20"></rich:datascroller>
+			<rich:extendedDataTable id="tabRemates"
+				value="#{remateVehiculosManaged.listRemate}" var="record"
+				width="100%" sortMode="single" selectionMode="single"
+				enableContextMenu="false" rowKeyVar="row" rows="50">
+				<rich:column id="x1" style="text-align:center" width="2%">
+					<f:facet name="header">Itm</f:facet>
+					<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+				</rich:column>
+				<rich:column id="x2" style="text-align:center" width="6%"
+					filterBy="#{record.placa}">
+					<f:facet name="header">Placa</f:facet>
+					<h:outputText value="#{record.placa}" />
+				</rich:column>
+				<rich:column id="x5" width="6%" style="text-align:center"
+					filterBy="#{record.propietarioId}">
+					<f:facet name="header">Codigo</f:facet>
+					<h:outputText value="#{record.propietarioId}" />
+				</rich:column>
+				<rich:column id="id2" width="20%" style="text-align:center"
+					filterBy="#{record.gnPersona.apellidosNombres}">
+					<f:facet name="header">Propietario</f:facet>
+					<h:outputText value="#{record.gnPersona.apellidosNombres}" />
+				</rich:column>
+				<rich:column id="x4_" width="8%" style="text-align:center">
+					<f:facet name="header">Monto Adjudicado</f:facet>
+					<h:outputText value="#{record.montoAdjudicado}" />
+				</rich:column>
+				<rich:column id="x9" style="text-align:center" width="7%">
+					<f:facet name="header">Fecha  Remate</f:facet>
+					<h:outputText value="#{record.fechaRemate}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x3" style="text-align:center" width="11%">
+					<f:facet name="header">Fecha  Registro</f:facet>
+					<h:outputText value="#{record.fechaRegistro}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss a" timeZone="EST" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x6" width="35%" style="text-align:center">
+					<f:facet name="header">Sustento</f:facet>
+					<h:outputText value="#{record.sustento}" />
+				</rich:column>
+				<rich:column id="x10" filterBy="#{record.sgUsuario.nombreUsuario}"
+					width="6%">
+					<f:facet name="header">Registró</f:facet>
+					<h:outputText value="#{record.sgUsuario.nombreUsuario}" />
+				</rich:column>
+			</rich:extendedDataTable>
+
+		</rich:panel>
+	</h:form>
+	<rich:modalPanel id="pnlNuevoRemate" width="420" autosized="true"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" height="260" top="200">
+		<f:facet name="header">Registro Remate de Vehiculo</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="closeImag"
+					styleClass="hidelink" />
+				<rich:componentControl for="pnlNuevoRemate" attachTo="closeImag"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="edit_form">
+			<h:outputText style="font-weight:bold;"
+				value="Cuidado!!! #{sessionManaged.user.usuario} al Registrar Rematará el Vehiculo." />
+			<rich:separator height="1" lineType="solid" width="100%" />
+			<a4j:outputPanel ajaxRendered="true">
+				<rich:panel id="p01">
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Codigo:" />
+						<h:inputText id="txtPersonaIdPropietario"
+							value="#{remateVehiculosManaged.datosPropietario.personaId}"
+							style="width:60px" disabled="true" />
+						<h:outputLabel value="DNI:" />
+						<h:inputText id="txtDni"
+							value="#{remateVehiculosManaged.datosPropietario.nroDocuIdentidad}"
+							style="width:60px" disabled="true" />
+						<h:outputLabel value="Propietario:" />
+						<h:inputText id="txtApellidosNombresPopietario"
+							value="#{remateVehiculosManaged.datosPropietario.apellidosNombres eq ''?remateVehiculosManaged.datosPropietario.razonSocial:remateVehiculosManaged.datosPropietario.apellidosNombres}"
+							style="width:250px;" disabled="true" />
+						<h:outputLabel value="" />
+						<a4j:commandButton id="cmdBuscarPropietario"
+							title="Buscar Propietario" value="#{msg['gn.buscar']}"
+							immediate="true"
+							action="#{remateVehiculosManaged.setPersonaAsociadaConPapeleta}"
+							oncomplete="#{rich:component('id_panelBuscarPersonaPapeletas')}.show()"
+							reRender="id_panelBuscarPersonaPapeletas">
+							<f:param name="destinoRefresh"
+								value="txtApellidosNombresPopietario" />
+						</a4j:commandButton>
+					</h:panelGrid>
+				</rich:panel>
+			</a4j:outputPanel>
+			<rich:panel id="p02">
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Placa:" />
+					<h:panelGroup>
+						<h:inputText id="txtNroPlaca" size="10"
+							value="#{remateVehiculosManaged.placa}" maxlength="8"
+							style="width:60px; text-transform:uppercase;" required="true"
+							requiredMessage="Ingrese Placa" onkeyup="validaPlacaMotor(this)"
+							styleClass="placa" converter="#{upperCaseConverter}">
+							<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+						</h:inputText>
+						<rich:message for="txtNroPlaca" />
+						<rich:jQuery id="maskPlaca" selector=".placa"
+							query="mask('*****?***',{placeholder:' '})" timing="onload" />
+					</h:panelGroup>
+					<h:outputLabel value="Monto Adjudicado:" />
+					<h:inputText style="width:60px;"
+						value="#{remateVehiculosManaged.montoAdjudicado}">
+						<!-- 							<f:convertNumber type="currency" minFractionDigits="2" -->
+						<!-- 								maxFractionDigits="2" locale="en" /> -->
+						<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+					</h:inputText>
+					<h:outputLabel value="Fecha Remate:" />
+					<h:panelGroup>
+						<rich:calendar id="fechaRemate"
+							value="#{remateVehiculosManaged.fechaRemate}"
+							locale="#{msg['param.localedate']}"
+							datePattern="#{msg['param.datepattern']}"
+							enableManualInput="false"
+							requiredMessage="#{msg['obl.requiredFechaEmision']}"
+							inputSize="10" converterMessage="#{msg['obl.converterFecha']}"
+							required="true" tabindex="6" inputStyle="width:60px"
+							immediate="true">
+							<a4j:support event="onchanged" ajaxSingle="true"></a4j:support>
+						</rich:calendar>
+						<!-- 						<rich:jQuery id="maskedo004" selector=".maskDate" -->
+						<!-- 							query="mask('#{msg['obl.maskFecha']}')" timing="onload" /> -->
+						<!-- 							<rich:calendar locale="en/US" datePattern="dd/MM/yyyy" -->
+						<!-- 								popup="true" enableManualInput="true" inputClass="maskDate" -->
+						<!-- 								id="idfechaRemate" required="true" -->
+						<!-- 								requiredMessage="Indique la fecha de Remate" -->
+						<!-- 								inputStyle="width:60px" immediate="true" -->
+						<!-- 								value="#{remateVehiculosManaged.fechaRemate}"> -->
+						<!-- 								<a4j:support event="onchange" ajaxSingle="true"></a4j:support> -->
+						<!-- 							</rich:calendar> -->
+						<!-- 							<rich:jQuery id="maskedo4" selector=".maskDate" -->
+						<!-- 								query="mask('99/99/9999')" timing="onload" /> -->
+					</h:panelGroup>
+					<h:outputLabel for="txtSustento" value="Sustento:" />
+					<h:inputTextarea id="txtSustento"
+						value="#{remateVehiculosManaged.sustento}" required="true"
+						style="width:250px;" requiredMessage="*****Ingrese Sustento***">
+						<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+						<f:validateLength for="txtJustifique" maximum="200" />
+						<rich:ajaxValidator event="onblur" />
+					</h:inputTextarea>
+					<h:outputText value="" />
+					<rich:message for="txtSustento" />
+				</h:panelGrid>
+
+			</rich:panel>
+			<h:panelGroup
+				style=" text-align: center; width:100%; position:absolute;">
+				<a4j:commandButton id="cmdRegistrarRemate" value="Registrar"
+					action="#{remateVehiculosManaged.guardarRemates}" ajaxSingle="true"
+					status="ajaxStatus"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirma\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					reRender="id_panelRemates,edit_form">
+					<rich:componentControl for="pnlNuevoRemate"
+						attachTo="cmdRegistrarRemate" operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</h:panelGroup>
+
+		</h:form>
+	</rich:modalPanel>
+	<rich:modalPanel id="id_panelBuscarPersonaPapeletas" autosized="true"
+		width="800" height="500" onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+		<!-- 	onshow="autofocus('frmBuscarPersonaPapeletas');focusInputCodigoPersona()" -->
+		<f:facet name="header">#{msg['pa.buscarpersonas']}</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddPerson" styleClass="hidelink" />
+				<rich:componentControl for="id_panelBuscarPersonaPapeletas"
+					attachTo="hideIconAddPerson" operation="hide" event="onclick" />
+			</h:panelGroup>
+
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/papeletas/buscarpersonapapeletas.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+</ui:composition>

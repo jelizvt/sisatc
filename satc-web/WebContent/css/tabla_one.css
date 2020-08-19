@@ -1,0 +1,67 @@
+@charset "ISO-8859-1";
+.tabla{
+      border: solid 2px #2E2EFE ;
+      border-collapse: collapse;
+      color: #424242;
+      font-weight: bold;
+}
+.cabeceraTabla{
+  color: #FFFFFF;
+  background: #0080FF;
+  padding:5px;
+}
+.fila1{
+  text-align: center;
+  background:#FFFFFF;
+ 
+  }
+.fila2{
+  text-align: center;
+  background:#EFEFFB;
+  border: solid 2px #2E2EFE;
+  }
+  .msjError{
+    color: #FF0000;
+    font-weight: bold;
+    margin: 0px 0px 0px 15px;
+}
+.form{
+  border: solid 2px #2E2EFE;
+  width: 800px;
+  padding: 20px;
+}
+.label{
+  width: 300px;
+}
+.txtNombre, .txtApellido{
+  margin-left: 90px;
+  width: 200px;
+}
+.txtDireccion{
+  margin-left: 83px;
+  width: 250px;
+}
+.txtMail{
+  margin-left: 114px;
+  width: 250px;
+}
+.txtSectorEmpr{
+  margin-left: 11px;
+  width: 20px;
+}
+.txtSueldoBas{
+  margin-left: 54px;
+  width: 50px;
+}
+.txtFechaNac{
+  margin-left: 51px;
+  width: 80px;
+}
+.txtNombre, .txtApellido, .txtDireccion, .txtMail, .txtSectorEmpr, .txtSueldoBas, .txtFechaNac{
+  font: 15px bold;
+  color: #045FB4;
+}
+.texto{
+  color: blue;
+  font-size: 2px;
+}

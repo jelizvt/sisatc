@@ -1,0 +1,1077 @@
+package com.sat.sisat.cobranzacoactiva.dao;
+
+import java.math.BigDecimal;
+import java.security.Timestamp;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.sat.sisat.cobranzacoactiva.dto.FindCcLoteDetalleActoExp;
+import com.sat.sisat.cobranzacoactiva.dto.FindCcLoteExigible;
+import com.sat.sisat.cobranzacoactiva.dto.FindCcRecHistorico;
+import com.sat.sisat.cobranzacoactiva.dto.FindCcRecTipo;
+import com.sat.sisat.common.dao.GeneralDao;
+import com.sat.sisat.common.security.UserSession;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.common.util.SATParameterFactory;
+import com.sat.sisat.controlycobranza.dto.FindCcLote;
+import com.sat.sisat.controlycobranza.dto.FindCcLoteDetalleActo;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.obligacion.dto.ObligacionDTO;
+import com.sat.sisat.persistence.entity.GnRemate;
+
+public class CobranzaCoactivaBusinessDao extends GeneralDao {
+
+	public Boolean contribEnCobranzaCoactiva(Integer personaId)
+			throws SisatException {
+
+		Boolean respuesta = Boolean.FALSE;
+
+		String sql = "select case when COUNT(*) > 0 then 1 else 0 end from cd_deuda where persona_id = ? and flag_cc = 1 AND flag_detencion=1";
+		// String sql =
+		// "select case when COUNT(*) > 0 then 1 else 0 end from cc_detencion_deuda where persona_id = ? and estado = 1";
+
+		PreparedStatement pst;
+		try {
+			pst = connect().prepareStatement(sql);
+			pst.setInt(1, personaId);
+
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				respuesta = rs.getBoolean(1);
+			}
+		} catch (SQLException e) {
+
+			throw new SisatException(e.getMessage());
+		} catch (SisatException e) {
+
+			throw e;
+		}
+
+		return respuesta;
+	}
+
+	public Boolean resultadoDjsSinDeterminar(Integer personaId)
+			throws SisatException, SQLException {
+
+		Boolean respuesta = Boolean.FALSE;
+
+		try {
+
+			String SQL = "spt_cc_verificaDjsSinDeterminar ?";
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, personaId);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				respuesta = rs.getBoolean(1);
+
+			}
+		} catch (SQLException e) {
+
+			throw new SisatException(e.getMessage());
+
+		}
+		return respuesta;
+	}
+
+	public List<FindCcLoteDetalleActoExp> getAllFindCcLoteExp(Integer lote_id)
+			throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+
+		try {
+			StringBuilder SQL = new StringBuilder(
+					"exec dbo.stp_getAllDeudaExigibleDetalle ?");
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, lote_id);
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+
+				obj.setDeudaExigibleId(rs.getInt("deuda_exigible_id"));
+				obj.setLoteId(rs.getInt("lote_id"));
+				obj.setTipoActoId(rs.getInt("tipo_acto_id"));
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setActoId(rs.getInt("acto_id"));
+				obj.setTipoActo(rs.getString("descripcion"));
+				obj.setApellidosNombres(rs.getString("apellidos_nombres"));
+				obj.setTipoActoDescripcionCorta(rs
+						.getString("descripcion_corta"));
+				obj.setNroActo(rs.getString("nro_acto"));
+				obj.setAnnoLote(rs.getInt("anno_lote"));
+				obj.setMontoDeuda(rs.getBigDecimal("monto_deuda"));
+				obj.setAnnoDeuda(rs.getInt("anno_deuda"));
+				obj.setDeuda(rs.getBigDecimal("deuda"));
+				obj.setPago(rs.getBigDecimal("pago"));
+				obj.setConceptoId(rs.getInt("concepto_id"));
+				obj.setConcepto(rs.getString("concepto"));
+				obj.setNroDocumento(rs.getString("nroDocumento"));
+				obj.setDireccion(rs.getString("direccion"));
+				obj.setSector(rs.getString("sector"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setNroExpediente(rs.getString("nro_expediente"));
+				obj.setLoteRecId(rs.getInt("lote_rec_id"));
+				obj.setTipoDocumentoId(rs.getInt("tipo_documento_id"));
+				obj.setFechaPago(rs.getTimestamp("fecha_pago"));
+				obj.setUltimaRecEmitida(rs.getString("ultima_rec"));
+				obj.setPapeletaId(rs.getInt("papeleta_id"));
+				obj.setNroPapeleta(rs.getString("numero_papeleta"));
+				obj.setUltimaTipoRecId(rs.getInt("tipo_rec_id"));
+				obj.setFechaNotificacion(rs.getTimestamp("fecha_notificacion"));
+				obj.setEstadoExpediente(rs.getString("estado_expediente"));
+				if (obj.getTipoActoId()==10 && obj.getConceptoId()==2){
+					obj.setPlaca(rs.getString("placa"));
+				}
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public List<FindCcLoteExigible> getAllFindLote() throws Exception {
+		List<FindCcLoteExigible> list = new ArrayList<FindCcLoteExigible>();
+
+		try {
+			String SQL = new String("stp_getAllDeudaExigible");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+
+				FindCcLoteExigible obj = new FindCcLoteExigible();
+				obj.setLoteId(rs.getInt("lote_id"));
+				obj.setAnnoLote(rs.getInt("anno_lote"));
+				obj.setDescripcionCorta(rs.getString("descripcion_corta"));
+				obj.setTipoActoId(rs.getInt("tipo_acto_id"));
+				obj.setFechaRegistro(rs.getString("fecha_registro"));
+				obj.setUsuario(rs.getString("nombre_usuario"));
+				obj.setTipoActoAnterior(rs.getString("concepto_tipo_acto"));
+				obj.setHoraRegistro(rs.getString("hora_registro"));
+				obj.setCantidadValores(rs.getInt("total_registros"));
+				obj.setMontoDeuda(rs.getBigDecimal("monto_deuda"));
+				obj.setEstadoLote(rs.getString("estado_lote"));
+				obj.setNroRegConExpediente(rs.getInt("con_expediente"));
+
+				list.add(obj);
+
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public List<FindCcLoteDetalleActoExp> getAllExpedientesAcumulados(
+			Integer personaId) throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+
+		try {
+			String SQL = new String("stp_getAllExpedientesAcumulados ?");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, personaId);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setConceptoId(rs.getInt("concepto_id"));
+				obj.setLoteRecId(rs.getInt("lote_id"));
+				obj.setDeudaExigibleId(rs.getInt("deuda_exigible_id"));
+				obj.setLoteIdAnterior(rs.getInt("lote_exigible_id"));
+				obj.setNroExpediente(rs.getString("nro_expediente"));
+				obj.setAnnoDeuda(rs.getInt("anno_deuda"));
+				obj.setMontoDeuda(rs.getBigDecimal("deuda_total"));
+				obj.setTipoActoDescripcionCorta(rs
+						.getString("descripcion_corta"));
+				obj.setPlaca(rs.getString("placa"));
+				obj.setNroPapeleta(rs.getString("nro_papeleta"));
+				obj.setPapeletaId(rs.getInt("papeleta_id"));
+				obj.setApellidosNombres(rs.getString("apellidos_nombres"));
+				obj.setActoId(rs.getInt("acto_id"));
+				obj.setTipoDocumentoId(rs.getInt("tipo_documento_id"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setNroActo(rs.getString("nro_acto"));
+				obj.setEstadoExpediente(rs.getString("estado_expediente"));
+				obj.setMotivoCancelacion(rs.getString("motivo_cancelacion"));
+				obj.setResolucionCancelacion(rs
+						.getString("resolucion_cancelacion"));
+				obj.setFechaCancelacion(rs.getTimestamp("fecha_cancelacion"));
+				obj.setUsuarioCancelacion(rs.getString("usuario_cancelacion"));
+				list.add(obj);
+
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public List<FindCcLoteDetalleActoExp> getAllExpedientesXPlaca(String placa)
+			throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+
+		try {
+			String SQL = new String("stp_getAllExpedientesAcumuladosXPlaca ?");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setString(1, placa);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setConceptoId(rs.getInt("concepto_id"));
+				obj.setLoteRecId(rs.getInt("lote_id"));
+				obj.setDeudaExigibleId(rs.getInt("deuda_exigible_id"));
+				obj.setLoteIdAnterior(rs.getInt("lote_exigible_id"));
+				obj.setNroExpediente(rs.getString("nro_expediente"));
+				obj.setAnnoDeuda(rs.getInt("anno_deuda"));
+				obj.setMontoDeuda(rs.getBigDecimal("deuda_total"));
+				obj.setTipoActoDescripcionCorta(rs
+						.getString("descripcion_corta"));
+				obj.setPlaca(rs.getString("placa"));
+				obj.setNroPapeleta(rs.getString("nro_papeleta"));
+				obj.setPapeletaId(rs.getInt("papeleta_id"));
+				obj.setApellidosNombres(rs.getString("apellidos_nombres"));
+				obj.setActoId(rs.getInt("acto_id"));
+				obj.setTipoDocumentoId(rs.getInt("tipo_documento_id"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setNroActo(rs.getString("nro_acto"));
+				obj.setEstadoExpediente(rs.getString("estado_expediente"));
+				obj.setMotivoCancelacion(rs.getString("motivo_cancelacion"));
+				obj.setResolucionCancelacion(rs
+						.getString("resolucion_cancelacion"));
+				obj.setFechaCancelacion(rs.getTimestamp("fecha_cancelacion"));
+				obj.setUsuarioCancelacion(rs.getString("usuario_cancelacion"));
+				list.add(obj);
+
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public List<FindCcLoteDetalleActoExp> getAllDeudaExigibleOpPredialVehicular(
+			Integer tipoActo, Integer conceptoId, Integer anio,
+			BigDecimal montoMinimo, Integer flagUbicacion) throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+		try {
+			String SQL = "sp_deuda_exigible_op_predial_vehicular ?,?,?,?,?";
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, tipoActo);
+			pst.setInt(2, conceptoId);
+			pst.setInt(3, anio);
+			pst.setBigDecimal(4, montoMinimo);
+			pst.setInt(5, flagUbicacion);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setApellidosNombres(rs.getString("datos_persona"));
+				obj.setDireccion(rs.getString("direccion_completa"));
+				obj.setTipoActo(rs.getString("tipo_acto"));
+				obj.setNroActo(rs.getString("nro_acto"));
+				obj.setAnnoDeuda(rs.getInt("anno_acto"));
+				obj.setMontoDeuda(rs.getBigDecimal("monto_deuda"));
+				obj.setFechaNotificacion(rs.getTimestamp("fecha_notificacion"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setObservacion(rs.getString("observacion"));
+				obj.setActoId(rs.getInt("acto_id"));
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public List<FindCcLoteDetalleActoExp> getAllDeudaExigibleRdArbitriosyRm(
+			Integer tipoActo, Integer conceptoId, Integer anio,
+			BigDecimal montoMinimo, Integer flagUbicacion) throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+		try {
+			String SQL = "sp_deuda_exigible_rd_arbitrios_rm ?,?,?,?,?";
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, tipoActo);
+			pst.setInt(2, conceptoId);
+			pst.setInt(3, anio);
+			pst.setBigDecimal(4, montoMinimo);
+			pst.setInt(5, flagUbicacion);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setApellidosNombres(rs.getString("datos_persona"));
+				obj.setDireccion(rs.getString("direccion_completa"));
+				obj.setTipoActo(rs.getString("tipo_acto"));
+				obj.setNroActo(rs.getString("nro_acto"));
+				obj.setAnnoDeuda(rs.getInt("anno_acto"));
+				obj.setMontoDeuda(rs.getBigDecimal("monto_deuda"));
+				obj.setFechaNotificacion(rs.getTimestamp("fecha_notificacion"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setObservacion(rs.getString("observacion"));
+				obj.setActoId(rs.getInt("acto_id"));
+
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public List<FindCcLoteDetalleActoExp> getAllDeudaExigibleRdPredial(
+			Integer tipoActo, Integer conceptoId, Integer anio,
+			BigDecimal montoMinimo, Integer flagUbicacion) throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+		try {
+			String SQL = "sp_deuda_exigible_rd_predial ?,?,?,?,?";
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, tipoActo);
+			pst.setInt(2, conceptoId);
+			pst.setInt(3, anio);
+			pst.setBigDecimal(4, montoMinimo);
+			pst.setInt(5, flagUbicacion);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setApellidosNombres(rs.getString("datos_persona"));
+				obj.setDireccion(rs.getString("direccion_completa"));
+				obj.setTipoActo(rs.getString("tipo_acto"));
+				obj.setNroActo(rs.getString("nro_acto"));
+				obj.setAnnoDeuda(rs.getInt("anno_acto"));
+				obj.setMontoDeuda(rs.getBigDecimal("monto_deuda"));
+				obj.setFechaNotificacion(rs.getTimestamp("fecha_notificacion"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setObservacion(rs.getString("observacion"));
+				obj.setActoId(rs.getInt("acto_id"));
+
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public List<FindCcLoteDetalleActoExp> getAllDeudaExigibleRs(
+			Integer tipoActo, Integer conceptoId, Integer anio,
+			BigDecimal montoMinimo, Integer flagUbicacion) throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+		try {
+			String SQL = "sp_deuda_exigible_rs ?,?,?,?,?";
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, tipoActo);
+			pst.setInt(2, conceptoId);
+			pst.setInt(3, anio);
+			pst.setBigDecimal(4, montoMinimo);
+			pst.setInt(5, flagUbicacion);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setApellidosNombres(rs.getString("datos_persona"));
+				obj.setDireccion(rs.getString("direccion_completa"));
+				obj.setTipoActo(rs.getString("tipo_acto"));
+				obj.setNroActo(rs.getString("nro_acto"));
+				obj.setAnnoDeuda(rs.getInt("anno_acto"));
+				obj.setMontoDeuda(rs.getBigDecimal("monto_deuda"));
+				obj.setFechaNotificacion(rs.getTimestamp("fecha_notificacion"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setObservacion(rs.getString("observacion"));
+				obj.setActoId(rs.getInt("acto_id"));
+
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public List<FindCcLote> getAllFindCcLoteDeudaExigible(Integer loteId,Integer annoLote) throws Exception {
+		List<FindCcLote> list = new ArrayList<FindCcLote>(); 
+		
+		try {
+			String SQL = "dbo.reporte_ccLoteDeudaExigible ?,?";
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, loteId==null?0:loteId);
+			pst.setInt(2, annoLote==null?0:annoLote);
+			
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				FindCcLote obj = new FindCcLote();
+				obj.setLoteId(rs.getInt("lote_id"));
+				obj.setTipoLoteId(rs.getInt("tipo_lote_id"));
+				obj.setAnnoLote(rs.getInt("anno_lote"));
+				obj.setFechaRegistro(rs.getTimestamp("fecha_registro"));
+				obj.setHoraRegistro(rs.getString("hora_registro"));
+				obj.setTipoLote(rs.getString("tipo_lote"));
+				obj.setTipoActo(rs.getString("tipo_acto"));
+				obj.setTipoActoId(rs.getInt("tipo_acto_id"));
+				obj.setConcepto(rs.getString("concepto"));
+				obj.setEstadoTipoLoteGeneracion(rs
+						.getString("estado_tipo_lote_generacion"));
+				obj.setEstadoGeneracion(rs.getString("estado_generacion"));
+				obj.setTipo_lote_generacion(rs
+						.getString("tipo_lote_generacion"));
+				obj.setFlag_generacion(rs.getString("flag_generacion"));
+				obj.setTotalDeuda(rs.getBigDecimal("monto_deuda"));
+				obj.setNroDocumentos(rs.getInt("total_registros"));
+				// obj.setFlagUbicables(rs.getString("flag_ubicables"));
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public int registrarActoDeudaExigibleOPPredialVehicular(Integer loteId,
+			Integer periodo, Integer conceptoId, Integer tipoActoId,
+			BigDecimal montoMinimo, Integer flagUbicable, Integer usuarioId,
+			String terminal) throws Exception {
+		int salida = 0;
+		try {
+			CallableStatement cs = connect()
+					.prepareCall(
+							"{call dbo.stp_genera_deuda_exigible_op_predial_vehicular(?,?,?,?,?,?,?,?)}");
+			cs.setInt(1, loteId);
+			cs.setInt(2, periodo);
+			cs.setInt(3, conceptoId);
+			cs.setInt(4, tipoActoId);
+			cs.setBigDecimal(5, montoMinimo);
+			cs.setInt(6, flagUbicable);
+			cs.setInt(7, usuarioId);
+			cs.setString(8, terminal);
+			cs.execute();
+		} catch (Exception ex) {
+			System.out.println("ERROR: " + ex);
+		}
+		return salida;
+	}
+
+	public int registrarActoDeudaExigibleRdArbitriosRm(Integer loteId,
+			Integer periodo, Integer conceptoId, Integer tipoActoId,
+			BigDecimal montoMinimo, Integer flagUbicable, Integer usuarioId,
+			String terminal) throws Exception {
+		int salida = 0;
+		try {
+			CallableStatement cs = connect()
+					.prepareCall(
+							"{call dbo.stp_genera_deuda_exigible_rd_arbitrios_rm(?,?,?,?,?,?,?,?)}");
+			cs.setInt(1, loteId);
+			cs.setInt(2, periodo);
+			cs.setInt(3, conceptoId);
+			cs.setInt(4, tipoActoId);
+			cs.setBigDecimal(5, montoMinimo);
+			cs.setInt(6, flagUbicable);
+			cs.setInt(7, usuarioId);
+			cs.setString(8, terminal);
+			cs.execute();
+		} catch (Exception ex) {
+			System.out.println("ERROR: " + ex);
+		}
+		return salida;
+	}
+
+	public int registrarActoDeudaExigibleRdPredial(Integer loteId,
+			Integer periodo, Integer conceptoId, Integer tipoActoId,
+			BigDecimal montoMinimo, Integer flagUbicable, Integer usuarioId,
+			String terminal) throws Exception {
+		int salida = 0;
+		try {
+			CallableStatement cs = connect()
+					.prepareCall(
+							"{call dbo.stp_genera_deuda_exigible_rd_predial(?,?,?,?,?,?,?,?)}");
+			cs.setInt(1, loteId);
+			cs.setInt(2, periodo);
+			cs.setInt(3, conceptoId);
+			cs.setInt(4, tipoActoId);
+			cs.setBigDecimal(5, montoMinimo);
+			cs.setInt(6, flagUbicable);
+			cs.setInt(7, usuarioId);
+			cs.setString(8, terminal);
+			cs.execute();
+		} catch (Exception ex) {
+			System.out.println("ERROR: " + ex);
+		}
+		return salida;
+	}
+
+	public int registrarActoDeudaExigibleRs(Integer loteId, Integer periodo,
+			Integer conceptoId, Integer tipoActoId, BigDecimal montoMinimo,
+			Integer flagUbicable, Integer usuarioId, String terminal)
+			throws Exception {
+		int salida = 0;
+		try {
+			CallableStatement cs = connect().prepareCall(
+					"{call dbo.stp_genera_deuda_exigible_rs(?,?,?,?,?,?,?,?)}");
+			cs.setInt(1, loteId);
+			cs.setInt(2, periodo);
+			cs.setInt(3, conceptoId);
+			cs.setInt(4, tipoActoId);
+			cs.setBigDecimal(5, montoMinimo);
+			cs.setInt(6, flagUbicable);
+			cs.setInt(7, usuarioId);
+			cs.setString(8, terminal);
+			cs.execute();
+		} catch (Exception ex) {
+			System.out.println("ERROR: " + ex);
+		}
+		return salida;
+	}
+
+	public List<FindCcLoteDetalleActoExp> getAllFindDetalleFinalDeudaExigible(
+			Integer loteId) throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+
+		try {
+			StringBuilder SQL = new StringBuilder(
+					"exec dbo.stp_getAllFinalDeudaExigible ?");
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, loteId);
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+				obj.setDeudaExigibleId(rs.getInt("deuda_exigible_id"));
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setApellidosNombres(rs.getString("datos_persona"));
+				obj.setDireccion(rs.getString("direccion_completa"));
+				obj.setTipoActo(rs.getString("tipo_acto"));
+				obj.setNroActo(rs.getString("nro_acto"));
+				obj.setAnnoDeuda(rs.getInt("anno_acto"));
+				obj.setMontoDeuda(rs.getBigDecimal("monto_deuda"));
+				obj.setFechaNotificacion(rs.getTimestamp("fecha_notificacion"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setActoId(rs.getInt("acto_id"));
+				obj.setLoteId(rs.getInt("lote_id"));
+				obj.setEstadoDeudaExigible(rs.getString("estado_exigible"));
+				obj.setFechaPago(rs.getTimestamp("fecha_pago"));
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public boolean eliminarDeudaExigible(Integer deudaExigibleId,
+			Integer loteId, Integer actoId, String administrado,
+			String nroActo, String motivodescargo, Integer usuarioId,
+			String terminal) throws Exception {
+		boolean result = false;
+		try {
+			CallableStatement cs = connect().prepareCall(
+					"{call dbo.sp_elimina_deuda_exigible(?,?,?,?,?,?,?,?)}");
+			cs.setInt(1, deudaExigibleId);
+			cs.setInt(2, loteId);
+			cs.setInt(3, actoId);
+			cs.setString(4, administrado);
+			cs.setString(5, nroActo);
+			cs.setString(6, motivodescargo);
+			cs.setInt(7, usuarioId);
+			cs.setString(8, terminal);
+
+			result = cs.execute();
+		} catch (Exception e) {
+			throw (e);
+		}
+		return result;
+	}
+
+	public List<FindCcRecHistorico> getAllFindRecHistorico(Integer loteId,
+			Integer deudaExId, Integer personaId) throws Exception {
+		List<FindCcRecHistorico> list = new ArrayList<FindCcRecHistorico>();
+
+		try {
+			String SQL = new String("stp_getAllHistorialREC ?,?,?");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, loteId);
+			pst.setInt(2, deudaExId);
+			pst.setInt(3, personaId);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+
+				FindCcRecHistorico obj = new FindCcRecHistorico();
+				obj.setDeudaExigibleId(rs.getInt("deuda_exigible_id"));
+				obj.setRecId(rs.getInt("rec_id"));
+				obj.setTipoRecId(rs.getInt("tipo_rec_id"));
+				obj.setDescripcionCortaRec(rs.getString("descripcion_corta"));
+				obj.setDescripcionRec(rs.getString("descripcion"));
+				obj.setLoteId(rs.getInt("lote_id"));
+				obj.setLoteRecId(rs.getInt("lote_rec_id"));
+				// obj.setFechaRegistro(rs.getTimestamp("fecha_registro"));
+				obj.setAnioRec(rs.getInt("anio_rec"));
+				obj.setFechaEmision(rs.getTimestamp("fecha_emision"));
+				obj.setFechaNotificacion(rs.getTimestamp("fecha_notificacion"));
+				obj.setMontoDeuda(rs.getBigDecimal("deuda_total"));
+				obj.setUsuarioId(rs.getInt("usuario_id"));
+				obj.setNombreUsuario(rs.getString("nombre_usuario"));
+				obj.setNroExpediente(rs.getString("nro_expediente"));
+				obj.setMotivoNotificacionId(rs.getInt("motivo_notificacion_id"));
+				obj.setNotificadorId(rs.getInt("notificador_id"));
+				// obj.setAnioDeuda(rs.getInt("anno_deuda"));
+				obj.setSubConceptoId(rs.getInt("sub_concepto_id"));
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setUsuarioNotificacion(rs.getString("usuario_notificacion"));
+
+				list.add(obj);
+
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public int generarRecInicio(Integer loteId, Integer loteExigibleId,
+			Integer nroRegistros, Integer usuarioId, String terminal)
+			throws Exception {
+		int salida = 0;
+		try {
+			CallableStatement cs = connect().prepareCall(
+					"{call dbo.spt_cc_genera_rec_inicio(?,?,?,?,?)}");
+			cs.setInt(1, loteId);
+			cs.setInt(2, loteExigibleId);
+			cs.setInt(3, nroRegistros);
+			cs.setInt(4, usuarioId);
+			cs.setString(5, terminal);
+			cs.execute();
+		} catch (Exception ex) {
+			System.out.println("ERROR: " + ex);
+		}
+		return salida;
+	}
+
+	public List<FindCcRecTipo> getAllTipoRec() throws Exception {
+		List<FindCcRecTipo> lista = new LinkedList<FindCcRecTipo>();
+		try {
+			String SQL = new String(
+					"SELECT cc_tipo_rec.tipo_rec_id, subc.descripcion as descripcionTipoRec,subc.etiqueta as descripcionCortaTipoRec,subc.subconcepto_id FROM cc_tipo_rec INNER JOIN gn_subconcepto subc ON cc_tipo_rec.sub_concepto_id = subc.subconcepto_id WHERE (cc_tipo_rec.tipo_rec_id <> 1) AND (cc_tipo_rec.estado = 1) ORDER BY cc_tipo_rec.tipo_rec_id ASC");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {
+				FindCcRecTipo obj = new FindCcRecTipo();
+
+				obj.setTipoRecId(rs.getInt("tipo_rec_id"));
+				obj.setDescripcionTipoRec(rs.getString("descripcionTipoRec"));
+				obj.setDescripcionCortaTipoRec(rs
+						.getString("descripcionCortaTipoRec"));
+
+				lista.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return lista;
+	}
+
+	public int generarRec(Integer loteRecId, Integer anioRec,
+			Integer personaRecId, String nroExpedienteRec, Integer anioDeuda,
+			Integer tipoRec, Integer tipoDocRec, Integer loteExId,
+			Integer actoRecId, Integer usuarioId, String terminal)
+			throws Exception {
+
+		int salida = 0;
+		try {
+			CallableStatement cs = connect().prepareCall(
+					"{call dbo.spt_cc_genera_rec(?,?,?,?,?,?,?,?,?,?,?)}");
+			cs.setInt(1, loteRecId);
+			cs.setInt(2, anioRec);
+			cs.setInt(3, personaRecId);
+			cs.setString(4, nroExpedienteRec);
+			cs.setInt(5, anioDeuda);
+			cs.setInt(6, tipoRec);
+			cs.setInt(7, tipoDocRec);
+			cs.setInt(8, loteExId);
+			cs.setInt(9, actoRecId);
+			cs.setInt(10, usuarioId);
+			cs.setString(11, terminal);
+
+			cs.execute();
+		} catch (Exception ex) {
+			System.out.println("ERROR: " + ex);
+		}
+		return salida;
+	}
+
+	// Actualiza Notificaciones de cada Rec
+	public int actualizarNotificacionRec(Integer recId,
+			Integer noNotificacionId, Integer notificadorId,
+			Date fechaNotifica, Integer usuarioId) throws Exception {
+		int result = 0;
+		try {
+			StringBuffer SQL = new StringBuffer();
+
+			SQL.append(" UPDATE " + SATParameterFactory.getDBNameScheme()
+					+ ".cc_rec ");
+			SQL.append(" SET motivo_notificacion_id =?,notificador_id =?,fecha_notificacion=?, usuario_notificacion=?");
+			SQL.append(" where rec_id = ? ");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, noNotificacionId);
+			pst.setInt(2, notificadorId);
+			pst.setTimestamp(3, DateUtil.dateToSqlTimestamp(fechaNotifica));
+			pst.setInt(4, usuarioId);
+			pst.setInt(5, recId);
+
+			result = pst.executeUpdate();
+		} catch (Exception e) {
+			throw (e);
+		}
+		return result;
+	}
+
+	public int actualizarRecXCancelacion(String motivoCancelacion,
+			String resolucionCancelacion, String estado, String nroExpediente,
+			Integer codPersona, String usuarioCancelacion, Integer usuarioId,
+			String terminal) throws Exception {
+		int result = 0;
+		try {
+			CallableStatement cs = connect()
+					.prepareCall(
+							"{call dbo.stp_actualizar_rec_x_cancelacion(?,?,?,?,?,?,?,?)}");
+
+			cs.setString(1, motivoCancelacion);
+			cs.setString(2, resolucionCancelacion);
+			cs.setString(3, estado);
+			cs.setString(4, nroExpediente);
+			cs.setInt(5, codPersona);
+			cs.setString(6, usuarioCancelacion);
+			cs.setInt(7, usuarioId);
+			cs.setString(8, terminal);
+			cs.execute();
+		} catch (Exception e) {
+			throw (e);
+		}
+		return result;
+	}
+
+	public int actualizarEmisionRecMigradas(Integer recId, Date fechaEmision)
+			throws Exception {
+		int result = 0;
+		try {
+			StringBuffer SQL = new StringBuffer();
+			SQL.append(" UPDATE " + SATParameterFactory.getDBNameScheme()
+					+ ".cc_rec ");
+			SQL.append(" SET fecha_emision =?");
+			SQL.append(" where rec_id = ? ");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setTimestamp(1, DateUtil.dateToSqlTimestamp(fechaEmision));
+			pst.setInt(2, recId);
+
+			result = pst.executeUpdate();
+		} catch (Exception e) {
+			throw (e);
+		}
+		return result;
+	}
+
+	public List<FindCcRecTipo> getAllRecsMasivasPorLote(Integer loteId)
+			throws Exception {
+		List<FindCcRecTipo> list = new ArrayList<FindCcRecTipo>();
+
+		try {
+			String SQL = new String("reporte_tiporecs_generadas_por_lote ?");
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, loteId);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				FindCcRecTipo obj = new FindCcRecTipo();
+				obj.setLoteId(rs.getInt("lote_id"));
+				obj.setTipoRecId(rs.getInt("tipo_rec_id"));
+				obj.setDescripcionTipoRec(rs.getString("descripcion"));
+				obj.setFechaEmisionRec(rs.getDate("fecha_emision"));
+				obj.setNroRecsGeneradas(rs.getInt("nro_recs_generadas"));
+				obj.setFechaNotificacionRec(rs.getDate("fecha_notificacion"));
+				obj.setConceptoId(rs.getInt("concepto_id"));
+				obj.setConceptoDescripcion(rs.getString("concepto"));
+				obj.setUsuarioId(rs.getInt("usuario_id"));
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public List<ObligacionDTO> getAllCostasXTipoRec(Integer personaId,
+			Integer recId) throws Exception {
+		List<ObligacionDTO> list = new ArrayList<ObligacionDTO>();
+
+		try {
+			String SQL = new String("sp_listar_costasXtipo_rec ?,?");
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, personaId);
+			pst.setInt(2, recId);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				ObligacionDTO obj = new ObligacionDTO();
+				obj.setConceptoDescripcion(rs.getString("concepto"));
+				obj.setSubConceptoDescripcion(rs.getString("descripcion"));
+				obj.setFechaEmision(rs.getDate("fecha_emision"));
+				obj.setFechaVencimiento(rs.getDate("fecha_vencimiento"));
+				obj.setResponsable(rs.getString("responsable"));
+				obj.setMonto(rs.getBigDecimal("cc_total_deuda"));
+
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public void insertarJustificacion(Integer personaId, Integer conceptoId,
+			Integer subConceptoId, Integer anho, Integer determinacionId,
+			String nroExped, String justificacion, UserSession userSession)
+			throws SisatException {
+		try {
+			CallableStatement cs = connect()
+					.prepareCall(
+							"{call dbo.stp_justificacion_deudas_coactiva(?,?,?,?,?,?,?,?,?)}");
+
+			cs.setInt(1, personaId);
+			cs.setInt(2, conceptoId);
+			cs.setInt(3, subConceptoId);
+			cs.setInt(4, anho);
+			cs.setInt(5, determinacionId);
+			cs.setString(6, nroExped);
+			cs.setString(7, justificacion);
+			cs.setInt(8, userSession.getUsuarioId().intValue());
+			cs.setString(9, userSession.getTerminal());
+
+			cs.execute();
+
+		} catch (SQLException e) {
+
+			throw new SisatException(e.getMessage(), e.getCause());
+		} catch (SisatException e) {
+
+			throw e;
+		}
+	}
+
+	public List<FindCcLoteDetalleActoExp> getAllReporteExpedientes(
+			Integer tipoDeuda, Integer tipoRecId) throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+
+		try {
+			String SQL = new String("getAllReporteExpedientes ?,?");
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, tipoDeuda);
+			pst.setInt(2, tipoRecId);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setApellidosNombres(rs.getString("administrado"));
+				obj.setDireccion(rs.getString("domicilio_fiscal"));
+				obj.setTipoActo(rs.getString("tipo_valor"));
+				obj.setConcepto(rs.getString("concepto"));
+				obj.setPlaca(rs.getString("placa"));
+				obj.setNroActo(rs.getString("nro_valor"));
+				obj.setNroExpediente(rs.getString("nro_expediente"));
+				obj.setEstadoExpediente(rs.getString("estado_expediente"));
+				obj.setFechaEmision(rs.getTimestamp("fecha_emision"));
+				obj.setFechaNotificacion(rs.getTimestamp("fecha_notificacion"));
+				obj.setDeuda(rs.getBigDecimal("deuda_rec"));
+				obj.setMontoDeuda(rs.getBigDecimal("deuda_saldos"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setAnnoDeuda(rs.getInt("anno_deuda"));
+				obj.setDeudaTotalDcto(rs.getBigDecimal("monto_pago"));
+				obj.setFechaPago(rs.getTimestamp("fecha_pago"));
+				obj.setFechaCancelacion(rs.getTimestamp("fecha_cancelacion"));
+				obj.setUltimaRecEmitida(rs.getString("ultima_rec_emitida"));
+
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public List<FindCcLoteDetalleActoExp> getAllExpedientesXCodigoAnterior(
+			String codigoAnterior) throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+
+		try {
+			String SQL = new String(
+					"stp_getAllExpedientesAcumuladosCodAnterior ?");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setString(1, codigoAnterior);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setConceptoId(rs.getInt("concepto_id"));
+				obj.setLoteRecId(rs.getInt("lote_id"));
+				obj.setDeudaExigibleId(rs.getInt("deuda_exigible_id"));
+				obj.setLoteIdAnterior(rs.getInt("lote_exigible_id"));
+				obj.setNroExpediente(rs.getString("nro_expediente"));
+				obj.setAnnoDeuda(rs.getInt("anno_deuda"));
+				obj.setMontoDeuda(rs.getBigDecimal("deuda_total"));
+				obj.setTipoActoDescripcionCorta(rs
+						.getString("descripcion_corta"));
+				obj.setPlaca(rs.getString("placa"));
+				obj.setNroPapeleta(rs.getString("nro_papeleta"));
+				obj.setPapeletaId(rs.getInt("papeleta_id"));
+				obj.setApellidosNombres(rs.getString("apellidos_nombres"));
+				obj.setActoId(rs.getInt("acto_id"));
+				obj.setTipoDocumentoId(rs.getInt("tipo_documento_id"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setNroActo(rs.getString("nro_acto"));
+				obj.setEstadoExpediente(rs.getString("estado_expediente"));
+				obj.setMotivoCancelacion(rs.getString("motivo_cancelacion"));
+				obj.setResolucionCancelacion(rs
+						.getString("resolucion_cancelacion"));
+				obj.setFechaCancelacion(rs.getTimestamp("fecha_cancelacion"));
+				obj.setUsuarioCancelacion(rs.getString("usuario_cancelacion"));
+				list.add(obj);
+
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+
+	public GnRemate insertarDetalleRemate(GnRemate remate)
+			throws SisatException {
+		try {
+			CallableStatement cs = connect().prepareCall(
+					"{call dbo.insertarDetalleRemate(?,?,?,?,?,?,?,?)}");
+			cs.setInt(1, remate.getPropietarioId());
+			cs.setString(2, remate.getPlaca());
+			cs.setBigDecimal(3, remate.getMontoAdjudicado());
+			cs.setDate(4, DateUtil.dateToSqlDate(remate.getFechaRemate()));
+			cs.setTimestamp(5, remate.getFechaRegistro());
+			cs.setInt(6, remate.getUsuarioId());
+			cs.setString(7, remate.getTerminal());
+			cs.setString(8, remate.getSustento());
+
+			cs.execute();
+		} catch (SQLException e) {
+			throw new SisatException(e.getMessage(), e.getCause());
+		} catch (SisatException e) {
+
+			throw e;
+		}
+		return null;
+	}
+	
+	public List<FindCcLoteDetalleActoExp> getAllDeudaExigibleRdVehicular(
+			Integer tipoActo, Integer conceptoId, Integer anio,
+			BigDecimal montoMinimo, Integer flagUbicacion) throws Exception {
+		List<FindCcLoteDetalleActoExp> list = new ArrayList<FindCcLoteDetalleActoExp>();
+		try {
+			String SQL = "sp_deuda_exigible_rd_vehicular ?,?,?,?,?";
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, tipoActo);
+			pst.setInt(2, conceptoId);
+			pst.setInt(3, anio);
+			pst.setBigDecimal(4, montoMinimo);
+			pst.setInt(5, flagUbicacion);
+			ResultSet rs = pst.executeQuery();
+			while (rs.next()) {
+				FindCcLoteDetalleActoExp obj = new FindCcLoteDetalleActoExp();
+				obj.setPersonaId(rs.getInt("persona_id"));
+				obj.setApellidosNombres(rs.getString("datos_persona"));
+				obj.setDireccion(rs.getString("direccion_completa"));
+				obj.setTipoActo(rs.getString("tipo_acto"));
+				obj.setNroActo(rs.getString("nro_acto"));
+				obj.setAnnoDeuda(rs.getInt("anno_acto"));
+				obj.setMontoDeuda(rs.getBigDecimal("monto_deuda"));
+				obj.setFechaNotificacion(rs.getTimestamp("fecha_notificacion"));
+				obj.setEstado_deuda(rs.getString("estado_deuda"));
+				obj.setObservacion(rs.getString("observacion"));
+
+				list.add(obj);
+			}
+		} catch (Exception e) {
+			throw (e);
+		}
+		return list;
+	}
+	
+	public int registrarActoDeudaExigibleRdVehicular(Integer loteId,
+			Integer periodo, Integer conceptoId, Integer tipoActoId,
+			BigDecimal montoMinimo, Integer flagUbicable, Integer usuarioId,
+			String terminal) throws Exception {
+		int salida = 0;
+		try {
+			CallableStatement cs = connect()
+					.prepareCall(
+							"{call dbo.stp_genera_deuda_exigible_rd_vehicular(?,?,?,?,?,?,?,?)}");
+			cs.setInt(1, loteId);
+			cs.setInt(2, periodo);
+			cs.setInt(3, conceptoId);
+			cs.setInt(4, tipoActoId);
+			cs.setBigDecimal(5, montoMinimo);
+			cs.setInt(6, flagUbicable);
+			cs.setInt(7, usuarioId);
+			cs.setString(8, terminal);
+			cs.execute();
+		} catch (Exception ex) {
+			System.out.println("ERROR: " + ex);
+		}
+		return salida;
+	}
+	
+	public Integer registraCarteraExigible(String listActoId,Integer loteId,Integer usuarioId,String terminal)throws Exception{
+		Integer result=Constante.RESULT_PENDING;
+		try {
+			String SQL = "{call dbo.stp_co_cartera_exigible_registra(?,?,?,?)}";
+			CallableStatement cs = connect().prepareCall(SQL.toString());
+			cs.setString(1, listActoId);
+			cs.setInt(2, loteId);
+			cs.setInt(3, usuarioId);
+			cs.setString(4, terminal);
+			int rowCount=cs.executeUpdate();
+			result=Constante.RESULT_SUCCESS;
+		} catch (Exception e) {
+			throw (e);
+		}
+		return result;		
+	}
+	public Integer retiraCarteraExigible(Integer actoId,Integer motivoId,String resenaRetiro,Integer loteId,Integer usuarioId,String terminal)throws Exception{
+		Integer result=Constante.RESULT_PENDING;
+		try {
+			String SQL = "{call dbo.stp_co_cartera_exigible_retira(?,?,?,?,?,?)}";
+			CallableStatement cs = connect().prepareCall(SQL.toString());
+			cs.setInt(1, actoId);
+			cs.setInt(2, motivoId);
+			cs.setString(3, resenaRetiro);
+			cs.setInt(4, loteId);
+			cs.setInt(5, usuarioId);
+			cs.setString(6, terminal);
+			int rowCount=cs.executeUpdate();
+			result=Constante.RESULT_SUCCESS;
+		} catch (Exception e) {
+			throw (e);
+		}
+		return result;		
+	}
+
+}

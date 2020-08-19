@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form id="formregistroLotesRS">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+
+		<style type="text/css">
+.extdt-empty-cell {
+	width: 0;
+}
+
+th.extdt-empty-cell {
+	width: 0;
+}
+/* Disables resizing */
+.extdt-hsep {
+	display: none;
+}
+</style>
+
+		<a4j:outputPanel id="id_panelprincipalregistroLoteRS">
+			<a4j:outputPanel id="outputrdarbitrios">
+				<rich:panel style="width:100%;  height: 100px;"
+					id="id_paneldatosloterdarbitrios">
+					<f:facet name="header">
+						<h:outputLabel
+							value="Registro de Lote de Resolución Determinación de Arbitrios" />
+					</f:facet>
+					<table border="0" align="center" width="100%">
+						<tr>
+							<td><h:outputText id="idLote" value="Numero de Lote : " />
+							</td>
+							<td><h:outputText id="idNroLote"
+									rendered="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='1' or registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2'}"
+									value="#{registroLoteRDArbitriosManaged.ccLote.loteId} - #{registroLoteRDArbitriosManaged.ccLote.annoLote}" />
+							</td>
+							<td align="left" width="130px"><h:outputText
+									rendered="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2'}"
+									value="Descarga de archivos :" /></td>
+							<td width="150px"><rich:comboBox width="150px"
+									rendered="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2' and registroLoteRDArbitriosManaged.estadoDireccionId==1}"
+									defaultLabel="Seleccione" required="true"
+									id="id_condicionpropiedad"
+									value="#{registroLoteRDArbitriosManaged.cmbValueSector}"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									immediate="true" enableManualInput="true"
+									onkeypress="return showListCbo(this,event);"
+									onblur="validaInputCbo(this)">
+									<f:selectItems id="id_lstSector"
+										value="#{registroLoteRDArbitriosManaged.lstSector}" />
+								</rich:comboBox></td>
+							<td align="center" width="130px"><h:commandLink
+									id="newlinkHLPDF"
+									rendered="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2'}"
+									action="#{registroLoteRDArbitriosManaged.generacionArchivos}">
+									<h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+								</h:commandLink></td>
+
+							<!-- 							<td><h:commandLink id="newlinkHLXLS" immediate="true" -->
+							<!-- 									rendered="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2'}" -->
+							<!-- 									action="#{registroLoteRDArbitriosManaged.generacionArchivosXml}"> -->
+							<!-- 									<h:graphicImage value="/images/modal/excel.png" -->
+							<!-- 										style="border:0" width="22" height="22" /> -->
+							<!-- 								</h:commandLink></td> -->
+						</tr>
+						<tr>
+							<td colspan="6">
+								<hr width="100%"></hr>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Periodo :" /></td>
+							<td align="left" width="80px"><h:inputText id="id_periodo"
+									maxlength="10" style="width:100%"
+									value="#{registroLoteRDArbitriosManaged.periodo}"
+									title="Ingrese Año a Generar RD de Arbitrios"
+									onkeypress="validaEnteroPositivo(event);"
+									readonly="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2'}">
+									<a4j:support ajaxSingle="true" event="onblur" />
+								</h:inputText></td>
+							<td align="center" width="130px"><h:outputText
+									value="Estado de Ubicación :" /></td>
+							<td width="250px">
+									<h:inputText maxlength="10"
+									style="width:100%"
+									rendered="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2' and registroLoteRDArbitriosManaged.estadoDireccionId==1}"
+									value="RD Ubicables" readonly="true" /> 
+									<h:inputText
+									maxlength="10" style="width:100%"
+									rendered="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2' and registroLoteRDArbitriosManaged.estadoDireccionId==0}"
+									value="RD InUbicables" readonly="true" /> 
+									<h:inputText
+									maxlength="10" style="width:100%"
+									rendered="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2' and registroLoteRDArbitriosManaged.estadoDireccionId==2}"
+									value="RD InUbicables S/N" readonly="true" /> 
+									<rich:comboBox
+									width="150px" defaultLabel="Selecccione"
+									enableManualInput="false" selectFirstOnUpdate="true"
+									directInputSuggestions="false"
+									binding="#{registroLoteRDArbitriosManaged.cmbEstadoDireccion}"
+									onblur="validaInputCbo(this)" id="id_rsubicable"
+									immediate="true"
+									rendered="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion!='2'}"
+									valueChangeListener="#{registroLoteRDArbitriosManaged.loadSeleccion}">
+									<f:selectItem itemValue="RD Ubicables" itemLabel="1" />
+									<f:selectItem itemValue="RD InUbicables" itemLabel="0" />
+									<f:selectItem itemValue="RD InUbicables S/N" itemLabel="2" />
+									<a4j:support id="idEventRs" event="onchange"
+										BypassUpdates="false" ajaxSingle="true" />
+								</rich:comboBox></td>
+							<td width="220px"><h:panelGrid columns="2"
+									rendered="#{registroLoteRDArbitriosManaged.lstlotePreliminar.size()>0}">
+									<h:outputText style="font-weight:bold; color:black;"
+										value="Lista de RDs Arbitrios :" />
+									<h:commandLink id="btnReporteOps"
+										action="#{registroLoteRDArbitriosManaged.generacionPreliminarArbitrios}"
+										immediate="true">
+										<h:graphicImage value="/images/modal/excel.png"
+											style="border:0; height:25px;width:25px;"
+											title="Descargar lista de RD de arbitrios" />
+									</h:commandLink>
+								</h:panelGrid></td>
+							<td colspan="2"></td>
+						</tr>
+					</table>
+				</rich:panel>
+			</a4j:outputPanel>
+
+			<table align="center" width="100%">
+				<tr>
+					<td align="center"><a4j:outputPanel id="idBotones">
+							<a4j:commandButton id="id_btnPreliminar"
+								value="Generacion Preliminar" style="width:150px;"
+								action="#{registroLoteRDArbitriosManaged.motrarLotePreliminar}"
+								disabled="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2'}"
+								oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+								reRender="id_panelprincipalregistroLoteRS,outputrespreliminar,outputrdarbitrios"
+								status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton value="Guardar" style="width:100px;"
+								id="id_btnguardar"
+								action="#{registroLoteRDArbitriosManaged.guardar}"
+								disabled="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2'}"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								reRender="id_panelprincipalregistroLoteRS,outputrespreliminar,outputrdarbitrios"
+								status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton value="Generación Valores"
+								id="idBtnGenerarValores" style="width:150px;" immediate="true"
+								action="#{registroLoteRDArbitriosManaged.generacionValores}"
+								disabled="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='2'}"
+								oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								reRender="id_panelprincipalregistroLoteRS,outputrespreliminar,outputrdarbitrios"
+								status="ajaxStatus">
+							</a4j:commandButton>
+							<a4j:commandButton id="idBtnSalir" value="Salir"
+								style="width:100px;"
+								action="#{registroLoteRDArbitriosManaged.salir}"
+								immediate="true" reRender="panelinclude">
+								<f:setPropertyActionListener
+									value="/sisat/controlycobranza/buscarloterdarbitrios.xhtml"
+									target="#{sessionManaged.page}" />
+							</a4j:commandButton>
+							<!-- <a4j:commandButton  value="Mostrar Valores"
+								 style="width:150px;" immediate="true"
+								 action="#{registroLoteRDArbitriosManaged.mostrarValores}"
+								 disabled="#{registroLoteRDArbitriosManaged.ccLote.flagGeneracion=='1'}"
+								 reRender="id_panelprincipalregistroLoteRS,outputrespreliminar,outputrdarbitrios"
+								 status="ajaxStatus">
+							</a4j:commandButton> -->
+						</a4j:outputPanel></td>
+				</tr>
+			</table>
+
+			<table align="center" width="100%">
+				<tr>
+					<td><a4j:outputPanel id="outputrespreliminar">
+							<rich:datascroller for="resultadofinal1" maxPages="10"></rich:datascroller>
+							<rich:extendedDataTable id="resultadofinal1"
+								value="#{registroLoteRDArbitriosManaged.lstlotePreliminar}"
+								var="lotePreliminar" width="100%" height="480px" rows="20"
+								selectionMode="single"
+								noDataLabel="No Se Encontro Información para esta Busqueda"
+								rowKeyVar="row" enableContextMenu="false">
+
+								<rich:column id="x1" width="5%" style="text-align:center"
+									filterBy="#{lotePreliminar.personaId}"
+									sortBy="#{lotePreliminar.personaId}">
+									<f:facet name="header">Cod. Per.</f:facet>
+									<h:outputText value="#{lotePreliminar.personaId}" />
+								</rich:column>
+								<rich:column sortBy="#{lotePreliminar.descripcionPersona}"
+									id="x2" width="15%"
+									filterBy="#{lotePreliminar.descripcionPersona}">
+									<f:facet name="header">Apellidos Y Nombres</f:facet>
+									<h:outputText value="#{lotePreliminar.descripcionPersona}" />
+								</rich:column>
+								<rich:column id="x3" width="5%" style="text-align:center"
+									filterBy="#{lotePreliminar.nroDocumento}"
+									sortBy="#{lotePreliminar.nroDocumento}">
+									<f:facet name="header">Nro Doc</f:facet>
+									<h:outputText value="#{lotePreliminar.nroDocumento}" />
+								</rich:column>
+								<rich:column id="x4" width="35%" style="text-align:center"
+									sortBy="#{lotePreliminar.direccion}">
+									<f:facet name="header">Direccion</f:facet>
+									<h:outputText value="#{lotePreliminar.direccion}" />
+								</rich:column>
+								<rich:column sortBy="#{lotePreliminar.sector}" id="x15"
+									width="10%" filterBy="#{lotePreliminar.sector}">
+									<f:facet name="header">Sector</f:facet>
+									<h:outputText value="#{lotePreliminar.sector}" />
+								</rich:column>
+								<rich:column id="x6" width="5%" style="text-align:center">
+									<f:facet name="header">Insoluto</f:facet>
+									<h:outputText value="#{lotePreliminar.insoluto}" />
+								</rich:column>
+								<rich:column id="x12" width="5%" style="text-align:center">
+									<f:facet name="header">Interes</f:facet>
+									<h:outputText
+										value="#{lotePreliminar.interesSimple+lotePreliminar.interesCapitalizado}" />
+								</rich:column>
+								<rich:column id="x13" width="5%" style="text-align:center"
+									sortBy="#{lotePreliminar.deudaTotal}">
+									<f:facet name="header">Total</f:facet>
+									<h:outputText value="#{lotePreliminar.deudaTotal}" />
+								</rich:column>
+								<rich:column id="x14" width="15%" style="text-align:center">
+									<f:facet name="header">Nro Valor</f:facet>
+									<h:outputText value="#{lotePreliminar.nroActo}">
+									</h:outputText>
+								</rich:column>
+							</rich:extendedDataTable>
+						</a4j:outputPanel></td>
+				</tr>
+			</table>
+
+		</a4j:outputPanel>
+	</h:form>
+</ui:composition>

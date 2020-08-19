@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<script type="text/javascript">
+			var row;
+			function convertToUpper(oevent, othis) {
+				var temp = othis.value.toUpperCase();
+				othis.value = temp;
+			}
+		
+		</script> 
+	
+    <h:form id="formExtornoOperacion">
+    <a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<script type="text/javascript">
+			var row;
+			function convertToUpper(oevent, othis) {
+				var temp = othis.value.toUpperCase();
+				othis.value = temp;
+			}
+		</script>
+	<rich:panel  id="p01" >
+		<f:facet name="header">		
+			Detalle del Recibo Extorno     
+		</f:facet>
+	<table style="border:0;width: 100% " >  
+		<tr>
+			<td>
+			 <rich:panel  id="p02" width="100%" >  
+				<table  cellpadding="0" cellspacing="0"  border="0" width="70%">
+				
+					<tr>
+						<td width="15%" align="left"><h:outputText style="font-weight:bold" value="Código Administrado :" /></td>
+						<td><h:inputText id="txtCodigoPersona" readonly="true" value="#{extornoOperacionManaged.codigoContribuyente}"  style="width:200px;font-weight:bold;FONT-SIZE:14px;border: none"/></td>
+					</tr>
+					<tr>
+						<td width="20%" align="left"><h:outputText style="font-weight:bold" value="Nombre Contribuyente :" /></td>
+						<td><h:inputText id="txtNombre" readonly="true" value="#{extornoOperacionManaged.nombreContribuyente}"  style="width:400px;font-weight:bold;FONT-SIZE:14px;border: none" /></td>
+					</tr>
+					<tr>
+						<td width="20%" align="left"><h:outputText style="font-weight:bold" value="Monto :" /></td>
+						<td><h:inputText id="txtMonto" readonly="true" value="#{extornoOperacionManaged.montoPago}"  style="width:200px;font-weight:bold;FONT-SIZE:14px;border: none" /></td>
+					</tr>
+					<tr>
+						<td width="20%" align="left"><h:outputText style="font-weight:bold" value="Fecha Pago:" /></td>
+						<td><h:inputText id="txtFechaPago" readonly="true" value="#{extornoOperacionManaged.fechaRecibo}"  style="width:200px;font-weight:bold;FONT-SIZE:14px;border: none" /></td>
+					</tr>
+					<tr>
+								<td align="left"><div style="text-align: left">
+										<h:outputText value="Observación :" />
+									</div></td> 
+								<td colspan="6"><h:inputText value="#{extornoOperacionManaged.txtObs_observacion}" id="observacion" styleClass="textUpperCase" style="width:540px;font-weight:bold;FONT-SIZE:14px;" tabindex="9">
+									<f:converter converterId="uppeCaseConverter"/>
+								</h:inputText></td> 
+							</tr>
+				 </table>
+				 </rich:panel>
+			 </td>  
+		 </tr>
+		 <tr> 
+			 <td>
+				<table  width="100%"> 
+						<tr>
+							<td  width="100%">
+							  <rich:panel  id="p03" width="100%" >  
+							  <f:facet name="header">Detalle de concepto</f:facet>
+							     <rich:extendedDataTable id="id_tablelistarecibo"  value="#{extornoOperacionManaged.lstReciboPago}" var="record" width="100%" height="200px" selectedClass="dataTableSelectedRow"
+ 								 sortMode="single" selectionMode="single" rowKeyVar="row">
+					             <rich:column width="20%" id="c01">  
+					                		<f:facet name="header">Concepto</f:facet>
+					                		<div style="text-align: center">
+					           				<h:outputText value="#{record.tributo}" />  
+					           				</div> 
+					            </rich:column>
+					            <rich:column width="15%" id="c02">
+					                		<f:facet name="header">Cuota</f:facet>
+					                			<div style="text-align: center">
+					                		<h:outputText value="#{record.cuota}" />
+					                		</div>
+					            </rich:column>
+					            <rich:column width="15%" id="c03">
+					               			<f:facet name="header">Monto</f:facet>
+					               				<div style="text-align: right">
+					               			<h:outputText value="#{record.insoluto}" />
+					               			</div>
+			                    </rich:column>
+			                     <rich:column width="10%" id="c05">
+				               			<f:facet name="header">Reajuste</f:facet>
+				               				<div style="text-align: right">
+				               			<h:outputText value="#{record.reajuste}" />
+				               			</div>
+			                    </rich:column>
+			                       <rich:column width="15%" id="c06">
+				               			<f:facet name="header">Interes</f:facet>
+				               				<div style="text-align: right">
+				               			<h:outputText value="#{record.interes}" />
+				               				</div>
+			                    </rich:column>
+			                       <rich:column width="10%" id="c07">
+				               			<f:facet name="header">Derecho Emision</f:facet>
+				               				<div style="text-align: right">
+                 					    <h:outputText value="#{record.derechoEmision}" style="width: 100%" />
+                 					    </div>
+			                    </rich:column>
+					            <rich:column width="15%" id="c09">
+					            		<f:facet name="header">Total</f:facet>
+					            			<div style="text-align: right">
+					               		<h:outputText value="#{record.total}" />
+					               		</div>
+			                    </rich:column>
+								</rich:extendedDataTable>
+		   				 	</rich:panel>
+							</td>
+						</tr>
+				</table>
+			</td>
+		</tr>
+		<tr> 
+			 <td>
+				<table  width="100%"> 
+						<tr>
+							<td  width="100%">
+							  <rich:panel  id="p04" width="100%" > 
+							  	  <f:facet name="header">Detalle de forma pago</f:facet> 
+							     <rich:extendedDataTable id="id_tablelistarecibodetalle"  value="#{extornoOperacionManaged.lstReciboDetalle}" var="record" width="100%" height="200px" selectedClass="dataTableSelectedRow"
+ 								 sortMode="single" selectionMode="single" rowKeyVar="row">
+					            
+					            <rich:column width="20%" id="c01">  
+					                		<f:facet name="header">Forma de Pago</f:facet>
+					                			<div style="text-align: center">
+					           				<h:outputText value="#{record.formaPagoDes}" />   
+					           				</div>
+					            </rich:column>
+					            <rich:column width="20%" id="c02">
+					                		<f:facet name="header">Moneda</f:facet>
+					                			<div style="text-align: center">
+					                		<h:outputText value="#{record.moneda_des}" />
+					                		</div>
+					            </rich:column>
+					            <rich:column width="20%" id="c03">
+					               			<f:facet name="header">Tipo de Cambio</f:facet>
+					               				<div style="text-align: center">
+					               			<h:outputText value="#{record.tipoCambio}" />
+					               			</div>
+			                    </rich:column>
+			                     <rich:column width="20%" id="c05">
+					               			<f:facet name="header">Monto Moneda</f:facet>
+					               				<div style="text-align: right">
+					               			<h:outputText value="#{record.monto}" />
+					               			</div>
+			                    </rich:column>
+			                     <rich:column width="20%" id="c06">
+					               			<f:facet name="header">Monto Soles</f:facet>
+					               				<div style="text-align: right">
+					               			<h:outputText value="#{record.montoTotalSoles}" />
+					               			</div>
+			                    </rich:column>
+								</rich:extendedDataTable>
+		   				 </rich:panel>
+							</td>
+						</tr>
+				</table>
+			</td>
+		</tr>
+		<tr> 
+				<td align="center">  
+						<table cellpadding="1" cellspacing="1" border="0">  
+							<tr>
+								<td style="vertical-align: center">
+									<a4j:commandButton value="Extornna Pago" status="ajaxStatus"   disabled="#{extornoOperacionManaged.estadoBoton}" action="#{extornoOperacionManaged.ExtornarPago}" id="cmd1" style="width:150px;" immediate="true" 
+									tabindex="13" /></td>
+								<td style="vertical-align: center">   
+									<a4j:commandButton value="Regresar" status="ajaxStatus"  action="#{extornoOperacionManaged.salir}" style="width:150px;" id="cmd2" immediate="true">  
+									<f:setPropertyActionListener value="/sisat/caja/extornoLista.xhtml" target="#{sessionManaged.page}" />
+									</a4j:commandButton></td>
+								<td colspan="5"></td>
+							</tr>  
+							
+						</table>
+					</td>
+				</tr>   
+	</table>
+	</rich:panel>
+	</h:form>
+	<rich:modalPanel id="modalGrabo" autosized="true" width="450">
+		<f:facet name="header">
+			<h:outputText value="#{msg['gn.mensajes']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>  
+				<h:graphicImage value="/images/modal/close.png" id="hidelGrabo"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalGrabo" attachTo="hidelGrabo"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages style="color: blue;'}" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

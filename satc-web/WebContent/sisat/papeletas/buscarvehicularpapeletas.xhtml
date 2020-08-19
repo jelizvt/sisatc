@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<head>
+<title>#{msg['rv.pagina.titulo']}</title>
+</head>
+
+<body>
+	<ui:composition>
+	<a4j:loadScript src="/js/sisat.js" />
+	<h:form id="frmBuscarVehicular">
+		<rich:panel id="pnlBuscar">
+			<f:facet name="header">
+			#{msg['rv.titulobuscardjv']}	
+		</f:facet>
+			<table>
+				<tr>
+					<td>
+						<h:outputLabel value="#{msg['rv.placa']}: " />
+					</td>
+					<td>
+						<h:inputText id="txtPlaca"
+						value="#{registroVehiculosPapeletasManaged.placaBuscar}" maxlength="20"
+						styleClass="textUpperCase" converter="uppeCaseConverter"
+						onkeypress = "return onlyLetrasAndNumbers(event);"	
+						required = "true"
+						requiredMessage="Ingrese placa"
+						binding = "#{registroVehiculosPapeletasManaged.txtPlacaBuscar}"/>
+					</td>
+				</tr>
+				<tr >
+					<td><h:outputLabel value="#{msg['rv.clase']}: ">
+												</h:outputLabel>
+					</td>
+					<td><rich:comboBox
+							value="#{registroVehiculosPapeletasManaged.selectedClaseVehiculo}"
+							defaultLabel="#{msg['param.defaultlabelcombo']}"
+							width="200"
+							selectFirstOnUpdate="true"
+							enableManualInput="true"
+							directInputSuggestions="false"
+							onkeypress="return showListCbo(this,event)"	onblur="validaInputCbo(this)"
+							binding = "#{registroVehiculosPapeletasManaged.cmbClase}">
+							<f:selectItems id="itmClase"
+								value="#{registroVehiculosPapeletasManaged.lstClaseVehiculo}" />
+						</rich:comboBox></td>
+				</tr>
+				<tr>
+					<td>
+						<h:outputLabel value="#{msg['rv.categoria']}: ">
+						</h:outputLabel>
+					</td>
+					<td>
+					<rich:comboBox
+							value="#{registroVehiculosPapeletasManaged.selectedCategoriaVehiculo}"
+							defaultLabel="#{msg['param.defaultlabelcombo']}"
+							width="200" immediate="true" ajaxSingle="true"
+							selectFirstOnUpdate="true"
+							enableManualInput="true"
+							directInputSuggestions="false"
+							onkeypress="return showListCbo(this,event)"	onblur="validaInputCbo(this)"
+							binding = "#{registroVehiculosPapeletasManaged.cmbCategoria}">
+							<f:selectItems id="itmCategoria"
+								value="#{registroVehiculosPapeletasManaged.lstCategoriaVehiculo}" />
+					</rich:comboBox>
+					</td>
+												
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{msg['rv.marca']}: ">
+												</h:outputLabel></td>
+					<td>
+						<rich:comboBox id="cboMarcaVehic"
+							value="#{registroVehiculosPapeletasManaged.selectedMarcaVehiculo}"
+							immediate="true"
+							defaultLabel="#{msg['param.defaultlabelcombo']}"
+							width="200"
+							selectFirstOnUpdate="true"
+							enableManualInput="true"
+							directInputSuggestions="false"
+							onkeypress="return showListCbo(this,event)"	onblur="validaInputCbo(this)"
+							binding="#{registroVehiculosPapeletasManaged.cmbMarca}">
+							<f:selectItems id="itmMarca"
+								value="#{registroVehiculosPapeletasManaged.lstMarcaVehiculo}" />
+						</rich:comboBox></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{msg['rv.modelo']}: ">
+						</h:outputLabel>
+					</td>
+					<td><rich:comboBox id="cboModeloVehic"
+							value="#{registroVehiculosPapeletasManaged.selectedModeloVehiculo}"
+							defaultLabel="#{msg['param.defaultlabelcombo']}"
+							width="200"
+							selectFirstOnUpdate="true"
+							enableManualInput="true"
+							directInputSuggestions="false"
+							onkeypress="return showListCbo(this,event)"	onblur="validaInputCbo(this)"
+							binding="#{registroVehiculosPapeletasManaged.cmbModelo}">
+							<f:selectItems id="itmModelo"
+								value="#{registroVehiculosPapeletasManaged.lstModeloVehiculo}" />
+						</rich:comboBox></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{msg['rv.aniofabricacion']}: ">
+					</h:outputLabel>
+					</td>
+					<td>
+						<h:inputText
+							value="#{registroVehiculosPapeletasManaged.anioFabricacionVehiculo}"
+							maxlength="4"
+							onkeypress="return soloNumeros(event);"
+							style="width: 60px;"
+							binding = "#{registroVehiculosPapeletasManaged.txtAnioFabricacion}" />
+					</td>
+
+				</tr>
+				<tr>
+					<td align = "center">
+					
+					<a4j:commandButton value="[B]uscar"
+					action="#{registroVehiculosPapeletasManaged.buscarVehiculo}"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					reRender="pnlListado, idPanelDatosVehiculo"
+					accesskey="b" />
+					
+					</td>
+				</tr>
+			</table>
+		</rich:panel>
+		
+		<rich:panel>
+			<f:facet name="header">
+				#{msg['rv.titulobuscardjv']}	
+			</f:facet>
+			
+			<rich:extendedDataTable id="pnlListado" value="#{registroVehiculosPapeletasManaged.vehiculo}" var="record" rowKeyVar="row"
+											width="100%" height="100px"
+											selectionMode="single" 
+											enableContextMenu="false"
+											>		
+												  	<rich:column style="text-align:center" width="30px">
+												  		<f:facet name="header">Placa</f:facet>
+								                    	<h:outputText value="#{record.placa}"/>
+								                    </rich:column>
+								                    <rich:column>
+								                    	 <f:facet name="header">Marca</f:facet>
+								                        <h:outputText value="#{record.marca}"/>
+								                    </rich:column>
+								                    <rich:column>
+								                    	 <f:facet name="header">Modelo</f:facet>
+								                        <h:outputText value="#{record.modelo}" />
+								                    </rich:column>
+								                    <rich:column>
+								                    	 <f:facet name="header">Año Fabricación</f:facet>
+								                        <h:outputText value="#{record.annoFabricacion}" />
+								                    </rich:column>
+								                    <rich:column width="30px">
+								            	<a4j:commandLink ajaxSingle="true" id="newlink3bv" action="#{registroVehiculosPapeletasManaged.seleccionar}" 
+								            	oncomplete="#{rich:component('panelAgregarVehiculo')}.hide(); "
+								            	 reRender="idPanelDatosVehiculo,pnlBuscar" >
+								                    <h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+								                </a4j:commandLink>
+			        						</rich:column>
+               </rich:extendedDataTable>
+				
+		</rich:panel>
+	</h:form>
+	</ui:composition>
+	
+</body>
+</html>

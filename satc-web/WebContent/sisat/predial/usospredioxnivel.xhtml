@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:a4j="http://richfaces.org/a4j"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+     <rich:jQuery query="focus().select()" selector="#id_formusosdelpredioxnivel :input:visible:enabled:first" name="focusInputupnxnivel"/>
+     <rich:panel  id="id_thispanelusospredioxnivel" width="100%" >
+			<table border="0" width="100%">
+				<tr>
+					<td align="left" width="100px">
+						<h:outputLabel value="Periodo :" />
+					</td>
+					<td align="left">
+						<h:outputLabel id="id_periodouso" value="#{usosPredioxNivelManaged.rpDjuso.annoAfectacion}"
+						readonly="true" style="width:50%;border: none"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px">
+						<h:outputLabel value="Uso de Predio :" >
+							<span style="color: red;">*</span>
+						</h:outputLabel>
+					</td>
+					<td align="left" >
+						<rich:comboBox width="500px" defaultLabel="Seleccione" id="id_combousospredio" value="#{usosPredioxNivelManaged.cmbValueRpTipoUso}"
+							binding="#{usosPredioxNivelManaged.cmbRpTipoUso}"
+							selectFirstOnUpdate="true" directInputSuggestions="false"
+							required="true" requiredMessage="El campo Uso del Predio es requerido"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							disabled="#{usosPredioxNivelManaged.disabled}"	
+							>
+							<f:selectItems id="id_lstusospredio" value="#{usosPredioxNivelManaged.lstTipoUso}"/>
+						</rich:comboBox>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<br />
+					</td>
+				</tr>
+				<tr>
+				
+					<td colspan="2">
+						
+						<rich:extendedDataTable 
+							id="id_tablausosxnivel" value="#{usosPredioxNivelManaged.recordsxNivel}" var="record" width="100%" height="250px"
+							sortMode="single" selectionMode="single" enableContextMenu="false" 
+							rowKeyVar="row">
+							<rich:column id="x4" style="text-align:center" width="4%" >
+				                <f:facet name="header" >Nivel</f:facet>
+				                <h:outputText value="#{record.nroNivel}"/>
+				            </rich:column>
+				            <rich:column id="x41" style="text-align:center" width="4%" >
+				                <f:facet name="header" >Sec</f:facet>
+				                <h:outputText value="#{record.seccion}"/>
+				            </rich:column>
+				            <rich:column id="x13" style="text-align:right" width="10%">
+				                <f:facet name="header" >Denominacion</f:facet>
+				                <h:outputText value="#{record.denoTipoNivel}"/>
+				            </rich:column>
+				            <rich:column id="x5" style="text-align:right" width="10%">
+				                <f:facet name="header" >Area Const</f:facet>
+				                <h:outputText value="#{record.areaConstruccion}"/>
+				            </rich:column>
+				            
+							<rich:column id="x6" style="text-align:right" width="10%">
+				                <f:facet name="header" >Area Usada</f:facet>
+				                <h:outputText value="#{record.areaUsada}"/>
+				            </rich:column>		
+				            				
+								<rich:column id="x7" style="text-align:right" width="10%">
+					                <f:facet name="header">Area Asigna</f:facet>
+					                <h:inputText required="#{record.areaConstruccion>record.areaUsada}" style="width:80%;" value="#{record.areaAsignada}" requiredMessage="Indique el Area Asignada del #{record.denoTipoNivel} nivel #{record.nroNivel}" 
+					                onkeypress="return numbersonly(this.value,event)"
+					                onblur="validaarea(#{record.areaConstruccion},#{record.areaUsada},this.value)"
+					                disabled="#{record.areaUsada>=record.areaConstruccion or usosPredioxNivelManaged.disabled}"
+					                >
+					                
+					                </h:inputText>
+					            </rich:column>            			
+					            <rich:column id="x8" style="text-align:center" width="13%">
+					                <f:facet name="header">Mes Inicio</f:facet>
+					                <rich:comboBox defaultLabel="Selecccione" selectFirstOnUpdate="true" directInputSuggestions="false"
+										id="id_mesinicio"   value="#{record.mesInicio}" style="width:95%;"
+										onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+										required="#{record.areaConstruccion>record.areaUsada}" requiredMessage="Indique el Mes Inicio del #{record.denoTipoNivel} nivel #{record.nroNivel}"	
+										disabled="#{record.areaUsada>=record.areaConstruccion or usosPredioxNivelManaged.disabled}"
+										>
+										
+										<f:selectItems id="id_lstmesini" value="#{usosPredioxNivelManaged.lstmes}"/>
+									</rich:comboBox>
+					            </rich:column>
+					            <rich:column id="x9" style="text-align:center" width="13%">
+					                <f:facet name="header">Mes Fin</f:facet>
+					                <rich:comboBox   defaultLabel="Selecccione" selectFirstOnUpdate="true" directInputSuggestions="false"
+										id="id_mesfin"   value="#{record.mesFin}" style="width:95%;"
+										onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+										required="#{record.areaConstruccion>record.areaUsada}" requiredMessage="Indique el Mes Fin del #{record.denoTipoNivel} nivel #{record.nroNivel}"
+										disabled="#{record.areaUsada>=record.areaConstruccion or usosPredioxNivelManaged.disabled}"
+										>
+										
+										<f:selectItems id="id_lstmesfin" value="#{usosPredioxNivelManaged.lstmes}"/>
+									</rich:comboBox>
+					            </rich:column>
+					            <rich:column id="x10" style="text-align:center" width="4%">
+					                <f:facet name="header">Sel.</f:facet>
+					                <h:selectBooleanCheckbox value="#{record.confirmacion}" 
+					                disabled="#{record.areaUsada>=record.areaConstruccion or usosPredioxNivelManaged.disabled}"
+					                >
+					                </h:selectBooleanCheckbox>
+					            </rich:column>
+					            <rich:column id="x11" style="text-align:left" width="20%">
+					                <f:facet name="header">Referencia</f:facet>
+					                <h:inputText style="width:95%;" value="#{record.referencia}" />
+					            </rich:column>  
+			   			</rich:extendedDataTable>
+			   				
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px">
+						<h:outputLabel value="Total Area de uso :" />
+					</td>
+					<td align="left">
+						<h:outputText id="id_totalareauso" value=""
+						readonly="true" style="width:50%;border: none"
+						/>
+					</td>
+				</tr>
+			</table>
+     </rich:panel>
+     
+     <table>
+			<tr>
+				<td align="center" colspan="4">
+					<h:panelGrid align="center" columns="3" width="40%" border="0" style="text-align:center" >
+						<a4j:commandButton value="[G]uardar" style="width:100px;"
+						 
+						action="#{usosPredioxNivelManaged.guardar}" reRender="id_tablausosdelpredio,id_thispanelusospredioxnivel,id_tablausosxnivel"
+						accesskey="g" 
+						oncomplete="if(#{facesContext.maximumSeverity == null}){ if(#{usosPredioxNivelManaged.isEditable==true}){#{rich:component('id_paneusosdelpredioxnivel')}.hide();}else{focusInputupnxnivel();} }else{#{rich:component('mpErrors')}.show();}"
+						disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0')}"
+						
+						/>
+						
+						<a4j:commandButton value="[S]alir" style="width:100px;" id="id_salir" action="#{usosPredioxNivelManaged.salir}"
+						 oncomplete="#{rich:component('id_paneusosdelpredioxnivel')}.hide(); return false"
+						 immediate="true"
+						 accesskey="s" onblur="focusInputupnxnivel();" >
+						</a4j:commandButton>
+					</h:panelGrid>
+				</td>
+			</tr>
+		</table>
+		
+          
+</h:panelGrid>
+
+

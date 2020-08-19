@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:form id="formReporteDJPredial">
+		<rich:panel id="idPanelReporteVehicular">
+			<f:facet name="header">GENERAR ESTADO CUENTA DETALLADO</f:facet>
+			<h:panelGrid columns="3">
+
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Codigo Contribuyente:">
+						<span class="requiredField">*</span>
+					</h:outputLabel>
+					<h:inputText value="#{estadoCuentaDetalladoManaged.personaId}"
+						required="true" />
+				</h:panelGrid>
+
+				<a4j:commandButton id="id_buttonEC"
+					action="#{estadoCuentaDetalladoManaged.previewDJ}"
+					value="Descargar EC Detallado"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.imprimirEc\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+				</a4j:commandButton>
+				<h:commandLink id="linkIdEc" styleClass="imprimirEc" value="xxx"
+					style="display: none;"
+					action="#{estadoCuentaDetalladoManaged.imprimirEstadoCuenta}" />
+
+			</h:panelGrid>
+		</rich:panel>
+
+	</h:form>
+</ui:composition>

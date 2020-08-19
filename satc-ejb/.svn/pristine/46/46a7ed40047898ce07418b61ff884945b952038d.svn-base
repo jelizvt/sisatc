@@ -1,0 +1,614 @@
+package com.sat.sisat.usuario.dao;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.sat.sisat.cobranzacoactiva.dto.PerfilCoactivo;
+import com.sat.sisat.common.dao.GeneralDao;
+import com.sat.sisat.common.dto.PermisoDTO;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.persistence.entity.RpDjpredial;
+import com.sat.sisat.persistence.entity.SgRol;
+import com.sat.sisat.persistence.entity.SgRolUsuario;
+import com.sat.sisat.persistence.entity.SgUsuario;
+import com.sat.sisat.persistence.entity.SgUsuarioAcceso;
+import com.sat.sisat.usuario.dto.CajaPermisosDTO;
+import com.sat.sisat.usuario.dto.MenusPermisosDTO;
+import com.sat.sisat.usuario.dto.RolesUsuarioDTO;
+import com.sat.sisat.usuario.dto.UsuarioDTO;
+
+public class UsuarioDao extends GeneralDao{
+
+	public UsuarioDao() {
+	}
+	
+	/**
+	 * Obtiene los datos del usuario que ha hecho log in.
+	 * 
+	 * @param userName Nombre de usuario.
+	 * @return Datos de usuario.
+	 * @throws SisatException
+	 */
+	public UsuarioDTO getUsuarioLoginData(String userName) throws SisatException {
+		try {
+			StringBuilder SQL = new StringBuilder("SELECT u.numero_dni,u.clave_reniec,u.usuario_id, u.nombre_usuario, u.apellidos, u.nombres, DATEDIFF(DAY,GETDATE(),fecha_expiracion) AS dias FROM ").append(Constante.schemadb).append(".sg_usuario u ");
+			SQL.append("WHERE u.nombre_usuario='" + userName + "' ");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+
+			UsuarioDTO us = new UsuarioDTO();
+			if (rs.next()) {
+				SgUsuario u = new SgUsuario();
+				u.setUsuarioId(rs.getInt("usuario_id"));
+				u.setNombreUsuario(rs.getString("nombre_usuario"));
+				u.setApellidos(rs.getString("apellidos"));
+				u.setNombres(rs.getString("nombres"));
+				
+				u.setDniUsuario(rs.getString("numero_dni"));
+				u.setClaveREniec(rs.getString("clave_reniec"));
+				
+				us.setDias(rs.getInt("dias"));	
+				
+				us.setUsuario(u);
+			}
+
+			StringBuilder SQL2 = new StringBuilder("SELECT ").append(Constante.schemadb).append(".terminal_cliente() AS terminal");
+			PreparedStatement pst2 = connect().prepareStatement(SQL2.toString());
+			ResultSet rs2 = pst2.executeQuery();
+			if (rs2.next()) {
+				us.setTerminal(rs2.getString("terminal"));				
+			}
+			
+			StringBuilder SQL3 = new StringBuilder("select r.unidad_id, r.rol, u.descripcion unidad_descripcion from ").append(Constante.schemadb)
+					.append(".td_resolutor r inner join gn_unidad u on u.unidad_id = r.unidad_id where r.estado = 1 and usuario_resolutor_id= ?");
+			PreparedStatement pst3 = connect().prepareStatement(SQL3.toString());
+			pst3.setInt(1, us.getUsuario().getUsuarioId());
+			ResultSet rs3 = pst3.executeQuery();
+			if (rs3.next()) {
+				Integer unidad = rs3.getInt("unidad_id") > 0 ? rs3.getInt("unidad_id") : null;
+				Integer rol = rs3.getInt("rol");
+				String unidadDescripcion = rs3.getString("unidad_descripcion");
+				us.setUnidadId(unidad);
+				us.setRolUnidad(rol);
+				us.setUnidadDescripcion(unidadDescripcion);
+			}
+
+			return us;
+		} catch (Exception ex) {
+ 			String msg = "No se ha podido recuperar los datos del usuario";
+			System.out.println(msg + ex);
+			throw new SisatException(msg);
+		}
+	}
+	
+	/**
+	 * Obtiene los roles que tiene asignado un usuairo.
+	 * 
+	 * @param userId Identificador del rol.
+	 * @return Roles del usuario.
+	 */
+	public Map<Integer,String> getRolesUsuario(int userId){
+		Map<Integer,String> lista = new HashMap<Integer, String>();
+		try{
+			StringBuilder SQL = new StringBuilder("SELECT DISTINCT r.rol_id,r.descripcion_corta ");
+			SQL.append("FROM ").append(Constante.schemadb).append(".sg_rol_modulo rm ");
+			SQL.append("INNER JOIN ").append(Constante.schemadb).append(".sg_rol r ON r.rol_id = rm.rol_id ");
+			SQL.append("WHERE rm.rol_id IN(SELECT rol_id FROM ").append(Constante.schemadb).append(".sg_rol_usuario WHERE usuario_id=").append(userId).append(" AND estado='").append(Constante.ESTADO_ACTIVO).append("') ");
+			SQL.append("AND r.estado='").append(Constante.ESTADO_ACTIVO).append("' AND rm.estado='").append(Constante.ESTADO_ACTIVO).append("'");
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+			while(rs.next()){
+				int rolId = rs.getInt("rol_id");
+				String desCorta = rs.getString("descripcion_corta");
+				lista.put(rolId, desCorta);
+			}
+		}catch(Exception ex){
+			String msg = "No se ha logrado recuperar los roles del usuario";
+			System.out.println(msg + ex);
+		}
+		return lista;
+	}
+
+	public Set<PermisoDTO> getPermisos(int userId) throws SisatException {
+		try {
+			//StringBuilder SQL = new StringBuilder("SELECT modulo_id, accion, flag_menu FROM dbo.sg_rol_modulo ");
+			//SQL.append("WHERE rol_id=" + rolId);
+
+			StringBuilder SQL = new StringBuilder("select ");
+			SQL.append("gmo.modulo_id, ");
+			SQL.append("accion=STUFF(( ");
+			SQL.append("SELECT ',' + mo.accion ");
+			SQL.append("FROM ");
+			SQL.append("( ");
+			SQL.append("SELECT rm.modulo_id, rm.accion, rm.flag_menu FROM ").append(Constante.schemadb).append(".sg_rol_modulo rm ");
+			SQL.append("WHERE rol_id IN ( ");
+			SQL.append("SELECT r.rol_id FROM ").append(Constante.schemadb).append(".sg_rol r ");
+			SQL.append("INNER JOIN ").append(Constante.schemadb).append(".sg_rol_usuario ru ON ru.rol_id = r.rol_id ");
+			SQL.append("WHERE ru.usuario_id = ").append(userId).append(" AND ru.estado = '").append(Constante.ESTADO_ACTIVO).append("') ");
+			SQL.append(") AS mo WHERE mo.modulo_id=gmo.modulo_id ");
+			SQL.append("FOR XML PATH('')),1,1,'') ");
+			SQL.append("FROM ").append(Constante.schemadb).append(".sg_rol_modulo gmo ");
+			SQL.append("WHERE gmo.rol_id IN( ");
+			SQL.append("SELECT gr.rol_id FROM ").append(Constante.schemadb).append(".sg_rol gr ");
+			SQL.append("INNER JOIN ").append(Constante.schemadb).append(".sg_rol_usuario gru ON gru.rol_id = gr.rol_id ");
+			SQL.append("WHERE gru.usuario_id = ").append(userId).append(" AND gru.estado = '").append(Constante.ESTADO_ACTIVO).append("') GROUP BY gmo.modulo_id");
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+
+			Set<PermisoDTO> prs = new HashSet<PermisoDTO>();
+			while (rs.next()) {
+				int moduloId = rs.getInt("modulo_id");
+				String accion = rs.getString("accion");
+				//String flagMenu = rs.getString("flag_menu");
+				PermisoDTO per = new PermisoDTO();
+				per.setModuloId(moduloId);
+				per.setNuevo(accion.contains("N"));
+				per.setModificacion(accion.contains("M"));
+				per.setCambioEstado(accion.contains("E"));
+				per.setConsulta(accion.contains("Q"));
+				//per.setFlagMenu(flagMenu.equals("S"));
+				prs.add(per);
+			}
+			return prs;
+		} catch (Exception ex) {
+			String msg = "No se ha podido recuperar los accesos del usuario: " + userId;
+			System.out.println(msg + ": " + ex);
+			throw new SisatException(msg);
+		}
+	}
+	
+	public List<MenusPermisosDTO> getMenusPermisos(int userId,int tipoMenuId) throws SisatException {
+		List<MenusPermisosDTO> list = new ArrayList<MenusPermisosDTO>();
+		
+		//Set<MenusPermisosDTO> list = new HashSet<MenusPermisosDTO>();
+		try {
+			String SQL = new String("dbo.sg_menu_usuario ?,?");
+		
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, userId);
+			pst.setInt(2, tipoMenuId);
+				
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {	
+				MenusPermisosDTO obj = new MenusPermisosDTO();
+				
+				obj.setMenuId(rs.getInt("menu_id"));
+				obj.setSubMenuId(rs.getInt("submenu_id"));
+				obj.setNivelAccesoId(rs.getInt("nivel_acceso_id"));
+				obj.setMenu(rs.getString("menu"));
+				obj.setSubmenu(rs.getString("submenu"));
+				obj.setNivelAcceso(rs.getString("acceso"));
+				obj.setUrl(rs.getString("url"));
+				
+				list.add(obj);
+			}
+			
+		} catch (Exception ex) {
+			String msg = "No se ha podido recuperar informacion del usuario: " + userId;
+			System.out.println(msg + ": " + ex);
+			throw new SisatException(msg);
+		}
+		
+		return list;
+		
+	}
+	
+	public List<MenusPermisosDTO> getSubmenusPermisos(int userId,int tipoMenuId) throws SisatException {
+		List<MenusPermisosDTO> list = new ArrayList<MenusPermisosDTO>();
+		try {
+			String SQL = new String("dbo.sg_submenu_usuario ?, ?");
+		
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, userId);
+			pst.setInt(2, tipoMenuId);
+			
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {	
+				MenusPermisosDTO obj = new MenusPermisosDTO();
+				
+				obj.setMenuId(rs.getInt("menu_id"));
+				obj.setSubMenuId(rs.getInt("submenu_id"));
+				obj.setNivelAccesoId(rs.getInt("nivel_acceso_id"));
+				obj.setMenu(rs.getString("menu"));
+				obj.setSubmenu(rs.getString("submenu"));
+				obj.setNivelAcceso(rs.getString("acceso"));
+				obj.setUrl(rs.getString("url"));
+				obj.setTipoUrl(rs.getInt("tipo_url"));
+				
+				
+				list.add(obj);
+			}
+			
+		} catch (Exception ex) {
+			String msg = "No se ha podido recuperar informacion del usuario: " + userId;
+			System.out.println(msg + ": " + ex);
+			throw new SisatException(msg);
+		}
+		
+		return list;
+		
+	}
+	
+	public List<SgUsuario> getAllSgUsuario(){
+		List<SgUsuario> lista = new ArrayList<SgUsuario>();
+		try {
+			StringBuilder SQL = new StringBuilder("SELECT usuario_id, apellidos, nombres, nombre_usuario, estado FROM ").append(Constante.schemadb).append(".sg_usuario ORDER BY apellidos");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+			
+			while (rs.next()) {
+				SgUsuario obj = new SgUsuario();
+				obj.setUsuarioId(rs.getInt("usuario_id"));
+				obj.setApellidos(rs.getString("apellidos"));
+				obj.setNombres(rs.getString("nombres"));
+				obj.setNombreUsuario(rs.getString("nombre_usuario"));
+				obj.setEstado(rs.getString("estado"));
+				lista.add(obj);
+			}
+		} catch (Exception e) {
+			System.out.println("No ha sido posible obtener los usuarios");
+		}
+		return lista;
+	}
+	
+	public List<SgRol> getAllSgRol(){
+		List<SgRol> lista = new ArrayList<SgRol>();
+		try{
+			StringBuilder SQL = new StringBuilder("SELECT rol_id,descripcion_corta,descripcion,estado FROM ").append(Constante.schemadb).append(".sg_rol ORDER BY rol_id");
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+			
+			while (rs.next()) {
+				SgRol sgr = new SgRol();
+				sgr.setRolId(rs.getInt("rol_id"));
+				sgr.setDescripcionCorta(rs.getString("descripcion_corta"));
+				sgr.setDescripcion(rs.getString("descripcion"));
+				sgr.setEstado(rs.getString("estado"));
+				lista.add(sgr);
+			}
+		}catch(Exception ex){
+			
+		}
+		return lista;
+	}
+	
+	public List<RolesUsuarioDTO> getRolesHabilitados(int userId){
+		List<RolesUsuarioDTO> lista = new ArrayList<RolesUsuarioDTO>();
+		try {
+			StringBuilder SQL = new StringBuilder("SELECT rol_id, descripcion_corta, descripcion, ");
+			SQL.append("CASE WHEN rol_id IN (SELECT rol_id FROM ").append(Constante.schemadb).append(".sg_rol_usuario WHERE usuario_id = ").append(userId).append(" AND estado='").append(Constante.ESTADO_ACTIVO).append("') THEN '1' ELSE '0' END AS habilitado FROM ").append(Constante.schemadb).append(".sg_rol");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+			
+			while (rs.next()) {
+				RolesUsuarioDTO obj = new RolesUsuarioDTO();
+				obj.setRolId(rs.getInt("rol_id"));
+				obj.setDescripcionCorta(rs.getString("descripcion_corta"));
+				obj.setDescripcion(rs.getString("descripcion"));
+				String hb = rs.getString("habilitado");
+				if(hb.equals("1")){
+					obj.setHabilitado(true);
+				}else{
+					obj.setHabilitado(false);
+				}
+				lista.add(obj);
+			}
+		} catch (Exception e) {
+			System.out.println("No ha sido posible obtener los roles");
+		}
+		return lista;
+	}
+	
+	public Integer crearUsuario(SgUsuario us) throws SisatException{
+		String  SQLVAL;
+		try{
+			SQLVAL = "SELECT nombre_usuario FROM ".concat(Constante.schemadb).concat(".sg_usuario WHERE nombre_usuario='").concat(us.getNombreUsuario()).concat("'");
+			PreparedStatement pstVal = connect().prepareStatement(SQLVAL);
+			ResultSet rsVal = pstVal.executeQuery();
+			if(rsVal.next()){
+				throw new SisatException("Nombre de usuario ya existe");
+			}
+			String SQL = "SELECT MAX(usuario_id) + 1 AS nextId FROM dbo.sg_usuario";
+			PreparedStatement pst = connect().prepareStatement(SQL);
+			ResultSet rs = pst.executeQuery();
+			if(rs.next()){
+				int nextId = rs.getInt("nextId");
+				if(nextId == 0){
+					nextId = 1;
+				}
+				StringBuilder SQL2 = new StringBuilder("SET LANGUAGE 'us_english'; INSERT INTO ").append(Constante.schemadb).append(".sg_usuario(usuario_id,registro,nombre_usuario,clave,apellidos,nombres,estado,usuario_actualizacion,fecha_actualizacion,terminal,fecha_registro,fecha_cambioclave,fecha_expiracion) ");
+				SQL2.append("VALUES(" ).append( nextId + ",NULL,'" ).append( us.getNombreUsuario() + "','" ).append( us.getClave() + "','" ).append( us.getApellidos() + "','" ).append( us.getNombres());
+				SQL2.append("','" ).append( us.getEstado() ).append( "'," + us.getUsuarioActualizacion() ).append( ",'" ).append( us.getFechaActualizacion() ).append("','" ).append( us.getTerminal() ).append( "','" ).append( DateUtil.getCurrentDate() ).append("', GETDATE(), DATEADD(DAY,30,CONVERT(date,GETDATE()))").append(")");
+				pst = connect().prepareStatement(SQL2.toString());
+				pst.execute();
+				return nextId;
+			}
+		}catch(SisatException ex){
+			throw ex;
+		}catch(Exception ex){
+			System.out.println("No se ha podido guardar el usuario: "+ex.getMessage());
+		}
+		return null;
+	}
+	
+	
+	
+	
+	public boolean actualizaUsuario(SgUsuario us){
+		try{
+			StringBuilder SQL = new StringBuilder("SET LANGUAGE 'us_english'; UPDATE ").append(Constante.schemadb).append(".sg_usuario ");
+			//SQL.append("SET apellidos='" + us.getApellidos() + "', nombres='" + us.getNombres() + "',estado='" + us.getEstado());
+			SQL.append("SET estado='" ).append( us.getEstado());
+			SQL.append("',usuario_actualizacion=" ).append( us.getUsuarioActualizacion() ).append( ",fecha_actualizacion='" ).append( us.getFechaActualizacion() ).append("',terminal='" + us.getTerminal());
+			SQL.append("' WHERE usuario_id="+us.getUsuarioId());
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.execute();
+			return true;
+		}catch(Exception ex){
+			System.out.println("No se ha podido actualizar los datos del usuario: "+ex.getMessage());
+		}
+		return false;
+	}
+	
+	public String getEstadoRolUsuario(int userId, int rolId){
+		try{
+			StringBuilder SQL = new StringBuilder("SELECT estado FROM ").append(Constante.schemadb).append(".sg_rol_usuario WHERE usuario_id=" + userId + " AND rol_id=" + rolId);
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+
+			while(rs.next()){
+				String est = rs.getString("estado");
+				return est;
+			}
+		}catch(Exception ex){
+			System.out.println("No se ha podido obtener el estado del rol_usuario: "+ex.getMessage());
+		}
+		return null;
+	}
+	
+	public Integer guardarRolUsuario(SgRolUsuario ru){
+		try{
+			StringBuilder SQL = new StringBuilder("SELECT MAX(rol_usuario_id) + 1 AS nextId FROM ").append(Constante.schemadb).append(".sg_rol_usuario");
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+			
+			if(rs.next()){
+				int nextId = rs.getInt("nextId");
+				if(nextId == 0){
+					nextId = 1;
+				}
+				StringBuilder SQL2 = new StringBuilder("SET LANGUAGE 'us_english'; INSERT INTO ").append(Constante.schemadb).append(".sg_rol_usuario(rol_usuario_id,rol_id,usuario_id,estado,fecha_registro,terminal) ");
+				SQL2.append("VALUES(" + nextId + "," + ru.getRolId() + "," + ru.getUsuarioId() + ",'" + ru.getEstado());
+				SQL2.append("','" + ru.getFechaRegistro() + "','" + ru.getTerminal() + "')");
+				
+				pst = connect().prepareStatement(SQL2.toString());
+				pst.execute();
+				return nextId;
+			}
+		}catch(Exception ex){
+			System.out.println("No se ha podido los roles del usuario: "+ex.getMessage());
+		}
+		return null;
+	}
+	
+	public boolean actualizarEstadoRolUsuario(int userId, int rolId, String estado){
+		try{
+			StringBuilder SQL = new StringBuilder("SET LANGUAGE 'us_english'; UPDATE ").append(Constante.schemadb).append(".sg_rol_usuario SET estado = '" + estado + "' WHERE usuario_id=" + userId + " AND rol_id=" + rolId);
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.execute();
+			return true;
+		}catch(Exception ex){
+			System.out.println("No se ha podido inactivar rol_usuario: "+ex.getMessage());
+		}
+		return false;
+	}
+	
+	/**
+	 * Cambia de estado a todos los roles que no sean administrador
+	 * @param userId PK. Usuario
+	 * @param rolId PK. Rol
+	 * @param estado Nuevo estado
+	 * @return
+	 */
+	public boolean cambiarEstadoMenosAdmin(int userId, int rolId, String estado){
+		try{
+			StringBuilder SQL = new StringBuilder("SET LANGUAGE 'us_english'; UPDATE ").append(Constante.schemadb).append(".sg_rol_usuario SET estado = '" + estado + "' WHERE usuario_id=" + userId + " AND rol_id <> " + rolId);
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.execute();
+			return true;
+		}catch(Exception ex){
+			System.out.println("No ha sido posible inactivar a los roles a excepción de admin");
+		}
+		return false;
+	}
+	
+	public List<SgUsuarioAcceso> getUsuarioAcceso(int rolUsuarioId){
+		List<SgUsuarioAcceso> lista = new ArrayList<SgUsuarioAcceso>();
+		try {
+			StringBuilder SQL = new StringBuilder("SELECT usuario_acceso_id,fecha_inicio,fecha_fin,estado FROM ").append(Constante.schemadb).append(".sg_usuario_acceso ");
+			SQL.append("WHERE rol_usuario_id="+rolUsuarioId+" ORDER BY fecha_registro DESC");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+			
+			while (rs.next()) {
+				SgUsuarioAcceso obj = new SgUsuarioAcceso();
+				obj.setUsuarioAccesoId(rs.getInt("usuario_acceso_id"));
+				obj.setFechaInicio(rs.getTimestamp("fecha_inicio"));
+				obj.setFechaFin(rs.getTimestamp("fecha_fin"));
+				obj.setEstado(rs.getString("estado"));
+				lista.add(obj);
+			}
+		} catch (Exception e) {
+			System.out.println("No ha sido posible obtener los roles");
+		}
+		return lista;
+	}
+	
+	public Integer getRolUsuarioId(int usuarioId, int rolId){
+		try{
+			StringBuilder SQL = new StringBuilder("SELECT rol_usuario_id FROM ").append(Constante.schemadb).append(".sg_rol_usuario WHERE usuario_id="+usuarioId+" AND rol_id="+rolId+" AND estado='"+Constante.ESTADO_ACTIVO+"'");
+
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+			if(rs.next()){
+				return rs.getInt("rol_usuario_id");
+			}
+		}catch(Exception ex){
+			System.out.println("No ha sido posible obtener el PK de sg_rol_usuario");
+		}
+		return null;
+	}
+	
+	public Integer crearUsuarioAcceso(SgUsuarioAcceso ua){
+		try{
+			StringBuilder SQL = new StringBuilder("SELECT MAX(usuario_acceso_id) + 1 AS nextId FROM ").append(Constante.schemadb).append(".sg_usuario_acceso");
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+			
+			if(rs.next()){
+				int nextId = rs.getInt("nextId");
+				if(nextId == 0){
+					nextId = 1;
+				}
+				StringBuilder SQL2 = new StringBuilder("SET LANGUAGE 'us_english'; INSERT INTO ").append(Constante.schemadb).append(".sg_usuario_acceso(usuario_acceso_id,rol_usuario_id,fecha_inicio,fecha_fin,estado,fecha_registro,terminal,usuario_id) ");
+				SQL2.append("VALUES(" + nextId + "," + ua.getRolUsuarioId() + ",'" + ua.getFechaInicio() + "','" + ua.getFechaFin());
+				SQL2.append("','" + ua.getEstado() + "','" + ua.getFechaRegistro() +"','" + ua.getTerminal() + "', " + ua.getUsuarioId() + ")");
+				
+				pst = connect().prepareStatement(SQL2.toString());
+				pst.execute();
+				return nextId;
+			}
+		}catch(Exception ex){
+			System.out.println("No se ha podido guardar SgUsuarioAcceso: "+ex.getMessage());
+		}
+		return null;
+	}
+	
+	public boolean inactivarUsuarioAcceso(int rolUsuarioId, int usuarioAccesoId){
+		try{
+			StringBuilder SQL = new StringBuilder("SET LANGUAGE 'us_english'; UPDATE ").append(Constante.schemadb).append(".sg_usuario_acceso SET estado = '" + Constante.ESTADO_INACTIVO + "' WHERE rol_usuario_id=" + rolUsuarioId + " AND usuario_acceso_id != " + usuarioAccesoId);
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.execute();
+			return true;
+		}catch(Exception ex){
+			System.out.println("No se ha podido inactivar SgUsuarioAcceso: "+ex.getMessage());
+		}
+		
+		return false;
+	}
+	
+	public boolean changePassword(int userId, String claveActual, String claveNueva) throws SisatException, Exception{
+		try{
+			StringBuilder SQL = new StringBuilder("SELECT clave FROM ").append(Constante.schemadb).append(".sg_usuario WHERE usuario_id=" + userId + " AND clave='" + claveActual + "'");
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			ResultSet rs = pst.executeQuery();
+			boolean aboveCorrect = false;
+			if(rs.next()){
+				if(rs.getString("clave").equals(claveActual)){
+					aboveCorrect = true;
+				}
+			}
+			
+			if(!aboveCorrect){
+				throw new SisatException("La clave actual no es correcta.");
+			}
+			
+			StringBuilder SQL2 = new StringBuilder("SET LANGUAGE 'us_english'; UPDATE ").append(Constante.schemadb).append(".sg_usuario SET clave='"+claveNueva+"' WHERE usuario_id=" + userId + " AND clave='" + claveActual + "'");
+			PreparedStatement pst2 = connect().prepareStatement(SQL2.toString());
+			pst2.executeUpdate();
+			
+			StringBuilder SQL3 = new StringBuilder("UPDATE ").append(Constante.schemadb).append(".sg_usuario SET fecha_cambioclave=GETDATE() WHERE usuario_id=" + userId);
+			PreparedStatement pst3 = connect().prepareStatement(SQL3.toString());
+			pst3.executeUpdate();
+			
+			StringBuilder SQL4 = new StringBuilder("UPDATE ").append(Constante.schemadb).append(".sg_usuario SET fecha_expiracion = DATEADD(day,30,fecha_cambioclave) WHERE usuario_id=" + userId);
+			PreparedStatement pst4 = connect().prepareStatement(SQL4.toString());
+			pst4.executeUpdate();
+			
+			return true;
+		}catch(SisatException ex){
+			throw ex;
+		}catch(Exception ex){
+			throw ex;
+		}
+	}
+	
+	/**
+	 * Obtiene el perfil relacionado al modulo de coactiva
+	 */
+	public PerfilCoactivo getCargoUsuario(Integer usuarioId) throws Exception{
+		PerfilCoactivo perfil=new PerfilCoactivo();
+		try{
+			StringBuilder SQL = new StringBuilder();
+			SQL.append("select distinct c.cargo_id,c.materia_id from dbo.gn_usuario_cargo c ");
+			SQL.append("left join dbo.gn_usuario_cargo_aux a on (a.usuario_cargo_id=c.usuario_cargo_id) ");
+			SQL.append("where c.usuario_id=? or a.usuario_id=?");
+			
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, usuarioId);
+			pst.setInt(2, usuarioId);
+			ResultSet rs = pst.executeQuery();
+			if(rs.next()){
+				perfil.setCargoId(rs.getInt("cargo_id"));
+				perfil.setMateriaId(rs.getInt("materia_id"));
+			}
+		}catch(Exception ex){
+			throw (ex);
+		}
+		return perfil;
+	}
+	
+	
+	public CajaPermisosDTO getPermisosCaja(int userId) throws SisatException {
+		CajaPermisosDTO permiso = new CajaPermisosDTO();
+		try {
+			String SQL = new String("dbo.sg_get_permiso_caja ?");
+		
+			PreparedStatement pst = connect().prepareStatement(SQL.toString());
+			pst.setInt(1, userId);
+			
+			ResultSet rs = pst.executeQuery();
+
+			while (rs.next()) {	
+				CajaPermisosDTO obj = new CajaPermisosDTO();
+				
+				obj.setCajero(rs.getBoolean("iscajero"));
+				obj.setSupervisorCaja(rs.getBoolean("issupervisorcaja"));
+				
+				
+				permiso = obj;
+			}
+			
+		} catch (Exception ex) {
+			String msg = "No se ha podido recuperar informacion del usuario: " + userId;
+			System.out.println(msg + ": " + ex);
+			throw new SisatException(msg);
+		}
+		
+		return permiso;
+		
+	}
+}

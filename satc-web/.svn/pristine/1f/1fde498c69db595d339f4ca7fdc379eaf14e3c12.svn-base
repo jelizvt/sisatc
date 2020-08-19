@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:form id="formReporteDJPredial">
+		<rich:panel id="idPanelReporteVehicular">
+			<f:facet name="header">Generar CUPONERA INDIVIDUAL</f:facet>
+			<h:panelGrid columns="3">
+				<ul>
+					<h:panelGrid columns="2">
+							<h:outputLabel value="Codigo Contribuyente:">
+								<span class="requiredField">*</span>
+							</h:outputLabel>
+							<h:inputText value="#{generarCuponeraManaged.personaId}" required="true" />
+						</h:panelGrid>	
+					<a4j:commandButton id="id_GenerarCuponera"
+						action="#{generarCuponeraManaged.guardar}"
+						value="Generar Cuponera" status="ajaxStatus"></a4j:commandButton>
+					<li><a4j:commandButton id="id_buttonPu"
+							action="#{generarCuponeraManaged.previewDJ}" value="Descargar PU"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.imprimirPu\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+						</a4j:commandButton> <h:commandLink id="linkIdPu" styleClass="imprimirPu" value="xxx"
+							style="display: none;"
+							action="#{generarCuponeraManaged.imprimirPdfPuCuponera}" /></li>
+					<li><a4j:commandButton id="id_buttonPr"
+							action="#{generarCuponeraManaged.previewDJ}" value="Descargar PR"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.imprimirPr\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+						</a4j:commandButton> <h:commandLink id="linkIdPr" styleClass="imprimirPr" value="xxx"
+							style="display: none;"
+							action="#{generarCuponeraManaged.imprimirPdfPrCuponera}" /></li>
+					<li><a4j:commandButton id="id_buttonHr1"
+							action="#{generarCuponeraManaged.previewDJ}"
+							value="Descargar HR1"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.imprimirHr1\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+						</a4j:commandButton> <h:commandLink id="linkIdHr1" styleClass="imprimirHr1"
+							value="xxx" style="display: none;"
+							action="#{generarCuponeraManaged.imprimirPdfHr1Cuponera}" /></li>
+					<li><a4j:commandButton id="id_buttonHr2"
+							action="#{generarCuponeraManaged.previewDJ}"
+							value="Descargar HR2"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.imprimirHr2\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+						</a4j:commandButton> <h:commandLink id="linkIdHr2" styleClass="imprimirHr2"
+							value="xxx" style="display: none;"
+							action="#{generarCuponeraManaged.imprimirPdfHr2Cuponera}" /></li>
+					<li><a4j:commandButton id="id_buttonEcCup"
+							action="#{generarCuponeraManaged.previewDJ}" value="Descargar EC"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.imprimirEcCup\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+						</a4j:commandButton> <h:commandLink id="linkIdEcCup" styleClass="imprimirEcCup"
+							value="xxx" style="display: none;"
+							action="#{generarCuponeraManaged.imprimirPdfEcCuponera}" /></li>
+					<li><a4j:commandButton id="id_buttonArbCup"
+							action="#{generarCuponeraManaged.previewDJ}"
+							value="Descargar Arbitrios"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.imprimirArbitrios\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+						</a4j:commandButton> <h:commandLink id="linkIdArbCup" styleClass="imprimirArbitrios"
+							value="xxx" style="display: none;"
+							action="#{generarCuponeraManaged.imprimirPdfArbitrosCuponera}" />
+					</li>
+					<li><a4j:commandButton id="id_buttonNotifCup"
+							action="#{generarCuponeraManaged.previewDJ}"
+							value="Descargar Notificaciones"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.imprimirNotif\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+						</a4j:commandButton> <h:commandLink id="linkIdNotifCup" styleClass="imprimirNotif"
+							value="xxx" style="display: none;"
+							action="#{generarCuponeraManaged.imprimirPdfNotificacionCuponera}" />
+					</li>
+				</ul>
+			</h:panelGrid>
+		</rich:panel>
+
+	</h:form>
+</ui:composition>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" width="100%">
+     
+     <style type="">
+     .col1FormVia{
+     	width: 80px;
+     }
+     .col2FormVia{
+     	width:600px; 
+     }
+     </style>
+	<rich:panel id="id_thispanelbuscarvia" width="680">
+		<h:panelGrid columns="2" columnClasses="col1FormVia, col2FormVia">
+			<h:outputLabel value="Tipo Via"> :</h:outputLabel>
+			<rich:comboBox id="comboBoxTipoViaId" valueChangeListener="#{buscarViaPersonaManaged.changeListenerComboBoxTipoVia}"
+				defaultLabel="Seleccione" enableManualInput="true"
+				onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+				>
+				<f:selectItems value="#{buscarViaPersonaManaged.lsttipovia}" />
+				<a4j:support event="onchange" reRender="comboBoxTipoViaId, comboBoxViaId" bypassUpdates="false" ajaxSingle="true"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"></a4j:support>
+			</rich:comboBox>
+			<h:outputLabel value="Via"> :</h:outputLabel>
+			<rich:comboBox id="comboBoxViaId" valueChangeListener="#{buscarViaPersonaManaged.changeListenerComboBoxVia}"
+				defaultLabel="Seleccione"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+				enableManualInput="true" value="#{buscarViaPersonaManaged.comboBoxVia}"
+				onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+				>
+				<f:selectItems value="#{buscarViaPersonaManaged.listSelectItemGnVia}" />
+				<a4j:support event="onchange" bypassUpdates="false" ajaxSingle="true" reRender="comboBoxViaId"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"></a4j:support>
+			</rich:comboBox>
+		</h:panelGrid>
+		<rich:separator height="1px"></rich:separator>
+		<h:panelGrid columns="2" columnClasses="col1FormVia, col2FormVia">
+			<h:outputLabel value="Descripcion"> :</h:outputLabel>
+			<h:inputText maxlength="80" size="80" style="width:90%" value="#{buscarViaPersonaManaged.descripcion}" />
+		</h:panelGrid>
+		<h:panelGrid columns="2" columnClasses="columnButtonL,columnButtonR" width="100%">
+			<a4j:commandButton value="Buscar" style="width:100px;" action="#{buscarViaPersonaManaged.buscarV2}"
+				reRender="id_tableviasbv, tableDataScroller" status="ajaxStatus"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };" />
+			<a4j:commandButton value="Salir" style="width:100px;"
+				oncomplete="#{rich:component('panelBuscarVia')}.hide(); return false" />
+		</h:panelGrid>
+		<rich:extendedDataTable id="id_tableviasbv" value="#{buscarViaPersonaManaged.records}" var="record" width="100%"
+			selectionMode="single" rows="8" enableContextMenu="false" noDataLabel="No se encontraron coincidencias"
+			rowKeyVar="row" height="225px"
+			onRowContextMenu="if (row) row.style.backgroundColor='#{a4jSkin.tableBackgroundColor}';
+				                this.style.backgroundColor='#F1F1F1'; row=this;
+				                #{rich:component('menu')}.show(event,{ currentRow:'#{row}'});
+				                return false;">
+			<rich:column width="30px">
+				<a4j:commandLink ajaxSingle="true" id="newlink3bv" action="#{buscarViaPersonaManaged.seleccionarEnMpDireccion}"
+					oncomplete="#{rich:component('panelBuscarVia')}.hide(); return false"
+					reRender="ubicaciondireccion,id_thispanelbuscarvia">
+					<h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+					<f:setPropertyActionListener value="#{record}" target="#{buscarViaPersonaManaged.currentItem}" />
+				</a4j:commandLink>
+			</rich:column>
+			<rich:column width="15%" id="r01bv">
+				<f:facet name="header">Sector</f:facet>
+				<h:outputText value="#{record.sector}" />
+				<h:inputHidden value="#{record.sectorId}" />
+				<h:inputHidden value="#{record.ubicacionId}" />
+			</rich:column>
+			<rich:column width="20%" id="r02bv">
+				<f:facet name="header">Lugar</f:facet>
+				<h:outputText value="#{record.lugar}" />
+			</rich:column>
+			<rich:column width="15%" id="r03bv">
+				<f:facet name="header">Tipo Via</f:facet>
+				<h:outputText value="#{record.tipoVia}" />
+			</rich:column>
+			<rich:column width="20%" id="r04bv">
+				<f:facet name="header">Via</f:facet>
+				<h:outputText value="#{record.via}" />
+			</rich:column>
+			<rich:column width="5%" id="r05bv">
+				<f:facet name="header">Cdra.</f:facet>
+				<h:outputText value="#{record.numeroCuadra}" />
+			</rich:column>
+			<rich:column width="10%" id="r06bv">
+				<f:facet name="header">Lado</f:facet>
+				<h:outputText rendered="#{record.lado==1}" value="#{record.lado} - DER" />
+				<h:outputText rendered="#{record.lado==2}" value="#{record.lado} - IZQ" />
+			</rich:column>
+			<rich:column width="10%" id="r07bv">
+				<f:facet name="header">Manz.</f:facet>
+				<h:outputText value="#{record.numeroManzana}" />
+			</rich:column>
+		</rich:extendedDataTable>
+		<rich:datascroller id="tableDataScroller" align="center" for="id_tableviasbv" renderIfSinglePage="false"
+			status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+			<f:facet name="pages">
+				<h:outputText value="#{pageIndex} / #{pages}" />
+			</f:facet>
+		</rich:datascroller>
+	</rich:panel>
+	<rich:modalPanel id="mpErrors" autosized="true" width="450">
+       <f:facet name="header">
+            <h:outputText value="Mensajes" />
+        </f:facet>
+        <f:facet name="controls">
+            <h:panelGroup>
+                <h:graphicImage value="/images/modal/close.png" id="hidelink3ss"
+                    styleClass="hidelink" />
+                <rich:componentControl for="mpErrors" attachTo="hidelink3ss"
+                    operation="hide" event="onclick" />
+            </h:panelGroup>
+        </f:facet>
+        <h:form >
+        		
+       	<a4j:outputPanel ajaxRendered="true" style="width:100%">
+	 	  <rich:messages style="color: red;" />
+	 	  
+	      <div style="text-align:center">
+	      <a4j:commandButton id="btnReturn" value="Salir" >
+	        <rich:componentControl for="mpErrors" attachTo="btnReturn" operation="hide" event="onclick"/>
+	      </a4j:commandButton>
+	      </div>
+		</a4j:outputPanel>
+        </h:form>
+    </rich:modalPanel>   
+</ui:composition>
+
+

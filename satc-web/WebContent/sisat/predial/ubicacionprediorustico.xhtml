@@ -1,0 +1,193 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:a4j="http://richfaces.org/a4j"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+     
+     <rich:jQuery query="focus().select()" selector="#formUbicacionPredioRustico :input:visible:enabled:first" name="focusInputupr"/>
+    <rich:panel  id="ubicacionprediop02" >
+		<f:facet name="header">		
+			DIRECCION PARA PREDIO RUSTICO
+		</f:facet>
+					<table cellpadding="0" width="100%" >
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputLabel value="Lugar :" >
+									<span style="color: red;">*</span>
+								</h:outputLabel>
+							</td>
+							<td colspan="2">
+								<h:inputText maxlength="100" id="id_rusticolugar" required="true" style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.lugar}" 
+								requiredMessage="Indique el Lugar del predio"
+								tabindex="1"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioRusticoManaged.disabled}"
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText value="Nombre del Predio :" />
+							</td>
+							<td colspan="2">
+								<h:inputText maxlength="50" id="id_nombrepredio"  style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.nombreEdificiacion}" 
+								tabindex="2"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioRusticoManaged.disabled}"	
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<br></br>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<rich:separator height="1" lineType="solid"></rich:separator>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText value="Predios Colindante:" />
+							</td>
+							<td>
+								<h:outputText value="Nombre del Predio :" />
+							</td>
+							<td>
+								<h:outputText value="Nombre del Propietario :" />
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText value="Norte :" />
+							</td>
+							<td>
+								<h:inputText maxlength="100" id="id_nombrepredio_norte"  style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.predioColindanteNorte}" 
+								tabindex="3"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioRusticoManaged.disabled}"
+								/>
+							</td>
+							<td>
+								<h:inputText maxlength="100" id="id_nombrepropie_norte"  style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.propietarioColindanteNorte}"
+								tabindex="4"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioRusticoManaged.disabled}"	
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText value="Sur :" />
+							</td>
+							<td>
+								<h:inputText maxlength="100" id="id_nombrepredio_sur"  style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.predioColindanteSur}" 
+								tabindex="5"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioRusticoManaged.disabled}"
+								/>
+							</td>
+							<td>
+								<h:inputText maxlength="100" id="id_nombrepropie_sur"  style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.propietarioColindanteSur}" 
+								tabindex="6"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioRusticoManaged.disabled}"	
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText value="Este :" />
+							</td>
+							<td>
+								<h:inputText maxlength="100" id="id_nombrepredio_este"  style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.predioColindanteEste}" 
+								tabindex="7"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioRusticoManaged.disabled}"	
+								/>
+							</td>
+							<td>
+								<h:inputText maxlength="100" id="id_nombrepropie_este"  style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.propietarioColindanteEste}" 
+								tabindex="8"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioRusticoManaged.disabled}"	
+								/>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="100px" >
+								<h:outputText value="Oeste :" />
+							</td>
+							<td>
+								<h:inputText maxlength="100" id="id_nombrepredio_oeste"  style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.predioColindanteOeste}" 
+								tabindex="9"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioRusticoManaged.disabled}"	
+								/>
+							</td>
+							<td>
+								<h:inputText maxlength="100" id="id_nombrepropie_oeste"  style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.propietarioColindanteOeste}" 
+								tabindex="10"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioRusticoManaged.disabled}"	
+								/>
+							</td>
+						</tr>
+					</table>
+					
+     </rich:panel>
+     
+     
+     <rich:panel  id="p03" >
+		<f:facet name="header">		
+			UBICACION CATASTRAL TRIBUTARIA
+		</f:facet>
+		<table border="0" width="100%">
+			<tr>
+				<td align="left" width="100px" >
+					<h:outputText value="Sector catast. :" />
+				</td>
+				<td >
+					<h:inputText id="id_sectorcatastralrustico" maxlength="5"   style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.sectorCatastral}" 
+					tabindex="11"
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{ubicacionPredioRusticoManaged.disabled}"	
+					/>
+				</td>
+				<td align="left" width="100px" >
+					<h:outputText value="Manz. catast. :" />
+				</td>
+				<td >
+					<h:inputText id="id_manzanacatastralrustico" maxlength="5"    style="width:100%;" value="#{ubicacionPredioRusticoManaged.rpDjdireccion.manzanaCatastral}" 
+					tabindex="12"
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{ubicacionPredioRusticoManaged.disabled}"	
+					/>
+				</td>
+			</tr>
+		</table>
+     </rich:panel>
+
+	<h:panelGrid columns="2" align="center" >
+		<a4j:commandButton value="[G]rabar" style="width:100px;"	action="#{ubicacionPredioRusticoManaged.guardar}"   reRender="id_paneldireccionpredio"
+		oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.hideModalPanel(\'panelUbicacionPredioRustico\');return false ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+		accesskey="g"
+		tabindex="13" 
+		disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0')}"
+		/>
+		
+		<a4j:commandButton value="[S]alir" style="width:100px;"	action="#{ubicacionPredioRusticoManaged.salir}" oncomplete="#{rich:component('panelUbicacionPredioRustico')}.hide(); return false"
+		onblur="focusInputupr();"
+		accesskey="s"
+		tabindex="14"
+		/>
+    </h:panelGrid>
+
+ 	
+    
+</h:panelGrid>

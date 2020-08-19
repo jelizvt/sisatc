@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<style>
+.labelForm {
+	font-weight: bold;
+}
+
+.bodyPanelClass {
+	padding: 0px;
+}
+</style>
+
+	<rich:hotKey key="return"
+		handler="#{rich:element('idButtonBuscar')}.click()"
+		selector="formBuscarRepresentante" />
+
+	<h:panelGroup id="pnlBuscarPersona">
+		<h:panelGrid columns="1" id="panelGridBusqueda">
+			<h:panelGrid columns="3" cellpadding="0" cellspacing="0">
+				<h:panelGrid columns="2">
+					<h:panelGroup style="width:94px;" layout="block">
+						<h:outputLabel value="Cod Persona: " styleClass="labelForm" />
+					</h:panelGroup>
+					<h:inputText
+						value="#{buscarPersonaPopupManaged.paramBusquedaPersonaDTO.personaId}"
+						styleClass="textUpperCase" converter="uppeCaseConverter" />
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<h:panelGroup style="width:100px;" layout="block">
+						<h:outputLabel value="Tipo Documento: " styleClass="labelForm" />
+					</h:panelGroup>
+					<h:panelGroup style="width:132px;" layout="block">
+						<rich:comboBox
+							value="#{buscarPersonaPopupManaged.selectedTipoDocBusc}"
+							defaultLabel="#{msg['param.defaultlabelcombo']}" width="100px">
+							<f:selectItems value="#{buscarPersonaPopupManaged.lstTipoDoc}" />
+						</rich:comboBox>
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<h:panelGroup style="width:94px;" layout="block">
+						<h:outputLabel value="Nro Documento: " styleClass="labelForm" />
+					</h:panelGroup>
+					<h:inputText
+						value="#{buscarPersonaPopupManaged.paramBusquedaPersonaDTO.nroDocumento}"
+						styleClass="textUpperCase" converter="uppeCaseConverter" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<h:panelGrid columns="3" cellpadding="0" cellspacing="0">
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Apellido Paterno: " styleClass="labelForm" />
+					<h:inputText
+						value="#{buscarPersonaPopupManaged.paramBusquedaPersonaDTO.apellidoPaterno}"
+						styleClass="textUpperCase" converter="uppeCaseConverter" />
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Apellido Materno: " styleClass="labelForm" />
+					<h:inputText
+						value="#{buscarPersonaPopupManaged.paramBusquedaPersonaDTO.apellidoMaterno}"
+						styleClass="textUpperCase" converter="uppeCaseConverter" />
+				</h:panelGrid>
+				<h:panelGrid columns="2">
+					<h:panelGroup style="width:94px" layout="block">
+						<h:outputLabel value="Primer Nombre: " styleClass="labelForm" />
+					</h:panelGroup>
+					<h:inputText
+						value="#{buscarPersonaPopupManaged.paramBusquedaPersonaDTO.primerNombre}"
+						styleClass="textUpperCase" converter="uppeCaseConverter" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<h:panelGroup style="width:94px;" layout="block">
+					<h:outputLabel value="Razon Social: " styleClass="labelForm" />
+				</h:panelGroup>
+				<h:inputText
+					value="#{buscarPersonaPopupManaged.paramBusquedaPersonaDTO.razonSocial}"
+					size="70" styleClass="textUpperCase" converter="uppeCaseConverter" />
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Apellidos y Nombres: " styleClass="labelForm" />
+				<h:inputText
+					value="#{buscarPersonaPopupManaged.paramBusquedaPersonaDTO.apellidosNombres}"
+					size="70" styleClass="textUpperCase" converter="uppeCaseConverter" />
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<a4j:commandButton id="idButtonBuscar" style="width:80px;" value="#{msg['gn.buscar']}"
+					action="#{buscarPersonaPopupManaged.buscar}"
+					reRender="frmBuscarTransferente" status="ajaxStatus"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };" />
+				<a4j:commandButton value="Limpiar" style="width:80px;"
+					action="#{buscarPersonaPopupManaged.limpiar}" ajaxSingle="true"
+					status="ajaxStatus" reRender="panelGridBusqueda"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</h:panelGroup>
+	<rich:panel id="frmBuscarTransferente" style="border:0"
+		bodyClass="bodyPanelClass">
+		<div id="Layer1" style="height: 250px; overflow: auto;">
+			<table id="tableper" width="100%" cellpadding="1" border="0">
+				<tr>
+					<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+							value="" /></th>
+					<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+							value="#{msg['gn.id']}" /></th>
+					<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+							value="#{msg['gn.tipodoc']}" /></th>
+					<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+							value="#{msg['gn.nrodoc']}" /></th>
+					<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+							value="#{msg['gn.apenomorazonsocial']}" /></th>
+					<th bgcolor="#3F7FB2"><h:outputText style="color: #ffffff;"
+							value="#{msg['gn.contribuyente']}" /></th>
+				</tr>
+				<a4j:repeat id="tblPersonas"
+					value="#{buscarPersonaPopupManaged.lstPersonas}" var="record"
+					width="720" height="330px"
+					noDataLabel="#{msg['gn.noexistendatos']}">
+					<tr>
+						<rich:column>
+							<a4j:commandLink
+								action="#{buscarPersonaPopupManaged.seleccionarPersona}"
+								oncomplete="Richfaces.hideModalPanel('#{componentModalId}'); return false"
+								reRender="#{reRederIdComponent}">
+								<h:graphicImage value="/images/check.gif" height="16"
+									style="border:0" />
+								<f:setPropertyActionListener
+									target="#{buscarPersonaPopupManaged.personaDTOSeleccionada}"
+									value="#{record}" />
+							</a4j:commandLink>
+						</rich:column>
+						<td><h:outputText value="#{record.personaId}" /></td>
+						<td><h:outputText value="#{record.tipoDocIdentidad}" /></td>
+						<td><h:outputText value="#{record.nroDocuIdentidad}" /></td>
+						<td><h:outputText
+								value="#{record.apellidosNombres} #{record.apellidosNombres != null ? record.razonSocial != null ? ' - ': '' : ''} #{record.razonSocial}" />
+						</td>
+						<td><h:outputText rendered="#{record.esContribuyente}"
+								value="SI" /> <h:outputText
+								rendered="#{!record.esContribuyente}" value="NO" /></td>
+					</tr>
+				</a4j:repeat>
+			</table>
+		</div>
+	</rich:panel>
+</ui:composition>

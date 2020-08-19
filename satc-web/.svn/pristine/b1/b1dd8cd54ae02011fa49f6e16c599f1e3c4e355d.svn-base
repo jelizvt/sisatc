@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<head>
+<title>Recibo de Pago</title>
+<script type="text/javascript"> 
+	window.onload = function () {
+	  window.print();
+	  setTimeout(function(){window.close();}, 1);
+	}
+ </script> 
+<script language="javascript">
+		function ejecutarImpresion(){
+			window.print();
+		}
+		function imprimir(){
+			document.getElementById("Cabecera").style.display="none";
+			ejecutarImpresion();
+			document.getElementById("Cabecera").style.display="";			
+		}			
+	</script>
+</head>
+<body
+	style="margin: 0px; padding: 0px; font-size: 16px; font-family: Arial, Verdana, sans-serif">
+	<h:form id="myformImprimirReciboTupa"
+		style="margin: 0px; padding: 0px;">
+		<div id="Cabecera" style="width: 300px; text-align: center;">
+			<input type="button" value="Imprimir" onclick="imprimir();javascript:window.close();" />
+		</div>
+		<div style="width: 300px; text-align: center;">
+			SERVICIO DE ADMINISTRACION TRIBUTARIA <br /> CAJAMARCA <br /> RUC :
+			20453807267 <br />
+			<table width="100%">
+				<tr>
+					<td style="text-align: center" colspan="2">DUPLICADO DE RECIBO</td>
+				</tr>
+			</table>
+			<table style="margin-top: 10px;">
+				<tbody align="left">					
+					<tr>
+						<td width="90px">Recibo Nro<span style="float: right;">:</span></td>
+						<td>#{imprimirReciboTupaManaged.reciboPago.nroRecibo}</td>
+					</tr>
+				</tbody>
+			</table>
+			<table style="margin-top: 5px;">
+				<tbody align="left">
+					<tr>
+						<td width="210">Concepto</td>
+						<td width="30">Cant.</td>
+						<td width="60" style="text-align: right;">Total</td>
+					</tr>
+					<tr>
+						<td width="100%" colspan="6"
+							style="border-bottom: 1px dotted #000;"></td>
+					</tr>
+					<ui:repeat var="item"
+						value="#{imprimirReciboTupaManaged.listReciboPagoDetalle}">
+						<tr>
+							<td width="210">#{item.concepto}</td>
+							<td width="30" align="center">#{item.cantidad}</td>
+							<td width="60" style="text-align: right;">#{item.total}</td>
+						</tr>
+					</ui:repeat>
+				</tbody>
+			</table>
+			<!-- <table style="margin-top: 10px;">
+				<tbody align="left">
+					<tr>
+						<td width="80">Descuento<span style="float: right;">:</span></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Total General<span style="float: right;">:</span></td>
+						<td>#{imprimirReciboTupaManaged.reciboPago.montoCobrado}</td>
+					</tr>
+					<tr>
+						<td valign="top">Son<span style="float: right;">:</span></td>
+						<td>#{imprimirReciboTupaManaged.reciboPago.montoLetras}</td>
+					</tr>
+				</tbody>
+			</table> -->
+			<div style="width: 100%; border-top: 1px dotted #000000;"></div>
+			<table>
+				<tbody align="left">
+					<tr>
+						<td width="170" style="font-size: 14px;text-align: left;">Pagado por:</td>
+						<td></td>
+					</tr>
+					<tr>
+					<td colspan="2">#{imprimirReciboTupaManaged.reciboPago.pagadoPor}</td>
+					</tr>
+					<tr>
+					<td>
+					</td>
+					<td></td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">Efec. Entregado<span style="float: right;text-align: right;">:</span></td>
+						<td style="text-align: right;">#{imprimirReciboTupaManaged.reciboPago.montoCobrado}</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">Total pagado<span style="float: right;text-align: right;">:</span></td>
+						<td style="text-align: right;">#{imprimirReciboTupaManaged.reciboPago.montoACobrar}</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;">Vuelto<span style="float: right;">:</span></td>
+						<td style="text-align: right;">#{imprimirReciboTupaManaged.reciboPago.montoVuelto}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div style="width: 100%; border-top: 1px dotted #000000;"></div>
+			<table width="100%">
+				<tbody align="left">
+					<tr style="font-size: 15px;">
+						<td width="90">Fecha<span style="float: right;">:</span></td>
+						<td><h:outputText value="#{imprimirReciboTupaManaged.reciboPago.fechaRecibo}" >
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+						</h:outputText></td>
+					</tr>
+					<tr>
+						<td>Cajero<span style="float: right;">:</span></td>
+						<td>#{imprimirReciboTupaManaged.reciboPago.cajeroDes}</td>
+					</tr>
+					<tr>
+						<td valign="top">Forma pago<span style="float: right;">:</span></td>
+						<td>
+							<table width="100%" cellspacing="0px" cellpadding="0px" >
+								<a4j:repeat
+									value="#{imprimirReciboTupaManaged.listReciboPagoFormaPago}"
+									var="record">
+									<tr>
+										<td>#{record.formaPagoDes}</td>
+										<td align="right"><h:outputText value="#{record.montoTotalSoles}"/></td>
+									</tr>
+								</a4j:repeat>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</h:form>
+</body>
+</html>

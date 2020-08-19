@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<style type="">
+		.className {
+		    text-align: right;
+		}
+		.classLeft {
+		    text-align: left;
+		}
+	</style>
+	<h:form id="id_formRegistroLote">
+	
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		
+		<rich:hotKey key="return"
+				handler="#{rich:element('id_preliminarDE')}.click()"
+				selector="#id_formRegistroLote" />
+				
+		<rich:panel id="idPanelDE" header="Listado de Valores de Deudas Exigibles">
+			<h:panelGrid columns="4" width="38%" >
+				<h:outputText value="Tipo de Acto :" />
+				<rich:comboBox width="150px" defaultLabel="Selecccione Acto"
+					enableManualInput="false" selectFirstOnUpdate="true"
+					required="true" requiredMessage="Seleccione Tipo de acto"
+					directInputSuggestions="false"
+					disabled="#{registroDeudaExigible.lote_id>0}"
+					value="#{registroDeudaExigible.tipoActo}"
+					binding="#{registroDeudaExigible.cmbTipoActo}"
+					valueChangeListener="#{registroDeudaExigible.loadGnConceptoById}"
+					onblur="validaInputCbo(this)" id="idTipoActo" immediate="true">
+					<f:selectItem id="id1x" itemValue="OP" itemLabel="3" />
+					<f:selectItem id="id2x" itemValue="RD" itemLabel="4" />
+					<f:selectItem id="id3x" itemValue="RS" itemLabel="8" />
+					<f:selectItem id="id4x" itemValue="RM" itemLabel="5" />
+					<a4j:support id="idEventRs" event="onchange" BypassUpdates="false"
+						reRender="id_concepto,id_lstconcepto" ajaxSingle="true" />
+				</rich:comboBox>
+				
+				<h:outputText value="Concepto:" />
+				<rich:comboBox width="150px" defaultLabel="Selecccione Concepto"
+					selectFirstOnUpdate="true"
+					disabled="#{registroDeudaExigible.lote_id>0}"
+					value="#{registroDeudaExigible.valueConcepto}"
+					directInputSuggestions="false" onblur="validaInputCbo(this)"
+					id="id_concepto" binding="#{registroDeudaExigible.cmbgnConcepto}"
+					immediate="true"
+					required="true" requiredMessage="Seleccione Concepto"
+					>
+					<f:selectItems id="id_lstconcepto"
+						value="#{registroDeudaExigible.lstgnConcepto}" />
+				</rich:comboBox>
+			</h:panelGrid>
+			<h:panelGrid columns="2">
+				<h:outputText value="Año de Deuda:" />
+				<h:inputText id="idPeriodoDE"
+					disabled="#{registroDeudaExigible.lote_id>0}"
+					value="#{registroDeudaExigible.periodo}" size="4"
+					title="Ingresar año a Generar Deuda Exigible." maxlength="4"
+					style="width:50px;" required="true"
+					requiredMessage="Ingrese Año de Deuda">
+				</h:inputText>
+				
+				<h:outputText value="Monto Mayor a:" />
+				<h:inputText id="idMontoDe"
+					disabled="#{registroDeudaExigible.lote_id>0}"
+					value="#{registroDeudaExigible.montoMinimo}"
+					title="Ingresar monto de la Deuda Exigible." maxlength="5"
+					style="width:50px;" required="true"
+					requiredMessage="Ingrese Monto de la Deuda">
+				</h:inputText>
+				
+				
+				<h:outputText value="Ubicación :" />
+				<rich:comboBox width="150px" defaultLabel="Selecccione"
+					enableManualInput="false" selectFirstOnUpdate="true"
+					disabled="#{registroDeudaExigible.lote_id>0}"
+					directInputSuggestions="true"
+					binding="#{registroDeudaExigible.cmbHtmlDexUbicable}"
+					onblur="validaInputCbo(this)" id="id_rsubicable" immediate="true"
+					valueChangeListener="#{registroDeudaExigible.loadSeleccion}"
+					required="true" requiredMessage="Seleccione Ubicación">
+					<f:selectItem id="id1" itemValue="Ubicables" />
+					<f:selectItem id="id2" itemValue="Inubicables" />
+					<a4j:support id="idEventRs2" event="onchange"
+						BypassUpdates="false" ajaxSingle="true" />
+				</rich:comboBox>
+			</h:panelGrid>
+			
+			<h:panelGrid>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="4" cellpadding="2" cellspacing="2">
+				<a4j:commandButton value="Vista Preliminar" id="id_preliminarDE"
+						disabled="#{registroDeudaExigible.lote_id>0}"
+						action="#{registroDeudaExigible.motrarLotePreliminar}"
+						oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+						reRender="idPanelDE,pnlPrincipal" status="ajaxStatus">
+				</a4j:commandButton>
+				<a4j:commandButton value="Guardar Lote" style="width:100px;"
+						id="id_btnguardar" ajaxSingle="true"
+						disabled="#{registroDeudaExigible.lote_id>0 or registroDeudaExigible.lstlotePreliminar.size()==0 }"
+						action="#{registroDeudaExigible.guardarLote}"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="idPanelDE,pnlPrincipal" status="ajaxStatus">
+				</a4j:commandButton>
+				<a4j:commandButton id="btnGenerarDe" value="Generar Deuda Exigible"
+					disabled="#{registroDeudaExigible.lote_id==0 or registroDeudaExigible.findCcLoteItem.flag_generacion==2}" 
+					oncomplete="#{rich:component('mpConfirmacionGeneraLoteExigible')}.show()" 
+					style="width:150px;"
+					status="ajaxStatus"
+					/>
+				<a4j:commandButton id="idBtnSalir" value="Salir"
+					style="float:right;width:100px;"
+					action="#{registroDeudaExigible.salir}" immediate="true"
+					reRender="panelinclude">
+					<f:setPropertyActionListener
+						value="/sisat/coactiva/listar_deuda_exigible.xhtml"
+						target="#{sessionManaged.page}" />
+					<rich:toolTip for="idBtnSalir"
+						value="Regresa a la Lista de Lotes Exigibles."></rich:toolTip>
+				</a4j:commandButton>
+			</h:panelGrid>
+		</rich:panel>
+		
+		<rich:panel bodyClass="body3" style="width:1320px;height:400px" id="pnlPrincipal">
+			<h:panelGrid columns="2" columnClasses="classLeft" rendered="#{registroDeudaExigible.lote_id>0 and registroDeudaExigible.findCcLoteItem.flag_generacion==2}" >
+				<h:outputText style="font-weight:bold;" value="Nro Lote :" />
+				<h:outputText value="#{registroDeudaExigible.lote_id}" style="width:50px;font-weight:bold;"  />
+			</h:panelGrid>
+				
+			<h:panelGrid columns="3" columnClasses="classLeft" >
+				<h:commandLink id="newBtnConstanciasExig" disabled="#{registroDeudaExigible.findCcLoteItem.flag_generacion!=2}"
+						action="#{registroDeudaExigible.imprimirConstanciasExibilidad}"
+						immediate="true"
+						>
+						<h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+						<rich:toolTip for="newBtnConstanciasExig"
+							value="CONSTANCIAS DE EXIGIBILIDAD DEL LOTE: #{registroDeudaExigible.findCcLoteItem.loteId}"></rich:toolTip>
+				</h:commandLink>
+				<h:commandLink id="exportar22" disabled="#{registroDeudaExigible.lstlotePreliminar.size()==0}"
+					action="#{registroDeudaExigible.exportarTablaExcel}"
+					styleClass="button1"
+					immediate="true"
+					>
+					<h:graphicImage value="/images/modal/excel.png"
+						style="border:0;width:20px;height:20px;" />
+					<rich:toolTip for="exportar22">Exportar Lista a Excel.</rich:toolTip>
+				</h:commandLink>
+				<h:commandLink id="newBtnDEliminadasPdf" disabled="#{registroDeudaExigible.findCcLoteItem.flag_generacion!=2}"
+						action="#{registroDeudaExigible.imprimirDeudasExigiblesEliminadas}"
+						immediate="true"
+						>
+						<h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+						<rich:toolTip for="newBtnDEliminadasPdf"
+							value="Total de Deudas Exigibles Eliminadas de lote: #{registroDeudaExigible.findCcLoteItem.loteId}"></rich:toolTip>
+				</h:commandLink>
+			</h:panelGrid>
+			
+			<h:outputText 
+				value="Son: #{registroDeudaExigible.lstlotePreliminar.size()} registros del total de: #{registroDeudaExigible.findCcLoteItem.nroDocumentos} generados." />
+				
+			<rich:datascroller for="tablaDeudaExig" maxPages="20"></rich:datascroller>
+			<rich:extendedDataTable id="tablaDeudaExig"
+				value="#{registroDeudaExigible.lstlotePreliminar}" var="r" rows="10"
+				selectionMode="single" width="100%" height="330px"
+				noDataLabel="No se encontró registros" enableContextMenu="false"
+				rowKeyVar="idx">
+				<rich:column id="idcampo1" width="5%" filterBy="#{r.personaId}"
+					style="background-color:#{r.styleEstado};text-align:center">
+					<f:facet name="header">CODIGO</f:facet>
+					<h:outputText value="#{r.personaId}" />
+				</rich:column>
+				<rich:column id="idcampo2" width="20%"
+					filterBy="#{r.apellidosNombres}"
+					style="background-color:#{r.styleEstado};text-align:left">
+					<f:facet name="header">CONTRIBUYENTE</f:facet>
+					<h:outputText value="#{r.apellidosNombres}" />
+				</rich:column>
+				<rich:column id="idcampo3" width="24%" filterBy="#{r.direccion}"
+					style="background-color:#{r.styleEstado};text-align:left">
+					<f:facet name="header">DIRECCION FISCAL</f:facet>
+					<h:outputText value="#{r.direccion}" />
+				</rich:column>
+				<rich:column id="idcampo4" width="8%" filterBy="#{r.tipoActo}"
+					style="background-color:#{r.styleEstado};text-align:center">
+					<f:facet name="header">TIPO_VALOR</f:facet>
+					<h:outputText value="#{r.tipoActo}" />
+				</rich:column>
+				<rich:column id="idcampo5" width="9%" filterBy="#{r.nroActo}"
+					style="background-color:#{r.styleEstado};text-align:center">
+					<f:facet name="header">NRO_VALOR</f:facet>
+					<h:outputText value="#{r.nroActo}" />
+				</rich:column>
+				<rich:column id="idcampo6" width="4%" filterBy="#{r.annoDeuda}"
+					style="background-color:#{r.styleEstado};text-align:center">
+					<f:facet name="header">AÑO</f:facet>
+					<h:outputText value="#{r.annoDeuda}" />
+				</rich:column>
+				<rich:column id="idcampo7" width="5%" filterBy="#{r.montoDeuda}"
+					style="background-color:#{r.styleEstado};text-align:center">
+					<f:facet name="header">MONTO</f:facet>
+					<h:outputText value="#{r.montoDeuda}" />
+				</rich:column>
+				<rich:column id="idcampo8" width="9%"
+					style="background-color:#{r.styleEstado};text-align:center">
+					<f:facet name="header">FECHA NOTIFICACION</f:facet>
+					<h:outputText
+						value="#{r.fechaNotificacion==null? '--':r.fechaNotificacion}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="EST" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="idcampo9" width="8%" filterBy="#{r.estado_deuda}"
+					style="background-color:#{r.styleEstado};text-align:center">
+					<f:facet name="header">DEUDA</f:facet>
+					<h:outputText value="#{r.estado_deuda}" />
+					<rich:toolTip id="idTooltip2" for="idcampo9"
+						rendered="#{r.estado_deuda=='CANCELADA'}"
+						value="Fecha de Pago: #{r.fechaPago}">
+					</rich:toolTip>
+				</rich:column>
+				<rich:column  id="idcampo10" width="4%"
+					rendered="#{registroDeudaExigible.findCcLoteItem.loteId!=0 
+								and registroDeudaExigible.findCcLoteItem.flag_generacion!=2
+								and listarDeudaExigibleManaged.permisoEliminar}"
+					style="background-color:#{r.styleEstado};text-align:left">
+					<a4j:commandLink ajaxSingle="true" id="newlinkDeudaE"
+						action="#{registroDeudaExigible.verPnlEliminarExigibilidad}"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'retirarActo\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="retirarActo" status="ajaxStatus">
+						<h:graphicImage value="/images/modal/delete.gif" style="border:0;width:14px;height:14px;" />
+						<f:setPropertyActionListener value="#{r}"
+							target="#{registroDeudaExigible.findDetalleDeudaExigItem}"
+							id="r215" />
+						<rich:toolTip for="newlinkDeudaE" direction="top-left"> Quitar Valor de la Cartera de Deudas Exigibles.</rich:toolTip>
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="idcampo11" width="4%"
+					rendered="#{registroDeudaExigible.findCcLoteItem.loteId!=null 
+					and registroDeudaExigible.findCcLoteItem.flag_generacion==2
+					and listarDeudaExigibleManaged.permisoEliminar}"
+					style="background-color:#{r.styleEstado};text-align:left">
+					<a4j:commandLink ajaxSingle="true" id="newlinkDeudaElimina"
+						action="#{registroDeudaExigible.verPnlEliminarExigibilidad}"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'pnlDesbloqueo\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="pnlDesbloqueo" status="ajaxStatus">
+						<h:graphicImage value="/images/modal/delete.gif" style="border:0" />
+						<f:setPropertyActionListener value="#{r}"
+							target="#{registroDeudaExigible.findDetalleDeudaExigItem}"
+							id="r215" />
+						<rich:toolTip for="newlinkDeudaElimina" direction="top-left"> Quitar Valor de la Lista de Deudas Exigibles.</rich:toolTip>
+					</a4j:commandLink>
+				</rich:column>
+			</rich:extendedDataTable>
+		</rich:panel>
+	</h:form>
+	
+	<rich:modalPanel id="retirarActo" autosized="true" style="height:170px">
+        <h:form id="formRetirarActo">
+	        <fieldset>
+	            <legend><b>Retirar Acto de lote</b></legend>
+	            <h:panelGrid columns="2">
+		            <h:outputText for="idSelectOneMotivo" value="Motivo" />
+		            <h:selectOneMenu id="idSelectOneMotivo"
+						value="#{registroDeudaExigible.motivoRetiroId}" style="width:185px;"
+						required="true" requiredMessage="Seleccione el motivo de Retiro">
+						<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+						<f:selectItem itemValue="1" itemLabel="Lote Diferente" />
+						<f:selectItem itemValue="2" itemLabel="No existe Fisico" />
+						<f:selectItem itemValue="3" itemLabel="Sin Notificar" />
+						<f:selectItem itemValue="4" itemLabel="Otros" />
+					</h:selectOneMenu>
+	            	<h:outputText for="txtAreObservacion" value="Observación"/>
+	            	<h:inputTextarea id="txtAreObservacion" value="#{registroDeudaExigible.resenaMotivoRetiro}"
+	            		style="width:180px;" 
+	            		required="true" requiredMessage="Especifique el detalle del motivo de Retiro"
+	            		/>
+	            </h:panelGrid>
+	            
+	            <h:panelGrid columns="2" columnClasses="classNameCenter">
+		        	<a4j:commandButton value="Aceptar"
+					action="#{registroDeudaExigible.retirarCartera()}"
+					reRender="pnlPrincipal"
+					id="cmdQuitarEx"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirma\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					status="ajaxStatus"
+					 >
+					 <rich:componentControl for="retirarActo" attachTo="cmdQuitarEx"
+						operation="hide" event="onclick" />
+					 </a4j:commandButton>
+		        	<a4j:commandButton value="Cancelar" onclick="#{rich:component('retirarActo')}.hide(); return false;" />
+	        	</h:panelGrid>
+	        	
+	        </fieldset>
+        </h:form>
+     </rich:modalPanel>
+	
+	<rich:modalPanel id="mpConfirmacionGeneraLoteExigible" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose3" styleClass="hidelink" />
+				<rich:componentControl for="mpConfirmacionGeneraLoteExigible"
+					attachTo="imgclose3" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea Registrar Cartera Exigible?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{registroDeudaExigible.generarValores}"  
+						oncomplete="#{rich:component('mpConfirmacionGeneraLoteExigible')}.hide();"
+						reRender="idPanelDE,pnlPrincipal" status="ajaxStatus" ajaxSingle="true"
+						 />
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('mpConfirmacionGeneraLoteExigible')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="pnlDesbloqueo" width="250" autosized="true"
+		height="120" top="280">
+		<f:facet name="header">CUIDADO!!!.</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="closeImag"
+					styleClass="hidelink" />
+				<rich:componentControl for="pnlDesbloqueo" attachTo="closeImag"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:outputText style="font-weight:bold;"
+				value="Está seguro que desea Retirar El Valor Exigible #{sessionManaged.user.usuario} ?." />
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Justificación:" />
+				<h:inputTextarea id="txtJustifique"
+					value="#{registroDeudaExigible.motivoDescargo}" required="true"
+					style="width:250px;"
+					requiredMessage="*****Ingrese Justificación***">
+					<a4j:support ajaxSingle="true" event="onchange"></a4j:support>
+					<f:validateLength for="txtJustifique" maximum="200" />
+					<rich:ajaxValidator event="onblur" />
+				</h:inputTextarea>
+				<h:outputLabel value="" />
+				<rich:message for="txtJustifique" style="color:red;"></rich:message>
+			</h:panelGrid>
+			<h:panelGroup
+				style=" text-align: center; width:100%; position:absolute;">
+				<a4j:commandButton id="cmdQuitarEx" value="Descargar"
+					ajaxSingle="true" status="ajaxStatus"
+					action="#{registroDeudaExigible.eliminar_click}"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirma\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					reRender="pnlPrincipal">
+					<rich:componentControl for="pnlDesbloqueo" attachTo="cmdQuitarEx"
+						operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</h:panelGroup>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>
+

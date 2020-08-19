@@ -1,0 +1,538 @@
+package com.sat.sisat.vehicular.dto;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
+
+public class BuscarPersonaDTO implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4648674837948322592L;
+	private Integer personaId;
+	private String tipoDocIdentidad;
+	private String nroDocuIdentidad;
+	private String apellidosNombres;
+	private String apellidoPaterno;
+	private String apellidoMaterno;
+	private String primerNombre;
+	private String segundoNombre;
+	private String razonSocial;
+	private String direccionCompleta;
+	private BigDecimal porcentaje;
+	private Boolean esContribuyente;
+	private String descargoAutomatico;
+	private Integer direccionId;
+	private Integer tipoViaId;
+	private Integer viaId;
+	private Integer lugarId;
+	private Integer sectorId;
+	private String numero;
+	private Integer tipoPersonaId;
+	private Integer subtipoPersonaId;
+	private Integer tipodocumentoIdentidadId;
+	private Integer tipoDocIdentidadId;
+	private String telefono;
+	private String nombresCompletos;
+	private String referencia;
+	private String partidaDefuncion;
+	private Date fechaDefuncion;
+	private Date fechaConsNac;
+	private String terminal;
+	private Timestamp fechaRegistro;
+	private Integer usuarioId;
+	private String estado;
+	
+	
+
+
+	private String placa; 
+	
+	private BigDecimal area;
+	private BigDecimal areaMatriz;
+	private BigDecimal areaTransferida;
+	private BigDecimal areaRestante;
+	private BigDecimal porcentajeMatriz;
+	private BigDecimal porcentajeTransferido;
+	private BigDecimal porcentajeRestante;
+	
+	private String formaAdquisicion;
+	private Integer nroPapeletas;
+	
+	private String numLicencia;
+	private Integer claseLicenciaId;
+	
+	private Boolean sinDocumento;
+	
+	private String nroDocumentoIdentidad;
+	private Integer nroDj;
+	private Integer tipodocumentoIdent;
+	private String codigoAnterior;
+
+	private String tipoPersonaAsString;
+	
+	private String tipoDocumentoIdentidadAsString;
+	private String contribuyenteInfractor;
+	
+	public BuscarPersonaDTO(Integer personaId, String tipoDocIdentidad,
+			String nroDocuIdentidad, String apellidosNombres, String razonSocial) {
+		super();
+		this.personaId = personaId;
+		this.tipoDocIdentidad = tipoDocIdentidad;
+		this.nroDocuIdentidad = nroDocuIdentidad;
+		this.apellidosNombres = apellidosNombres;
+		this.razonSocial = razonSocial;
+	}
+	
+	public BuscarPersonaDTO(Integer personaId, String tipoDocIdentidad,
+			String nroDocuIdentidad, String apellidosNombres,
+			String razonSocial, Integer nroPapeletas) {
+		super();
+		this.personaId = personaId;
+		this.tipoDocIdentidad = tipoDocIdentidad;
+		this.nroDocuIdentidad = nroDocuIdentidad;
+		this.apellidosNombres = apellidosNombres;
+		this.razonSocial = razonSocial;
+		this.setNroPapeletas(nroPapeletas);
+	}
+	
+	public String getStyleSelected() {
+        if(getContribuyenteInfractor().equals("SI"))
+        	return "#73F29D";       
+        else
+        	return "white";
+    }
+
+	public Integer getPersonaId() {
+		return personaId;
+	}
+
+	public void setPersonaId(Integer personaId) {
+		this.personaId = personaId;
+	}
+
+	public String getTipoDocIdentidad() {
+		return tipoDocIdentidad;
+	}
+
+	public void setTipoDocIdentidad(String tipoDocIdentidad) {
+		this.tipoDocIdentidad = tipoDocIdentidad;
+	}
+
+	public String getNroDocuIdentidad() {
+		return nroDocuIdentidad;
+	}
+
+	public void setNroDocuIdentidad(String nroDocuIdentidad) {
+		this.nroDocuIdentidad = nroDocuIdentidad;
+	}
+
+	public String getApellidosNombres() {
+		return apellidosNombres;
+	}
+
+	public void setApellidosNombres(String apellidosNombres) {
+		this.apellidosNombres = apellidosNombres;
+	}
+
+	public String getApellidoPaterno() {
+		return apellidoPaterno;
+	}
+
+	public void setApellidoPaterno(String apellidoPaterno) {
+		this.apellidoPaterno = apellidoPaterno;
+	}
+
+	public String getApellidoMaterno() {
+		return apellidoMaterno;
+	}
+
+	public void setApellidoMaterno(String apellidoMaterno) {
+		this.apellidoMaterno = apellidoMaterno;
+	}
+
+	public String getPrimerNombre() {
+		return primerNombre;
+	}
+
+	public void setPrimerNombre(String primerNombre) {
+		this.primerNombre = primerNombre;
+	}
+
+	public String getSegundoNombre() {
+		return segundoNombre;
+	}
+
+	public void setSegundoNombre(String segundoNombre) {
+		this.segundoNombre = segundoNombre;
+	}
+
+	public String getRazonSocial() {
+		return razonSocial;
+	}
+
+	public void setRazonSocial(String razonSocial) {
+		this.razonSocial = razonSocial;
+	}
+
+	public String getDireccionCompleta() {
+		return direccionCompleta;
+	}
+
+	public void setDireccionCompleta(String direccionCompleta) {
+		this.direccionCompleta = direccionCompleta;
+	}
+
+	public BigDecimal getPorcentaje() {
+		return porcentaje;
+	}
+
+	public void setPorcentaje(BigDecimal porcentaje) {
+		this.porcentaje = porcentaje;
+	}
+
+	public Boolean getEsContribuyente() {
+		return esContribuyente;
+	}
+
+	public void setEsContribuyente(Boolean esContribuyente) {
+		this.esContribuyente = esContribuyente;
+	}
+
+	public Integer getDireccionId() {
+		return direccionId;
+	}
+
+	public void setDireccionId(Integer direccionId) {
+		this.direccionId = direccionId;
+	}
+
+	public Integer getTipoViaId() {
+		return tipoViaId;
+	}
+
+	public void setTipoViaId(Integer tipoViaId) {
+		this.tipoViaId = tipoViaId;
+	}
+
+	public Integer getViaId() {
+		return viaId;
+	}
+
+	public void setViaId(Integer viaId) {
+		this.viaId = viaId;
+	}
+
+	public Integer getLugarId() {
+		return lugarId;
+	}
+
+	public void setLugarId(Integer lugarId) {
+		this.lugarId = lugarId;
+	}
+
+	public Integer getSectorId() {
+		return sectorId;
+	}
+
+	public void setSectorId(Integer sectorId) {
+		this.sectorId = sectorId;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
+
+	public BuscarPersonaDTO() {
+		super();
+	}
+
+	public Integer getTipoPersonaId() {
+		return tipoPersonaId;
+	}
+
+	public void setTipoPersonaId(Integer tipoPersonaId) {
+		this.tipoPersonaId = tipoPersonaId;
+	}
+
+	public Integer getSubtipoPersonaId() {
+		return subtipoPersonaId;
+	}
+
+	public void setSubtipoPersonaId(Integer subtipoPersonaId) {
+		this.subtipoPersonaId = subtipoPersonaId;
+	}
+
+	public Integer getTipodocumentoIdentidadId() {
+		return tipodocumentoIdentidadId;
+	}
+
+	public void setTipodocumentoIdentidadId(Integer tipodocumentoIdentidadId) {
+		this.tipodocumentoIdentidadId = tipodocumentoIdentidadId;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+
+	public String getNombresCompletos() {
+		return nombresCompletos;
+	}
+
+	public void setNombresCompletos(String nombresCompletos) {
+		this.nombresCompletos = nombresCompletos;
+	}
+
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
+	}
+
+	public Date getFechaConsNac() {
+		return fechaConsNac;
+	}
+
+	public void setFechaConsNac(Date fechaConsNac) {
+		this.fechaConsNac = fechaConsNac;
+	}
+
+	public Date getFechaDefuncion() {
+		return fechaDefuncion;
+	}
+
+	public void setFechaDefuncion(Date fechaDefuncion) {
+		this.fechaDefuncion = fechaDefuncion;
+	}
+
+	public String getPartidaDefuncion() {
+		return partidaDefuncion;
+	}
+
+	public void setPartidaDefuncion(String partidaDefuncion) {
+		this.partidaDefuncion = partidaDefuncion;
+	}
+	
+	public String getDescargoAutomatico() {
+		return descargoAutomatico;
+	}
+
+	public void setDescargoAutomatico(String descargoAutomatico) {
+		this.descargoAutomatico = descargoAutomatico;
+	}
+
+
+	public BigDecimal getAreaTransferida() {
+		return areaTransferida;
+	}
+
+	public void setAreaTransferida(BigDecimal areaTransferida) {
+		this.areaTransferida = areaTransferida;
+	}
+
+	public BigDecimal getPorcentajeTransferido() {
+		return porcentajeTransferido;
+	}
+
+	public void setPorcentajeTransferido(BigDecimal porcentajeTransferido) {
+		this.porcentajeTransferido = porcentajeTransferido;
+	}
+
+	public BigDecimal getAreaRestante() {
+		return areaRestante;
+	}
+
+	public void setAreaRestante(BigDecimal areaRestante) {
+		this.areaRestante = areaRestante;
+	}
+
+	public BigDecimal getPorcentajeRestante() {
+		return porcentajeRestante;
+	}
+
+	public void setPorcentajeRestante(BigDecimal porcentajeRestante) {
+		this.porcentajeRestante = porcentajeRestante;
+	}
+
+	public String getFormaAdquisicion() {
+		return formaAdquisicion;
+	}
+
+	public void setFormaAdquisicion(String formaAdquisicion) {
+		this.formaAdquisicion = formaAdquisicion;
+	}
+	
+	public String getPlaca() {
+		return placa;
+	}
+
+	public void setPlaca(String placa) {
+		this.placa = placa;
+	}
+	
+	public BigDecimal getArea() {
+		return area;
+	}
+
+	public void setArea(BigDecimal area) {
+		this.area = area;
+	}
+
+	public BigDecimal getAreaMatriz() {
+		return areaMatriz;
+	}
+
+	public void setAreaMatriz(BigDecimal areaMatriz) {
+		this.areaMatriz = areaMatriz;
+	}
+
+	public BigDecimal getPorcentajeMatriz() {
+		return porcentajeMatriz;
+	}
+
+	public void setPorcentajeMatriz(BigDecimal porcentajeMatriz) {
+		this.porcentajeMatriz = porcentajeMatriz;
+	}
+
+	public Integer getNroPapeletas() {
+		return nroPapeletas;
+	}
+
+	public void setNroPapeletas(Integer nroPapeletas) {
+		this.nroPapeletas = nroPapeletas;
+	}
+
+	public Integer getClaseLicenciaId() {
+		return claseLicenciaId;
+	}
+
+	public void setClaseLicenciaId(Integer claseLicenciaId) {
+		this.claseLicenciaId = claseLicenciaId;
+	}
+
+	public String getNumLicencia() {
+		return numLicencia;
+	}
+
+	public void setNumLicencia(String numLicencia) {
+		this.numLicencia = numLicencia;
+	}
+
+	public Integer getTipoDocIdentidadId() {
+		return tipoDocIdentidadId;
+	}
+
+	public void setTipoDocIdentidadId(Integer tipoDocIdentidadId) {
+		this.tipoDocIdentidadId = tipoDocIdentidadId;
+	}
+
+	public Boolean getSinDocumento() {
+		return sinDocumento;
+	}
+
+	public void setSinDocumento(Boolean sinDocumento) {
+		this.sinDocumento = sinDocumento;
+	}
+
+	public String getNroDocumentoIdentidad() {
+		return nroDocumentoIdentidad;
+	}
+
+	public void setNroDocumentoIdentidad(String nroDocumentoIdentidad) {
+		this.nroDocumentoIdentidad = nroDocumentoIdentidad;
+	}
+
+	public Integer getNroDj() {
+		return nroDj;
+	}
+
+	public void setNroDj(Integer nroDj) {
+		this.nroDj = nroDj;
+	}
+
+	public Integer getTipodocumentoIdent() {
+		return tipodocumentoIdent;
+	}
+
+	public void setTipodocumentoIdent(Integer tipodocumentoIdent) {
+		this.tipodocumentoIdent = tipodocumentoIdent;
+	}
+
+	public String getCodigoAnterior() {
+		return codigoAnterior;
+	}
+
+	public void setCodigoAnterior(String codigoAnterior) {
+		this.codigoAnterior = codigoAnterior;
+	}
+
+	public String getTipoPersonaAsString() {
+		return tipoPersonaAsString;
+	}
+
+	public void setTipoPersonaAsString(String tipoPersonaAsString) {
+		this.tipoPersonaAsString = tipoPersonaAsString;
+	}
+
+	public String getTipoDocumentoIdentidadAsString() {
+		return tipoDocumentoIdentidadAsString;
+	}
+
+	public void setTipoDocumentoIdentidadAsString(
+			String tipoDocumentoIdentidadAsString) {
+		this.tipoDocumentoIdentidadAsString = tipoDocumentoIdentidadAsString;
+	}
+
+	public String getContribuyenteInfractor() {
+		return contribuyenteInfractor;
+	}
+
+	public void setContribuyenteInfractor(String contribuyenteInfractor) {
+		this.contribuyenteInfractor = contribuyenteInfractor;
+	}
+	public String getTerminal() {
+		return terminal;
+	}
+
+	public void setTerminal(String terminal) {
+		this.terminal = terminal;
+	}
+
+	public Timestamp getFechaRegistro() {
+		return fechaRegistro;
+	}
+
+	public void setFechaRegistro(Timestamp fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
+	}
+
+	public Integer getUsuarioId() {
+		return usuarioId;
+	}
+
+	public void setUsuarioId(Integer usuarioId) {
+		this.usuarioId = usuarioId;
+	}
+	
+
+	public String getEstado() {
+		return estado;
+	}
+
+	public void setEstado(String estado) {
+		this.estado = estado;
+	}
+	
+}

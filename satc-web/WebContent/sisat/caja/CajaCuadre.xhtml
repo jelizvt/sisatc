@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="frmCajaCuadre">
+	<rich:hotKey key="return" handler="#{rich:element('buttonProbarCuadre')}.click()" selector="#frmCajaCuadre"/>
+		<rich:panel>
+			<f:facet name="header">CUADRE DE CAJA</f:facet>
+			<table width="100%">
+				<tr>
+					<td><rich:panel id="DetalleCuadre">
+							<f:facet name="header">		
+			  			     Detalle de cuadre de caja
+					    	</f:facet>
+							<rich:extendedDataTable id="id_tablelistarecibo"
+								value="#{cajaCuadreManaged.records}" var="record" width="100%"
+								height="400px" selectedClass="dataTableSelectedRow"
+								sortMode="single" selectionMode="single" rowKeyVar="row"
+								enableContextMenu="false">
+
+								<rich:column width="10%" id="c01">
+									<f:facet name="header">Forma de Pago</f:facet>
+									<h:outputText value="#{record.formaPagoDes}" />
+								</rich:column>
+								<rich:column width="10%" id="c02">
+									<f:facet name="header">Moneda</f:facet>
+									<h:outputText value="#{record.monedaDes}" />
+								</rich:column>
+								<rich:column width="10%" id="c03">
+									<f:facet name="header" style="text-align: right;">Tipo de Cambio</f:facet>
+									<h:outputText value="#{record.tipoCambio}" />
+								</rich:column>
+								<rich:column width="10%" id="c04" style="text-align: right;">
+									<f:facet name="header">Monto moneda</f:facet>
+									<!-- <h:outputText value="#{record.montoMoneda}" /> -->
+								</rich:column>
+								
+								<rich:column width="10%" id="c05" style="text-align: right;">
+									<f:facet name="header">Monto total</f:facet>
+									<h:outputText  value="#{record.montoTotal}" style="width: 100%"/>
+								</rich:column>
+								<rich:column width="15%" id="c06" style="text-align: right;">
+									<f:facet name="header">Monto</f:facet>
+									<h:inputText value="#{record.montoCaja}" />
+								</rich:column>
+								
+								<rich:column width="17%" id="c07">
+									<f:facet name="header">Diferencia</f:facet>
+									<h:outputText value="#{record.formaPagoId!=5?'':record.montoDiferencia}" />
+								</rich:column>
+								
+								<rich:column width="18%" id="c08">
+									<f:facet name="header">Descripción de diferencia</f:facet>
+									<h:outputText value="#{record.faltanteSobrante}" />
+								</rich:column>
+								<!-- 
+								<f:facet name="footer">
+									<rich:columnGroup>
+										<rich:column colspan="4" style="text-align: center;">Cuadre Total</rich:column>
+										<rich:column style="text-align: right;">
+											<h:outputLabel value="#{cajaCuadreManaged.monTotRec}">
+											</h:outputLabel>
+										</rich:column>
+										<rich:column style="text-align: right;">
+											<h:inputText value="#{cajaCuadreManaged.monTotIng}"
+												disabled="true" />
+										</rich:column>
+										<rich:column style="text-align: right;">
+											<h:outputLabel value="#{cajaCuadreManaged.monTotDif}">
+											</h:outputLabel>
+										</rich:column>
+										<rich:column style="text-align: right;">
+											<h:outputText value="" />
+										</rich:column>
+									</rich:columnGroup>
+								</f:facet>
+								 -->
+							</rich:extendedDataTable>
+							<div>
+								<a4j:commandButton id="buttonProbarCuadre" value="Cuadre de Caja" style="width:150px;"
+									reRender="id_tablelistarecibo" status="ajaxStatus" 
+									action="#{cajaCuadreManaged.ProbarCuadre}" 
+									oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'modalGrabo\')' }" />
+								<a4j:commandButton value="Ver Lista de Operaciones"
+									style="width: 150px; margin-left: 6px;" status="ajaxStatus"
+									action="#{cajaCuadreManaged.iniciaListaOperaciones}" 
+									reRender="modalListaOperaciones"
+									oncomplete="#{'Richfaces.showModalPanel(\'modalListaOperaciones\')'}"
+									/>
+							</div>
+						</rich:panel></td>
+				</tr>
+			</table>
+			<h:panelGrid columns="3">
+				<h:outputText value="Seleccione el motivo del Cuadre :" />
+				<rich:comboBox width="250px" defaultLabel="Seleccionar"
+					selectFirstOnUpdate="true" directInputSuggestions="false"
+					id="cboMotivoCierre" binding="#{cajaCuadreManaged.cmbMotivoCuadre}"
+					immediate="true" tabindex="3"
+					onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+					>
+					<f:selectItems id="id_cmbMotivoCuadre"
+						value="#{cajaCuadreManaged.lstMotivoCuadre}" />
+				</rich:comboBox>
+				<a4j:commandButton value="Grabar" status="ajaxStatus" 
+					action="#{cajaCuadreManaged.grabarCuadre}" style="width:150px;"
+					reRender="DetalleCuadre" 
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'modalGrabo\')' }" />
+			</h:panelGrid>
+		</rich:panel>
+	</h:form>
+
+	<rich:modalPanel id="modalGrabo" autosized="true" width="450">
+		<f:facet name="header">
+			<h:outputText value="#{msg['gn.mensajes']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelGrabo"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalGrabo" attachTo="hidelGrabo"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton id="btnGrabo" value="#{msg['gn.aceptar']}" status="ajaxStatus" 
+					actionListener="#{cajaCuadreManaged.GraboCorrectoCuadre}">
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+
+	<rich:modalPanel id="modalListaOperaciones" minWidth="900"
+		minHeight="400">
+		<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink2ddd" />
+					<rich:componentControl for="modalListaOperaciones"
+						attachTo="hidelink2ddd" operation="hide" event="onclick" />
+				</h:panelGroup>
+			</f:facet>
+		<f:facet name="header">Lista de Operaciones</f:facet>
+		<a4j:include viewId="/sisat/caja/listaOperacion.xhtml" />
+	</rich:modalPanel>
+
+</ui:composition>
+

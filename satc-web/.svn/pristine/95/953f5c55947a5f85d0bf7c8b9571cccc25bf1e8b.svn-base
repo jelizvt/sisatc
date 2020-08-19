@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	
+	<h:form id="formRegistroNoAdeudo">
+		<rich:panel id="idPanelConstancia">
+			<f:facet name="header">CONSTANCIA DE NO ADEUDO</f:facet>
+			<h:panelGrid id="idPanelconcepto" columns="2" width="30%" >
+				<h:outputText value="Nro. Recibo:" />
+				<rich:comboBox id="comboBoxRecibo" defaultLabel="Seleccione Recibo" enableManualInput="true"
+					width="150px" onblur="validaInputCbo(this)"
+				    value="#{registrarConstanciaNoAdeudo.concepto}"
+				    valueChangeListener="#{registrarConstanciaNoAdeudo.loadGnConceptoById}">
+					<f:selectItems value="#{registrarConstanciaNoAdeudo.listConcepto}" />
+					<a4j:support event="onselect" reRender="idPanelSubconcepto,idPanelPropiedad" bypassUpdates="false" ajaxSingle="true"> </a4j:support> 
+				</rich:comboBox>
+			</h:panelGrid>
+			<h:panelGrid id="idPanelSubconcepto" columns="6" width="48%" rendered="#{registrarConstanciaNoAdeudo.listConcepto.size()>0}"  >
+				<h:outputText value="Sub Concepto:" />
+				<h:selectManyListbox id="selectSubConcepto" required="true" requiredMessage="Seleccione un Tributo"	value="#{registrarConstanciaNoAdeudo.subconcepto}" size="6">
+					<f:selectItems id="idLstSubconcepto" var="var" itemValue="#{var.abreviacion}"	itemLabel="#{var.abreviacion}"
+						value="#{registrarConstanciaNoAdeudo.listSub}"/>
+				</h:selectManyListbox>
+
+				<h:outputText value="Año de Deuda:" />
+				<h:selectManyListbox id="selectAnio" required="true" requiredMessage="Seleccione un Año" value="#{registrarConstanciaNoAdeudo.anioSeleccionado}" size="6">
+						<f:selectItems var="var1" itemValue="#{var1.anio}" itemLabel="#{var1.anio}"
+							value="#{registrarConstanciaNoAdeudo.listAnio}" />
+				</h:selectManyListbox>
+				
+				<h:outputText value="Cuota(s):" />
+				<h:selectManyListbox id="selectCuota" required="true" requiredMessage="Seleccione una Cuota" value="#{registrarConstanciaNoAdeudo.cuotaSeleccionado}" size="6">
+						<f:selectItems var="var2" itemValue="#{var2.numero}" itemLabel="#{var2.numero}"
+							value="#{registrarConstanciaNoAdeudo.listCuota}" />
+				</h:selectManyListbox>
+
+			</h:panelGrid>
+			
+			<h:panelGrid id="idPanelPropiedad" columns="2"  width="16%" >				
+				<h:outputText value="Predio(s)/Placa(s):" />
+				<h:selectManyListbox id="selectPredio" required="true" requiredMessage="Seleccione una opción" value="#{registrarConstanciaNoAdeudo.propiedadSeleccionado}" size="6">
+						<f:selectItems var="var3" itemValue="#{var3.referencia}" itemLabel="#{var3.referencia}"
+							value="#{registrarConstanciaNoAdeudo.listPropiedad}" />
+				</h:selectManyListbox>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="3" cellpadding="2" cellspacing="2">
+				<a4j:commandButton value="Búsqueda Preliminar" id="buttonPreliminar"
+					action="#{registrarConstanciaNoAdeudo.buscar()}"
+					oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+					reRender="idPanelConstancia" status="ajaxStatus">
+				</a4j:commandButton>
+				<a4j:commandButton value="Generar Constancia" 
+					id="buttonGenerar" ajaxSingle="true"
+					rendered="#{registrarConstanciaNoAdeudo.sinDeuda}"
+					action="#{registrarConstanciaNoAdeudo.guardar()}"
+					oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+					reRender="idPanelConsultaConstancia" status="ajaxStatus">
+				</a4j:commandButton>
+				<a4j:commandButton id="buttonSalir" value="Salir"
+					style="float:right;width:100px;"
+					action="#{registrarConstanciaNoAdeudo.salir()}" immediate="true"
+					reRender="panelinclude">
+					<f:setPropertyActionListener
+						value="/sisat/persona/buscarpersona.xhtml"
+						target="#{sessionManaged.page}" />
+					<rich:toolTip for="buttonSalir"
+						value="Regresa a la Búsqueda de Contribuyentes."></rich:toolTip>
+				</a4j:commandButton>
+			</h:panelGrid>
+		</rich:panel>
+		<rich:panel id="idPanelConsultaConstancia" style="width:1320px;height:400px">
+			<rich:datascroller for="tablaConstancia" maxPages="20"></rich:datascroller>
+			<rich:extendedDataTable id="tablaConstancia" value="#{registrarConstanciaNoAdeudo.listConstancia}" var="r" rows="10"
+				selectionMode="single" width="100%" height="200px"	noDataLabel="No se encontró registros" enableContextMenu="false"
+				rowKeyVar="idx">
+				<rich:column id="idcampo1" width="10%">
+					<f:facet name="header">Nro. Recibo</f:facet>
+					<h:outputText value="#{r.numeroRecibo}" />
+				</rich:column>
+				<rich:column id="idcampo2" width="5%">
+					<f:facet name="header">Codigo</f:facet>
+					<h:outputText value="#{r.personaId}" />
+				</rich:column>
+				<rich:column id="idcampo3" width="20%">
+					<f:facet name="header">Apellidos y Nombres</f:facet>
+					<h:outputText value="#{r.nombrePersona}" />
+				</rich:column>
+				<rich:column id="idcampo4" width="10%">
+					<f:facet name="header">Nro. Recibo</f:facet>
+					<h:outputText value="#{r.numeroRecibo}" />
+				</rich:column>
+				<rich:column id="idcampo5" width="20%">
+					<f:facet name="header">Año</f:facet>
+					<h:outputText value="#{r.anno}" />
+				</rich:column>
+				<rich:column id="idcampo6" width="5%">
+					<f:facet name="header">Usuario</f:facet>
+					<h:outputText value="#{r.usuarioRecibo}" />
+				</rich:column>
+				<rich:column id="x19" width="2%">
+				<div align="center">
+						<h:commandLink id="idcampo7" action="#{registrarConstanciaNoAdeudo.impresion()}" immediate="true">
+							<h:graphicImage id="imgImp" value="/images/imprimi2.png" style="border:0" />
+							<f:setPropertyActionListener value="#{r}" id="al1"	target="#{registrarConstanciaNoAdeudo.constanciaItem}" />
+							<rich:toolTip for="idcampo7" direction="top-left"> Descargar Constancia</rich:toolTip>
+						</h:commandLink>
+					</div>
+				</rich:column>
+
+		</rich:extendedDataTable>
+		</rich:panel>
+<!-- 		<rich:panel id="idPanelConsultaDeudas" style="width:1320px;height:400px"> -->
+<!-- 			<rich:datascroller for="tablaDeuda" maxPages="20"></rich:datascroller> -->
+<!-- 			<rich:extendedDataTable id="tablaDeuda" -->
+<!-- 				value="#{registrarConstanciaNoAdeudo.listDeudas}" var="r" rows="10" -->
+<!-- 				selectionMode="single" width="100%" height="330px" -->
+<!-- 				noDataLabel="No se encontró registros" enableContextMenu="false" -->
+<!-- 				rowKeyVar="idx"> -->
+<!-- 				<rich:column id="idcampo1" width="5%" filterBy="#{r.anioDeuda}"> -->
+<!-- 					<f:facet name="header">AÑO</f:facet> -->
+<!-- 					<h:outputText value="#{r.anioDeuda}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column id="idcampo2" width="10%" filterBy="#{r.subconcepto}"> -->
+<!-- 					<f:facet name="header">TRIBUTO</f:facet> -->
+<!-- 					<h:outputText value="#{r.subconcepto}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column id="idcampo3" width="10%" filterBy="#{r.descripcion}"> -->
+<!-- 					<f:facet name="header">REFERENCIA</f:facet> -->
+<!-- 					<h:outputText value="#{r.descripcion}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column id="idcampo4" width="10%"> -->
+<!-- 					<f:facet name="header">CUOTA</f:facet> -->
+<!-- 					<h:outputText value="#{r.numPapeleta}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column id="idcampo5" width="5%"> -->
+<!-- 					<f:facet name="header">INSOLUTO</f:facet> -->
+<!-- 					<h:outputText value="#{r.insoluto}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column id="idcampo6" width="5%"> -->
+<!-- 					<f:facet name="header">EMISIÓN</f:facet> -->
+<!-- 					<h:outputText value="#{r.derechoEmi}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column id="idcampo7" width="5%"> -->
+<!-- 					<f:facet name="header">REAJUSTE</f:facet> -->
+<!-- 					<h:outputText value="#{r.reajuste}" /> -->
+<!-- 				</rich:column> -->
+<!-- 				<rich:column id="idcampo8" width="5%"> -->
+<!-- 					<f:facet name="header">INTERÉS</f:facet> -->
+<!-- 					<h:outputText value="#{r.interes}" /> -->
+<!-- 				</rich:column> -->
+<!-- 			</rich:extendedDataTable> -->
+<!-- 		</rich:panel> -->
+	
+	</h:form>
+</ui:composition>

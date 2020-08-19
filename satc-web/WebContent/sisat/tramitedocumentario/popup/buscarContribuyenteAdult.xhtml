@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscarPersona')}.click()"
+			selector="#formBuscarContribuyente" />
+
+		<a4j:outputPanel id="p01">
+			<table border="0" width="100%">
+				<tr>
+					<td align="left" width="110px"><h:outputText
+							value="Cod.contribuyente:" /></td>
+					<td><h:inputText maxlength="9" style="width:90%"
+							value="#{busquedaContribuyentePopupManaged.personaId}"
+							onkeypress="return validaEnteroPositivo(event)" /></td>
+					<td align="left" width="105px"><h:outputText
+							value="Tipo de documento:" /></td>
+					<td><rich:comboBox width="150px" defaultLabel="Seleccione"
+							value="#{busquedaContribuyentePopupManaged.cmbValuetipodocumento}"
+							id="id_tipodocumento"
+							binding="#{busquedaContribuyentePopupManaged.cmbtipodocumento}"
+							immediate="true"
+							valueChangeListener="#{busquedaContribuyentePopupManaged.loadTipoTipoDocumentoById}"
+							onkeypress="return showListCbo(this,event);"
+							onblur="validaInputCbo(this)">
+							<f:selectItems id="id_lsttipodocumento"
+								value="#{busquedaContribuyentePopupManaged.lsttipodocumento}" />
+							<a4j:support id="id_supportlsttipodocumento"
+								reRender="id_docident" event="onchange" BypassUpdates="false"
+								ajaxSingle="true" />
+						</rich:comboBox></td>
+					<td align="left"><h:outputText value="Nro. documento identidad:" /></td>
+					<td><h:panelGroup id="id_docident">
+							<h:inputText id="id_docidentidad1"
+								onkeypress="return validaEnteroPositivo(event)"
+								rendered="#{!busquedaContribuyentePopupManaged.isDNI and !busquedaContribuyentePopupManaged.isRUC}"
+								maxlength="13" style="width:90%"
+								value="#{busquedaContribuyentePopupManaged.nroDocumentoIdentidad}" />
+							<h:inputText id="id_docidentidaddni"
+								onkeypress="return validaEnteroPositivo(event)"
+								rendered="#{busquedaContribuyentePopupManaged.isDNI}"
+								maxlength="8" style="width:90%"
+								value="#{busquedaContribuyentePopupManaged.nroDocumentoIdentidad}" />
+							<h:inputText id="id_docidentidadruc"
+								onkeypress="return validaEnteroPositivo(event)"
+								rendered="#{busquedaContribuyentePopupManaged.isRUC}"
+								maxlength="11" style="width:90%"
+								value="#{busquedaContribuyentePopupManaged.nroDocumentoIdentidad}" />
+						</h:panelGroup></td>
+				</tr>
+				<tr>
+					<td align="left" width="110px"><h:outputText
+							value="Apellido paterno:" /></td>
+					<td><h:inputText id="id_inputapellidoPaterno"
+							styleClass="textUpperCase"
+							onkeypress="return validarCarateres(event)" maxlength="50"
+							style="width:90%"
+							value="#{busquedaContribuyentePopupManaged.apellidoPaterno}">
+							<f:converter converterId="uppeCaseConverter"></f:converter>
+						</h:inputText></td>
+					<td align="left" width="105px"><h:outputText
+							value="Apellido Materno :" /></td>
+					<td><h:inputText id="id_inputapellidoMaterno"
+							styleClass="textUpperCase"
+							onkeypress="return validarCarateres(event)" maxlength="50"
+							style="width:90%"
+							value="#{busquedaContribuyentePopupManaged.apellidoMaterno}">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText></td>					
+<!-- 					<td align="left" width="115px"><h:outputText value="Placa :" /></td> -->
+<!-- 					<td><h:inputText id="id_inputplaca" styleClass="textUpperCase" -->
+<!-- 							onkeypress="return validarCarateres(event)" maxlength="50" -->
+<!-- 							style="width:90%" -->
+<!-- 							value="#{busquedaContribuyentePopupManaged.placa}"> -->
+<!-- 							<f:converter converterId="uppeCaseConverter" /> -->
+<!-- 						</h:inputText></td> -->
+				</tr>
+				<tr>
+
+					<td align="left" width="110px"><h:outputText
+							value="Apellidos y nombres:" /></td>
+					<td><h:inputText id="id_inputsegundoNombre"
+							styleClass="textUpperCase"
+							onkeypress="return validarCarateres(event)" maxlength="50"
+							style="width:90%"
+							value="#{busquedaContribuyentePopupManaged.apellidosNombres}">
+							<f:converter converterId="uppeCaseConverter" />
+						</h:inputText></td>
+<!-- 					<td align="left" width="105px"><h:outputText -->
+<!-- 							value="Razón Social :" /></td> -->
+<!-- 					<td><h:inputText id="id_inputrazonsocial" -->
+<!-- 							styleClass="textUpperCase" -->
+<!-- 							onkeypress="return validarCarateres(event)" maxlength="50" -->
+<!-- 							style="width:90%" -->
+<!-- 							value="#{busquedaContribuyentePopupManaged.razonSocial}"> -->
+<!-- 							<f:converter converterId="uppeCaseConverter" /> -->
+<!-- 						</h:inputText></td> -->
+<!-- 					<td align="left" width="115px"><h:outputText -->
+<!-- 							value="Cod. Anterior :" /></td> -->
+<!-- 					<td><h:inputText id="id_inputcodant" -->
+<!-- 							onkeypress="return validaEnteroPositivo(event)" maxlength="12" -->
+<!-- 							style="width:90%" -->
+<!-- 							value="#{busquedaContribuyentePopupManaged.codigoAnterior}"> -->
+<!-- 						</h:inputText></td> -->
+				</tr>
+
+			</table>
+
+		</a4j:outputPanel>
+		<h:panelGrid columns="3" align="center">
+			<a4j:commandButton value="Buscar" style="width:100px;"
+				id="cmdBuscarPersona"
+				action="#{busquedaContribuyentePopupManaged.buscar}"
+				status="ajaxStatus" reRender="id_panelresultadospersonas2"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };" />
+			<a4j:commandButton value="Limpiar" style="width:100px;"
+				action="#{busquedaContribuyentePopupManaged.limpiar}"
+				status="ajaxStatus" reRender="p01,id_panelresultadospersonas2" />
+				
+<!-- 			<a4j:commandButton  style="width:100px;" -->
+<!-- 				onclick="#{rich:component('modalPanelNuevoRemitente')}.show()" -->
+<!-- 				value="Nuevo"></a4j:commandButton> -->
+			
+		</h:panelGrid>
+		<rich:panel id="id_panelresultadospersonas2">
+			<rich:datascroller for="datosPersona" maxPages="20"></rich:datascroller>
+
+			<rich:extendedDataTable id="datosPersona"
+				value="#{busquedaContribuyentePopupManaged.personas}" var="persona"
+				height="225px" rows="8" selectionMode="single"
+				noDataLabel="No Se Encontro Información para esta Busqueda"
+				rowKeyVar="row" enableContextMenu="false">
+
+				<rich:column
+					style="text-align: center;"
+					width="30px">
+					<f:facet name="header">Sel.</f:facet>
+
+					 <h:panelGroup  rendered="#{componentModalId!='buscarContTranferencia'}">
+						<h:graphicImage value="/images/ver2.png"
+							id="hidelinkBuscarContribuyente" styleClass="hidelink">
+							<a4j:support event="onclick"
+								action="#{busquedaContribuyentePopupManaged.ver}"
+								oncomplete="Richfaces.hideModalPanel('#{componentModalId}'); return false" 
+								reRender="#{reRederIdComponent}">
+								<f:setPropertyActionListener
+									target="#{busquedaContribuyentePopupManaged.currentItem}"
+									value="#{persona}" />
+							</a4j:support>
+						</h:graphicImage>
+					</h:panelGroup> 
+					
+					
+					<h:panelGroup rendered="#{componentModalId=='buscarContTranferencia'}">
+						<h:graphicImage value="/images/ver2.png"
+							id="hidelinkBuscarContribuyenteTras" styleClass="hidelink">
+							
+							<a4j:support event="onclick"
+								action="#{busquedaContribuyentePopupManaged.ver}"
+								oncomplete=" #{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');'};" 
+								reRender="#{reRederIdComponent}">
+								<f:setPropertyActionListener
+									target="#{busquedaContribuyentePopupManaged.currentItem}"
+									value="#{persona}" />
+							</a4j:support>
+						</h:graphicImage>
+					</h:panelGroup>
+
+				</rich:column>
+				<rich:column
+					style="text-align: center;"
+					width="70px">
+					<f:facet name="header">Código</f:facet>
+					<h:outputText value="#{persona.personaId}" />
+				</rich:column>
+				<rich:column
+					style=""
+					width="105px">
+					<f:facet name="header">Tipo contribuyente</f:facet>
+					 <h:outputText value="#{persona.tipoPersonaAsString}" /> 
+				</rich:column>
+				<rich:column
+					style=""
+					width="100px">
+					<f:facet name="header">Doc. Ident.</f:facet>
+					<h:outputText value="#{persona.tipoDocumentoIdentidadAsString}" />
+				</rich:column>
+				<rich:column
+					style=""
+					width="120px">
+					<f:facet name="header">Nro. Doc. Ident.</f:facet>
+					
+					<h:outputText value="#{persona.nroDocuIdentidad}" />
+				</rich:column>
+
+				<rich:column
+					style=""
+					width="350px">
+					<f:facet name="header">Apellidos y nombres</f:facet>
+					<div style="width: 350px;">
+						<h:outputText value="#{persona.apellidosNombres}" />
+					</div>
+				</rich:column>
+				
+				<rich:column
+					style=""
+					width="350px">
+					<f:facet name="header">Apellidos y nombres</f:facet>
+					<div style="width: 350px;">
+						<h:outputText value="#{persona.apellidosNombres}" />
+					</div>
+				</rich:column>
+			</rich:extendedDataTable>
+		</rich:panel>
+		
+</ui:composition>

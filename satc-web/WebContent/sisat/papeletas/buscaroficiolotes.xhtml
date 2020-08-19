@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form  id="formbuscaroficio">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	<a4j:loadScript src="/js/sisat.js"/>
+
+	<rich:hotKey key="return"
+		handler="#{rich:element('btnBuscarLote')}.click()"
+		selector="#formbuscaroficio" />
+		
+	<a4j:outputPanel id="idPanelPrincipalBusquedaLotesPapeleta" >
+			<table align="center" border="0" width="100%">
+		    	<tr>
+		    		<td align = "left"> 
+			    		<rich:panel rendered="#{buscarOficioLotesManaged.permisoBuscar}" style="width:100%; height: 100px;" id="idPanelDatosInfractor">
+					    	<f:facet name="header">		
+								BUSQUEDA DE LOTES 
+							</f:facet>
+							
+							<table width="100%" border="0">
+								<tr>
+									<td align="left" width="150px">
+										<h:outputLabel value = "Numero de Oficio "><span style="color: red;">*</span></h:outputLabel>
+									</td>
+									<td align="left" width="150px">
+										<h:inputText style="width:90%" value = "#{buscarOficioLotesManaged.numeroOficio}"
+										onkeypress="return numbersonly(this.value,event)" maxlength="10"/>
+									</td>
+									<td width="150px">
+										<h:outputLabel value = "Fecha de Oficio">
+											<span style="color: red;">*</span>
+										</h:outputLabel>
+									</td>
+									<td>
+										<rich:calendar inputStyle="width:70px"
+					                        locale="en/US"
+					                        datePattern="dd/MM/yyyy"
+					                        enableManualInput="true" inputClass="maskDate"
+					                         id="idFechaOficio" value="#{buscarOficioLotesManaged.fechaOficio}" 
+					                         >
+					                     </rich:calendar>
+					                     <rich:jQuery id="maskedo4" selector=".maskDate" query="mask('99/99/9999')" timing="onload" />  
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<h:outputLabel value = "Fecha de Recepcion">
+											<span style="color: red;">*</span>
+										</h:outputLabel>
+									</td>
+									<td>
+										<rich:calendar inputStyle="width:70px"
+					                        locale="en/US"
+					                        datePattern="dd/MM/yyyy"
+					                        enableManualInput="true" inputClass="maskDate"
+					                         id="idFechaRecepcion" value="#{buscarOficioLotesManaged.fechaRecepcion}" 
+					                         >
+				                     	</rich:calendar>
+				                     	<rich:jQuery id="maskedo5" selector=".maskDate" query="mask('99/99/9999')" timing="onload" />  
+									</td>
+									<td colspan="3">
+									</td>
+								</tr>
+							</table>
+						</rich:panel>
+					</td>
+				</tr>	
+				<tr>
+					<td  align = "left"> 
+						<a4j:commandButton rendered="#{buscarOficioLotesManaged.permisoBuscar}" 
+						id="btnBuscarLote" action="#{buscarOficioLotesManaged.buscarLotes}" value="Buscar"  style="width : 100px"
+						reRender = "idPanelResultadosBusquedaLotes" status="ajaxStatus" />
+					</td>	
+				</tr>
+				<tr>
+					<td align="left">
+					<rich:panel id = "idPanelResultadosBusquedaLotes" style = "width:100%;">
+						<h:panelGrid rendered="#{buscarOficioLotesManaged.permisoAgregarRegistrar}" columns="3" align="center" >
+							<a4j:commandLink ajaxSingle="true" id="newlink1" action="#{buscarOficioLotesManaged.inscripcion}" immediate="true" reRender="panelinclude" >
+			                    <h:graphicImage value="/images/modal/new.gif" style="border:0" />
+			                    <f:setPropertyActionListener value="/sisat/papeletas/registrooficiolotes.xhtml" target="#{sessionManaged.page}" />
+			                </a4j:commandLink>
+			                <rich:toolTip id="x2" for="newlink1" value="Registro de oficio" />
+						</h:panelGrid>
+						<rich:extendedDataTable 
+								id="datosLote" 
+								value="#{buscarOficioLotesManaged.listaLotes}"  
+								var="record" width="100%" height="300px"
+								sortMode="single" selectionMode="single" enableContextMenu="false" 
+								rowKeyVar="row"	>
+								<rich:column id="x4it" width="5%"  >
+					                <f:facet name="header"  >Item</f:facet>
+					                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+					            </rich:column>
+					            <rich:column id="x0" width="10%" >
+					                <f:facet name="header"  >Nro Lote</f:facet>
+					                <h:outputText value="#{record.cargaLotesId}"/>
+					            </rich:column>
+								<rich:column id="x4" width="10%" >
+					                <f:facet name="header"  >Nro Oficio</f:facet>
+					                <h:outputText value="#{record.numOficio}"/>
+					            </rich:column>
+					            
+					            <rich:column id="x5" width="10%">
+					                <f:facet name="header" >Fecha Oficio</f:facet>
+					                <h:outputText value="#{record.fecOficio}">
+					                	<f:convertDateTime pattern="dd/MM/yyyy" />
+					                </h:outputText>
+					            </rich:column>
+					            
+					             <rich:column id="x6" width="15%">
+					                <f:facet name="header" >Fecha Recep.</f:facet>
+					                <h:outputText value="#{record.fecRecepcion}">
+					                	<f:convertDateTime pattern="dd/MM/yyyy" />
+					                </h:outputText>
+					            </rich:column>
+					             <rich:column id="x8" width="10%">
+						                <f:facet name="header" >Cant. Papeletas Oficio.</f:facet>
+						                <h:outputText value="#{record.cantidadOficio}">
+						                </h:outputText>
+					            	</rich:column>
+					            <!--  INI-->
+					            	 <rich:column id="x9" width="10%">
+						                <f:facet name="header" >Cant. Papeletas</f:facet>
+						                <h:outputText value="#{record.cantidad}">
+						                </h:outputText>
+					            	</rich:column>
+					            	<!-- 
+						            <rich:column id="x84" width="10%">
+						                <f:facet name="header" >En Verificacion</f:facet>
+						                <h:outputText value="#{record.cantEnVerificacion}">
+						                </h:outputText>
+						            </rich:column>
+						             -->
+						            <rich:column id="x82" width="10%">
+						                <f:facet name="header" >No Coincide</f:facet>
+						                <h:outputText value="#{record.cantNoCoincide}">
+						                </h:outputText>
+						            </rich:column>
+						            <rich:column id="x81" width="10%">
+						                <f:facet name="header" >Definitivo</f:facet>
+						                <h:outputText value="#{record.cantDefinitivo}">
+						                </h:outputText>
+						            </rich:column>
+					            <!--  FIN-->
+					            <rich:column rendered="#{buscarOficioLotesManaged.permisoModificarActualizar}" id="x10" width="5%">
+					             	<f:facet name="header" >Actualizar</f:facet>
+					            	<a4j:commandLink ajaxSingle="true" id="newlink8" action="#{buscarOficioLotesManaged.verDetalle}" reRender="panelinclude" >
+					                    <h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+					                    <f:setPropertyActionListener value="#{record}" target="#{buscarOficioLotesManaged.currentItem}" id="r427"/>
+					                    <f:setPropertyActionListener value="/sisat/papeletas/registroDetalleLotePapeleta.xhtml" target="#{sessionManaged.page}" />
+					                </a4j:commandLink>
+					                <rich:toolTip for="newlink8" value="Agregar" />
+						        </rich:column>
+						        <rich:column rendered="#{buscarOficioLotesManaged.permisoVerificar}" id="x13" width="5%">
+					             	<f:facet name="header" >Verificar</f:facet>
+						            	<a4j:commandLink ajaxSingle="true" id="newlink5" action="#{buscarOficioLotesManaged.verificar}" reRender="panelinclude" >
+						                    <h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+						                    <f:setPropertyActionListener value="#{record}" target="#{buscarOficioLotesManaged.currentItem}" id="r427"/>
+						                    <f:setPropertyActionListener value="/sisat/papeletas/verificarLotePapeleta.xhtml" target="#{sessionManaged.page}" />
+						                </a4j:commandLink>
+						                <rich:toolTip for="newlink5" value="Verificar" />
+						        </rich:column>
+				   			</rich:extendedDataTable>
+				   		</rich:panel>
+					</td>
+				</tr>
+			</table>
+		</a4j:outputPanel>
+	</h:form>
+	<rich:modalPanel id="panelRegistroExitoso" autosized="true" width="300">
+        <f:facet name="header">
+          Mensajes
+        </f:facet>
+        <f:facet name="controls">
+            <h:panelGroup>
+                <h:graphicImage value="/images/modal/close.png" id="id_papeleta_close02"
+                    styleClass="hidelink" />
+                <rich:componentControl for="panelRegistroExitoso" attachTo="id_papeleta_close02"
+                    operation="hide" event="onclick" />
+            </h:panelGroup>
+        </f:facet>
+        		
+        <h:panelGrid columns="1">
+             <a4j:outputPanel ajaxRendered="true">
+                 <h:panelGrid columns="2">
+                     <h:outputText id="id_succ01" style="font-weight:bold;color:green" 
+                     value="El lote se grabó satisfactoriamente"/>
+                      <rich:messages style="color: blue;" />
+                 </h:panelGrid>
+             </a4j:outputPanel>
+              <h:panelGrid columns="2">
+                         <a4j:commandButton
+                         value="Aceptar"
+                         onclick="#{rich:component('panelRegistroExitoso')}.hide();return false;"
+                         />
+               </h:panelGrid>          
+         </h:panelGrid>
+    </rich:modalPanel>
+
+</ui:composition>

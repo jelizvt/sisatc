@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:a4j="http://richfaces.org/a4j"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+     <rich:jQuery query="focus().select()" selector="#id_formdocanexos :input:visible:enabled:first" name="focusInput"/>
+     <rich:panel  id="id_thispaneldocumentoanexo" width="100%" >
+			<table border="0" width="100%">
+				<tr>
+					<td align="left" width="100px">
+						<h:outputLabel value="Tipo Documento :" >
+							<span style="color: red;">*</span>
+						</h:outputLabel>
+					</td>
+					<td align="left" colspan="2">
+						<rich:comboBox width="300" style="width:100%" defaultLabel="Seleccione" id="id_combotipodocumento" value="#{documentoAnexoManaged.cmbValueTipoDocumento}"
+							binding="#{documentoAnexoManaged.cmbTipoDocumento}"
+							selectFirstOnUpdate="true" directInputSuggestions="false"
+							immediate="true" tabindex="1"
+							required="true" requiredMessage="Campo Tipo Documento es requerido"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							>
+							<f:selectItems id="id_lsttipodocumento" value="#{documentoAnexoManaged.lstTipoDocumento}"/>
+						</rich:comboBox>
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px">
+						<h:outputLabel value="Num documento :" >
+							<span style="color: red;">*</span>
+						</h:outputLabel>
+					</td>
+					<td>
+						<h:inputText tabindex="2" maxlength="50" id="id_txtnumerodocumento" size="50" style="width:50%" value="#{documentoAnexoManaged.rjDocuAnexo.numeroDocumento}" 
+						required="true" requiredMessage="Campo Numero documento es requerido"
+						styleClass="textUpperCase" converter="uppeCaseConverter"
+						/>
+					</td>
+					<td width="100px">
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px">
+						<h:outputText value="Referencia :" />
+					</td>
+					<td align="left">
+										 
+						<h:inputText  id="id_txtreffilename_da" value="#{documentoAnexoManaged.archivo.fileName}" 
+							readonly="true" style="width:100%;border: none"
+						/>
+					</td>
+					<td>	
+						<a4j:commandButton id="id_findreffilename" immediate="true" action="#{documentoAnexoManaged.setParameters}" 
+						 oncomplete="#{rich:component('panelfileupload')}.show();" style="width:100px;"
+						 value="[A]djuntar" accesskey="a" tabindex="3" reRender="panelfileupload">
+						 	<f:param name="paramParentFileUpload" value="DA"/>
+						</a4j:commandButton>
+					</td>
+				</tr>
+				
+			</table>
+     </rich:panel>
+     <table>
+			<tr>
+				<td align="center" colspan="4">
+					<h:panelGrid align="center" columns="3" width="40%" border="0" style="text-align:center" >
+						<a4j:commandButton value="[G]uardar" style="width:100px;" 
+						action="#{documentoAnexoManaged.guardar}" reRender="id_documentosanexos,id_thispaneldocumentoanexo"
+						tabindex="4"
+						accesskey="g"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						status="ajaxStatus"
+						/>
+						
+						<a4j:commandButton value="[S]alir" style="width:100px;" id="id_salir" action="#{documentoAnexoManaged.salir}"
+						 oncomplete="#{rich:component('id_paneldocanexos')}.hide(); return false"
+						 immediate="true"
+						 tabindex="5"
+						 accesskey="s"
+						 onblur="focusInput();"
+						/>
+					</h:panelGrid>
+				</td>
+			</tr>
+	</table>
+</h:panelGrid>
+
+

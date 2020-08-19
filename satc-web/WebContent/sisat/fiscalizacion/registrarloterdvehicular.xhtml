@@ -1,0 +1,275 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form id="formregistroLotesRDV">
+	<a4j:outputPanel id="id_panelprincipalregistroLoteRS">
+	<a4j:outputPanel id="outputrdarbitrios">
+	<rich:panel style="width:100%;  height: 150px;" id="id_paneldatosloterdvehicular">
+				<f:facet name="header">
+					<h:outputLabel
+						value="Registro de Lote de Resolución Determinación Vehicular" />
+				</f:facet>
+			  <table border="0" align="center" width="100%">
+				    <tr>
+						<td align="left" width="130px"><h:outputLabel value="Numero de Lote : " /></td>
+						<td>
+							<h:panelGrid
+								id="panelRefenciaReqs">
+								<h:inputText id="id_lote" style="width: 80px"
+									value="#{registroLoteRDVehicularManaged.nroLoteasociado}"
+									onclick="#{rich:component('paneldocumentoreferencia')}.show();return false" />
+							</h:panelGrid>
+						</td>
+					</tr>
+					<tr>
+							<td width="220px"><h:panelGrid columns="2"
+									rendered="#{registroLoteRDVehicularManaged.lstlotePreliminar.size()>0}">
+									<h:outputText style="font-weight:bold; color:black;"
+										value="Lista de RDs Vehicular :" />
+									<h:commandLink id="btnReporteRds"
+										action="#{registroLoteRDVehicularManaged.generacionPreliminarVehicular}"
+										immediate="true">
+										<h:graphicImage value="/images/modal/excel.png"
+											style="border:0; height:20px;width:20px;"
+											title="Descargar lista de RD de Vehicular" />
+									</h:commandLink>
+								</h:panelGrid>
+							</td>
+						</tr>
+						<tr>	
+							<td width="220px"><h:panelGrid columns="2"
+									rendered="#{registroLoteRDVehicularManaged.esImpresionMasiva}">
+									<h:outputText style="font-weight:bold; color:black;"
+										value="Descarga de archivos :" />
+									<h:commandLink id="btnRds"
+										action="#{registroLoteRDVehicularManaged.generacionArchivos}"
+										immediate="true">
+										<h:graphicImage value="/images/modal/pdf.png"
+											style="border:0; height:20px;width:20px;"
+											title="Descargar RDs de Vehicular" />
+									</h:commandLink>
+								</h:panelGrid>
+							</td>
+						</tr>
+						
+			  </table>
+	</rich:panel>
+	</a4j:outputPanel>
+			  <table align="center" width="100%">
+				  <tr>
+				  	<td align="center"> 
+				  		<a4j:outputPanel id="idBotones">
+						<a4j:commandButton id="id_btnGeneraDeterminacion"
+							value="Generacion Determinación" style="width:150px;"
+							action="#{registroLoteRDVehicularManaged.generaDeterminacionVehicular}"
+							disabled="#{registroLoteRDVehicularManaged.ccLote.flagGeneracion=='2'}"
+							oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+							
+							status="ajaxStatus">
+						</a4j:commandButton>
+						<a4j:commandButton id="id_btnPreliminar"
+							value="Generacion Preliminar" style="width:150px;"
+							action="#{registroLoteRDVehicularManaged.mostrarLotePreliminar}"
+							disabled="#{registroLoteRDVehicularManaged.ccLote.flagGeneracion=='2'}"
+							oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+							reRender="id_panelprincipalregistroLoteRS,outputrespreliminar,outputrdarbitrios"
+							status="ajaxStatus">
+						</a4j:commandButton>
+						<a4j:commandButton value="Guardar" style="width:100px;"
+							id="id_btnguardar"
+							action="#{registroLoteRDVehicularManaged.guardar}"
+							disabled="#{registroLoteRDVehicularManaged.ccLote.flagGeneracion=='2'}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirma\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							reRender="id_panelprincipalregistroLoteRS,outputrespreliminar,outputrdarbitrios"
+							status="ajaxStatus">
+						</a4j:commandButton>
+						<a4j:commandButton value="Generación Valores"
+							id="idBtnGenerarValores" style="width:150px;" immediate="true"
+							action="#{registroLoteRDVehicularManaged.generacionValores}"
+							disabled="#{registroLoteRDVehicularManaged.ccLote.flagGeneracion=='2'}"
+							oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							reRender="id_panelprincipalregistroLoteRS,outputrespreliminar,outputrdarbitrios"
+							status="ajaxStatus">
+						</a4j:commandButton>
+						<a4j:commandButton id="idBtnSalir" value="Salir"
+							style="width:100px;"
+							action="#{registroLoteRDVehicularManaged.salir}" immediate="true"
+							reRender="panelinclude">
+							<f:setPropertyActionListener
+								value="/sisat/fiscalizacion/buscarloterdvehicular.xhtml"
+								target="#{sessionManaged.page}" />
+						</a4j:commandButton>
+					</a4j:outputPanel>
+				  	</td>
+				  </tr>
+			  </table>
+			<table align="center" width="100%">
+				<tr>
+					<td>
+						<a4j:outputPanel id="outputrespreliminar">
+							<rich:datascroller for="resultadofinal1" maxPages="10"></rich:datascroller>
+								<rich:extendedDataTable id="resultadofinal1"
+								value="#{registroLoteRDVehicularManaged.lstlotePreliminar}"
+								var="lotePreliminar" width="100%" height="480px" rows="20"
+								selectionMode="single"
+								noDataLabel="No Se Encontro Información para esta Busqueda"
+								rowKeyVar="row" enableContextMenu="false">
+										<rich:column id="x1" width="5%" style="text-align:center"
+											filterBy="#{lotePreliminar.personaId}"
+											sortBy="#{lotePreliminar.personaId}">
+											<f:facet name="header">Cod. Per.</f:facet>
+											<h:outputText value="#{lotePreliminar.personaId}" />
+										</rich:column>
+										<rich:column sortBy="#{lotePreliminar.descripcionPersona}"
+											id="x2" width="15%"
+											filterBy="#{lotePreliminar.descripcionPersona}">
+											<f:facet name="header">Apellidos Y Nombres</f:facet>
+											<h:outputText value="#{lotePreliminar.descripcionPersona}" />
+										</rich:column>
+										<rich:column id="x3" width="5%" style="text-align:center"
+											filterBy="#{lotePreliminar.nroDocumento}"
+											sortBy="#{lotePreliminar.nroDocumento}">
+											<f:facet name="header">Nro Doc</f:facet>
+											<h:outputText value="#{lotePreliminar.nroDocumento}" />
+										</rich:column>
+										<rich:column id="x4" width="25%" style="text-align:center"
+											sortBy="#{lotePreliminar.direccion}">
+											<f:facet name="header">Direccion</f:facet>
+											<h:outputText value="#{lotePreliminar.direccion}" />
+										</rich:column>
+										<rich:column sortBy="#{lotePreliminar.sector}" id="x5"
+											width="10%" filterBy="#{lotePreliminar.sector}">
+											<f:facet name="header">Sector</f:facet>
+											<h:outputText value="#{lotePreliminar.sector}" />
+										</rich:column>
+										<rich:column id="x6" width="5%" style="text-align:center">
+											<f:facet name="header">Insoluto</f:facet>
+											<h:outputText value="#{lotePreliminar.insoluto}" />
+										</rich:column>
+										<rich:column id="x7" width="5%" style="text-align:center">
+											<f:facet name="header">D.Emisión</f:facet>
+											<h:outputText value="#{lotePreliminar.derechoEmision}" />
+										</rich:column>
+										<rich:column id="x8" width="5%" style="text-align:center">
+											<f:facet name="header">Reajuste</f:facet>
+											<h:outputText value="#{lotePreliminar.reajuste}" />
+										</rich:column>
+										<rich:column id="x9" width="5%" style="text-align:center">
+											<f:facet name="header">Interes</f:facet>
+											<h:outputText value="#{lotePreliminar.interesCapitalizado}" />
+										</rich:column>
+										<rich:column id="x10" width="5%" style="text-align:center"
+											sortBy="#{lotePreliminar.deudaTotal}">
+											<f:facet name="header">Total</f:facet>
+											<h:outputText value="#{lotePreliminar.deudaTotal}" />
+										</rich:column>
+										<rich:column id="x11" width="15%" style="text-align:center">
+											<f:facet name="header">Nro Valor</f:facet>
+											<h:outputText value="#{lotePreliminar.nroActo}">
+											</h:outputText>
+										</rich:column>
+									</rich:extendedDataTable>
+						</a4j:outputPanel>
+					</td>
+				</tr>
+			</table>
+			</a4j:outputPanel>
+	</h:form>
+	<rich:modalPanel id="paneldocumentoreferencia" width="760" height="300">
+		<f:facet name="header">
+			<h:outputText value="Listado de Lotes Omisos al Imp. Vehicular" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					styleClass="hidelink" id="hidelink3" />
+				<rich:componentControl for="paneldocumentoreferencia"
+					attachTo="hidelink3" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<div align="center">
+				<h3>
+					<h:outputText value="Carteras" />
+				</h3>
+			</div>
+			<rich:datascroller for="datosReqs" maxPages="10"></rich:datascroller>
+			<rich:extendedDataTable id="datosReqs"
+				noDataLabel="No se encontró registros de Lotes Omisos"
+				value="#{registroLoteRDVehicularManaged.cartera}" var="recordReqs"
+				width="740px" height="200px" sortMode="single" rows="10"
+				selectionMode="single" enableContextMenu="false" rowKeyVar="row">
+				<rich:column id="x1" width="3.2%">
+					<a4j:commandLink ajaxSingle="true"
+						oncomplete="#{rich:component('paneldocumentoreferencia')}.hide();"
+						reRender="panelRefenciaReqs">
+						<h:graphicImage value="/images/ver2.png" style="border: 0px;" />
+						<f:setPropertyActionListener
+							target="#{registroLoteRDVehicularManaged.nroLoteasociado}"
+							value="#{recordReqs.loteId}" />
+					</a4j:commandLink>
+				</rich:column>
+
+				<rich:column id="x2" width="4%">
+					<f:facet name="header"></f:facet>
+					<div align="center">
+						<h:commandLink id="newlinkImprimir"
+							action="#{registroLoteRDVehicularManaged.imprimirDjsPendientesXLS}"
+							immediate="true">
+							<h:graphicImage id="imgImp" value="/images/imprimi2.png"
+								style="border:0" />
+							<f:setPropertyActionListener
+								target="#{registroLoteRDVehicularManaged.nroLoteasociado}"
+								value="#{recordReqs.loteId}" />
+							<rich:toolTip for="newlinkImprimir" direction="top-left"> Descargar Documento</rich:toolTip>
+						</h:commandLink>
+					</div>
+				</rich:column>
+
+				<rich:column id="ptp" width="12%" filterBy="#{recordReqs.loteId}" style="text-align:center">
+					<f:facet name="header">Nro. Lote</f:facet>
+					<h:outputText value="#{recordReqs.loteId}" />
+				</rich:column>
+				<rich:column id="pnro" width="8%" style="text-align:center"
+					filterBy="#{recordReqs.annoLote}" sortBy="#{recordReqs.annoLote}">
+					<f:facet name="header">Año</f:facet>
+					<h:outputText value="#{recordReqs.annoLote}" />
+				</rich:column>
+				<rich:column id="pnom" width="30%" style="text-align:center"
+					filterBy="#{recordReqs.descripcionLote}"
+					sortBy="#{recordReqs.descripcionLote}">
+					<f:facet name="header">Descripción</f:facet>
+					<h:outputText value="#{recordReqs.descripcionLote}" />
+				</rich:column>
+				<rich:column id="pfec" width="13%" style="text-align:center"
+					filterBy="#{recordReqs.fechaRegistro}"
+					sortBy="#{recordReqs.fechaRegistro}">
+					<f:facet name="header">F. Registro</f:facet>
+					<h:outputText value="#{recordReqs.fechaRegistro}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="c1" width="8%" style="text-align:center">
+					<f:facet name="header">Total</f:facet>
+					<h:outputText value="#{recordReqs.tipoLoteId}" />
+				</rich:column>
+				<rich:column id="c2" width="8%" style="text-align:center">
+					<f:facet name="header">Tot. Req.</f:facet>
+					<h:outputText value="#{recordReqs.nroDocumentos}" />
+				</rich:column>
+				<rich:column id="c3" width="8%" style="text-align:center">
+					<f:facet name="header">Tot. Not.</f:facet>
+					<h:outputText value="#{recordReqs.nroPersonas}" />
+				</rich:column>
+				<rich:column id="c4" width="8%" style="text-align:center">
+					<f:facet name="header">Tot. RD.</f:facet>
+					<h:outputText value="#{recordReqs.tipoActoId}" />
+				</rich:column>
+			</rich:extendedDataTable>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:s="http://jboss.com/products/seam/taglib"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formBuscarPersona">
+
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscarPersona')}.click()"
+			selector="#formBuscarPersona" />
+
+		<rich:panel id="p01">
+			<f:facet name="header">		
+			BUSQUEDA DE EXPEDIENTES
+		</f:facet>
+
+			<table border="0" width="100%">
+				<tr>
+					<td align="left" width="150px"><h:outputText
+							value="Cod.Persona :" /></td>
+					<td><h:inputText maxlength="9" style="width:10%"
+							value="#{buscarExpedienteManaged.personaId}"
+							onkeypress="return validaEnteroPositivo(event)" /></td>
+				</tr>
+			</table>
+
+		</rich:panel>
+		<h:panelGrid columns="3" align="center">
+			<a4j:commandButton value="Buscar" style="width:100px;"
+				id="cmdBuscarPersona" action="#{buscarExpedienteManaged.buscar}"
+				status="ajaxStatus" reRender="id_panelresultadospersonas2"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };" />
+			<a4j:commandButton value="Limpiar" style="width:100px;"
+				action="#{busquedaPersonaManaged.limpiar}" status="ajaxStatus"
+				reRender="p01,id_panelresultadospersonas2" />
+		</h:panelGrid>
+		<rich:panel id="id_panelresultadospersonas2">
+			<h:panelGrid columns="3" align="center">
+			</h:panelGrid>
+			<rich:datascroller for="datosPersona" maxPages="20"></rich:datascroller>
+
+			<rich:extendedDataTable id="datosPersona"
+				value="#{buscarExpedienteManaged.lstExpedientes}" var="expedientes"
+				width="100%" height="430px" rows="20" selectionMode="single"
+				noDataLabel="No Se Encontro Información para esta Busqueda"
+				rowKeyVar="row" enableContextMenu="false">				
+	
+				<rich:column style="text-align:center"
+					filterBy="#{expedientes.expediente}"  width="15%">
+					<f:facet name="header">Expediente</f:facet>
+					<h:outputText value="#{expedientes.expediente}">						
+					</h:outputText>									
+				</rich:column>
+				<rich:column style="text-align:center"
+					filterBy="#{expedientes.tipoValor}" width="10%">
+					<f:facet name="header">Tipo Acto</f:facet>
+					<h:outputText value="#{expedientes.tipoValor}">						
+					</h:outputText>									
+				</rich:column>
+				<rich:column style="text-align:center"
+					filterBy="#{expedientes.tipoRec}"  width="10%">
+					<f:facet name="header">Descripción</f:facet>
+					<h:outputText value="#{expedientes.tipoRec}">						
+					</h:outputText>									
+				</rich:column>
+				<rich:column style="text-align:center"
+					filterBy="#{expedientes.tipoRec}"  width="10%">
+					<f:facet name="header">Monto</f:facet>
+					<h:outputText value="#{expedientes.monto}">						
+					</h:outputText>									
+				</rich:column>
+				<rich:column style="text-align:center"
+					filterBy="#{expedientes.periodo}"  width="10%">
+					<f:facet name="header">Periodo</f:facet>
+					<h:outputText value="#{expedientes.periodo}">						
+					</h:outputText>									
+				</rich:column>																	
+				<rich:column style="text-align:center"
+					filterBy="#{expedientes.tipoRec}"  width="10%">
+					<f:facet name="header">Emisión</f:facet>
+					<h:outputText value="#{expedientes.fechaEmision}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />						
+					</h:outputText>									
+				</rich:column>
+				<rich:column style="text-align:center"
+					filterBy="#{expedientes.fechaNotificacion}"  width="10%">
+					<f:facet name="header">Notificación</f:facet>
+					<h:outputText value="#{expedientes.fechaNotificacion}">	
+						<f:convertDateTime pattern="dd/MM/yyyy" />					
+					</h:outputText>									
+				</rich:column>			
+				<rich:column style="text-align:center"
+					filterBy="#{expedientes.tipoRec}"  width="15%">
+					<f:facet name="header">Ubicación(Año-Archivador)</f:facet>
+					<h:outputText value="#{expedientes.anioPaquete}-#{expedientes.paquete}"></h:outputText>									
+				</rich:column>
+				<rich:column style="text-align:center"	width="8%">
+					<f:facet name="header">Digitalización</f:facet>
+					<h:outputLink value="#{expedientes.rutaCompleta.trim()}" target="_blank"					
+					>	
+					   <h:graphicImage value="/images/modal/pdf_1.png" rendered="#{expedientes.rutaCompleta!=null}" style="border:0" />				
+					</h:outputLink>
+														
+				</rich:column>														
+						
+				
+			</rich:extendedDataTable>
+		</rich:panel>
+	</h:form>
+
+</ui:composition>

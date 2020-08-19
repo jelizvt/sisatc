@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form>
+		<rich:panel>
+		<f:facet name="header">Carteras de Trabajo</f:facet>
+		<rich:dataTable value="#{carteraManaged.listCarteraDeudas}"
+			var="carteras">
+			<rich:column>
+				<f:facet name="header">Id</f:facet>
+				<h:outputText value="#{carteras.carteraDeudaId}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">Monto Minimo</f:facet>
+				<h:outputText value="#{carteras.montoMinimo}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">Monto Máximo</f:facet>
+				<h:outputText value="#{carteras.montoMaximo}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">Fecha Creación</f:facet>
+				<h:outputText value="#{carteras.fechaCreacion}" />
+			</rich:column>
+			<rich:column>
+				<f:facet name="header">Referencia</f:facet>
+				<h:outputText value="#{carteras.referencia}" />
+			</rich:column>
+				<rich:column>
+					<a4j:commandButton rendered="#{carteraManaged.permisoDescargarExcelTerminal}" id="idButtonExcel1"
+						action="#{carteraManaged.verExcelCarteraDeuda(carteras.carteraDeudaId)}"
+						value="XLS Trimestral"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.linkXLS1\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+
+					<a4j:commandButton rendered="#{carteraManaged.permisoDescargarExcelResumido}" id="idButtonExcel2"
+						action="#{carteraManaged.verExcelCarteraDeuda(carteras.carteraDeudaId)}"
+						value="XLS Resumido"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.linkXLS2\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+				</rich:column>
+			</rich:dataTable>
+		</rich:panel>
+		<h:commandLink id="linkIdXLS1" styleClass="linkXLS1" value="sasas" style="display: none;"
+						action="#{carteraManaged.generarReportesXLSTrimestral}" />					
+		<h:commandLink id="linkIdXLS2" styleClass="linkXLS2" value="sasas" style="display: none;"
+			action="#{carteraManaged.generarReportesXLSResume}" />
+	</h:form>
+</ui:composition>

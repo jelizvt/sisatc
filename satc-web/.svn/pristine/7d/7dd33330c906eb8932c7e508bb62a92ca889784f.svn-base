@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HojaLiquidacionIV_subreport1" language="groovy" pageWidth="555" pageHeight="52" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="determinacion_id" class="java.lang.Integer"/>
+	<parameter name="nro_cuotas" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select top ($P{nro_cuotas}) cd.nro_cuota, convert(varchar,cd.fecha_vencimiento, 103) fecha_vencimiento,
+ convert(varchar(50),convert(money,(convert(numeric(18,3),(round((cd.insoluto-cd.insoluto_cancelado),3,1)),1))),1) AS insoluto,
+ convert(varchar(50),convert(money,(convert(numeric(18,3),(round(((cd.reajuste-cd.reajuste_cancelado)+dbo.fnGN_reajusteDeuda(cd.deuda_id,CURRENT_TIMESTAMP)),3,1)),1))),1) AS reajuste,
+ convert(varchar(50),convert(money,(convert(numeric(18,3),(round((cd.derecho_emision-cd.derecho_emision_cancelado),3,1)),1))),1) AS derecho_emision ,
+ convert(varchar(50),convert(money,(convert(numeric(18,3),(round(((cd.interes_capitalizado-cd.interes_capi_cancelado)+dbo.fnGN_interesCapitalizado(cd.insoluto+cd.reajuste+dbo.fnGN_reajusteDeuda(cd.deuda_id,CURRENT_TIMESTAMP), cd.fecha_interes, cd.fecha_vencimiento)),3,1)),1))),1) AS interes_capitalizado,
+convert(varchar(50),convert(money,(convert(numeric(18,3),(round(((cd.interes_mensual-cd.interes_mensual_cancelado)+dbo.fnGN_interesSimple(cd.insoluto+cd.reajuste+dbo.fnGN_reajusteDeuda(cd.deuda_id,CURRENT_TIMESTAMP), cd.fecha_interes, cd.fecha_vencimiento, CURRENT_TIMESTAMP)),3,1)),1))),1) AS interes,
+convert(varchar(50),convert(money,(convert(numeric(18,3),(round(((cd.total_deuda-cd.total_cancelado)+(cd.reajuste-cd.reajuste_cancelado)+dbo.fnGN_reajusteDeuda(cd.deuda_id,CURRENT_TIMESTAMP)+
+(cd.interes_capitalizado-cd.interes_capi_cancelado)+dbo.fnGN_interesCapitalizado(cd.insoluto+cd.reajuste+dbo.fnGN_reajusteDeuda(cd.deuda_id,CURRENT_TIMESTAMP), cd.fecha_interes, cd.fecha_vencimiento)+
+(cd.interes_mensual-cd.interes_mensual_cancelado)+dbo.fnGN_interesSimple(cd.insoluto+cd.reajuste+dbo.fnGN_reajusteDeuda(cd.deuda_id,CURRENT_TIMESTAMP), cd.fecha_interes, cd.fecha_vencimiento, CURRENT_TIMESTAMP)),3,1)
+ ),1))),1)AS total
+  FROM dbo.cd_deuda cd WHERE cd.determinacion_id = $P{determinacion_id};]]>
+	</queryString>
+	<field name="nro_cuota" class="java.lang.Integer"/>
+	<field name="fecha_vencimiento" class="java.lang.String"/>
+	<field name="insoluto" class="java.lang.String"/>
+	<field name="reajuste" class="java.lang.String"/>
+	<field name="derecho_emision" class="java.lang.String"/>
+	<field name="interes_capitalizado" class="java.lang.String"/>
+	<field name="interes" class="java.lang.String"/>
+	<field name="total" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="102" y="0" width="54" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tributo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="33" y="0" width="61" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Vencimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="482" y="0" width="73" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="367" y="0" width="46" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interes en el Año]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="0" width="54" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reajuste]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="0" width="45" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Derecho Emisión]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="294" y="0" width="61" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interes Capitalizado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="27" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro Cuota]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="0" width="55" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Costas]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="33" y="0" width="61" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_vencimiento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="294" y="0" width="61" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{interes_capitalizado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="27" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_cuota}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="0" width="54" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{insoluto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="174" y="0" width="54" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reajuste}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="45" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{derecho_emision}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="367" y="0" width="46" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{interes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="482" y="0" width="73" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formBuscarLotesOrdinarios">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscarLote')}.click()"
+			selector="#formBuscarLotesOrdinarios" />
+
+		<rich:panel rendered="#{notificarLoteOrdinarioManaged.permisoBuscar}" id="p01">
+			<f:facet name="header">
+				<h:outputLabel value="#{msg['cc.actosadministrativo']}" />
+			</f:facet>
+			<table border="0" width="100%">
+				<tr>
+					<td align="left" width="150px"><h:outputText
+							value="Nro de Lote :" /></td>
+					<td><h:inputText maxlength="50" style="width:50%"
+							value="#{notificarLoteOrdinarioManaged.nroLote}" /></td>
+					<td align="left" width="150px"><h:outputText
+							value="Notificar Acto/Rec :" /></td>
+					<td><h:panelGroup>
+							<h:inputText id="inputnrovalor"
+								value="#{notificarLoteOrdinarioManaged.nroActoRec}"
+								styleClass="prueba" style="text-align:center" size="17"
+								maxlength="16" tabindex="5">
+							</h:inputText>
+							<rich:jQuery id="maskedo0010" selector=".prueba"
+								query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+						</h:panelGroup></td>
+					<td align="left" width="150px"><h:outputText
+							value="Cod Persona :" /></td>
+					<td><h:inputText maxlength="50" style="width:50%"
+							value="#{notificarLoteOrdinarioManaged.persona_id}" /></td>
+				</tr>
+			</table>
+		</rich:panel>
+		<h:panelGrid rendered="#{notificarLoteOrdinarioManaged.permisoBuscar}" columns="3" align="center">
+			<a4j:commandButton value="Buscar" style="width:100px;"
+				id="cmdBuscarLote" action="#{notificarLoteOrdinarioManaged.buscar}"
+				status="ajaxStatus" reRender="id_panelresultados" />
+
+			<a4j:commandButton value="Limpiar" style="width:100px;"
+				action="#{notificarLoteOrdinarioManaged.limpiar}"
+				status="ajaxStatus" reRender="p01,id_panelresultados" />
+
+			<h:commandLink id="exportarLstExc" 
+				
+				action="#{notificarLoteOrdinarioManaged.exportarExcel}">
+				<h:graphicImage value="/images/modal/excel.png"
+					style="border:0;width:25px;height:25px;" />
+				<rich:toolTip for="exportarLstExc">Descargar Lista en Excel.</rich:toolTip>
+			</h:commandLink>
+
+		</h:panelGrid>
+
+		<rich:panel id="id_panelresultados">
+
+			<!--	<h:panelGrid columns="3" align="center">
+				<a4j:commandLink ajaxSingle="true" id="newlink1"
+					action="#{registroLoteOrdinarioManaged.sendRedirectPrincipal}"
+					reRender="panelinclude">
+					<h:graphicImage value="/images/modal/new.gif" style="border:0" />
+
+					<f:setPropertyActionListener
+						value="/sisat/controlycobranza/notificarActoRecMasivo.xhtml"
+						target="#{sessionManaged.page}" />
+
+				</a4j:commandLink>
+
+				 <rich:toolTip id="x2" for="newlink1" value="Notificar Actos Masivos" /> 
+
+
+			</h:panelGrid>-->
+			<rich:datascroller for="datosactos" maxPages="20"></rich:datascroller>
+
+			<rich:extendedDataTable id="datosactos"
+				value="#{notificarLoteOrdinarioManaged.lstFindLote}" var="acto"
+				width="100%" height="320px" rows="20" selectionMode="single"
+				noDataLabel="No Se Encontro Información de lotes Ordinarios"
+				rowKeyVar="row" enableContextMenu="false">
+				<!-- 
+				<rich:column id="x1" width="3%">
+				  <f:facet name="header" width="4%" >Ver</f:facet>
+					<h:commandLink  ajaxSingle="true" id="newlink1"  action="#{notificarLoteOrdinarioManaged.verActo}"   status="ajaxStatus"
+					   > disabled="#{acto.contenId == 0}" 
+	                      <h:graphicImage value="/images/modal/lupa.gif" style="border:0" />
+	                        <f:setPropertyActionListener value="#{acto}" target="#{notificarLoteOrdinarioManaged.findCcActoItem}" id="r4280"/>
+			              </h:commandLink>
+	        
+	                <rich:toolTip for="newlink1" value="Ver Notificación" />
+		        </rich:column>
+ -->
+				<rich:column rendered="#{notificarLoteOrdinarioManaged.permisoNotificar}" id="x2" width="3%">
+
+					<f:facet  name="header" width="6%">Not.</f:facet>
+					<a4j:commandLink ajaxSingle="true" id="newlink3"
+						action="#{notificarLoteOrdinarioManaged.notificar}"
+						status="ajaxStatus" 
+						oncomplete="#{rich:component('panelNotificarActo')}.hide();#{rich:component('panelNotificarActo')}.show();"
+						reRender="panel">
+						<h:graphicImage value="/images/notifica-16.png" style="border:0" />
+						<f:setPropertyActionListener value="#{acto}"
+							target="#{notificarLoteOrdinarioManaged.findCcActoItem}"
+							id="r428" />
+					</a4j:commandLink>
+					<rich:toolTip for="newlink3" value="Notificar"
+						disabled="#{acto.notificado == 1}" />
+				</rich:column>
+
+				<rich:column id="x3" width="6%"
+					filterBy="#{acto.loteId}-#{acto.annoActo}">
+					<f:facet name="header" width="8%">Nro Lote</f:facet>
+					<h:outputText value="#{acto.loteId} - #{acto.annoActo}" />
+				</rich:column>
+				<rich:column id="x4" filterBy="#{acto.nroActo}" width="8%">
+					<f:facet name="header">Nro Acto</f:facet>
+
+					<a4j:commandLink ajaxSingle="true" id="newlink33"
+						action="#{notificarLoteOrdinarioManaged.notificar}"
+						status="ajaxStatus" 
+						value="#{acto.nroActo}"
+						oncomplete="#{rich:component('panelNotificarActo')}.hide();#{rich:component('panelNotificarActo')}.show();"
+						reRender="panel">
+						<f:setPropertyActionListener value="#{acto}"
+							target="#{notificarLoteOrdinarioManaged.findCcActoItem}"
+							id="r4288" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="x41" width="5%" filterBy="#{acto.personaId}">
+					<f:facet name="header">Cod. Per.</f:facet>
+					<h:outputText value="#{acto.personaId}" />
+				</rich:column>
+				<rich:column id="x5" width="6%">
+					<f:facet name="header">Fecha Notif.</f:facet>
+					<h:outputText value="#{acto.fechaNotificacion}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x51" width="6%">
+					<f:facet name="header">Fecha Emisión</f:facet>
+					<h:outputText value="#{acto.fechaEmision}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x6" width="6%">
+					<f:facet name="header">Deuda</f:facet>
+					<h:outputText value="#{acto.montoDeuda}">
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x8" width="12%" filterBy="#{acto.tipoActo}">
+					<f:facet name="header">Tipo Acto</f:facet>
+					<h:outputText value="#{acto.tipoActo}">
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x88" width="12%"
+					filterBy="#{acto.tipoNotificacion}">
+					<f:facet name="header">Tipo Notificacion</f:facet>
+					<h:outputText value="#{acto.tipoNotificacion}">
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x144" width="15%"
+					filterBy="#{acto.apellidosNombres}">
+					<f:facet name="header">Notificador</f:facet>
+					<h:outputText value="#{acto.apellidosNombres}">
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x145" width="7%">
+					<f:facet name="header">Fech.Reg.Notif.</f:facet>
+					<h:outputText value="#{acto.fechaCancelacion}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x121" width="5%">
+					<f:facet name="header">Registrador</f:facet>
+					<h:outputText value="#{acto.registrador}" />
+				</rich:column>
+				<rich:column id="x9" width="10%">
+					<f:facet name="header">Concepto</f:facet>
+					<h:outputText value="#{acto.concepto}">
+
+					</h:outputText>
+				</rich:column>
+
+			</rich:extendedDataTable>
+		</rich:panel>
+
+	</h:form>
+
+	<rich:modalPanel id="panelNotificarActo" minWidth="500" minHeight="300">
+
+		<f:facet name="header">
+			<h:outputText value="Notificar Acto" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelNotificarActo" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="panel">
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<table border="0" width="100%">
+						<tr>
+							<td><h:outputText id="succ0" value="Nro. de Acto" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ1"
+										value="#{notificarLoteOrdinarioManaged.findCcActoItem.nroActo}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ2" value="Cod. Persona" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ3"
+										value="#{notificarLoteOrdinarioManaged.findCcActoItem.personaId}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ4" value="Tipo de Acto" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ5"
+										value="#{notificarLoteOrdinarioManaged.findCcActoItem.tipoActo}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ6" value="Fecha Emisión" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ7"
+										value="#{notificarLoteOrdinarioManaged.findCcActoItem.fechaEmision}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</h:panelGrid></td>
+						</tr>
+
+						<tr>
+							<td><h:outputText id="succ8" value="Deuda" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ9"
+										value="#{notificarLoteOrdinarioManaged.findCcActoItem.montoDeuda}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ10" value="Concepto" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ11"
+										value="#{notificarLoteOrdinarioManaged.findCcActoItem.concepto}" />
+								</h:panelGrid></td>
+						</tr>
+						<!-- 	<tr>
+					 <td>
+						<h:outputText value="Nro. de Notificación" />
+					</td>
+					<td>
+						<h:panelGrid columns="2" >
+							<h:outputText 
+								value="#{notificarLoteOrdinarioManaged.findCcActoItem.nroCargoNotificacion}" />
+						</h:panelGrid>
+					</td>
+				</tr> 
+				  <tr>
+						<td align="left" width="130px" >
+							<h:outputText value="Doc. Ident." />
+							<span  style="color: red;">*</span>
+						</td>
+						<td align="left" width="200px" >
+							<h:inputText value="#{notificarLoteOrdinarioManaged.notificacion.nroDocumentoIden}" />
+						</td>
+				</tr>
+				 <tr>
+						<td align="left" width="130px" >
+							<h:outputText value="Nombres y Apellidos" />
+							<span  style="color: red;">*</span>
+						</td>
+						<td align="left" width="200px" >
+							<h:inputText   width="180" value="#{notificarLoteOrdinarioManaged.notificacion.nombreRelacionPersona}" />
+						</td>
+				</tr>
+				-->
+
+						<tr>
+							<td align="left" width="140px"><h:outputText
+									value="Condición de Administrado." /> <span
+								style="color: red;">*</span></td>
+							<td align="left" width="100px"><rich:comboBox width="127px"
+									defaultLabel="Seleccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									value="#{notificarLoteOrdinarioManaged.codicionAdministrado}"
+									requiredMessage="Seleccione la Condición del Administrado."
+									required="true" id="id_codicAdministrado"
+									binding="#{notificarLoteOrdinarioManaged.cmbCondicionAdministrado}"
+									valueChangeListener="#{notificarLoteOrdinarioManaged.loadFormaNotificacionById}">
+									
+									
+									<f:selectItem id="id_1" itemValue="Ubicables" itemLabel="1" />
+									<f:selectItem id="id_2" itemValue="Inubicables" itemLabel="2" />
+									<f:selectItem id="id_3" itemValue="No Hallados" itemLabel="3" />
+									<f:selectItem id="id_4" itemValue="Notificación Tácita" itemLabel="4" />
+									
+									
+									
+									
+									<a4j:support id="idEventAdm" event="onchange"
+										BypassUpdates="false" reRender="id_formaNotificacion"
+										ajaxSingle="true" />
+								</rich:comboBox></td>
+						</tr>
+						<tr>
+							<td align="left" width="140px"><h:outputText
+									value="Forma de Notificación:" /> <span style="color: red;">*</span></td>
+							<td><rich:comboBox width="250px" defaultLabel="Seleccione"
+									onblur="validaInputCbo(this)"
+									value="#{notificarLoteOrdinarioManaged.cmbValueNoMotivoNotificacion}"
+									requiredMessage="#{msg['cc.errormotivonotificacion']}"
+									required="true" id="id_formaNotificacion"
+									binding="#{notificarLoteOrdinarioManaged.cmbNoMotivoNotificacion}"
+									valueChangeListener="#{notificarLoteOrdinarioManaged.loadTMotivoNotificacionById}">
+									<f:selectItems id="id_lsttiporelacion"
+										value="#{notificarLoteOrdinarioManaged.lstNoMotivoNotificacion}" />
+								</rich:comboBox></td>
+						</tr>
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Notificador:" /> <span style="color: red;">*</span></td>
+							<td><h:panelGroup>
+									<rich:comboBox width="250px"
+										defaultLabel="Seleccione Notificador"
+										onblur="validaInputCbo(this)"
+										value="#{notificarLoteOrdinarioManaged.cmbNotificador}"
+										requiredMessage="Seleccione Un Notificador']}" required="true"
+										id="id_notificador"
+										binding="#{notificarLoteOrdinarioManaged.cmbHtmlNotificador}"
+										valueChangeListener="#{notificarLoteOrdinarioManaged.loadNotificador}">
+										<f:selectItems id="id_lstNotificador"
+											value="#{notificarLoteOrdinarioManaged.lstSelectItemsNotificador}" />
+									</rich:comboBox>
+
+								</h:panelGroup></td>
+
+						</tr>
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Fecha de Notificación" /> <span style="color: red;">*</span>
+							</td>
+							<td align="left" width="100px"><rich:calendar locale="en/US"
+									required="true"
+									requiredMessage="#{msg['cc.errorfechanotificacion']}"
+									datePattern="dd/MM/yyyy HH:mm" direction="top-right"
+									enableManualInput="true" inputClass="maskDate"
+									inputStyle="width:100px" id="id_fechadeclaracion"
+									value="#{notificarLoteOrdinarioManaged.fechaNotificacion}"
+									showApplyButton="true">
+								</rich:calendar> <rich:jQuery id="maskedo3" selector=".maskDate"
+									query="mask('99/99/9999 99:99')" timing="onload" /></td>
+						</tr>
+
+					</table>
+
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						action="#{notificarLoteOrdinarioManaged.notificarActo}"
+						reRender="datosactos,panel"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'panelconfirma\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						disabled="#{notificarLoteOrdinarioManaged.tipoAccion == null}">
+
+					</a4j:commandButton>
+					<a4j:commandButton value="Salir" style="width:100px;"
+						action="#{notificarLoteOrdinarioManaged.salir}"
+						status="ajaxStatus"
+						oncomplete="#{rich:component('panelNotificarActo')}.hide(); return false">
+					</a4j:commandButton>
+
+
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+</ui:composition>

@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:form id="formReportePartidas">
+	<style>
+.col1 {
+	vertical-align: top;
+	width: 480px;
+}
+
+.col2 {
+	vertical-align: top;
+	width: 260px;
+}
+
+.col3 {
+	vertical-align: top;
+	width: 260px;
+}
+.col1recaudacion{
+	width: 160px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+	height: 25px;
+}
+.col2recaudacion{
+	width: 88px;
+	text-align: right;
+	font-weight: bold;
+	font-size: 10pt;
+}
+</style>
+	<rich:panel id="idPanelReportePartidas">
+		<f:facet name="header">GENERAR REPORTE DE ESTADO DE PAPELETAS</f:facet>
+		<h:panelGrid columns="5">
+			<h:outputLabel value="Fecha de infracción - Inicio">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{reporteEstadoPapeletasManaged.fechaInicio}" datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Ingrese la fecha de infraccion inicio" enableManualInput="true" >
+			</rich:calendar>
+			<h:outputLabel value="Fecha de infracción - Fin">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{reporteEstadoPapeletasManaged.fechaFin}" datePattern="dd/MM/yyyy" inputSize="8" required="true" 
+				requiredMessage="Ingrese la fecha de infraccion fin" enableManualInput="true">
+			</rich:calendar>
+			
+			<a4j:commandButton id="id_buttonPartidaSOATXLS" action="#{reporteEstadoPapeletasManaged.previewPartidas}"
+				value="Generar Reporte de estado de papeletas en XLS"
+				oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+			</a4j:commandButton>
+			
+			<h:commandLink id="linkIdSOATXLS" styleClass="pruebaSOATXLS" value="sasas" style="display: none;" action="#{reporteEstadoPapeletasManaged.generarReportesPartidasXLS}" />
+		</h:panelGrid>
+	</rich:panel>
+</h:form>
+</html>

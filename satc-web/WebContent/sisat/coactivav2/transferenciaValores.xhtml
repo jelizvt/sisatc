@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form id="formBuscarTransferenciaValores">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscar')}.click()"
+			selector="#formBuscarTransferenciaValores" />
+		
+	    <rich:panel rendered="#{transferenciaValoresManaged.permisoBuscar}" id="pnlheader">
+	        <f:facet name="header">
+	        	Transferencias
+	        </f:facet>
+	        <h:panelGrid columns="2">
+	        	<h:outputText for="txtNroLotOrigen" value="Nro. Lote de Origen: " />
+	        	<h:inputText id="txtNroLotOrigen" value="#{transferenciaValoresManaged.nroLoteOrigen}"
+	        	onkeypress="return validaEnteroPositivo(event)" maxlength="5" />
+	        	
+	        	<h:outputText for="txtPeriodo" value="Período: " />
+	        	<h:inputText id="txtPeriodo" value="#{transferenciaValoresManaged.periodoDeuda}"
+	        	onkeypress="return validaEnteroPositivo(event)" maxlength="4" />
+	        	
+	        	<h:outputText for="idSelectOneEstado" value="Estado: " />
+	        	
+       			<h:selectOneMenu id="idSelectOneEstado"
+					value="#{transferenciaValoresManaged.estadoTransferencia}" style="width:150px;">
+					<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItems
+						value="#{transferenciaValoresManaged.listaEstado}"
+						var="item" itemLabel="#{item.descripcion}"
+						itemValue="#{item.estadoTransferenciaId}"></f:selectItems>
+				</h:selectOneMenu>
+		
+	        </h:panelGrid>
+	        <h:panelGrid>
+		        <a4j:commandButton id="cmdBuscar" value="Buscar" style="width:100px;"	
+				action="#{transferenciaValoresManaged.buscar}" status="ajaxStatus" reRender="rpanelresultadoscabecera" />
+	        </h:panelGrid>
+	        
+	    </rich:panel>
+	    <rich:panel  id="rpanelresultadoscabecera" style = "width:100%;" >
+	    		<h:panelGrid columns="2">
+					<h:commandLink id="btnExcel"
+						action="#{transferenciaValoresManaged.exportXls()}"
+						styleClass="button1" immediate="true">
+						<h:graphicImage value="/images/modal/excel.png"
+							style="border:0;width:23px;height:23px;" />
+					</h:commandLink>
+					<h:outputText value="#{transferenciaValoresManaged.records.size()} registros encontrados"/>
+				</h:panelGrid>
+		        <rich:extendedDataTable 
+					id="edt" value="#{transferenciaValoresManaged.records}" var="record" width="100%" height="190px"
+					sortMode="single" selectionMode="single" enableContextMenu="false" 
+					rowKeyVar="row" rows="8" >
+					
+					<rich:column rendered="#{transferenciaValoresManaged.permisoVerDetalle}" id="x0" style="text-align:center" width="3%" >
+						<f:facet name="header" width="10%">Ver</f:facet>
+						<a4j:commandLink ajaxSingle="true" id="cmdlnkDetTransferencia"
+							action="#{transferenciaValoresManaged.verDetalle}" reRender="rpanelresultadosdetalle">
+							<h:graphicImage value="/images/ver2.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{record}"
+								target="#{transferenciaValoresManaged.selInformeTransferido}" id="pal1" />
+						</a4j:commandLink>
+					</rich:column>
+					<rich:column id="x1" style="text-align:center" width="3%" >
+		                <f:facet name="header" >Item</f:facet>
+		                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x32" style="text-align:center" width="7%">
+		                <f:facet name="header"  >Tipo Valor</f:facet>
+		                <h:outputText value="#{record.tipoValor}"/>
+		            </rich:column>
+		            <rich:column id="x33" style="text-align:center" width="7%">
+		                <f:facet name="header"  >Concepto</f:facet>
+		                <h:outputText value="#{record.concepto}"/>
+		            </rich:column>
+		            <rich:column id="x31" style="text-align:center" width="7%">
+		                <f:facet name="header"  >Periodo</f:facet>
+		                <h:outputText value="#{record.periodoDeuda}"/>
+		            </rich:column>
+		            <rich:column id="x3" style="text-align:center" width="7%">
+		                <f:facet name="header"  >Fecha de envío</f:facet>
+		                <h:outputText value="#{record.fechaEmision}"/>
+		            </rich:column>
+		            <rich:column id="x4" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Usuario</f:facet>
+		                <h:outputText value="#{record.usuarioEmision}"/>
+		            </rich:column>
+		            <rich:column id="x6" style="text-align:center" width="8%">
+		                <f:facet name="header"  >Nro Lote origen</f:facet>
+		                <h:outputText value="#{record.nroLoteOrigen}"/>
+		            </rich:column>
+		            <rich:column id="x7" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Cant. valor</f:facet>
+		                <h:outputText value="#{record.cantidadValores}"/>
+		            </rich:column>
+		            <rich:column id="x8" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Cant. recibida</f:facet>
+		                <h:outputText value="#{record.cantidadRecibido}"/>
+		            </rich:column>
+		            <rich:column id="x9" style="text-align:center" width="7%">
+		                <f:facet name="header"  >Cant. devuelta</f:facet>
+		                <h:outputText value="#{record.cantidadDevuelto}"/>
+		            </rich:column>
+		            <rich:column id="x10" style="text-align:center" width="8%">
+		                <f:facet name="header"  >Total exigible</f:facet>
+		                <h:outputText value="#{record.totalExigible}"/>
+		            </rich:column>
+		            <rich:column id="x11" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Estado</f:facet>
+		                <h:outputText value="#{record.estadoTransferencia}"/>
+		            </rich:column>
+		            <rich:column rendered="#{transferenciaValoresManaged.permisoRecepciona}" id="x12" style="text-align:center" width="6%">
+           				<f:facet name="header"  >Recepciona</f:facet>
+						<a4j:commandLink ajaxSingle="true" id="cmdlnkGestValores"
+							action="#{transferenciaValoresManaged.gestionValores}" >
+							<f:setPropertyActionListener
+								value="/sisat/coactivav2/recepcionValores.xhtml"
+								target="#{sessionManaged.page}" />
+							<h:graphicImage value="/images/editar2.png" style="border:0;" />
+							<f:setPropertyActionListener value="#{record}"
+								target="#{transferenciaValoresManaged.selInformeTransferido}" id="palGestion" />
+						</a4j:commandLink>
+					</rich:column>
+	   			</rich:extendedDataTable>
+	   			<rich:datascroller for="edt" maxPages="5" fastStep="3"/>
+	        </rich:panel>
+	        <rich:panel  id="rpanelresultadosdetalle" style = "width:100%;" >
+	        	<h:panelGrid columns="2">
+					<h:commandLink id="btnExceld"
+						action="#{transferenciaValoresManaged.exportDetalleXls()}"
+						styleClass="button1" immediate="true">
+						<h:graphicImage value="/images/modal/excel.png"
+							style="border:0;width:23px;height:23px;" />
+					</h:commandLink>
+					<h:outputText value="#{transferenciaValoresManaged.recordsDetalle.size()} registros encontrados"/>
+				</h:panelGrid>
+		        <rich:extendedDataTable 
+					id="edt1" value="#{transferenciaValoresManaged.recordsDetalle}" var="record" width="100%" height="190px"
+					sortMode="single" selectionMode="single" enableContextMenu="false" 
+					rowKeyVar="row"	rows="8" >
+					
+					<rich:column id="x11" style="text-align:center" width="3%" >
+		                <f:facet name="header" >Item</f:facet>
+		                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		            </rich:column>
+		            <rich:column id="x22" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Tipo Valor</f:facet>
+		                <h:outputText value="#{record.tipoValor}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x221" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Concepto</f:facet>
+		                <h:outputText value="#{record.concepto}"/>
+		            </rich:column>
+		            <rich:column id="x222" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Periodo</f:facet>
+		                <h:outputText value="#{record.periodo}"/>
+		            </rich:column>
+		            
+		            <rich:column id="x23" style="text-align:center" width="8%" filterBy="#{record.nroValor}" >
+		                <f:facet name="header"  >Nro Valor</f:facet>
+		                <h:outputText value="#{record.nroValor}"/>
+		            </rich:column>
+		            <rich:column id="x24" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Código</f:facet>
+		                <h:outputText value="#{record.personaId}"/>
+		            </rich:column>
+		            <rich:column id="x25" style="text-align:center" width="20%">
+		                <f:facet name="header"  >Contribuyente</f:facet>
+		                <h:outputText value="#{record.apellidosNombresPersona}"/>
+		            </rich:column>
+		            <rich:column id="x26" style="text-align:center" width="20%">
+		                <f:facet name="header"  >Dirección fiscal</f:facet>
+		                <h:outputText value="#{record.direccionFiscal}"/>
+		            </rich:column>
+		            <rich:column id="x27" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Deuda</f:facet>
+		                <h:outputText value="#{record.montoDeuda}"/>
+		            </rich:column>
+		            <rich:column id="x30" style="text-align:center" width="5%">
+		                <f:facet name="header"  >Estado Deuda</f:facet>
+		                <h:outputText value="#{record.estadoDeuda}"/>
+		            </rich:column>
+		            <rich:column id="x28" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Exigibilidad</f:facet>
+		                <h:outputText value="#{record.exigibilidad}"/>
+		            </rich:column>
+		            <rich:column id="x29" style="text-align:center" width="6%">
+		                <f:facet name="header"  >Estado</f:facet>
+		                <h:outputText value="#{record.estadoRecepcion}"/>
+		            </rich:column>
+	   			</rich:extendedDataTable>
+	   			<rich:datascroller for="edt1" maxPages="5" fastStep="3"/>
+	   			
+		</rich:panel>
+		
+	</h:form>
+</ui:composition>	

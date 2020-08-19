@@ -1,0 +1,262 @@
+package com.sat.sisat.persona.business;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.ejb.Local;
+
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.persistence.entity.GnCondicionEspecial;
+import com.sat.sisat.persistence.entity.GnDenominacionUrbana;
+import com.sat.sisat.persistence.entity.GnDepartamento;
+import com.sat.sisat.persistence.entity.GnDistrito;
+import com.sat.sisat.persistence.entity.GnPersona;
+import com.sat.sisat.persistence.entity.GnProvincia;
+import com.sat.sisat.persistence.entity.GnTipoDenoUrbana;
+import com.sat.sisat.persistence.entity.GnTipoEdificacion;
+import com.sat.sisat.persistence.entity.GnTipoIngreso;
+import com.sat.sisat.persistence.entity.GnTipoInterior;
+import com.sat.sisat.persistence.entity.GnTipoVia;
+import com.sat.sisat.persistence.entity.GnVia;
+import com.sat.sisat.persistence.entity.MpDireccion;
+import com.sat.sisat.persistence.entity.MpPersona;
+import com.sat.sisat.persistence.entity.MpPersonaDomicilio;
+import com.sat.sisat.persistence.entity.MpRelacionado;
+import com.sat.sisat.persistence.entity.MpSituacionEmpresarial;
+import com.sat.sisat.persistence.entity.MpSubtipoPersona;
+import com.sat.sisat.persistence.entity.MpTipoCondicionEspecial;
+import com.sat.sisat.persistence.entity.MpTipoDocuIdentidad;
+import com.sat.sisat.persistence.entity.MpTipoDocumentoCondicionEspecial;
+import com.sat.sisat.persistence.entity.MpTipoPersona;
+import com.sat.sisat.persistence.entity.MpTipoPersonaTipoDocIden;
+import com.sat.sisat.persistence.entity.MpTipoRelacion;
+import com.sat.sisat.persistence.entity.TgPersona;
+import com.sat.sisat.persona.dto.ParamBusquedaPersonaDTO;
+import com.sat.sisat.persona.dto.PersonaEditTelEmailDTO;
+import com.sat.sisat.persona.dto.PersonaEstadoCuentaResumido;
+import com.sat.sisat.persona.dto.ValidaUbicacionDTO;
+import com.sat.sisat.predial.dto.FindDireccion;
+import com.sat.sisat.predial.dto.FindMpDireccion;
+import com.sat.sisat.predial.dto.FindMpPersona;
+import com.sat.sisat.predial.dto.FindMpRelacionado;
+import com.sat.sisat.predial.dto.FindPersona;
+import com.sat.sisat.vehicular.dto.BuscarPersonaDTO;
+
+@Local
+public interface PersonaBoLocal {
+
+	public List<BuscarPersonaDTO> findPersona(Integer persId,String apePat, String apeMat,String nombres) throws Exception;
+	public abstract List<MpTipoDocuIdentidad> getAllMpTipoDocumento()
+			throws Exception;
+
+	public abstract GnDenominacionUrbana getGnDenominacionUrbana(Integer DenoId)
+			throws Exception;
+
+	//GnTipoEdificacion
+	public abstract List<GnTipoEdificacion> getAllGnTipoEdificacion()
+			throws Exception;
+
+	//GnTipoIngreso
+	public abstract List<GnTipoIngreso> getAllGnTipoIngreso() throws Exception;
+
+	//GnTipoInterior
+	public abstract List<GnTipoInterior> getAllGnTipoInterior()
+			throws Exception;
+
+	public abstract List<GnTipoDenoUrbana> getAllGnTipoDenoUrbana()
+			throws Exception;
+
+	public abstract GnVia getGnVia(Integer ViaId) throws Exception;
+
+	public abstract List<MpPersona> listarPersonasxDni(String numeroDocumento)
+			throws Exception;
+
+	public abstract List<GnTipoVia> getAllGnTipoVia() throws Exception;
+	
+	public abstract List<MpTipoCondicionEspecial> getAllMpTipoCondicionEspecial(Integer tipoPersonaId,Integer subTipoPersonaId)throws Exception;
+
+	public abstract ArrayList<FindPersona> getFindPersona() throws Exception;
+
+	public abstract ArrayList<FindPersona> getFindEmpresas() throws Exception;
+
+	public abstract Integer getPersonaId(Integer tipDoc, String numeroDoc)
+			throws Exception;
+
+	public abstract GnCondicionEspecial findCondicionEspecial(MpPersona mpersona)
+			throws Exception;
+
+	public abstract FindDireccion verificaDireccion(Integer djId,
+			Integer idVia, String numero1, String letra1, String numero2,
+			String letra2) throws Exception;
+
+	//--	
+	public abstract int guardarMpRelacionado(MpRelacionado mpRelacionado)
+			throws Exception;
+
+	public abstract int guardarPersona(MpPersona persona) throws Exception;
+
+	public abstract int actualizarGuardarPersona(MpPersona mpPersona) throws Exception;
+
+	public abstract int GenerarDjMpPersona(MpPersona mpPersona)
+			throws Exception;
+
+	public abstract ArrayList<FindMpPersona> getmpPersona(Integer personaId,
+			String apePaterno, String apeMaterno, String primerNombre,
+			String apellidos_nombres, String documentoidentidad, Integer nroDj,Integer tipoDocumentoIdentidad,String razonSocial,String codigoAnterior, String placa)
+			throws Exception;
+
+	public abstract FindMpPersona findmpPersona(Integer personaId)
+			throws Exception;
+
+	public abstract FindMpPersona findmpPersona(String nroDocumento)
+			throws Exception;
+
+	public abstract ArrayList<MpTipoPersona> findMpTipoPersona(
+			Integer tipoPersonaId) throws Exception;
+
+	public abstract ArrayList<MpRelacionado> findMpRelacionado(
+			Integer Persona_id) throws Exception;
+
+	public abstract ArrayList<FindMpRelacionado> findMpRelacionadoPersona(
+			Integer Persona_id) throws Exception;
+
+	public abstract List<MpTipoPersona> getAllMpTipoPersona() throws Exception;
+
+	public abstract List<MpTipoRelacion> getAllMpTipoRelacion()
+			throws Exception;
+
+	public abstract List<MpTipoRelacion> findMpTipoRelacion(
+			Integer tipoRelacionId) throws Exception;
+
+	public abstract ArrayList<MpTipoDocuIdentidad> findMpTipoDocuIdentidad(
+			Integer tipoPersonaId) throws Exception;
+
+	public abstract ArrayList<MpTipoDocuIdentidad> findMpTipoDocuIdentidad(
+			Integer tipoPersonaId, Integer subtipoPersonaId) throws Exception;
+
+	public abstract List<MpTipoDocuIdentidad> getAllMpTipoDocumentoIdentidad()
+			throws Exception;
+
+	public abstract  List<MpTipoDocumentoCondicionEspecial> getAllMpTipoDocumentoCondicionEspecial()throws Exception;
+
+	     
+	public abstract  List<MpTipoDocumentoCondicionEspecial> findMpTipoDocumentoCondicionEspecial(Integer tipoDocumentoCondicionEspecial_id)throws Exception;
+		
+
+	public abstract List<MpSituacionEmpresarial> getAllMpSituacionEmpresarial(
+			Integer tipoPersonaId) throws Exception;
+
+	public abstract List<MpSituacionEmpresarial> findMpSituacionEmpresarial(
+			Integer situacion_empresarial_id) throws Exception;
+
+	public abstract List<MpTipoCondicionEspecial> findMpTipoCondicionEspecial(
+			Integer tipo_cond_especial_id) throws Exception;
+
+	public abstract List<MpSubtipoPersona> finMpSubtipoPersona(
+			Integer tipoPersonaId) throws Exception;
+
+	public abstract List<MpSubtipoPersona> finMpSubtipoPersona(
+			String tipoPersona) throws Exception;
+
+	public abstract String ConcatenarMpDireccion(MpDireccion direccion,
+			HashMap<Integer, String> mapIGnTipoEdificacion,
+			HashMap<Integer, String> mapIGnTipoInterior,
+			HashMap<Integer, String> mapIGnTipoIngreso,
+			HashMap<Integer, String> mapIGnTipoVia,
+			HashMap<Integer, String> mapIGnTipoDenUrbana,Integer nroCuadra,
+			String sector);
+
+	public abstract int guardarMpdireccion(MpDireccion direccion)
+			throws Exception;
+
+	public abstract int guardarMpPersonadireccion(
+			MpPersonaDomicilio mpPersonaDomicilio) throws Exception;
+
+	public abstract ArrayList<FindMpDireccion> finMpDireccionPersona(
+			int persona_id) throws Exception;
+
+	public abstract int guardarGnCondicionEspecial(
+			GnCondicionEspecial gnCondicionEspecial) throws Exception;
+
+	public abstract List<GnDepartamento> getAllGnDepartamento()
+			throws Exception;
+
+	public abstract List<GnProvincia> getAllGnProvincia(Integer departamentoId)
+			throws Exception;
+
+	public abstract List<GnDistrito> getAllGnDistrito(Integer departamentoId,
+			Integer provinciaId) throws Exception;
+	
+	public abstract int ActualizarCondicionEspecial(GnCondicionEspecial condicionEspecial)throws Exception;
+	
+	public abstract int darBajaCondicionEspecial(GnCondicionEspecial condicionEspecial)throws Exception;
+	
+	public abstract int ActualizarMpPersona(MpPersona mpPersona)throws Exception;
+	
+	public abstract int ActualizarMpRelacionado(MpRelacionado mpRelacionado)throws Exception;
+	
+	public abstract FindMpRelacionado findMpRelacionadoPersona(Integer Persona_id,Integer relacionado_id)throws Exception;
+	
+	public abstract MpDireccion finMpDireccion(Object mp_direccion_id)throws Exception;
+	
+	public abstract void editMpDireccion(MpDireccion mp_direccion)throws Exception;
+	
+	public abstract MpPersonaDomicilio finMpPersonaDomicilio(Object mp_persona_domicilio_id)throws Exception;
+	
+	public abstract void editMpPersonaDomicilio(MpPersonaDomicilio mpPersonaDomicilio)throws Exception;
+
+	public abstract MpTipoCondicionEspecial finMpTipoCondicionEspecial(Object pk)throws Exception;
+	
+	public abstract int verificarTipoDocumentoTipoPersona(MpTipoPersonaTipoDocIden tipoperTipoDoc)throws Exception;
+	
+	public abstract int grabarTablaMpPersonaHistorico(MpPersona persona)throws Exception;
+	
+	public abstract int actualizarEstadoMpDireccion(String estadoCambiar,String estadoCondicion,Integer persona_id,Integer direccion_id) throws Exception;
+
+	public abstract int actualizarEstadoMpDireccion(Integer direccion_id,String estado)throws Exception;
+
+	public abstract int actualizarEstadoMpPersonaDomicilio(Integer personaDomicilio_id,String estado)throws Exception;
+
+	public abstract int actualizarEstadoMpPersonaDomicilio(String estadoCambiar,String estadoCondicion,Integer persona_id,Integer domicilio_persona_id)throws Exception;
+
+	public abstract int actualizarEstadoMpRelacionado(String estadoCambiar,String estadoCondicion,Integer persona_id,Integer relacionado_id)throws Exception;
+	
+	public abstract int actualizarEstadoMpRelacionado(String estado,Integer persona_id,Integer relacionado_id)throws Exception;
+	
+	public abstract int grabarTablaGnCondicionEspecialHistorico(GnCondicionEspecial gnCondicionEspecial)throws Exception;
+	
+	public abstract int verificarRelacionadoTipoPersonaJuridica(Integer persona_id)throws Exception;
+	
+	public abstract FindMpPersona findmpPersona(Integer tipodocumentoid,String nroDocumento)throws Exception;
+     
+	public ArrayList<FindMpDireccion> finMpDireccionPersona(int persona_id,String estado)throws Exception;
+	
+	public abstract int grabarTablaMpRelacionadoHistorico(MpRelacionado mpRelacionado)throws Exception;
+
+	public List<TgPersona> buscarDNIPorDatosIdentificacion(String ape_pat, String ape_mat, String primer_nombre, String segundo_nombre) throws Exception;
+	
+	public FindMpPersona existeContribuyente2(Integer tipodocumentoid,String nroDocumento) throws Exception;
+	
+	public GnPersona getGnPersona(Integer personaId)throws Exception;
+	
+	public BuscarPersonaDTO findPaPersona(Integer infractorId) throws Exception;
+	
+	public List<BuscarPersonaDTO> findTraDocPersona(Integer personaId,
+			String apePaterno, String apeMaterno, String primerNombre,
+			String apellidos_nombres, String documentoidentidad, Integer nroDj,
+			Integer tipoDocumentoIdentidad, String razonSocial,
+			String codigoAnterior, String placa) throws SisatException;
+	
+	public List<BuscarPersonaDTO> busquedaPersona(ParamBusquedaPersonaDTO paramBusquedaPersonaDTO) throws SisatException;
+	
+	
+	//--=CRAMIREZ=-
+	public abstract PersonaEditTelEmailDTO finPersonaEditTelEmail(Integer persona_id)throws Exception;
+	public abstract int editarCorreoTelefono(PersonaEditTelEmailDTO persona,Integer usuarioId,String terminal )throws Exception;
+	public List<PersonaEstadoCuentaResumido> getEstadoCuentaResumido(Integer personaId);
+	
+	public abstract int changeFlagUbicableControl(Integer personaId, Integer flagUbicable)throws Exception;
+	public List<ValidaUbicacionDTO> getValidaPersonaUbicacion(Integer personaId)throws Exception;
+	public abstract int changeFlagUbicableVerifica(Integer personaId,Integer estado,String glosa ,Integer flagUbicable)throws Exception;
+}

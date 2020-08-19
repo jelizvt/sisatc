@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:form id="formReporteBeneficioTributario">
+	<rich:panel id="idPanelReporteVehicular">
+		<f:facet name="header">REPORTE BENEFICIO TRIBUTARIO</f:facet>
+		<h:panelGrid columns="6">
+			<h:outputLabel value="Fecha de inicio del registro:">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{reporteBeneficioTributario.fechaInicio}"
+				datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Fecha de inicio de la declaración:"
+				enableManualInput="true">
+			</rich:calendar>
+			<h:outputLabel value="Fecha fin del registro:">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{reporteBeneficioTributario.fechaFin}"
+				datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Fecha fin de la declaración:"
+				enableManualInput="true">
+			</rich:calendar>
+
+			<h:commandLink id="id_buttonConsolidadoXLS"
+				action="#{reporteBeneficioTributario.imprimirXlsReporte}">
+				<h:graphicImage value="/images/modal/excel.png" style="border:0"
+					width="20" height="20" />
+			</h:commandLink>
+
+		</h:panelGrid>
+	</rich:panel>
+
+</h:form>
+</html>

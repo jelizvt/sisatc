@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+		<h:form id="formDetalleActo">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		
+	  <rich:panel id="a01">
+			<f:facet name="header">
+      INFORMACION DE ACTO ADMINISTRATIVO
+      </f:facet>
+      
+      <table border="0"  width="100%">
+      <tr>
+      <td>
+      <h:outputText value="Nro Acto" />
+      </td>
+      <td>
+      <h:inputText size="25" value="#{detalleActoManaged.nroActo}" readonly="true" />
+      </td>
+      
+      <td>
+      <h:outputText value="Tipo Acto" />
+      </td>
+      <td>
+      <h:inputText size="35" value="#{detalleActoManaged.tipoActo}" readonly="true"/>
+      </td>
+      
+      <td>
+      <h:outputText value="Fecha Emisión" />
+      </td>
+      <td>
+      
+      <h:inputText value="#{detalleActoManaged.fechaEmision}" readonly="true"/>
+      </td>
+
+
+      
+      </tr>
+      
+      <tr>
+      <td>
+      <h:outputText value="Situacion Expediente" />
+      </td>
+      <td>
+      <h:inputText size="25" value="#{detalleActoManaged.situaExpediente}" readonly="true"/>
+      </td>
+      <td>
+      <h:outputText value="Nro de Resolución" />
+      </td>
+      <td>
+      <h:inputText size="35" value="#{detalleActoManaged.nroResolucion}" readonly="true"/>
+      </td>      
+      <!-- <td>
+      <h:outputText value="Fecha de Resolución" />
+      </td> 
+      <td colspan="3">
+      <h:inputText size="35" value="#{detalleActoManaged.fechaResolucion}" />
+      </td>
+      -->
+      
+      <td>
+      <h:outputText value="Fecha Notificación" />
+      </td>
+      <td>
+      <h:inputText value="#{detalleActoManaged.fechaNotificacion}" readonly="true"/>
+      </td>
+      </tr>
+      
+      </table>
+      
+	  </rich:panel>
+	  <br/>
+	  <rich:panel>
+	  			<f:facet name="header">
+      DATOS SUSTENTO CANCELACION
+      </f:facet>
+      
+
+      
+      <table border="0" width="100%">
+      <tr>
+      <td>
+      <table border="0" width="100%">
+      <tr>
+      <td>
+      <h:outputText value="Fecha Anulación" />
+      </td>
+      <td>
+      <h:inputText value="" readonly="true"/>
+      </td>
+
+      </tr>
+      <tr>
+      <td>
+      <h:outputText value="Motivo Anulación" />
+      </td>
+      <td>
+      <h:inputText value="" readonly="true"/>
+      </td>
+      </tr>
+      </table>
+      
+      </td>
+      
+      <td width="720px">
+      
+      <table>
+      <tr>
+      <td>
+      <h:outputText value="Observación" />
+      </td>
+      <td>
+      <h:inputTextarea style="width:450px" value="" readonly="true"/>
+      </td>
+      </tr>
+      </table>
+    
+      </td>
+      
+    
+      
+
+      </tr>
+
+      </table>
+	  </rich:panel>
+	  <br/>
+	  <rich:panel>
+	  			<f:facet name="header">
+      DETALLE ACTO
+      </f:facet>
+            <rich:dataTable id="id_datosActo" value="#{detalleActoManaged.listaDatosActo}" var="record" width="100%" sortMode="single" selectionMode="single" enableContextMenu="false" rowKeyVar="row">
+      
+      <!-- <rich:column id="x1" width="10%" style="text-align:center">
+      <f:facet name="header">Tributo</f:facet>
+	  <h:outputText value="" />
+      </rich:column>-->
+      
+      <rich:column id="x1" width="8%" style="text-align:center">
+      <f:facet name="header">Periodo</f:facet>
+	  <h:outputText value="#{record.anioDeuda} - #{record.nroCuota}" />
+      </rich:column>
+      
+      <rich:column id="x2" width="8%" style="text-align:center">
+      <f:facet name="header">Concepto</f:facet>
+	  <h:outputText value="#{record.concepto}" />
+      </rich:column>
+      
+      <rich:column id="x3" width="8%" style="text-align:center">
+      <f:facet name="header">Fecha Vencimiento</f:facet>
+	  <h:outputText value="#{record.fechaVenc}" >
+	  <f:convertDateTime pattern="dd/MM/yyyy" />
+	  </h:outputText>
+      </rich:column>
+      
+      <rich:column id="x4" width="8%" style="text-align:center">
+      <f:facet name="header">Fecha Emisión</f:facet>
+	  <h:outputText value="#{record.fechaEmi}" >
+	  <f:convertDateTime pattern="dd/MM/yyyy" />
+	  </h:outputText>
+      </rich:column>
+      
+      <rich:column id="x5" width="8%" style="text-align:center">
+      <f:facet name="header">Base Imponible</f:facet>
+	  <h:outputText value="#{record.baseImpo}" />
+      </rich:column>
+      
+      <rich:column id="x6" width="8%" style="text-align:center">
+      <f:facet name="header">Monto Insoluto</f:facet>
+	  <h:outputText value="#{record.insoluto}" />
+      </rich:column>
+      
+      <rich:column id="x7" width="8%" style="text-align:center">
+      <f:facet name="header">Derecho Emisión</f:facet>
+	  <h:outputText value="#{record.derechoEmi}" />
+      </rich:column>
+
+      <rich:column id="x8" width="8%" style="text-align:center">
+      <f:facet name="header">Reajuste</f:facet>
+	  <h:outputText value="#{record.reajuste}" />
+      </rich:column>
+      
+      <!--<rich:column id="x9" width="10%" style="text-align:center">
+      <f:facet name="header">Interes Cap.</f:facet>
+	  <h:outputText value="#{record.interCapit}" />
+      </rich:column>  
+      -->
+      <rich:column id="x10" width="9%" style="text-align:center">
+      <f:facet name="header">Interes</f:facet>
+	  <h:outputText value="#{record.interes}" />
+      </rich:column>  
+      
+      <rich:column id="x11" width="9%" style="text-align:center">
+      <f:facet name="header">Total(S/.)</f:facet>
+	  <h:outputText value="#{record.total}" />
+      </rich:column>  
+      
+      <rich:column id="x12" width="9%" style="text-align:center">
+      <f:facet name="header">Pagos(S/.)</f:facet>
+	  <h:outputText value="#{record.pagos}" />
+      </rich:column>  
+      
+      <rich:column id="x13" width="9%" style="text-align:center">
+      <f:facet name="header">Saldo(S/.)</f:facet>
+	  <h:outputText value="#{record.saldo}" />
+      </rich:column>  
+      
+
+      
+      
+      <rich:column id="x14" width="4%" style="text-align:center">
+		<a4j:commandLink ajaxSingle="true" id="newlink3" action="#{detalleActoManaged.verPagosActo}"  oncomplete="#{rich:component('id_panelPagos')}.show()"  reRender="id_panelPagos">
+		<h:graphicImage value="/images/modal/preview.png" style="border:0" />
+		<f:setPropertyActionListener value="#{record}" target="#{detalleActoManaged.currentItem}" id="r427"/>
+		</a4j:commandLink>
+	 <rich:toolTip value="Ver Pagos" />
+	 </rich:column>
+			        
+      </rich:dataTable>
+	  </rich:panel>
+
+
+
+		</h:form>
+
+	<rich:modalPanel id="id_panelPagos" autosized="true"
+		width="1000" height="150">
+		<f:facet name="header">Pagos Realizados</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddPredio" styleClass="hidelink" />
+				<rich:componentControl for="id_panelPagos"
+					attachTo="hideIconAddPredio" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<form id="id_form">
+		<table border="0" width="100%">
+
+		<tr>
+		<td>
+		<rich:panel id="pagos_panel">
+		<rich:dataTable id="id_Pagos" value="#{detalleActoManaged.listaPagos}" var="recordPagos" width="100%" sortMode="single" selectionMode="single" enableContextMenu="false" rowKeyVar="row">
+		<rich:column id="xp1" width="9%" style="text-align:center">
+      <f:facet name="header">Nro Recibo</f:facet>
+	  <h:outputText value="#{recordPagos.nroRecibo}" />
+      </rich:column> 
+            <rich:column id="xp2" width="9%" style="text-align:center">
+      <f:facet name="header">Concepto</f:facet>
+	  <h:outputText value="#{recordPagos.concepto}" />
+      </rich:column> 
+            <rich:column id="xp3" width="9%" style="text-align:center">
+      <f:facet name="header">Año</f:facet>
+	  <h:outputText value="#{recordPagos.anio}" />
+      </rich:column> 
+            <rich:column id="xp4" width="9%" style="text-align:center">
+      <f:facet name="header">Nro Cuota</f:facet>
+	  <h:outputText value="#{recordPagos.nroCuota}" />
+      </rich:column> 
+			<rich:column id="xp5" width="9%" style="text-align:center">
+      <f:facet name="header">Monto Cancelado</f:facet>
+	  <h:outputText value="#{recordPagos.montoPago}" />
+      </rich:column> 
+
+		</rich:dataTable>
+		</rich:panel>
+		</td>
+		</tr>
+		<tr>
+		<td align="center">
+			
+				<h:graphicImage value="/images/salir.png"
+					id="id_salir" styleClass="hidelink" />
+				<rich:componentControl for="id_panelPagos"
+					attachTo="id_salir" operation="hide" event="onclick" />
+			
+		</td>
+		</tr>
+		</table>
+		</form>
+
+	</rich:modalPanel>
+</ui:composition>
+
+

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formRegistroPrograma">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+
+		<table align="center" border="0" cellpadding="1" cellspacing="1"
+			width="100%">
+			<tr>
+				<td width="50%"><a4j:region immediate="true">
+						<rich:panel style="width:100%; height:185;" id="paneldatosprograma">
+							<f:facet name="header">
+								<h:outputText style="font-weight:bold"
+									value="DATOS DEL PROGRAMA" />
+							</f:facet>
+							<table width="100%" border="0">
+							<tr>
+									<td align="left" width="100px"><h:outputLabel
+											value="Nombre del Programa :">
+											<span style="color: red;">*</span>
+										</h:outputLabel></td>
+									<td align="left" width="120px">
+											<h:inputText
+											value="#{registrarProgramaManaged.descripcionPrograma}"
+											required="true"
+											requiredMessage="Indique el nombre del programa"
+											style="width: 250px;" rows="1" id="id_descripcionprograma" />
+									</td>
+
+							</tr>
+							
+								<tr>
+									<td align="left" width="100px"><h:outputLabel
+											value="Periodo a fiscalizar:">
+											<span style="color: red;">*</span>
+										</h:outputLabel></td>
+										</tr>
+									<tr>
+										<td></td>
+										
+										
+									<td align="left"  width="120px">
+										<h:selectManyListbox id="id_anioprograma" required="true"
+											requiredMessage="Seleccione un periodo"
+											value="#{registrarProgramaManaged.lstAnios}" size="8">
+											<f:selectItems var="var" 
+											    itemValue="#{var.anioFiscalizacion}"
+												itemLabel="#{var.anioFiscalizacion}"
+												value="#{registrarProgramaManaged.lstAniosInspc}" />
+										</h:selectManyListbox>
+									</td>
+									
+								</tr>
+							
+
+							</table>
+
+						</rich:panel>
+					</a4j:region></td>
+
+			</tr>
+
+			<tr>
+				<td width="50%" align="center"><a4j:outputPanel id="pnlbotones">
+
+						<rich:panel
+							style="width:100%; height: 50px; background-color: transparent;border:0">
+							<table width="10%" border="0" cellpadding="0" cellspacing="2"
+								align="center">
+								<tr id="fila">
+
+									<td>
+									<a4j:commandButton value="Guardar"
+											style="width:100px;"
+											action="#{registrarProgramaManaged.guardar}"
+											oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirmageneracion\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+											id="id_guardarcommand"
+											reRender="datosProgramas"
+											status="ajaxStatus" />
+
+									</td>
+									<td>										
+										 <a4j:commandButton value="Salir"
+											style="width:100px;" action="#{registrarProgramaManaged.salir}"
+											immediate="true" reRender="panelinclude">
+											<f:setPropertyActionListener
+												value="/sisat/fiscalizacion/buscarprograma.xhtml"
+												target="#{sessionManaged.page}" />
+										</a4j:commandButton></td>
+								</tr>
+							</table>
+						</rich:panel>
+					</a4j:outputPanel></td>
+			</tr>
+
+		</table>
+		<rich:panel id="panellistaprogramas">
+		<rich:datascroller for="datosProgramas"></rich:datascroller>
+		<rich:extendedDataTable id="datosProgramas"
+			value="#{registrarProgramaManaged.resultados}" var="record" width="100%"
+			height="200px" sortMode="single" selectionMode="single" rows="5"
+			enableContextMenu="false" rowKeyVar="row">
+			<f:facet name="header">
+				<h:outputLabel value="LISTADO DE PROGRAMAS" />
+			</f:facet>
+			<rich:column id="dd" style="text-align:center" width="30px">
+				<f:facet name="header">Item</f:facet>
+				<div align="center">
+					<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+				</div>
+			</rich:column>
+			<rich:column id="c1" style="text-align:center" width="300px">
+				<f:facet name="header">Programa</f:facet>
+				<div align="left">
+					<h:outputText value="#{record.nombrePrograma}" />
+				</div>
+			</rich:column>
+			<rich:column id="c2" style="text-align:center" width="350px">
+				<f:facet name="header">Periodo</f:facet>
+				<div align="left">
+					<h:outputText value="#{record.termninal}" />
+				</div>
+			</rich:column>
+			<rich:column id="c3" style="text-align:center" width="200px">
+				<f:facet name="header">Registra</f:facet>
+				<div align="left">
+					<h:outputText value="#{record.descripcionCortaPrograma}" />
+				</div>
+			</rich:column>
+		</rich:extendedDataTable>
+</rich:panel>
+
+
+	</h:form>
+
+		<rich:modalPanel id="panelconfirmageneracion" autosized="true"
+		width="300">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hlpconfiggenera" styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmageneracion"
+					attachTo="hlpconfiggenera" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2">
+						<h:outputText id="otextgenerar"
+							style="font-weight:bold;color:green"
+							value="El registro se realizó satisfactoriamente" />
+					</h:panelGrid>
+				</a4j:outputPanel>
+					<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						id="id_commandAceptarAct"
+						reRender="panelconfirmageneracion,datosProgramas">
+					</a4j:commandButton>
+				</h:panelGrid>
+
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+</ui:composition>

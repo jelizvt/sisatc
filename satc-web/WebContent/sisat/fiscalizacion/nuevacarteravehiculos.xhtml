@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	
+	>
+
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+	<h:form prependId="false">
+		<rich:panel id="pnlDatosVehic" style="min-width: 1000px;">
+			<f:facet name="header">
+			Crear cartera vehículos  
+			</f:facet>
+			
+			<h:panelGrid columns="1" cellspacing="0" cellpadding="0" style="w" id="panelUpload">
+	             <rich:fileUpload 
+	             		fileUploadListener="#{nuevaCarteraVehicularManaged.importaDataExcel}" 
+	             		id="upload" 
+	             		acceptedTypes="xlsx"
+		            	ontyperejected="alert('Solo se permiten archivos Excel (.xlsx)');" 
+		            	maxFilesQuantity="5"
+		            	reRender="panelResultadoBusquedaCartera" 
+		            	>
+		             <a4j:support
+			             event="uploadcomplete"
+			             bypassUpdates="false"
+						 ajaxSingle="true" 
+			             execute="@none" 
+			             reRender="panelResultadoBusquedaCartera" />
+		        </rich:fileUpload>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="3" cellspacing="0" cellpadding="0" style="margin-top:15px" id="panelAction">
+				<a4j:commandButton value="Vista preliminar"
+					action="#{nuevaCarteraVehicularManaged.preliminar}"
+					reRender="panelResultadoBusquedaCartera, panelAction" 
+					style="width:100px;     margin-left: 15px;"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+				</a4j:commandButton>				
+				
+				<a4j:commandButton value="Generar Cartera"
+					disabled="#{nuevaCarteraVehicularManaged.lstTemporal.size() == 0}"
+					action="#{nuevaCarteraVehicularManaged.cargar}"
+					reRender="panelResultadoBusquedaCartera, panelAction"
+					style="width:100px;     margin-left: 15px;"					
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmaCartera\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+				</a4j:commandButton>
+				
+				<a4j:commandButton value="Cancelar"
+					disabled="#{nuevaCarteraVehicularManaged.lstTemporal.size() == 0}"
+					action="#{nuevaCarteraVehicularManaged.limpiar}"
+					reRender="panelResultadoBusquedaCartera, panelAction" style="width:100px;     margin-left: 15px;"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+				</a4j:commandButton>
+			</h:panelGrid>
+			
+			
+			
+		</rich:panel>
+		
+		<div style="width: 100%; height: 4px;"></div>
+		
+		<div style="width: 100%; height: 4px;">
+		
+		
+		
+		</div>
+		
+		
+		<div style="min-width: 1000px;">
+		
+			
+			
+			
+			<!-- INICIO TABLA -->
+				<a4j:outputPanel id="panelResultadoBusquedaCartera">
+					<h:commandLink id="exportarExc"
+					action="#{nuevaCarteraVehicularManaged.exportarTablaExcel}">
+					<h:graphicImage value="/images/modal/excel.png"
+						style="border:0;width:20px;height:20px;" />
+					<rich:toolTip for="exportarRsNP">Exportar formato de Excel.</rich:toolTip>
+				</h:commandLink>
+				
+					<rich:simpleTogglePanel id="togglePanelResultados"
+						switchType="client"
+						label="Resultados #{nuevaCarteraVehicularManaged.lstTemporal.size()} registros"
+						height="auto" styleClass="uniqueClassName" opened="true">
+						
+						
+						<div style="margin-bottom: 0px;"> 
+							<!--  <h:outputText value="Descargar Requerimientos: "	rendered="#{not empty nuevaCarteraVehicularManaged.lstTemporal}"/> -->
+	
+							<!-- <h:commandLink rendered="#{not empty nuevaCarteraVehicularManaged.lstTemporal}"
+								id="id_descargarRm"
+								action="#{carteraVehicularManaged.generacionReqCarteraVehicular}"
+								immediate="true">
+								<h:graphicImage id="btnServ" value="/images/modal/pdf.png"
+									style="border:0 ; height:22px; width:22px;"
+									title="Lista de Requerimientos Vehicular " /> 
+							</h:commandLink> -->
+						</div>	
+						
+						<rich:dataTable id="dataTableExpedientes"
+							value="#{nuevaCarteraVehicularManaged.lstTemporal}"
+							var="item" rowKeyVar="rowIndex" rows="20"
+							rendered="#{not empty nuevaCarteraVehicularManaged.lstTemporal}">
+							<h:column>
+								<div align="center">
+									<h:outputText value="#{rowIndex + 1}" />
+								</div>
+							</h:column>
+							
+												
+							
+							
+							<h:column>
+								<f:facet name="header">Propietario</f:facet>
+								<div style="width: 330px;" align="left">
+									<h:outputText value="#{item.propietario}" />
+								</div>
+							</h:column>
+							
+							<h:column>
+								<f:facet name="header">Dirección</f:facet>
+								<div style="width: 400px;" align="left">
+									<h:outputText value="#{item.direccion}" />
+								</div>
+							</h:column>
+							
+							<!--  <h:column>
+								<f:facet name="header">Nro Requerimiento</f:facet>
+								<div style="width: 120px;" align="left">
+									<h:outputText value="#{item.nroRequerimiento}" />
+								</div>
+							</h:column> -->
+							
+							 <h:column>
+								<f:facet name="header">Placa</f:facet>
+								<div style="width: 50px;" align="center">
+									<h:outputText value="#{item.placa}" />
+								</div>
+							</h:column>	
+							
+							<h:column>
+								<f:facet name="header">Fecha Inscripción</f:facet>
+								<div style="width: 80px;" align="center">
+									<h:outputText value="#{item.fecha_insc_vehiculo}" />
+								</div>
+							</h:column>	
+							
+							<h:column>
+								<f:facet name="header">Fecha Adquisición </f:facet>
+								<div style="width: 80px;" align="center">
+									<h:outputText value="#{item.fecha_adqui_xprop}" />
+								</div>
+							</h:column>	
+							
+							<h:column>
+								<f:facet name="header">Distrito  </f:facet>
+								<div style="width: 80px;" align="center">
+									<h:outputText value="#{item.distrito_propietario}" />
+								</div>
+							</h:column>	
+							
+							
+							<h:column>
+								<f:facet name="header">Distrito_id  </f:facet>
+								<div style="width: 100px;" align="center">
+									<h:outputText value="#{item.distrito_id}" />
+								</div>
+							</h:column>	
+													
+						</rich:dataTable>
+						<rich:datascroller id="tableDataScroller" align="center"
+							for="dataTableExpedientes" renderIfSinglePage="false"
+							status="ajaxStatus" pageIndexVar="pageIndex" pagesVar="pages">
+							<f:facet name="pages">
+								<h:outputText value="#{pageIndex} / #{pages}" />
+							</f:facet>
+						</rich:datascroller>
+						
+					</rich:simpleTogglePanel>				
+				</a4j:outputPanel>
+			<!-- FIN TABLA -->
+			
+		</div>
+		
+		<a4j:commandButton value="#{msg['gn.regresar']}" style="width: 100px;" reRender="panelinclude" action="#{sessionManaged.sendRedirectPrincipal}">
+			<f:setPropertyActionListener
+				value="/sisat/fiscalizacion/buscarcarteravehicularmasiva.xhtml"
+				target="#{sessionManaged.page}" />
+		</a4j:commandButton>
+	</h:form>
+
+	<rich:modalPanel id="panelconfirmaCartera" autosized="true" width="300"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="confi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaCartera" attachTo="confi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2">
+						<h:outputText id="succgdj" style="font-weight:bold;color:blue"
+							value="Se Genero satisfactoriamente la Cartera N° #{nuevaCarteraVehicularManaged.lote_id}" />
+					</h:panelGrid>
+				</a4j:outputPanel>
+				<h:panelGrid columns="1">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						action="#{registroPersonaManaged.sendRedirectPrincipal}"
+						immediate="true" reRender="panelinclude">
+						<f:setPropertyActionListener
+							value="/sisat/fiscalizacion/buscarcarteravehicularmasiva.xhtml"
+							target="#{sessionManaged.page}" />
+					</a4j:commandButton>
+
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+</ui:composition>

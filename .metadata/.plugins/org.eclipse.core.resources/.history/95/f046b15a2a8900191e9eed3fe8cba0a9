@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">	
+	<a4j:loadStyle src="/css/tabla.css"></a4j:loadStyle>
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<a4j:loadScript src="/js/chart/Chart.js" />
+	<a4j:loadScript src="/js/ejemplo.js" />
+
+	<h:form id="id_formBuscarCarteraVehicular">
+		<rich:panel id="id_panelresultados">
+			<f:facet name="header">
+				<h:outputLabel value="#{msg['rv.carteravehicular']} " />
+			</f:facet>
+				
+				<h:panelGrid columns="1" cellspacing="0" cellpadding="0" style="margin-top:10px">
+				<a4j:commandLink ajaxSingle="true" id="newlink1"
+					action="#{carteraVehicularManaged.nuevo}" reRender="panelinclude">
+					<h:graphicImage value="/images/contribuyente.png" style="border:0" />
+					<f:setPropertyActionListener for="newlink1"
+						value="/sisat/fiscalizacion/nuevacarteravehiculos.xhtml"
+						target="#{sessionManaged.page}" />
+				</a4j:commandLink>
+			</h:panelGrid>
+			
+			<rich:datascroller for="datoslotesrv" maxPages="10"></rich:datascroller>
+			<rich:extendedDataTable rows="10" id="datoslotesrv"
+				value="#{busquedaLoteCarteraVehicularMasivaManaged.lstFindLoteVehicular}"
+				var="loterv" width="100%" height="310px" selectionMode="single"
+				noDataLabel="No se Encontró Información" rowKeyVar="row"
+				enableContextMenu="false">
+
+				<rich:column rendered="#{busquedaLoteCarteraVehicularMasivaManaged.permisoModificarActualizarCR}" style="text-align:center" id="x2" width="3%">
+					<f:facet name="header">Editar </f:facet>
+
+					<a4j:commandLink ajaxSingle="true" id="newlink3"
+						action="#{busquedaLoteCarteraVehicularMasivaManaged.listarFiscalizacion}"
+						status="ajaxStatus" reRender="panelinclude">
+						<h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+
+						<f:setPropertyActionListener value="#{loterv.loteId}"
+							target="#{sessionManaged.loteIdVehicular}"
+							id="r4253" />
+
+						<f:setPropertyActionListener
+							value="/sisat/fiscalizacion/carteravehiculos.xhtml"
+							target="#{sessionManaged.page}" />
+
+					</a4j:commandLink>
+					<rich:toolTip for="newlink3" value="Actualizacion" />
+				</rich:column>
+
+				<rich:column style="text-align:center" id="x1" width="5%">
+					<f:facet name="header">Descargar </f:facet>
+					<h:commandLink id="newlinkImprimir"
+						action="#{busquedaLoteCarteraVehicularMasivaManaged.generacionReqCarteraVehicular}"
+						immediate="true">
+						<h:graphicImage id="imgImp" value="/images/imprimi2.png"
+							style="border:0" />
+						<f:setPropertyActionListener
+							target="#{busquedaLoteCarteraVehicularMasivaManaged.nroLoteasociado}"
+							value="#{loterv.loteId}" />
+						<rich:toolTip for="newlinkImprimir" direction="top-left"> Descargar Documento</rich:toolTip>
+					</h:commandLink>
+				</rich:column>
+
+				<rich:column style="text-align:center" filterBy="#{loterv.loteId}"
+					id="x3" width="10%">
+					<f:facet name="header" width="10%">Nro Lote</f:facet>
+					<h:outputText value="#{loterv.loteId} - #{loterv.annoLote}" />
+				</rich:column>
+				<rich:column style="text-align:center"
+					filterBy="#{loterv.descripcionLote}" id="rvDescripcion" width="30%">
+					<f:facet name="header">Descripción</f:facet>
+					<h:outputText id="concepto1" value="#{loterv.descripcionLote}" />
+					<rich:toolTip for="concepto1" value="#{loterv.descripcionLote}" />
+				</rich:column>
+				<rich:column style="text-align:center"
+					filterBy="#{loterv.nombreEjecutor}" id="rvUsuario" width="15%">
+					<f:facet name="header">Registra</f:facet>
+					<h:outputText id="concepto2" value="#{loterv.nombreEjecutor}" />
+					<rich:toolTip for="concepto2" value="#{loterv.nombreEjecutor}" />
+				</rich:column>
+				<rich:column style="text-align:center" id="rvFecha" width="8%">
+					<f:facet name="header">Fec. Reg.</f:facet>
+					<h:outputText value="#{loterv.fechaRegistro}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<!-- Link de Estadísticas -->
+				<rich:column style="text-align:center" id="x21" width="4%">
+					<f:facet name="header">Est.</f:facet>
+					<rich:toolTip for="newlinkab" value="Estadística"></rich:toolTip>
+					<a4j:commandLink ajaxSingle="true" id="newlinkab"
+						reRender="modalEstadistica"
+						action="#{busquedaLoteCarteraVehicularMasivaManaged.estadistica}"
+						oncomplete="#{rich:component('modalEstadistica')}.hide();#{rich:component('modalEstadistica')}.show();">
+						<h:graphicImage value="/images/bar_chart.png" style="border:0" />
+						<f:setPropertyActionListener value="#{loterv}"
+							target="#{busquedaLoteCarteraVehicularMasivaManaged.findCcLoteItem}"
+							id="r4253" />
+
+					</a4j:commandLink>
+				</rich:column>
+				<!-- Fin link Estadísticas -->
+
+			</rich:extendedDataTable>
+		</rich:panel>
+	</h:form>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<rich:modalPanel id="modalEstadistica" width="620" autosized="true"
+		top="250" styleClass="sisatModalPanel">
+		<f:facet name="header">Estadística de la cartera</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalEstadistica" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:panel id="p0100">	
+			<div class="TablaResultados">			
+				<table width="600" border="1">
+					<tr class="tituloTabla">
+						<td colspan="5">
+							<center>					
+							<h2>Cartera de Omisos del Impuesto Vehicular<br></br> Lote: 				
+								<h:outputText
+									value="#{busquedaLoteCarteraVehicularMasivaManaged.findCcLoteItem.loteId}" />
+							</h2>
+							</center>
+						</td>
+					</tr>
+					<tr class="tituloTabla">
+						<th style="width : 200px">
+							<h3>Estado</h3>
+						</th>
+						<th style="width : 100px">
+							<h3>SI</h3>
+						</th>
+						<th style="width : 100px">
+							<h3>NO</h3>
+						</th>
+						<th style="width : 100px">
+							<h3>Cantidad</h3>
+						</th>
+						<th style="width : 100px">
+							<h3>Porcentaje % (SI)</h3>
+						</th>																	
+					</tr>
+					<tr class="color1 contenidoLetra">
+						<td >
+							Requerimientos
+						</td>
+						<td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(2)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0) - busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(2)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0) }" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{( ( ( busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(2) )* 100 ) / busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0))}" >
+								<f:convertNumber pattern="#0.00" />
+								</h:outputText>					   
+					   
+					   </td>
+					</tr>
+					<tr class="color1 contenidoLetra">
+						<td >
+							Notificados
+						</td>
+						<td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(2)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0) - busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(2)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0) }" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{( ( ( busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(2) )* 100 ) / busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0))}" >
+								<f:convertNumber pattern="#0.00" />
+								</h:outputText>					   
+					   
+					   </td>
+					</tr>
+					<tr class="contenidoLetra">
+						<td>
+							Servicios
+						</td>
+						<td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(1)}" />						
+					   </td>
+					    <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{(busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(1)/busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(4))*100}" >
+								<f:convertNumber pattern="#0.00" />
+								</h:outputText>					   
+					   
+					   </td>					   
+					</tr>
+					<tr class="color1 contenidoLetra " >
+						<td>
+							RD
+						</td>
+						<td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(2)}" />						
+					   </td>
+					    <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{(busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(2)/busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(4))*100}" >
+								<f:convertNumber pattern="#0.00" />
+							</h:outputText>					   
+					   
+					   </td>					   
+					</tr>
+					<tr class="contenidoLetra">
+						<td>
+							RM
+						</td>
+						<td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(3)}" />						
+					   </td>
+					    <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0)}" />						
+					   </td>
+					   					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{(busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(3)/busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(4))*100}" 
+									
+							>
+							<f:convertNumber pattern="#0.00" />
+							</h:outputText>					   
+					   
+					   </td>
+					</tr>
+					<tr class=" color1 contenidoLetra">
+						<td>
+							Pagaron
+						</td>
+						<td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(3)}" />						
+					   </td>
+					    <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0)}" />						
+					   </td>
+					   					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{(busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(3)/busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(4))*100}" 
+									
+							>
+							<f:convertNumber pattern="#0.00" />
+							</h:outputText>					   
+					   
+					   </td>
+					</tr>
+					<tr class="contenidoLetra">
+						<td>
+							No Corresponde 
+						</td>
+						<td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(3)}" />						
+					   </td>
+					    <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0)}" />						
+					   </td>
+					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(0)}" />						
+					   </td>
+					   					   <td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{(busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(3)/busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(4))*100}" 
+									
+							>
+							<f:convertNumber pattern="#0.00" />
+							</h:outputText>					   
+					   
+					   </td>
+					</tr>
+					<tr class="total contenidoLetra">
+						<td>
+							TOTAL
+						</td>
+						<td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(4)}" />
+						</td>
+						<td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(4)}" />
+						</td>
+						<td>
+							<h:outputText
+								rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas !=null}"
+								value="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.get(4)}" />
+						</td>
+											   <td>
+							<h:outputText
+								value="100 %" />					   
+					   
+					   </td>
+					</tr>															
+				</table>	
+				</div>			
+
+
+				<!-- 					rendered="#{busquedaLoteCarteraVehicularMasivaManaged.listEstadisticas.size()>0}" -->
+			</rich:panel>
+
+		</h:form>
+	</rich:modalPanel>
+
+
+</ui:composition>

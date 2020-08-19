@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<h:form id="id_formBuscarRequerimientoVehicular">
+		<rich:panel id="p01">
+			<f:facet name="header">		
+				BÚSQUEDA DE REQUERIMIENTOS
+			</f:facet>
+		</rich:panel>
+		<rich:panel id="id_panelresultados">
+			<h:panelGrid align="center">
+				<rich:extendedDataTable id="datosRequerimientos" rowKeyVar="row"
+					height="309px" width="1295px" rows="10"
+					value="#{busquedaRequerimientoVehicularManaged.inspeccion}"
+					var="record" sortMode="single"
+					noDataLabel="No se encontró registros" selectionMode="single"
+					enableContextMenu="false">
+					<rich:column id="x1" width="2%">
+						<f:facet name="header"></f:facet>
+						<div align="center">
+
+							<h:commandLink id="newlinkImprimir"
+								action="#{busquedaRequerimientoVehicularManaged.imprimirReqxTipo}"
+								immediate="true">
+								<h:graphicImage id="imgImp" value="/images/imprimi2.png"
+									style="border:0" />
+								<f:setPropertyActionListener value="#{record}" id="al1"
+									target="#{busquedaRequerimientoVehicularManaged.currentItem}" />
+								<rich:toolTip for="newlinkImprimir" direction="top-left"> Descargar Documento</rich:toolTip>
+							</h:commandLink>
+
+						</div>
+					</rich:column>
+					<rich:column   id="x2" width="2%" style="text-align:center;">
+						<rich:toolTip for="newlinka"
+							value="Edición de Características del Vehículo por año."></rich:toolTip>
+						<a4j:commandLink ajaxSingle="true" id="newlinka"
+							
+							action="#{busquedaRequerimientoVehicularManaged.mostrar}"
+							oncomplete="#{rich:component('modalDetalleRequerimiento')}.hide();#{rich:component('modalDetalleRequerimiento')}.show();"
+							reRender="modalDetalleRequerimiento,panel">
+							<h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+							<f:setPropertyActionListener value="#{record}"
+								target="#{busquedaRequerimientoVehicularManaged.detalleInspeccion}" />
+						</a4j:commandLink>
+					</rich:column>
+
+					<rich:column id="xItem" style="text-align:center" width="3%">
+						<f:facet name="header">ITEM</f:facet>
+						<div align="center">
+							<h:outputText value="#{component.parent.parent.rowIndex+1}" />
+						</div>
+					</rich:column>
+
+					<rich:column id="xTd" style="text-align:center" width="8%"
+						filterBy="#{record.tipoDocumentoNombre}">
+						<f:facet name="header">Documento</f:facet>
+						<div align="center">
+							<h:outputText value="#{record.tipoDocumentoNombre}" />
+						</div>
+					</rich:column>
+					<!-- 				<rich:column id="xNd" style="text-align:center" width="10%" -->
+					<!-- 					filterBy="#{record.nroRequerimiento}"> -->
+					<!-- 					<f:facet name="header">Nro. Documento</f:facet> -->
+					<!-- 					<div align="center"> -->
+					<!-- 						<h:outputText value="#{record.nroRequerimiento}" /> -->
+					<!-- 					</div> -->
+					<!-- 				</rich:column> -->
+
+					<rich:column id="xNd" style="text-align:center" width="10%"
+						filterBy="#{record.nroRequerimiento}">
+						<f:facet name="header">Nro. Documento</f:facet>
+						<div align="center">
+							<a4j:commandLink ajaxSingle="true" id="newlink334"
+								status="ajaxStatus" value="#{record.nroRequerimiento}"
+								oncomplete="#{rich:component('panelNotificarActo')}.hide();#{rich:component('panelNotificarActo')}.show();"
+								reRender="panel">
+								<f:setPropertyActionListener value="#{record}"
+									target="#{busquedaRequerimientoVehicularManaged.detalleInspeccion}"
+									id="r4253" />
+
+							</a4j:commandLink>
+						</div>
+					</rich:column>
+
+					<rich:column id="xFg" style="text-align:center" width="6%">
+						<f:facet name="header">F.Generación</f:facet>
+						<div align="center">
+							<h:outputText value="#{record.fechaRegistro}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</div>
+					</rich:column>
+					<rich:column id="xFn" width="6%" style="text-align:center">
+						<f:facet name="header">F.Notificación</f:facet>
+						<div align="center">
+							<h:outputText value="#{record.fechaNotificacion}">
+								<f:convertDateTime pattern="dd/MM/yyyy" />
+							</h:outputText>
+						</div>
+					</rich:column>
+					<rich:column id="xCod" width="4%" style="text-align:center"
+						filterBy="#{record.personaId}">
+						<f:facet name="header">Código</f:facet>
+						<div align="center">
+							<h:outputText value="#{record.personaId}" />
+						</div>
+					</rich:column>
+					<rich:column id="xRs" width="25%" style="text-align:center"
+						filterBy="#{record.apellidosNombres}">
+						<f:facet name="header">Contribuyente</f:facet>
+						<div align="left">
+							<h:outputText value="#{record.apellidosNombres}" />
+						</div>
+					</rich:column>
+					<rich:column id="xPlaca" width="5%" style="text-align:center"
+						filterBy="#{record.placa}">
+						<f:facet name="header">Placa</f:facet>
+						<div align="left">
+							<h:outputText value="#{record.placa}" />
+						</div>
+					</rich:column>
+					<rich:column id="xDist" width="10%" style="text-align:center"
+						filterBy="#{record.distritoNombre}">
+						<f:facet name="header">Distrito</f:facet>
+						<div align="left">
+							<h:outputText value="#{record.distritoNombre}" />
+						</div>
+					</rich:column>
+					<rich:column id="xAnios" width="7%" style="text-align:center"
+						filterBy="#{record.anioInspeccion}">
+						<f:facet name="header">Años</f:facet>
+						<div align="left">
+							<h:outputText value="#{record.anioInspeccion}" />
+						</div>
+					</rich:column>
+					<rich:column id="xEstado" width="10%" style="text-align:center"
+						filterBy="#{record.estadoDescripcion}">
+						<f:facet name="header">Estado</f:facet>
+						<div align="left">
+							<h:outputText value="#{record.estadoDescripcion}" />
+						</div>
+					</rich:column>
+					<rich:column id="xNusuario" width="3.8%" style="text-align:center">
+						<f:facet name="header">Registra</f:facet>
+						<div align="center">
+							<h:outputText value="#{record.nombreUsuario}" />
+						</div>
+					</rich:column>
+				</rich:extendedDataTable>
+				<rich:datascroller for="datosRequerimientos" maxPages="5" />
+
+			</h:panelGrid>
+		</rich:panel>
+	</h:form>
+
+	<rich:modalPanel id="panelNotificarActo" minWidth="450" minHeight="320">
+
+		<f:facet name="header">
+			<h:outputText value="Notificar Requerimiento" />
+		</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelNotificarActo" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="panel">
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<table border="0" width="100%">
+						<tr>
+							<td><h:outputText id="succ4" value="Tipo de Acto" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ5"
+										value="#{busquedaRequerimientoVehicularManaged.detalleInspeccion.tipoDocumentoNombre}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ0" value="Nro. de Requerimiento" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ1"
+										value="#{busquedaRequerimientoVehicularManaged.detalleInspeccion.nroRequerimiento}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ2" value="Cod. Persona" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ3"
+										value="#{busquedaRequerimientoVehicularManaged.detalleInspeccion.personaId}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ155"
+									value="Nombres o Razón Social" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ1555"
+										value="#{busquedaRequerimientoVehicularManaged.detalleInspeccion.apellidosNombres}" />
+								</h:panelGrid></td>
+						</tr>
+
+						<tr>
+							<td><h:outputText id="succ6" value="Fecha Emisión" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ7"
+										value="#{busquedaRequerimientoVehicularManaged.detalleInspeccion.fechaEmision}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</h:panelGrid></td>
+						</tr>
+
+						<tr>
+							<td><h:outputText id="succ8" value="Placa" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ9"
+										value="#{busquedaRequerimientoVehicularManaged.detalleInspeccion.placa}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ10" value="Placa Antigua" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ11"
+										value="#{busquedaRequerimientoVehicularManaged.detalleInspeccion.placa_anterior}" />
+								</h:panelGrid></td>
+						</tr>
+
+						<tr>
+							<td align="left" width="140px"><h:outputText
+									value="Condición de Administrado." /> <span
+								style="color: red;">*</span></td>
+							<td align="left" width="100px"><rich:comboBox width="127px"
+									defaultLabel="Seleccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									value="#{busquedaRequerimientoVehicularManaged.codicionAdministrado}"
+									requiredMessage="Seleccione la Condición del Administrado."
+									required="true" id="id_codicAdministrado"
+									binding="#{busquedaRequerimientoVehicularManaged.cmbCondicionAdministrado}"
+									valueChangeListener="#{busquedaRequerimientoVehicularManaged.loadFormaNotificacionById}">
+									<f:selectItem id="id_1" itemValue="Ubicables" itemLabel="1" />
+									<f:selectItem id="id_2" itemValue="Inubicables" itemLabel="2" />
+									<f:selectItem id="id_3" itemValue="No Hallados" itemLabel="3" />
+									<a4j:support id="idEventAdm" event="onchange"
+										BypassUpdates="false" reRender="id_formaNotificacion"
+										ajaxSingle="true" />
+								</rich:comboBox></td>
+						</tr>
+						<tr>
+							<td align="left" width="140px"><h:outputText
+									value="Forma de Notificación:" /> <span style="color: red;">*</span></td>
+							<td><rich:comboBox width="250px" defaultLabel="Seleccione"
+									onblur="validaInputCbo(this)"
+									value="#{busquedaRequerimientoVehicularManaged.cmbValueNoMotivoNotificacion}"
+									requiredMessage="#{msg['cc.errormotivonotificacion']}"
+									required="true" id="id_formaNotificacion"
+									binding="#{busquedaRequerimientoVehicularManaged.cmbNoMotivoNotificacion}"
+									valueChangeListener="#{busquedaRequerimientoVehicularManaged.loadTMotivoNotificacionById}">
+									<f:selectItems id="id_lsttiporelacion"
+										value="#{busquedaRequerimientoVehicularManaged.lstNoMotivoNotificacion}" />
+								</rich:comboBox></td>
+						</tr>
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Notificador:" /> <span style="color: red;">*</span></td>
+							<td><h:panelGroup>
+									<rich:comboBox width="250px"
+										defaultLabel="Seleccione Notificador"
+										onblur="validaInputCbo(this)"
+										value="#{busquedaRequerimientoVehicularManaged.cmbNotificador}"
+										requiredMessage="Seleccione Un Notificador']}" required="true"
+										id="id_notificador"
+										binding="#{busquedaRequerimientoVehicularManaged.cmbHtmlNotificador}"
+										valueChangeListener="#{busquedaRequerimientoVehicularManaged.loadNotificador}">
+										<f:selectItems id="id_lstNotificador"
+											value="#{busquedaRequerimientoVehicularManaged.lstSelectItemsNotificador}" />
+									</rich:comboBox>
+
+								</h:panelGroup></td>
+
+						</tr>
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Fecha de Notificación" /> <span style="color: red;">*</span>
+							</td>
+							<td align="left" width="100px"><rich:calendar locale="en/US"
+									required="true"
+									requiredMessage="#{msg['cc.errorfechanotificacion']}"
+									datePattern="dd/MM/yyyy HH:mm" direction="top-right"
+									enableManualInput="true" inputClass="maskDate"
+									inputStyle="width:100px" id="id_fechadeclaracion"
+									value="#{busquedaRequerimientoVehicularManaged.fechaNotificacion}"
+									showApplyButton="true">
+								</rich:calendar> <rich:jQuery id="maskedo3" selector=".maskDate"
+									query="mask('99/99/9999 99:99')" timing="onload" /></td>
+						</tr>
+
+					</table>
+
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						action="#{busquedaRequerimientoVehicularManaged.notificarRequerimiento}"
+						reRender="datosdetlotesrv,panel"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'panelconfirma\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						disabled="#{busquedaRequerimientoVehicularManaged.tipoAccion == null}">
+
+					</a4j:commandButton>
+					<a4j:commandButton value="Salir" style="width:100px;"
+						action="#{busquedaRequerimientoVehicularManaged.salir}"
+						status="ajaxStatus"
+						oncomplete="#{rich:component('panelNotificarActo')}.hide(); return false">
+					</a4j:commandButton>
+
+
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+		<rich:modalPanel id="modalDetalleRequerimiento" width="400"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')" top="110"
+		styleClass="sisatModalPanel">
+		<f:facet name="header">GENERACIÓN DE IMPUESTO VEHICULAR POR AÑO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi2"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalDetalleRequerimiento" attachTo="hlpconfi2"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="panelDet">
+			<rich:panel id="p01">
+				<table border="0" width="300px">
+					<tr>
+						<td align="left" width="300px"><h:outputText
+								id="tdDescripcion" value="Año de Afectación :" /></td>
+							<td>
+								<rich:comboBox defaultLabel="Seleccione"
+										enableManualInput="false" width="100"
+										value="#{busquedaRequerimientoVehicularManaged.cmbAnio}"
+										required="true"
+										requiredMessage="Porfavor seleccione un Año de afetación."
+										id="id_tiporelacion"
+										binding="#{busquedaRequerimientoVehicularManaged.cmbxAnio}"
+										valueChangeListener="#{busquedaRequerimientoVehicularManaged.loadTipoRecById}">
+										<f:selectItems
+											value="#{busquedaRequerimientoVehicularManaged.listaAnio}" />
+										<a4j:support id="suppAnioChange" event="onchange"
+									    				reRender="panelDetalle,p01"></a4j:support>
+								</rich:comboBox>
+							</td>
+
+					</tr>
+					<tr></tr>
+					<tr></tr>
+					</table>
+			
+			<rich:panel id="panelDetalle"
+				rendered="#{busquedaRequerimientoVehicularManaged.enablePanel==true}">
+				<table border="0" width="350px">
+					<tr>
+						<td align="left" width="350px"><h:outputText
+								id="tdAnioFabric" value="Año de Fabricación :" /></td>
+						<td align="left" width="80px"><h:inputText id="inptxtAnio"
+								binding="#{registroPersonaManaged.txtApePaterno}"
+								disabled="true"
+								value="#{registroPersonaManaged.mpPersona.apePaterno}">
+							</h:inputText></td>
+					</tr>
+					<tr></tr>
+					<tr></tr>
+					<tr>
+						<td align="left" width="350px"><h:outputText id="tdClase"
+								value="Clase :" /></td>
+						<td><rich:comboBox
+								value="#{busquedaRequerimientoVehicularManaged.selectedClaseVehic}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								onkeypress="return showListCbo(this,event)"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmClase"
+									value="#{busquedaRequerimientoVehicularManaged.lstClaseVehiculo}" />
+							</rich:comboBox></td>
+					</tr>
+					<tr></tr>
+					<tr></tr>
+					<tr>
+						<td align="left" width="250px"><h:outputText id="tdCategoria"
+								value="Categoría :" /></td>
+						<td><rich:comboBox
+								value="#{busquedaRequerimientoVehicularManaged.selectedCategoriaVehic}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								onkeypress="return showListCbo(this,event)"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmCategoria"
+									value="#{busquedaRequerimientoVehicularManaged.lstCategoriaVehiculo}" />
+								<a4j:support id="suppCategoriaChange" event="onchange"
+									actionListener="#{busquedaRequerimientoVehicularManaged.changeCategoria}"
+									reRender="cboMarcaVehic,cboModeloVehic"></a4j:support>
+							</rich:comboBox></td>
+					</tr>
+					<tr></tr>
+					<tr></tr>
+					<tr>
+						<td align="left" width="200px"><h:outputText id="tdMarca"
+								value="Marca :" /></td>
+						<td><rich:comboBox id="cboMarcaVehic"
+								value="#{busquedaRequerimientoVehicularManaged.selectedMarcaVehic}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								onkeypress="return showListCbo(this,event)"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmMarca"
+									value="#{busquedaRequerimientoVehicularManaged.lstMarcaVehiculo}" />
+								<a4j:support id="suppMarcaChange" event="onchange"
+									actionListener="#{busquedaRequerimientoVehicularManaged.changeMarca}"
+									reRender="cboModeloVehic"></a4j:support>
+							</rich:comboBox></td>
+					</tr>
+					<tr></tr>
+					<tr></tr>
+					<tr>
+						<td align="left" width="200px"><h:outputText id="tdModelo"
+								value="Modelo :" /></td>
+						<td><rich:comboBox id="cboModeloVehic"
+								value="#{busquedaRequerimientoVehicularManaged.selectedModeloVehic}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								onkeypress="return showListCbo(this,event)"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmModelo"
+									value="#{busquedaRequerimientoVehicularManaged.lstModelo}" />
+							</rich:comboBox></td>
+					</tr>
+				</table>
+
+			
+
+			<h:panelGrid id="pnlGenerar" columns="2" align="center">
+				<a4j:commandButton value="Generar Imp. Vehicular"
+					style="width:130px;" id="btnImpVehi"
+					action="#{busquedaRequerimientoVehicularManaged.generarImpuesto}"
+					oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\')' }"
+					reRender="pnlGenerar,p01" status="ajaxStatus" />
+				<a4j:commandButton value="Generar Decl. Jurada" style="width:130px;"
+					id="btnGeneraDj"
+					rendered="#{busquedaRequerimientoVehicularManaged.disableBtnGeneraDj==true}"
+					action="#{busquedaRequerimientoVehicularManaged.generarDj}"
+					oncomplete="#{facesContext.maximumSeverity == null ?'':'Richfaces.showModalPanel(\'mpErrors\');' }"
+					reRender="pnlGenerar,p01,modalDetalleRequerimiento" status="ajaxStatus" />
+
+				<!-- 				<a4j:commandButton value="Salir" style="width:100px;" -->
+				<!-- 					action="#{busquedaRequerimientoVehicularManaged.salirPanel}" -->
+				<!-- 					oncomplete="#{rich:component('modalDetalleRequerimiento')}.hide(); return false" /> -->
+			</h:panelGrid>
+			</rich:panel>
+		</rich:panel>
+		</h:form>
+	</rich:modalPanel>
+
+</ui:composition>

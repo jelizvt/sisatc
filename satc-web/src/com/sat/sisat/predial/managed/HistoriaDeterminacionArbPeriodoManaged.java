@@ -1,0 +1,382 @@
+package com.sat.sisat.predial.managed;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+
+import org.richfaces.component.html.HtmlExtendedDataTable;
+import org.richfaces.model.selection.SimpleSelection;
+
+import com.sat.sisat.common.business.GeneralBoRemote;
+import com.sat.sisat.common.util.BaseManaged;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.SATWEBParameterFactory;
+import com.sat.sisat.common.util.Util;
+import com.sat.sisat.common.util.WebMessages;
+import com.sat.sisat.persistence.CrudServiceBean;
+import com.sat.sisat.persistence.entity.MpPersona;
+import com.sat.sisat.predial.business.CalculoPredialBoRemote;
+import com.sat.sisat.predial.dto.DeterminacionArbitriosDTO;
+import com.sat.sisat.predial.dto.DtDeterminacionPeriodoDTO;
+import com.sat.sisat.predial.dto.DtDeterminacionResArbDTO;
+import com.sat.sisat.predial.managed.calculo.DeterminacionArbitrios;
+import com.sat.sisat.determinacion.vehicular.dto.DeudaValoresDTO;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.menus.business.MenuBoRemote;
+import com.sat.sisat.menus.dto.SimpleMenuDTO;
+
+@ManagedBean
+@ViewScoped
+public class HistoriaDeterminacionArbPeriodoManaged extends BaseManaged {
+	
+	@EJB
+	CalculoPredialBoRemote calculoPredialBo;
+	
+	@EJB
+	GeneralBoRemote generalBo;
+	
+	@EJB
+	MenuBoRemote menuBo;
+	
+	private ArrayList<DtDeterminacionResArbDTO> records;
+
+	private SimpleSelection selection = new SimpleSelection();
+	private HtmlExtendedDataTable table;
+	private int currentRow;
+	private DtDeterminacionResArbDTO currentItem = new DtDeterminacionResArbDTO();
+	private String codigoPredio;
+	
+	private List<DeudaValoresDTO> listarValorCoactiva = new ArrayList<DeudaValoresDTO>();
+	private Boolean conValor;
+	
+	// INICIO PERMISOS PARA EL MODULO -=CRAMIREZ=-
+		private List<SimpleMenuDTO> listPermisosSubmenu = new ArrayList<SimpleMenuDTO>();		
+		private boolean permisoDeterminarArbitrios;
+		private boolean permisoPDF_ARBITRIOS;
+	// FIN PERMISOS PARA EL MODULO	
+	
+	public HistoriaDeterminacionArbPeriodoManaged(){
+		
+	}
+	
+	@PostConstruct
+	public void init(){
+		permisosMenu();
+		try{
+			records=new ArrayList<DtDeterminacionResArbDTO>();
+			DtDeterminacionPeriodoDTO determinacion=(DtDeterminacionPeriodoDTO)getSessionMap().get("DtDeterminacionPeriodoDTO");
+			if(determinacion!=null){
+				records=calculoPredialBo.getAllDtDeterminacionArbitrios(determinacion.getPersonaId(),Util.toInteger(determinacion.getAnnoDj()));
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			WebMessages.messageFatal(e);
+		}
+	}
+	
+	public void permisosMenu() {	
+		try {
+			int submenuId = Constante.DECLARACION_JURADA;
+			
+			int permisoDeterminarArbitriosId = Constante.DETERMINAR_ARBITRIOS;
+			int permisoPDF_Arbitrios_ID = Constante.PDF_ARBITRIOS;
+			
+			permisoDeterminarArbitrios = false;
+			permisoPDF_ARBITRIOS = false;
+			
+			listPermisosSubmenu  = menuBo.getAccesosSubmenuUsuario( getSessionManaged().getUsuarioLogIn().getUsuarioId() , submenuId);
+			
+			Iterator<SimpleMenuDTO> menuIterar = listPermisosSubmenu.iterator();
+			while (menuIterar.hasNext()) {
+				SimpleMenuDTO lsm = menuIterar.next();
+				if(lsm.getItemId() == permisoDeterminarArbitriosId) {
+					permisoDeterminarArbitrios = true;
+				}
+				if(lsm.getItemId() == permisoPDF_Arbitrios_ID) {
+					permisoPDF_ARBITRIOS = true;
+				}				
+			}
+			
+		} catch (SisatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void determinarCalculoArbitrios(){
+		try{
+			DeterminacionArbitrios arbitrios=new DeterminacionArbitrios(calculoPredialBo,generalBo);
+			MpPersona contribuyente=arbitrios.getContribuyente(getSessionManaged().getContribuyente().getPersonaId());
+			
+			if(currentItem!=null){
+				//if (validaValorDeuda()==Boolean.FALSE){
+				if(currentItem.getAnnoDj()>=2012){
+					ArrayList<DeterminacionArbitriosDTO> lista=arbitrios.generarDeterminacionArbitriosDjPredial(contribuyente,currentItem.getAnnoDj(),currentItem.getDjId());
+					if(lista.size()>0){
+						records=new ArrayList<DtDeterminacionResArbDTO>();
+						System.out.println("currentItem.getPersonaId() : "+ currentItem.getPersonaId());
+						System.out.println("currentItem.getAnnoDj() : "+ currentItem.getAnnoDj());
+						records=calculoPredialBo.getAllDtDeterminacionArbitrios(currentItem.getPersonaId(),currentItem.getAnnoDj());
+						getSessionMap().put("lDeterminacionArbitriosDTO", lista);
+						
+						Iterator<String> it=arbitrios.getLmsg().iterator();
+						while(it.hasNext()){
+							String msg=it.next();
+							WebMessages.messageError(msg);
+						}
+					}else{
+						for(int i=0;i<records.size();i++){
+							if(records.get(i).getAnnoDj()==currentItem.getAnnoDj()&&
+									records.get(i).getDjId()==currentItem.getDjId()){
+								records.get(i).setArbitrioLimpieza(new Double(0));
+								records.get(i).setArbitrioParques(new Double(0));
+								records.get(i).setArbitrioRecojo(new Double(0));
+								records.get(i).setArbitrioSeguridad(new Double(0));	
+							}
+						}
+					}
+				//}else{
+				//	WebMessages.messageError("No se puede realizar el calculo de arbitrios para años diferentes al 2012");
+				//}
+			}else
+			  {WebMessages.messageError("No se puede realizar el calculo de arbitrios para años diferentes al 2012");}	
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			WebMessages.messageError(e.getMessage());
+		}
+	}
+	
+	public void mostrarDetalleArb(){
+		if(currentItem!=null){
+			getSessionMap().put("dtDeterminacionResArbDTO", currentItem);
+		}
+	}
+	
+	public void crearConsolidadoArbitrios(){
+		java.sql.Connection connection=null;
+		try {
+		   CrudServiceBean connj=CrudServiceBean.getInstance();
+		   connection=connj.connectJasper();
+			 
+		   HashMap<String,Object> parameters = new HashMap<String,Object>();
+           ArrayList<Integer> listaAnio = new ArrayList<Integer>(); 
+           ArrayList<Integer> listaDjid = new ArrayList<Integer>(); 
+           ArrayList<String> listaDomicilio = new ArrayList<String>();
+    
+			parameters.put("persona_id", records.get(0).getPersonaId());
+			parameters.put("anio", records.get(0).getAnnoDj());
+			
+			for(int i=0;records.size()>i;i++){
+		            
+	            if(records.get(i).getDeterminacionArbitriosId()>0){
+	            	
+				listaDjid.add(records.get(i).getDjId());
+				listaAnio.add(records.get(i).getAnnoDj());
+				listaDomicilio.add(records.get(i).getDescDomicilio());
+				
+	            }
+	        }
+						
+			parameters.put("djreferencia_id", listaDjid);
+			parameters.put("direc_predio", listaDomicilio);
+			parameters.put("SUBREPORT_DIR",SATWEBParameterFactory.getPathReporteImagenes()) ;  
+			parameters.put("ruta_image", SATWEBParameterFactory.getPathReporte());
+			if(listaDjid.size()>0){
+				
+			    JasperPrint jasperPrint = JasperFillManager.fillReport((SATWEBParameterFactory.getPathReporte()+"Arbitrios_consolidado.jasper"), parameters, connection);
+			    ByteArrayOutputStream output = new ByteArrayOutputStream();
+			    JasperExportManager.exportReportToPdfStream(jasperPrint, output);
+			               
+			    HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+			        
+			    response.setContentType("application/pdf");
+			    response.addHeader("Content-Disposition","attachment;filename=Consolidado_Arbitrios.pdf");
+			    response.setContentLength(output.size());
+			    ServletOutputStream servletOutputStream = response.getOutputStream();
+			    servletOutputStream.write(output.toByteArray(), 0, output.size());
+			    servletOutputStream.flush();
+			    servletOutputStream.close();
+			    FacesContext.getCurrentInstance().responseComplete();
+		    
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+			WebMessages.messageError(e.getMessage());
+		}finally{
+	    	 try{
+	    		 if(connection!=null){
+	    			 connection.close();
+	    			 connection=null;
+	    		 }
+	    	 }catch(Exception e){}
+	     }
+	}
+	
+	public void crearDeterminacionArbitrios(){
+		java.sql.Connection connection=null;
+		try {
+			if(currentItem!=null){
+				CrudServiceBean connj=CrudServiceBean.getInstance();
+				 connection=connj.connectJasper();
+				 
+	             HashMap<String,Object> parameters = new HashMap<String,Object>();
+	             parameters.put("anio", currentItem.getAnnoDj());
+	             parameters.put("persona_id", currentItem.getPersonaId());
+	             parameters.put("djreferencia_id", currentItem.getDjId());
+	             parameters.put("direc_predio", currentItem.getDescDomicilio());
+	             parameters.put("ruta_image", SATWEBParameterFactory.getPathReporteImagenes());
+	             parameters.put("SUBREPORT_DIR", SATWEBParameterFactory.getPathReporte()) ;
+	             JasperPrint jasperPrint = JasperFillManager.fillReport((SATWEBParameterFactory.getPathReporte()+"DeterminacionArbitrios.jasper"), parameters, connection);
+	             ByteArrayOutputStream output = new ByteArrayOutputStream();
+	                JasperExportManager.exportReportToPdfStream(jasperPrint, output);
+	               
+		          HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		                 response.setContentType("application/pdf");
+		          response.addHeader("Content-Disposition","attachment;filename=Arbitrios.pdf");
+		          response.setContentLength(output.size());
+		          ServletOutputStream servletOutputStream = response.getOutputStream();
+		          servletOutputStream.write(output.toByteArray(), 0, output.size());
+		          servletOutputStream.flush();
+		          servletOutputStream.close();
+		          FacesContext.getCurrentInstance().responseComplete();
+	       }
+	     }catch (Exception jre) {
+	          jre.printStackTrace();
+	          WebMessages.messageFatal(jre);
+		 }finally{
+	    	 try{
+	    		 if(connection!=null){
+	    			 connection.close();
+	    			 connection=null;
+	    		 }
+	    	 }catch(Exception e){}
+	     }
+
+	}
+	
+	public String salir(){
+		return sendRedirectPrincipal();
+	}
+	
+	public Boolean validaValorDeuda(){
+		try{
+			if(currentItem!=null){	
+
+				Integer codPersona = getSessionManaged().getContribuyente().getPersonaId();
+				Integer anio=currentItem.getAnnoDj();
+				//Integer determinacion=currentItem.getDeterminacionArbitriosId();
+				Integer determinacion=currentItem.getDjId();
+								
+				listarValorCoactiva=calculoPredialBo.getValorArbitrios(codPersona,anio,determinacion);
+					if (listarValorCoactiva!=null){
+						setConValor(true);
+					}else{
+						setConValor(false);
+					}
+
+			}else{
+				
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			WebMessages.messageFatal(e);
+		}
+		return conValor;
+	}
+	
+	public SimpleSelection getSelection() {
+		return selection;
+	}
+
+	public void setSelection(SimpleSelection selection) {
+		this.selection = selection;
+	}
+
+	public HtmlExtendedDataTable getTable() {
+		return table;
+	}
+
+	public void setTable(HtmlExtendedDataTable table) {
+		this.table = table;
+	}
+
+	public int getCurrentRow() {
+		return currentRow;
+	}
+
+	public void setCurrentRow(int currentRow) {
+		this.currentRow = currentRow;
+	}
+
+	public String getCodigoPredio() {
+		return codigoPredio;
+	}
+
+	public void setCodigoPredio(String codigoPredio) {
+		this.codigoPredio = codigoPredio;
+	}
+
+	public ArrayList<DtDeterminacionResArbDTO> getRecords() {
+		return records;
+	}
+
+	public void setRecords(ArrayList<DtDeterminacionResArbDTO> records) {
+		this.records = records;
+	}
+
+	public DtDeterminacionResArbDTO getCurrentItem() {
+		return currentItem;
+	}
+
+	public void setCurrentItem(DtDeterminacionResArbDTO currentItem) {
+		this.currentItem = currentItem;
+	}
+
+	public Boolean getConValor() {
+		return conValor;
+	}
+
+	public void setConValor(Boolean conValor) {
+		this.conValor = conValor;
+	}
+
+	public List<SimpleMenuDTO> getListPermisosSubmenu() {
+		return listPermisosSubmenu;
+	}
+
+	public void setListPermisosSubmenu(List<SimpleMenuDTO> listPermisosSubmenu) {
+		this.listPermisosSubmenu = listPermisosSubmenu;
+	}
+
+	public boolean isPermisoDeterminarArbitrios() {
+		return permisoDeterminarArbitrios;
+	}
+
+	public void setPermisoDeterminarArbitrios(boolean permisoDeterminarArbitrios) {
+		this.permisoDeterminarArbitrios = permisoDeterminarArbitrios;
+	}
+
+	public boolean isPermisoPDF_ARBITRIOS() {
+		return permisoPDF_ARBITRIOS;
+	}
+
+	public void setPermisoPDF_ARBITRIOS(boolean permisoPDF_ARBITRIOS) {
+		this.permisoPDF_ARBITRIOS = permisoPDF_ARBITRIOS;
+	}
+	
+}

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formBuscarPredioAlcabala">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+
+		<rich:panel id="p01">
+			
+<table border="0" width="100%" >
+				<tr>
+					<td align="left" width="100px" >
+						<h:outputText value="Codigo predio :" />
+					</td>
+					<td >
+						<h:inputText id="id_codigoprediobcp" style="width:150px" maxlength="10" value="#{buscarPredioInscripcionManaged.codigoPredio}" 
+						tabindex="1"
+						 onkeypress="return validaEnteroPositivo(event)" 
+						>
+						</h:inputText>
+					</td>
+					<td align="left" width="100px" >
+						<h:outputText value="Codigo Persona :" />
+					</td>
+					<td>
+						<h:inputText id="id_codigopersona" style="width:150px" maxlength="10" value="#{buscarPredioInscripcionManaged.personaId}" 
+						tabindex="1"
+						 onkeypress="return validaEnteroPositivo(event)" 
+						>
+						</h:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<rich:separator height="1" lineType="solid"></rich:separator>
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" >
+						<h:outputText value="Apellidos y nombres :" />
+					</td>
+					<td colspan="3">
+						<h:inputText id="id_apellidosnombres" maxlength="50" style="width:70%" value="#{buscarPredioInscripcionManaged.apellidosNombres}" 
+						tabindex="2" styleClass="textUpperCase" converter="uppeCaseConverter"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" >
+						<h:outputText value="Razon Social :" />
+					</td>
+					<td colspan="3">
+						<h:inputText id="id_razonsocial" maxlength="50" style="width:70%" value="#{buscarPredioInscripcionManaged.razonSocial}" 
+						tabindex="3"
+						styleClass="textUpperCase" converter="uppeCaseConverter"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="100px" >
+						<h:outputText value="Tipo documento:" />
+					</td>
+					<td>
+						<rich:comboBox width="150px" id="id_tipdoc" value="#{buscarPredioInscripcionManaged.tipoDocumento}"
+						enableManualInput="true"
+						tabindex="4" 
+						directInputSuggestions="false" defaultLabel="Seleccione"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						>
+							<f:selectItems id="id_lsttipodocumento" value="#{buscarPredioInscripcionManaged.lstTipDocIdentidad}"/>
+						</rich:comboBox>
+					</td>
+					
+					<td align="left" width="100px" >
+						<h:outputText value="Nro documento:" />
+					</td>
+					<td>
+						<h:inputText maxlength="12" style="width:150px;" id="id_numdoc" value="#{buscarPredioInscripcionManaged.numeroDocumento}"   tabindex="5"
+						styleClass="textUpperCase" converter="uppeCaseConverter"
+						/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<rich:separator height="1" lineType="solid"></rich:separator>
+					</td>
+				</tr>
+				<tr>	
+					<td align="left" width="100px" >
+						<h:outputText value="Tipo Via :" />
+					</td>
+					<td >
+						<rich:comboBox width="300px" defaultLabel="Seleccione" id="id_tipovia" value="#{buscarPredioInscripcionManaged.tipoVia}"
+							selectFirstOnUpdate="true" directInputSuggestions="false"
+							immediate="true"
+							enableManualInput="true"
+							tabindex="6"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							valueChangeListener="#{buscarPredioInscripcionManaged.selectTipoVia}"
+							reRender = "id_via">
+							<f:selectItems id="id_lstTipoVia" value="#{buscarPredioInscripcionManaged.lsttipovia}"/>
+							<a4j:support event="onchange" reRender = "id_via" immediate="true"  ajaxSingle="true"> </a4j:support>
+						</rich:comboBox>
+					</td>
+					
+					<td align="left" width="100px" >
+						<h:outputText value="Via :" />
+					</td>
+					<td >
+						<rich:comboBox width="300px" defaultLabel="Seleccione" id="id_via" value="#{buscarPredioInscripcionManaged.via}"
+							selectFirstOnUpdate="true" directInputSuggestions="false"
+							immediate="true"
+							enableManualInput="true"
+							tabindex="7"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							>
+							<f:selectItems id="id_lstVia" value="#{buscarPredioInscripcionManaged.lstvia}"/>
+						</rich:comboBox>
+					</td>
+				</tr>
+				
+				<tr>	
+					<td align="left" width="100px" >
+						<h:outputText value="Sector :" />
+					</td>
+					<td >
+						<rich:comboBox width="300px" defaultLabel="Seleccione" id="id_sector" value="#{buscarPredioInscripcionManaged.sector}"
+							selectFirstOnUpdate="true" directInputSuggestions="false"
+							immediate="true"
+							enableManualInput="true"
+							tabindex="8"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							valueChangeListener="#{buscarPredioInscripcionManaged.selectSector}"
+							reRender = "id_lugar">
+							<f:selectItems id="id_lstSector03" value="#{buscarPredioInscripcionManaged.lstsector}"/>
+							<a4j:support event="onchange" reRender = "id_lugar" immediate="true"  ajaxSingle="true"> </a4j:support>
+						</rich:comboBox>
+					</td>
+					<td align="left" width="100px" >
+						<h:outputText value="Lugar :" />
+					</td>
+					<td >
+						<rich:comboBox width="300px" defaultLabel="Seleccione" id="id_lugar" value="#{buscarPredioInscripcionManaged.lugar}"
+							selectFirstOnUpdate="true" directInputSuggestions="false"
+							immediate="true"
+							enableManualInput="true"
+							tabindex="9"
+							onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+							>
+							<f:selectItems id="id_lstLugar" value="#{buscarPredioInscripcionManaged.lstlugar}"/>
+						</rich:comboBox>
+					</td>
+				</tr>
+				<tr>	
+					<td align="left" width="100px" >
+						<h:outputText value="Direccion :" />
+					</td>
+					<td colspan="3">
+						<h:inputText id="id_direccion" style="width:70%" maxlength="50" value="#{buscarPredioInscripcionManaged.direccion}" 
+						tabindex="10"
+						styleClass="textUpperCase" converter="uppeCaseConverter"/>
+					</td>
+				</tr>
+				
+				<tr>
+					<td width="100%" colspan="4">
+						<h:panelGrid columns="3" align="center" >
+							<a4j:commandButton value="[B]uscar" style="width:100px;" action="#{buscarPredioInscripcionManaged.buscar}" status="ajaxStatus" reRender="id_panelresultadospredioAlcabala" 
+							tabindex="11"
+							accesskey="b"
+							/>
+							<a4j:commandButton value="Cancelar" style="width: 100px;" reRender="panelinclude" >
+								<f:setPropertyActionListener value="/sisat/alcabala/calculoalcabala.xhtml" target="#{sessionManaged.page}" />
+							</a4j:commandButton>
+							
+							<a4j:commandButton id="cmdAceptar" 
+						style="width:100px;"
+						
+							value="Aceptar" 
+							action="#{buscarPredioInscripcionManaged.enviarPredio}"
+							reRender="#{rich:clientId('id_direccionAlcabala')},#{rich:clientId('id_predio')},#{rich:clientId('id_porPropiedad')},#{rich:clientId('tblTransferente')},#{rich:clientId('id_selTipoPredio')},#{rich:clientId('id_hiddemDireccionAlcabala')},#{rich:clientId('oculto_record')},#{rich:clientId('id_Autovaluo')}"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'),Richfaces.hideModalPanel(\'id_panelBuscarPredio\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+							
+						</a4j:commandButton>
+							
+						</h:panelGrid>
+					</td>
+				</tr>
+			</table>
+
+			
+
+		</rich:panel>
+		</h:form>
+		<br />
+		
+		<h:form id="formResultados">
+		<rich:panel  id="id_panelresultadospredioAlcabala" >
+				
+					<rich:extendedDataTable 
+						id="datosPredios" value="#{buscarPredioInscripcionManaged.records}" var="record" width="100%" height="230px"
+						sortMode="single" selectionMode="single" 
+						rowKeyVar="row" 
+						enableContextMenu="false">
+						
+				        <rich:column id="x14" width="5%" style="background-color:#{record.styleSelected};text-align:center">
+	            	
+                  <a4j:commandLink  width="3%" id="newlink3" action="#{buscarPredioInscripcionManaged.seleccionaDatos}"  reRender="formBuscarPredioAlcabala"> 
+                   <h:graphicImage value="/images/modal/preview.png" style="border:0" />
+                   <f:setPropertyActionListener value="#{record}" target="#{buscarPredioInscripcionManaged.currentItem}" id="r427" />
+	                    
+	                </a4j:commandLink>
+	                <rich:toolTip for="newlink3" value="Seleccionar" />
+		        </rich:column>
+				        
+						<rich:column width="5%" style="background-color:#{record.styleSelected};text-align:center" >
+			                <f:facet name="header">Nro DJ</f:facet>
+			                <h:outputText value="#{record.djId}"/>
+			                <h:inputHidden value="#{record.predioId}"/>
+			            </rich:column>						
+						<rich:column width="5%" style="background-color:#{record.styleSelected};text-align:center" >
+			                <f:facet name="header">Tipo</f:facet>
+			                <h:outputText value="#{record.descripcionDocIdentidad}"/>
+			            </rich:column>            				                
+			            <rich:column width="8%" style="background-color:#{record.styleSelected};text-align:center" >
+			                <f:facet name="header">Documento</f:facet>
+			                <h:outputText value="#{record.numeroDocIdentidad}"/>
+			            </rich:column>
+			            <rich:column  width="23%" style="background-color:#{record.styleSelected};text-align:center" >
+			                <f:facet name="header">Propietario</f:facet>
+			                <h:outputText value="#{record.apellidosNombres}"/>
+			            </rich:column>
+			            <rich:column width="5%" style="background-color:#{record.styleSelected};text-align:center"  >
+			                <f:facet name="header">Predio</f:facet>
+			                <h:outputText value="#{record.tipoPredioDesc}"/>
+			            </rich:column>
+			            <rich:column width="5%" style="background-color:#{record.styleSelected};text-align:center" >
+			                <f:facet name="header">Codigo</f:facet>
+			                <h:outputText value="#{record.codigoPredio}"/>
+			            </rich:column>
+			            <rich:column width="5%" style="background-color:#{record.styleSelected};text-align:center" >
+			                <f:facet name="header">% Prop.</f:facet>
+			                <h:outputText value="#{record.porcPropiedad}"/>
+			            </rich:column>
+			            <rich:column width="40%" style="background-color:#{record.styleSelected};text-align:center" >
+			                <f:facet name="header">Direccion</f:facet>
+			                <h:outputText value="#{record.direccionCompleta} - #{record.nombreEdificiacion}"/>
+			            </rich:column>
+				            
+					</rich:extendedDataTable>
+			</rich:panel>
+		
+	</h:form>
+
+	
+</ui:composition>

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form id="formCalculadora">
+	<rich:panel id="id_x">
+	<f:facet name="header">Calculo Impuesto Vehicular</f:facet>
+	<h:panelGroup id="pnlGroupDatosVehic">
+	<table width="100%" border="0">
+	<tr>
+	<td>
+	<h:outputText value="Fecha Ins. Reg. Públ: " />
+	</td>
+	<td>
+	<h:panelGroup>
+	<rich:calendar value="#{calculadoraManged.fechaInsc}"
+	locale="#{msg['param.localedate']}"
+	datePattern="#{msg['param.datepattern']}"
+	timeZone="#{aplicationManaged.timeZone}"
+	enableManualInput="true" inputClass="maskDateFechaDeclar" required="true" requiredMessage="Seleccionar Fecha Inscripción" ajaxSingle="true"
+	></rich:calendar>
+	<rich:jQuery selector=".maskDateFechaDeclar"
+	query="mask('99/99/9999')" timing="onload" />
+	</h:panelGroup>	</td>
+	<td>
+	<h:outputText value="Año Afectación: " />
+	</td>
+	<td>
+	
+	<h:inputText id="id_anioAfecta" value="#{calculadoraManged.anioAfecta}" maxlength="4" onkeypress="return numbersonly(this.value,event)" required="true" requiredMessage="Ingresar año Afectación">
+	
+	<a4j:support id="suppanioAfecta" event="onblur" reRender="cbo_categoria" ajaxSingle="true"></a4j:support>
+	</h:inputText>
+	</td>
+
+	</tr>
+	<tr>
+	<td>
+	<h:outputText value="Año Fabricación: " />
+
+	</td>
+	<td>
+	<h:inputText id="id_anFab" value="#{calculadoraManged.anioFabrica}" maxlength="4" onkeypress="return numbersonly(this.value,event)" required="true" requiredMessage="Ingresar Año Fabricación"/>
+
+	</td>
+	<td>
+
+	<h:outputText value="Categoria: " />
+
+	</td>
+	<td>
+	<rich:comboBox id="cbo_categoria"  required="true" requiredMessage="Seleccionar una Categoria"
+	value="#{calculadoraManged.selectedCategoriaVehic}"
+	defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+	onkeypress="return showListCbo(this,event)" 
+	onblur="validaInputCbo(this)">
+	<f:selectItems id="itmCategoria" 
+	value="#{calculadoraManged.lstCategoriaVehiculo}" />
+	<a4j:support id="suppCategoriaChange" event="onchange" ajaxSingle="true"
+	actionListener="#{calculadoraManged.changeCategoria}"
+	oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+	reRender="cboMarcaVehic,cboModeloVehic"></a4j:support>
+	</rich:comboBox>
+
+	</td>
+	</tr>
+	<tr>
+	<td>
+
+	<h:outputText value="Valor Transfer: " />
+
+	</td>
+	<td>
+
+	<h:inputText id="id_valTrans" value="#{calculadoraManged.valorTrans}" onkeypress="return numbersonly(this.value,event)"  required="true" requiredMessage="Ingresar Valor de Transferencia"/>
+
+	</td>
+	<td>
+	<h:outputText value="Marca" />
+
+	</td>
+	<td>
+	<rich:comboBox id="cboMarcaVehic" required="true" requiredMessage="Seleccionar una Marca"
+	value="#{calculadoraManged.selectedMarcaVehic}"
+	defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+	onkeypress="return showListCbo(this,event)"
+	onblur="validaInputCbo(this)">
+	<f:selectItems id="itmMarca"
+	value="#{calculadoraManged.lstMarcaVehiculo}" />
+	<a4j:support id="suppMarcaChange" event="onchange" ajaxSingle="true"
+	actionListener="#{calculadoraManged.changeMarca}" 
+	reRender="cboModeloVehic"></a4j:support>
+	</rich:comboBox>	</td>
+	</tr>
+	<tr>
+	<td>
+
+	</td>
+	<td>
+
+	</td>
+	<td>
+	<h:outputText value="Modelo" />
+	</td>
+	<td>
+	<rich:comboBox id="cboModeloVehic" required="true" requiredMessage="Seleccionar un Modelo"
+	value="#{calculadoraManged.selectedModeloVehic}"
+	defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+	onkeypress="return showListCbo(this,event)"
+	onblur="validaInputCbo(this)"  >
+	<f:selectItems id="itmModelo"
+	value="#{calculadoraManged.lstModelo}" />
+	<a4j:support id="suppModeloChange" event="onchange" ajaxSingle="true"> </a4j:support>
+	</rich:comboBox>	</td>
+	</tr>
+	</table>
+	</h:panelGroup>
+	<h:panelGroup id="id_panCalcRes">
+	<table border="0" align="center" width="100%">
+	<tr align="center">
+	<td colspan="4">
+	<table>
+	<tr>
+	<td align="right">
+	<a4j:commandButton  id="id_calVehi"  style="width:100px" value="Calcular" action="#{calculadoraManged.calcularVehicular}" reRender="id_panCalcRes"
+	oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+	></a4j:commandButton>
+	</td>
+	
+	<td align="left">
+	<a4j:commandButton  id="id_limpiar" style="width:100px" value="Limpiar" action="#{calculadoraManged.limpiarCamposVehicular}" reRender="id_panCalcRes,pnlGroupDatosVehic"></a4j:commandButton>
+	</td>	</tr>
+	
+	
+	
+	
+	
+	
+	</table>
+	</td>
+	
+	
+	</tr>
+	
+	
+	<tr>
+	<td>
+	<h:outputText value="Valor Transferencia: " />
+	</td>
+	<td>
+	<h:inputText id="id_valorTransRes" value="#{calculadoraManged.valorTransRes}" readonly="true" >
+		<f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2"/>
+	</h:inputText>
+	</td>
+	<td>
+	<h:outputText value="Base Imponible: " />
+	</td>
+	<td>
+	<h:inputText id="id_baseimpo" value="#{calculadoraManged.baseImpon}" readonly="true" ><f:convertNumber locale="en" maxFractionDigits="2" minFractionDigits="2"/></h:inputText>
+	</td>
+	</tr>
+	
+	<tr>
+	<td>
+	<h:outputText value="Valor Referencial: " />
+	</td>
+	<td>
+	<h:inputText id="id_valorRef" value="#{calculadoraManged.valorRef}" readonly="true"><f:convertNumber locale="en" maxFractionDigits="2" minFractionDigits="2"/></h:inputText>
+	</td>
+	<td>
+	<h:outputText value="Tasa: " />
+	</td>
+	<td>
+	<h:inputText id="id_tasa" value="#{calculadoraManged.tasa}" readonly="true"><f:convertNumber locale="en" maxFractionDigits="2" minFractionDigits="2"/></h:inputText>
+	</td>
+	</tr>
+	
+	<tr>
+	<td>
+	<h:outputText value="Factor Ajuste: " />
+	
+	</td>
+	<td>
+	<h:inputText id="id_factAjust" value="#{calculadoraManged.factAjust}" readonly="true"><f:convertNumber locale="en" maxFractionDigits="2" minFractionDigits="2"/></h:inputText>
+	</td>
+	<td>
+	<h:outputText value="Importe Impuesto: " />
+	
+	</td>
+	<td>
+	<h:inputText id="id_imporImp" value="#{calculadoraManged.imporImp}" readonly="true"><f:convertNumber locale="en" maxFractionDigits="2" minFractionDigits="2"/></h:inputText>
+	</td>
+	</tr>
+	
+	<tr>
+	<td>
+	<h:outputText value="Valor Ajustado: " />
+	
+	</td>
+	<td>
+	<h:inputText id="id_valAjust" value="#{calculadoraManged.valAjust}" readonly="true"><f:convertNumber locale="en" maxFractionDigits="2" minFractionDigits="2"/></h:inputText>
+	</td>
+	<td colspan="2"></td>
+	</tr>
+	
+	</table>
+	</h:panelGroup>
+	
+	</rich:panel>
+
+	
+	</h:form>
+	<br/>
+	
+	<h:form id="form_calcPredial">
+	
+	<rich:panel>
+	<f:facet name="header">Calculo Impuesto Predial</f:facet>
+	<table border="0" width="100%" align="center">
+	<tr>
+	<td width="50%" colspan="2">
+	<table border="0" width="100%">
+	<tr>
+	<td>
+	<h:outputText value="Año Afectación: " />
+	</td>
+	<td>
+	<h:inputText id="id_anioAfectaPredial" value="#{calculadoraManged.anioAfectaPredial}"  maxlength="4" onkeypress="return numbersonly(this.value,event)" required="true" requiredMessage="Ingresar año afectación" immediate="true">
+	<a4j:support id="id_anioAfecSupport" event="onblur" ajaxSingle="true" action="#{calculadoraManged.limpiarCondicionBase}" 
+	reRender="id_baseImpoPredial,id_baseImpoOculto,id_cmbCondicionPredial" />
+	
+	</h:inputText>
+	</td>
+	</tr>
+	<tr>
+	<td>
+	<h:outputText value="Valor de Autovalúo: " />
+	</td>
+	<td>
+	<h:inputText id="id_autovaluo" value="#{calculadoraManged.autovaluoPredial}"  onkeypress="return numbersonly(this.value,event)" immediate="true" required="true" requiredMessage="Ingresar autovalúo">
+	<a4j:support id="id_autovaluoSupport" event="onblur" ajaxSingle="true" action="#{calculadoraManged.limpiarCondicionBase}" 
+	reRender="id_baseImpoPredial,id_baseImpoOculto,id_cmbCondicionPredial" />
+	<f:convertNumber locale="en" maxFractionDigits="2" minFractionDigits="2"/>
+	</h:inputText>
+	</td>
+	</tr>
+	<tr>
+	<td>
+	<h:outputText value="Condición: " />
+	</td>
+	<td>
+	<rich:comboBox id="id_cmbCondicionPredial"  defaultLabel="#{msg['param.defaultlabelcombo']}" width="150" binding="#{calculadoraManged.cmbCondicionPredial}" 
+	value="#{calculadoraManged.selectedCondicion}" required="true" requiredMessage="Seleccionar condición"
+	valueChangeListener="#{calculadoraManged.cambioCondicionPredial}" immediate="true"
+	onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+	>
+	<f:selectItems id="id1" value="#{calculadoraManged.lstCondicionPredial}" />
+	<a4j:support id="id_Predialsupport" event="onchange" ajaxSingle="true"  reRender="id_baseImpoPredial,id_baseImpoOculto" oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"/>
+	</rich:comboBox>
+
+	</td>
+	</tr>
+	
+	<tr>
+	<td>
+	<h:outputText value="Base Imponible: " />
+	</td>
+	<td>
+	<h:inputText id="id_baseImpoPredial" value="#{calculadoraManged.baseImponiblePredial}" readonly="true"><f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2"/> </h:inputText>
+	<h:inputHidden id="id_baseImpoOculto" value="#{calculadoraManged.baseImponiblePredial}" required="true" requiredMessage="Ingresar Base imponible" />
+	</td>
+	</tr>
+	</table>
+	</td>
+	<td width="50%" colspan="2">
+	
+	<h:panelGroup id="id_valoresUIT">
+	<table border="0" width="100%">
+	<tr>
+	<td width="50%" height="20px" >
+	<h:outputText value="Valor de UIT para el año #{calculadoraManged.anioAfectaPredial}: " />
+	</td>
+	<td width="50%" align="left">
+	<h:outputText value="#{calculadoraManged.valorUit}" ><f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2"/> </h:outputText>
+	</td>
+	</tr>
+	<tr>
+	<td width="50%" height="20px" >
+	<h:outputText value="15 UIT #{calculadoraManged.anioAfectaPredial}: " />
+	</td>
+	<td width="50%" align="left">
+	<h:outputText id="id_valor15Uit" value="#{calculadoraManged.valor15Uit}" ><f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	</td>
+	</tr>
+	<tr>
+	<td width="50%" height="20px">
+	<h:outputText value="60 UIT #{calculadoraManged.anioAfectaPredial}: " />
+	</td>
+	<td width="50%" align="left">
+	<h:outputText id="id_valor60Uit" value="#{calculadoraManged.valor60Uit}" ><f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	</td>
+	</tr>
+	<tr>
+	<td width="50%" height="20px">
+	<h:outputText value="Monto Mínimo (0.6% de UIT): " />
+	</td>
+	<td width="50%" align="left">
+	<h:outputText id="id_montoMinimo" value="#{calculadoraManged.montoMinimo}" ><f:convertNumber  locale="en" minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	</td>
+	</tr>
+	</table>
+	</h:panelGroup>
+	</td>
+	</tr>
+	
+	<tr align="center" >
+	<td colspan="4">
+	<table border="0" width="100%" align="center">
+	<tr>
+	<td align="right">
+	<a4j:commandButton  id="id_calVehi"  style="width:100px" value="Calcular" action="#{calculadoraManged.calccularPredial}" reRender="id_resulPredial,id_impTotal,id_baseImpRes,id_impTotalAnio,id_valoresUIT"
+	oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+	></a4j:commandButton>
+	</td>
+	
+	<td align="left">
+	<a4j:commandButton  id="id_limpiarPredial" style="width:100px" value="Limpiar" action="#{calculadoraManged.limpiarPredial}" reRender="form_calcPredial"></a4j:commandButton>
+	</td>	</tr>
+	
+	</table>
+	</td>
+	</tr>
+	
+	
+	<tr align="center" >
+	<td colspan="4">
+	<rich:dataTable id="id_resulPredial" width="100%" value="#{calculadoraManged.listaCalculoPredioDTO}" var="records">
+	<rich:column width="25%">
+	<f:facet name="header">Tramo</f:facet>
+	<h:outputText id="id_tramoPredio" rendered="#{records.tramo=='1'}" value="Hasta 15 UIT" />
+	<h:outputText id="id_tramoPredio2" rendered="#{records.tramo=='2'}" value="Mas de 15 UIT hasta 60 UIT" />
+	<h:outputText id="id_tramoPredio3" rendered="#{records.tramo=='3'}" value="Mas de 60 UIT" />
+	</rich:column>
+	
+	<rich:column width="25%"  style="text-align:right">
+	<f:facet name="header">Monto</f:facet>
+	<h:outputText id="id_montoPredio" value="#{records.monto}" ><f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	</rich:column>
+	
+	<rich:column width="25%"  style="text-align:center" >
+	<f:facet name="header">Tasa</f:facet>
+	<h:outputText id="id_tasaPredio" value="#{records.tasa}" ><f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	</rich:column>
+	
+	<rich:column width="25%"  style="text-align:right">
+	<f:facet name="header">Impuesto</f:facet>
+	<h:outputText id="id_impPredio" value="#{records.impuesto}" ><f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2"/></h:outputText>
+	</rich:column>
+	</rich:dataTable>
+	
+	</td>
+	</tr>
+	
+	<tr style="height:10px">
+	<td width="25%" align="center"><b><h:outputText value="TOTAL: " style="" /></b></td>
+	<td width="25%" align="right"><b><h:outputText id="id_baseImpRes" value="#{calculadoraManged.baseImponiblePredial}" ><f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2" type="currency" currencySymbol="S/. "/></h:outputText></b></td>
+	<td width="25%" ></td>
+	<td width="25%" align="right"><b><h:outputText id="id_impTotal" value="#{calculadoraManged.impuestoTotal}" ><f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2" type="currency" currencySymbol="S/. "/></h:outputText></b></td>
+	</tr>
+
+	<tr style="height:10px">
+	
+	<td width="25%" align="center"></td>
+	<td width="25%" align="center"></td>
+	<td colspan="2" width="50%">
+	
+	<table border="1" cellspacing="0" width="100%">
+	<tr>
+	<td width="60%" align="center">
+	<h2><h:outputText value="IMPUESTO #{calculadoraManged.anioAfecta}" /></h2></td>
+	<td align="center">
+	<h2><h:outputText id="id_impTotalAnio" value="#{calculadoraManged.impuestoTotal}" ><f:convertNumber locale="en" minFractionDigits="2" maxFractionDigits="2" type="currency" currencySymbol="S/. "/></h:outputText></h2></td>
+	</tr>
+	</table>
+	
+	</td>
+	</tr>	
+	
+	</table>
+	
+	</rich:panel>
+	
+	
+	
+	</h:form>	
+		
+	</ui:composition>

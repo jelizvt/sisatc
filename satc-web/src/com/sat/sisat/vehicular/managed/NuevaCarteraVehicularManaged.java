@@ -1,0 +1,579 @@
+package com.sat.sisat.vehicular.managed;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.sat.sisat.common.util.BaseManaged;
+import com.sat.sisat.controlycobranza.business.ControlyCobranzaBoRemote;
+import com.sat.sisat.persistence.entity.GnSector;
+import com.sat.sisat.vehicular.business.VehicularBoRemote;
+import com.sat.sisat.vehicular.dto.CabCarteraVehicularDTO;
+import com.sat.sisat.vehicular.dto.CarteraVehiculosDTO;
+import com.sat.sisat.vehicular.dto.DistritoDTO;
+
+import java.util.Iterator;
+
+//import org.richfaces.event.FileUploadEvent;
+
+import org.richfaces.event.UploadEvent;
+
+
+import java.io.InputStream;
+import java.io.FileInputStream;
+
+@ManagedBean
+@ViewScoped
+public class NuevaCarteraVehicularManaged extends BaseManaged{
+	
+	@EJB
+	VehicularBoRemote vehiculoBo;
+	
+	@EJB
+	ControlyCobranzaBoRemote controlBo;
+	
+	private List<CabCarteraVehicularDTO> lstCab = new ArrayList<CabCarteraVehicularDTO>();
+	
+	private List<CabCarteraVehicularDTO> lstTemporal = new ArrayList<CabCarteraVehicularDTO>();
+	
+	private List<CarteraVehiculosDTO> lstCarteraVehiculo = new ArrayList<CarteraVehiculosDTO>();
+	private List<DistritoDTO> lstDistritos = new ArrayList<DistritoDTO>();
+	private List<GnSector> lstSector= new ArrayList<GnSector>();
+	
+	
+	private int distritoId;
+	private int sectorId;
+	private int loteId;
+	private int personaId;
+	private String placa;
+	private String nroRequerimiento;
+	private int lote_id ;
+	
+	@PostConstruct
+	public void init() {
+		try {
+			
+			
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void exportarTablaExcel(){
+		
+		Workbook workbook = new HSSFWorkbook();
+		Sheet sheet = workbook.createSheet("Exportando a Excel");
+		int rowIndex = 1;
+		 Row row1 = sheet.createRow(0);
+
+		 	row1.createCell(0).setCellValue("orden");
+		 	row1.createCell(1).setCellValue("sunarp");
+		 	row1.createCell(2).setCellValue("placa");		 
+		    row1.createCell(3).setCellValue("partida");
+		    row1.createCell(4).setCellValue("fecha_insc_vehiculo");
+		    row1.createCell(5).setCellValue("fecha_adqui_xprop");		    
+		    row1.createCell(6).setCellValue("fecha_fin_afectacion");   
+		    row1.createCell(7).setCellValue("propietario");
+		    row1.createCell(8).setCellValue("tipo_doc");
+		    row1.createCell(9).setCellValue("tipo_doc_identidad_id");
+		    row1.createCell(10).setCellValue("documento");
+		    row1.createCell(11).setCellValue("direccion");
+		    row1.createCell(12).setCellValue("distrito_propietario");		    
+		    row1.createCell(13).setCellValue("dpto_id");
+		    row1.createCell(14).setCellValue("provincia_id");
+		    row1.createCell(15).setCellValue("distrito_id");	    		
+		    row1.createCell(16).setCellValue("cod_contribuyente_personas");
+		    row1.createCell(17).setCellValue("tipo_persona");
+		    row1.createCell(18).setCellValue("tipo_persona_id");
+		    row1.createCell(19).setCellValue("subtipo_persona_id");
+		    row1.createCell(20).setCellValue("relacionado");
+		    row1.createCell(21).setCellValue("dni_relacionado");
+		    row1.createCell(22).setCellValue("tipo_relacion");
+		    row1.createCell(23).setCellValue("tipo_relacion_id");
+		    row1.createCell(24).setCellValue("marca");
+		    row1.createCell(25).setCellValue("modelo");
+		    row1.createCell(26).setCellValue("carroceria");
+		    row1.createCell(27).setCellValue("motor");
+		    row1.createCell(28).setCellValue("serie");
+		    row1.createCell(29).setCellValue("ano_fab_veh");
+		    row1.createCell(30).setCellValue("combustible");		    
+		    row1.createCell(31).setCellValue("cilindrada");
+		    row1.createCell(32).setCellValue("color1");
+		    row1.createCell(33).setCellValue("color2");
+		    row1.createCell(34).setCellValue("color3");
+		    row1.createCell(35).setCellValue("no_tarj");
+		    row1.createCell(36).setCellValue("categoria");
+		    row1.createCell(37).setCellValue("tipo_uso_vehiculo");		    
+		    row1.createCell(38).setCellValue("monto_dolares");
+		    row1.createCell(39).setCellValue("monto_soles");
+		    row1.createCell(40).setCellValue("marca_vehiculo_id");
+		    row1.createCell(41).setCellValue("carroceria_vehiculo_id");
+		    row1.createCell(42).setCellValue("tipo_motor");		    
+		    row1.createCell(43).setCellValue("categoria_vehiculo");
+		    row1.createCell(44).setCellValue("categoria_id");
+		    row1.createCell(45).setCellValue("mode_vehiculo_cat");
+		    row1.createCell(46).setCellValue("mode_vehiculo_id");
+		    
+		    																	  	  							
+
+		  for(CabCarteraVehicularDTO data : lstCab){
+		    Row row = sheet.createRow(rowIndex++);
+		    int columnIndex = 0;
+		    
+		    row.createCell(columnIndex++).setCellValue(data.getOrden());
+		    row.createCell(columnIndex++).setCellValue(data.getSunarp());		    
+		    row.createCell(columnIndex++).setCellValue(data.getPlaca());		    
+		    row.createCell(columnIndex++).setCellValue(data.getPartida());
+		    row.createCell(columnIndex++).setCellValue(data.getFecha_insc_vehiculo());
+		    row.createCell(columnIndex++).setCellValue(data.getFecha_adqui_xprop());
+		    row.createCell(columnIndex++).setCellValue(data.getFecha_fin_afectacion());
+		    row.createCell(columnIndex++).setCellValue(data.getPropietario());
+		    row.createCell(columnIndex++).setCellValue(data.getTipo_doc());
+		    row.createCell(columnIndex++).setCellValue(data.getTipo_doc_identidad_id());
+		    
+		    row.createCell(columnIndex++).setCellValue(data.getDocumento());
+		    row.createCell(columnIndex++).setCellValue(data.getDireccion());
+		    row.createCell(columnIndex++).setCellValue(data.getDistrito_propietario());
+		    row.createCell(columnIndex++).setCellValue(data.getDpto_id());
+		    row.createCell(columnIndex++).setCellValue(data.getProvincia_id());
+		    row.createCell(columnIndex++).setCellValue(data.getDistrito_id());
+		    row.createCell(columnIndex++).setCellValue(data.getCod_contribuyente_personas());
+		    row.createCell(columnIndex++).setCellValue(data.getTipo_persona());
+		    row.createCell(columnIndex++).setCellValue(data.getTipo_persona_id());
+		    row.createCell(columnIndex++).setCellValue(data.getSubtipo_persona_id());
+		    
+		    row.createCell(columnIndex++).setCellValue(data.getRelacionado());
+		    row.createCell(columnIndex++).setCellValue(data.getDni_relacionado());
+		    row.createCell(columnIndex++).setCellValue(data.getTipo_relacion());
+		    row.createCell(columnIndex++).setCellValue(data.getTipo_relacion_id());
+		    row.createCell(columnIndex++).setCellValue(data.getMarca());
+		    row.createCell(columnIndex++).setCellValue(data.getModelo());
+		    row.createCell(columnIndex++).setCellValue(data.getCarroceria());
+		    row.createCell(columnIndex++).setCellValue(data.getMotor());
+		    row.createCell(columnIndex++).setCellValue(data.getSerie());
+		    row.createCell(columnIndex++).setCellValue(data.getAno_fab_veh());
+		    
+		    row.createCell(columnIndex++).setCellValue(data.getCombustible());
+		    row.createCell(columnIndex++).setCellValue(data.getCilindrada());
+		    row.createCell(columnIndex++).setCellValue(data.getColor1());
+		    row.createCell(columnIndex++).setCellValue(data.getColor2());		    
+		    row.createCell(columnIndex++).setCellValue(data.getColor3());
+		    row.createCell(columnIndex++).setCellValue(data.getNo_tarj());
+		    row.createCell(columnIndex++).setCellValue(data.getCategoria());
+		    row.createCell(columnIndex++).setCellValue(data.getTipo_uso_vehiculo());
+		    row.createCell(columnIndex++).setCellValue(data.getMonto_dolares());
+		    row.createCell(columnIndex++).setCellValue(data.getMonto_soles());
+		    
+		    row.createCell(columnIndex++).setCellValue(data.getMarca_vehiculo_id());
+		    row.createCell(columnIndex++).setCellValue(data.getCarroceria_vehiculo_id());		    
+		    row.createCell(columnIndex++).setCellValue(data.getTipo_motor());
+		    row.createCell(columnIndex++).setCellValue(data.getCategoria());
+		    row.createCell(columnIndex++).setCellValue(data.getCategoria_id());
+		    row.createCell(columnIndex++).setCellValue(data.getMode_vehiculo_cat());
+		    row.createCell(columnIndex++).setCellValue(data.getMode_vehiculo_id());
+		    
+		    
+
+		}
+		FacesContext context = FacesContext.getCurrentInstance();
+		ExternalContext externalContext = context.getExternalContext();
+		externalContext.responseReset(); 
+		externalContext.setResponseContentType("application/vnd.ms-excel");
+		externalContext.setResponseHeader("Content-Disposition", "attachment;filename=Control_Requerimientos.xls");
+		try {
+			workbook.write(externalContext.getResponseOutputStream());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		context.responseComplete(); // Prevent JSF from performing navigation.
+	}
+	
+	
+	
+	
+	public void importaDataExcel(UploadEvent event) throws Exception {
+		List cellDataList = new ArrayList();
+		
+		InputStream excelStream = null;
+		excelStream = new FileInputStream(event.getUploadItem().getFile());
+        XSSFWorkbook workbook = new XSSFWorkbook(excelStream);
+        
+        
+        XSSFSheet hssfSheet = workbook.getSheetAt(0);
+        XSSFSheet sheet = workbook.getSheetAt(0);
+        
+        int row=0;
+		XSSFRow r=sheet.getRow(row);
+		 
+            Iterator rowIterator = hssfSheet.rowIterator();
+             while (rowIterator.hasNext()){
+                XSSFRow hssfRow = (XSSFRow) rowIterator.next();
+                Iterator iterator = hssfRow.cellIterator();
+                List cellTempList = new ArrayList();
+                     while (iterator.hasNext()){
+                        XSSFCell hssfCell = (XSSFCell) iterator.next();
+                        cellTempList.add(hssfCell);
+                    }
+                cellDataList.add(cellTempList);
+             }
+             
+             
+             printToConsole(cellDataList);
+	}
+	
+	private void printToConsole(List cellDataList){
+		lstTemporal = new ArrayList<CabCarteraVehicularDTO>();
+		CabCarteraVehicularDTO obj = new CabCarteraVehicularDTO();
+				
+        for (int i = 1; i < cellDataList.size(); i++){
+        	//INICIO LLENAR OBJ
+        	obj = new CabCarteraVehicularDTO();
+        	List cellTempList = (List) cellDataList.get(i);
+        	
+        	
+        	
+        	XSSFCell ordenCell = (XSSFCell) cellTempList.get(0);
+        	if( !ordenCell.toString().equals("")) {
+        		obj.setOrden( (int)Double.parseDouble( ordenCell.toString() ));
+        	}  
+        	
+        	
+        	XSSFCell sunarpCell = (XSSFCell) cellTempList.get(1);
+        	obj.setSunarp( sunarpCell.toString() );
+        	
+        	XSSFCell placaCell = (XSSFCell) cellTempList.get(2);
+        	obj.setPlaca( placaCell.toString() );
+        	
+        	XSSFCell partidaCell = (XSSFCell) cellTempList.get(3);
+        	obj.setPartida( partidaCell.toString() );
+        	
+        	XSSFCell fecha_insc_vehiculoCell = (XSSFCell) cellTempList.get(4);
+        	obj.setFecha_insc_vehiculo( fecha_insc_vehiculoCell.toString() );
+        	
+        	XSSFCell fecha_adqui_xpropCell = (XSSFCell) cellTempList.get(5);
+        	obj.setFecha_adqui_xprop( fecha_adqui_xpropCell.toString() );
+        		 
+        	XSSFCell fecha_fin_afectacionCell = (XSSFCell) cellTempList.get(6);
+        	obj.setFecha_fin_afectacion( fecha_fin_afectacionCell.toString() );
+        	
+        	XSSFCell propietarioCell = (XSSFCell) cellTempList.get(7);
+        	obj.setPropietario( propietarioCell.toString() );
+        	
+        	XSSFCell tipo_docCell = (XSSFCell) cellTempList.get(8);
+        	obj.setTipo_doc( tipo_docCell.toString() );
+        	
+        	XSSFCell tipo_doc_identidad_idCell = (XSSFCell) cellTempList.get(9);
+        	if( !tipo_doc_identidad_idCell.toString().equals("")) {
+        		obj.setTipo_doc_identidad_id( (int)Double.parseDouble( tipo_doc_identidad_idCell.toString() ) );
+        	}         	
+        	
+        	XSSFCell documentoCell = (XSSFCell) cellTempList.get(10);
+        	obj.setDocumento( documentoCell.toString() );
+        	
+        	XSSFCell direccionCell = (XSSFCell) cellTempList.get(11);
+        	obj.setDireccion( direccionCell.toString() );
+        	
+        	XSSFCell distrito_propietarioCell = (XSSFCell) cellTempList.get(12);
+        	obj.setDistrito_propietario( distrito_propietarioCell.toString() );
+        	  
+        	XSSFCell dpto_idCell = (XSSFCell) cellTempList.get(13);
+        	if( !dpto_idCell.toString().equals("")) {
+        		obj.setDpto_id( (int)Double.parseDouble( dpto_idCell.toString() ) );
+        	}         	
+        	
+        	XSSFCell provincia_idCell = (XSSFCell) cellTempList.get(14);
+        	if( !provincia_idCell.toString().equals("")) {
+        		obj.setProvincia_id( (int)Double.parseDouble( provincia_idCell.toString() ) );
+        	}         	
+        	
+        	XSSFCell distrito_idCell = (XSSFCell) cellTempList.get(15);
+        	if( !distrito_idCell.toString().equals("")) {
+        		obj.setDistrito_id( (int)Double.parseDouble( distrito_idCell.toString() ) );
+        	}  
+        	
+        	XSSFCell cod_contribuyente_personasCell = (XSSFCell) cellTempList.get(16);
+        	if( !cod_contribuyente_personasCell.toString().equals("")) {
+        		obj.setCod_contribuyente_personas( (int)Double.parseDouble( cod_contribuyente_personasCell.toString() ) );
+        	}
+        	
+        	
+        	XSSFCell tipo_personaCell = (XSSFCell) cellTempList.get(17);
+        	obj.setTipo_persona(  tipo_personaCell.toString()  );
+        	
+        	XSSFCell tipo_persona_idCell = (XSSFCell) cellTempList.get(18);
+        	if( !tipo_persona_idCell.toString().equals("")) {
+        		obj.setTipo_persona_id( (int)Double.parseDouble( tipo_persona_idCell.toString() ) );
+        	}        	
+        	
+        	XSSFCell subtipo_persona_idCell = (XSSFCell) cellTempList.get(19);
+        	if( !subtipo_persona_idCell.toString().equals("")) {
+        		obj.setSubtipo_persona_id( (int)Double.parseDouble( subtipo_persona_idCell.toString() ) );
+        	}        	
+		    
+        	XSSFCell relacionadoCell = (XSSFCell) cellTempList.get(20);
+        	obj.setRelacionado(  relacionadoCell.toString()  );
+        	
+        	XSSFCell dni_relacionadoCell = (XSSFCell) cellTempList.get(21);
+        	obj.setDni_relacionado(  dni_relacionadoCell.toString()  );
+        	
+        	XSSFCell tipo_relacionCell = (XSSFCell) cellTempList.get(22);
+        	obj.setTipo_relacion(  tipo_relacionCell.toString()  );
+        	
+        	
+        	XSSFCell tipo_relacion_idCell = (XSSFCell) cellTempList.get(23);
+        	if( !tipo_relacion_idCell.toString().equals("")) {
+        		obj.setTipo_relacion_id(  (int)Double.parseDouble( tipo_relacion_idCell.toString() ) );
+        	}
+        	
+        	XSSFCell marcaCell = (XSSFCell) cellTempList.get(24);
+        	System.out.println(ordenCell.toString());
+        	System.out.println(marcaCell.toString());
+        	obj.setMarca(  marcaCell.toString()  );
+        	
+        	XSSFCell modeloCell = (XSSFCell) cellTempList.get(25);
+        	obj.setModelo(  modeloCell.toString()  );
+        	
+        	XSSFCell carroceriaCell = (XSSFCell) cellTempList.get(26);
+        	obj.setCarroceria(  carroceriaCell.toString()  );
+        	
+        	XSSFCell motorCell = (XSSFCell) cellTempList.get(27);
+        	obj.setMotor(  motorCell.toString()  );
+        	
+        	XSSFCell serieCell = (XSSFCell) cellTempList.get(28);
+        	obj.setSerie(  serieCell.toString()  );
+        	
+        	XSSFCell ano_fab_vehCell = (XSSFCell) cellTempList.get(29);
+        	if( !ano_fab_vehCell.toString().equals("")) {
+        		obj.setAno_fab_veh(  (int)Double.parseDouble(ano_fab_vehCell.toString())  );
+        	}
+        	
+        	
+        	XSSFCell combustibleCell = (XSSFCell) cellTempList.get(30);
+        	obj.setCombustible(  combustibleCell.toString()  );
+        	
+        	XSSFCell cilindradaCell = (XSSFCell) cellTempList.get(31);
+        	obj.setCilindrada(  cilindradaCell.toString()  );
+        	
+        	
+        	XSSFCell color1Cell = (XSSFCell) cellTempList.get(32);
+        	obj.setColor1(  color1Cell.toString()  );
+        	
+        	XSSFCell color2Cell = (XSSFCell) cellTempList.get(33);
+        	obj.setColor2(  color2Cell.toString()  );
+        	
+        	XSSFCell color3Cell = (XSSFCell) cellTempList.get(34);
+        	obj.setColor3(  color3Cell.toString()  );
+        			    
+        	XSSFCell no_tarjCell = (XSSFCell) cellTempList.get(35);
+        	obj.setNo_tarj(  no_tarjCell.toString()  );
+        	
+        	XSSFCell categoriaCell = (XSSFCell) cellTempList.get(36);
+        	obj.setCategoria(  categoriaCell.toString()  );
+        	
+        	XSSFCell tipo_uso_vehiculoCell = (XSSFCell) cellTempList.get(37);
+        	obj.setTipo_uso_vehiculo(  tipo_uso_vehiculoCell.toString()  );
+        	
+        	XSSFCell monto_dolaresCell = (XSSFCell) cellTempList.get(38);
+        	
+        	if( !monto_dolaresCell.toString().equals("")) {
+        		obj.setMonto_dolares(  Double.parseDouble( monto_dolaresCell.toString() ) );
+        	}        	
+        	
+        	XSSFCell monto_solesCell = (XSSFCell) cellTempList.get(39);        	
+        	if( !monto_solesCell.toString().equals("")) {
+        		obj.setMonto_soles(  Double.parseDouble( monto_solesCell.toString() ) );
+        	}         	
+        	
+        	XSSFCell marca_vehiculo_idCell = (XSSFCell) cellTempList.get(40);
+        	if( !marca_vehiculo_idCell.toString().equals("")) {
+        		obj.setMarca_vehiculo_id(  (int) Double.parseDouble( marca_vehiculo_idCell.toString() ) );
+        	}
+        	
+        	XSSFCell carroceria_vehiculo_idCell = (XSSFCell) cellTempList.get(41);
+        	if( !carroceria_vehiculo_idCell.toString().equals("")) {
+        		obj.setCarroceria_vehiculo_id(  (int) Double.parseDouble( carroceria_vehiculo_idCell.toString() ) );
+        	}        	
+        	
+        	XSSFCell tipo_motorCell = (XSSFCell) cellTempList.get(42);
+        	if( !tipo_motorCell.toString().equals("")) {
+        		obj.setTipo_motor(  (int)Double.parseDouble(tipo_motorCell.toString())  );
+        	}
+        	        	
+        	XSSFCell categoria1Cell = (XSSFCell) cellTempList.get(43);
+        	obj.setCategoria_vehiculo(  categoria1Cell.toString()  );
+        			    
+        	XSSFCell categoria_idCell = (XSSFCell) cellTempList.get(44);
+        	if( !categoria_idCell.toString().equals("")) {
+        		obj.setCategoria_id(  (int) Double.parseDouble( categoria_idCell.toString() ) );
+        	}         	
+        	
+        	XSSFCell mode_vehiculo_catCell = (XSSFCell) cellTempList.get(45);
+        	obj.setMode_vehiculo_cat(  mode_vehiculo_catCell.toString()  );
+        	
+        	
+        	XSSFCell mode_vehiculo_idCell = (XSSFCell) cellTempList.get(46);
+        	if( !mode_vehiculo_idCell.toString().equals("")) {
+        		obj.setMode_vehiculo_id(  (int) Double.parseDouble( mode_vehiculo_idCell.toString() ) );
+        	}    
+        	
+        	
+        	lstTemporal.add(obj);
+        	//System.out.println("=====================> "+ tipo_relacion_idCell.toString() );
+        	
+        	
+        	//System.out.println("=====================> "+obj.getOrden());
+        	//FIN LLENAR OBJ
+        	
+            /*List cellTempList = (List) cellDataList.get(i);
+            for (int j = 0; j < cellTempList.size(); j++){
+                 XSSFCell hssfCell = (XSSFCell) cellTempList.get(j);
+                 if(j == 0) {
+                	 
+                	 obj.setOrden((int)Double.parseDouble( hssfCell.toString() ));
+                	 
+                	 //String stringCellValue = hssfCell.toString();                 
+                     System.out.println(obj.getOrden() + "\t");
+                 }                   
+            }
+            */
+        }
+    }
+	
+	public void cargar() {
+		try {
+			
+			lote_id = vehiculoBo.getNuevaCarteraVehiculos(lstTemporal,getSessionManaged().getUsuarioLogIn().getUsuarioId() ,getSessionManaged().getUser().getTerminal());
+			
+			
+		} catch (Exception e) {
+			
+			String msg = "Ocurrio un error al cargar la cartera. ";
+			System.out.println(msg + e);
+			addErrorMessage(msg);
+			
+			e.printStackTrace();
+			
+		}
+	}
+	public void  preliminar(){
+		
+	}
+	
+	public void limpiar() {
+		lstTemporal = new ArrayList<CabCarteraVehicularDTO>();
+	}
+	
+	
+
+	public List<CarteraVehiculosDTO> getLstCarteraVehiculo() {
+		return lstCarteraVehiculo;
+	}
+
+	public void setLstCarteraVehiculo(List<CarteraVehiculosDTO> lstCarteraVehiculo) {
+		this.lstCarteraVehiculo = lstCarteraVehiculo;
+	}
+
+	public List<DistritoDTO> getLstDistritos() {
+		return lstDistritos;
+	}
+
+	public void setLstDistritos(List<DistritoDTO> lstDistritos) {
+		this.lstDistritos = lstDistritos;
+	}
+
+	public int getDistritoId() {
+		return distritoId;
+	}
+
+	public void setDistritoId(int distritoId) {
+		this.distritoId = distritoId;
+	}
+
+	public List<GnSector> getLstSector() {
+		return lstSector;
+	}
+
+	public void setLstSector(List<GnSector> lstSector) {
+		this.lstSector = lstSector;
+	}
+
+	public int getSectorId() {
+		return sectorId;
+	}
+
+	public void setSectorId(int sectorId) {
+		this.sectorId = sectorId;
+	}
+
+	public int getLoteId() {
+		return loteId;
+	}
+
+	public void setLoteId(int loteId) {
+		this.loteId = loteId;
+	}
+
+	public int getPersonaId() {
+		return personaId;
+	}
+
+	public void setPersonaId(int personaId) {
+		this.personaId = personaId;
+	}
+
+	public String getPlaca() {
+		return placa;
+	}
+
+	public void setPlaca(String placa) {
+		this.placa = placa;
+	}
+
+	public String getNroRequerimiento() {
+		return nroRequerimiento;
+	}
+
+	public void setNroRequerimiento(String nroRequerimiento) {
+		this.nroRequerimiento = nroRequerimiento;
+	}
+
+	public List<CabCarteraVehicularDTO> getLstTemporal() {
+		return lstTemporal;
+	}
+
+	public void setLstTemporal(List<CabCarteraVehicularDTO> lstTemporal) {
+		this.lstTemporal = lstTemporal;
+	}
+
+	public int getLote_id() {
+		return lote_id;
+	}
+
+	public void setLote_id(int lote_id) {
+		this.lote_id = lote_id;
+	}
+	
+	
+
+}

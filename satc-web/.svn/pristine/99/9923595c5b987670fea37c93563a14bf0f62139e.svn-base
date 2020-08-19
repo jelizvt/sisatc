@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<style type="text/css">
+.extdt-empty-cell {
+	width: 0;
+}
+
+th.extdt-empty-cell {
+	width: 0;
+}
+/* Disables resizing */
+.extdt-hsep {
+	display: none;
+}
+
+.special tr[id] {
+	display: none;
+}
+</style>
+
+	<h:form id="formregistroLoteOP">
+		<a4j:outputPanel id="id_panelprincipalregistroLoteOP">
+			<table align="center" border="0" cellpadding="0" cellspacing="0"
+				width="100%">
+				<tr>
+					<td>
+						<table align="center" width="100%">
+							<tr>
+								<td>
+									<table align="center" border="0" width="100%">
+										<tr>
+											<td><rich:panel id="nuevo_lote"
+													style="width:100%; font-weight:bold;">
+													<h:outputText value="Número de Lote : " />
+													<h:outputText
+														value="Numero de Lote : #{registroLoteOrdenPagoManaged.findCcLoteItem.loteId} - #{registroLoteOrdenPagoManaged.findCcLoteItem.annoLote}-->" />
+													<h:outputText
+														value="OPs Vehicular Sin Notificar Pendientes de Pago : "
+														rendered="#{registroLoteOrdenPagoManaged.findCcLoteItem.conceptoId==2}" />
+
+													<h:commandLink
+														rendered="#{registroLoteOrdenPagoManaged.findCcLoteItem.conceptoId==2}"
+														id="id_desc1"
+														action="#{registroLoteOrdenPagoManaged.generacionOPsVehicularSinNotificarySinPagarExcel}"
+														immediate="true">
+														<h:graphicImage value="/images/modal/excel.png"
+															style="border:0 ; height:22px; width:22px;"
+															title="Lista de OPs Vehicular Sin Notificar Pendientes de Pago" />
+													</h:commandLink>
+													<h:outputText value="OPs Vehicular Pendientes de Pago : "
+														rendered="#{registroLoteOrdenPagoManaged.findCcLoteItem.conceptoId==2}" />
+
+													<h:commandLink
+														rendered="#{registroLoteOrdenPagoManaged.findCcLoteItem.conceptoId==2}"
+														id="id_regist"
+														action="#{registroLoteOrdenPagoManaged.generacionOpsVehicularSinPagarExcel}"
+														immediate="true">
+														<h:graphicImage value="/images/modal/excel.png"
+															style="border:0 ; height:22px; width:22px;"
+															title="Lista de OPs Vehicular Pendientes de Pago" />
+													</h:commandLink>
+
+													<h:outputText value="Descargar OPs Predial Inubicables : "
+														rendered="#{registroLoteOrdenPagoManaged.findCcLoteItem.conceptoId==1}" />
+
+													<h:commandLink
+														rendered="#{registroLoteOrdenPagoManaged.findCcLoteItem.conceptoId==1}"
+														id="id_desc3"
+														action="#{registroLoteOrdenPagoManaged.generacionInubicablesPredialExcel}"
+														immediate="true">
+														<h:graphicImage value="/images/modal/excel.png"
+															style="border:0 ; height:22px; width:22px;"
+															title="Lista de OPs Inubicables Predial" />
+													</h:commandLink>
+												</rich:panel></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table align="center" border="0" width="100%">
+										<tr>
+											<td align="left" width="62%"><rich:panel
+													style="width:100%;  height: 150px;"
+													id="id_paneldatosloteordinario">
+													<f:facet name="header">
+														<h:outputLabel value="#{msg['cc.registrolotesOP']}" />
+													</f:facet>
+
+													<table border="0" width="100%">
+														<tr>
+															<td align="left" width="140px"><h:panelGroup>
+																	<h:outputText value="Concepto" />
+																</h:panelGroup></td>
+
+															<td><rich:comboBox width="140px"
+																	defaultLabel="Selecccione" selectFirstOnUpdate="true"
+																	value="#{registroLoteOrdenPagoManaged.cmbValueConcepto}"
+																	directInputSuggestions="false"
+																	onblur="validaInputCbo(this)" id="id_concepto"
+																	binding="#{registroLoteOrdenPagoManaged.cmbgnConcepto}"
+																	immediate="true"
+																	valueChangeListener="#{registroLoteOrdenPagoManaged.loadGnConceptoById}">
+																	<f:selectItems id="id_lstconcepto"
+																		value="#{registroLoteOrdenPagoManaged.lstgnConcepto}" />
+																	<a4j:support id="id_supportlstconcepto"
+																		reRender="selsubconcepto,id_firmantes"
+																		event="onchange" BypassUpdates="false"
+																		ajaxSingle="true" />
+																</rich:comboBox></td>
+														</tr>
+														<tr>
+															<td align="left" width="80px"><h:panelGroup>
+																	<h:outputText value="Tipo de Persona:" />
+																</h:panelGroup></td>
+															<td><h:selectManyListbox id="seltipopersona"
+																	required="true"
+																	requiredMessage="#{msg['cc.errortipopersona']}"
+																	value="#{registroLoteOrdenPagoManaged.lstMpTipoPersonaSeleccionados}"
+																	size="5">
+																	<f:selectItems var="var1"
+																		itemValue="#{var1.descripcion}"
+																		itemLabel="#{var1.descripcion}"
+																		value="#{registroLoteOrdenPagoManaged.lstTipoPersona}" />
+																	<a4j:support ajaxSingle="true" event="onblur"
+																		focus="selsubconcepto" />
+																</h:selectManyListbox></td>
+															<td align="left" width="140px"><h:panelGroup>
+																	<h:outputText value="Sub Concepto:" />
+																</h:panelGroup></td>
+															<td><h:selectManyListbox id="selsubconcepto"
+																	required="true"
+																	requiredMessage="#{msg['cc.errorsubconcepto']}"
+																	disabled="#{registroLoteOrdenPagoManaged.isRecordatorioDeudas}"
+																	value="#{registroLoteOrdenPagoManaged.lstGnSubConceptoSeleccionados}"
+																	style="width:140px" size="5">
+																	<f:selectItems var="var"
+																		itemValue="#{var.id.subconceptoId}"
+																		itemLabel="#{var.descripcion}"
+																		value="#{registroLoteOrdenPagoManaged.lstGnSubConcepto}" />
+																	<a4j:support id="id_supportlstsubconcepto"
+																		event="onchange" ajaxSingle="true" />
+																</h:selectManyListbox></td>
+
+														</tr>
+													</table>
+												</rich:panel></td>
+											<td style="width: 38%"><a4j:outputPanel>
+													<rich:panel id="id_agrupacion"
+														style="width:100%; height: 150px;">
+														<f:facet name="header">		
+												Criterios de Agrupación
+											</f:facet>
+														<table border="0" width="100%">
+
+															<tr>
+
+																<td>
+																	<h:selectBooleanCheckbox id="id_SelectSector"
+																			style="align:right;" 
+																			onclick="showOnMap(this)"
+																			valueChangeListener="#{registroLoteOrdenPagoManaged.porSector()}"
+																			value="true">
+																			<a4j:support event="onchange" ajaxSingle="true"
+																				BypassUpdates="false" reRender="id_SelectSector,id_sectores" />
+																	</h:selectBooleanCheckbox> <h:outputText value="Todos los Sectores" /></td>
+
+																<td>
+																
+																
+																	 <h:selectOneMenu																	 	 												 	
+																		disabled="#{not registroLoteOrdenPagoManaged.porSector}"
+																		id="id_sectores"
+																		value="#{registroLoteOrdenPagoManaged.sectorID}"
+																		style="width:140px;">
+																		<f:selectItem itemLabel="Seleccione"
+																			noSelectionOption="true" />
+																		<f:selectItems
+																			value="#{registroLoteOrdenPagoManaged.sectores}"
+																			var="item" 
+																			itemLabel="#{item.descripcionCorta}"
+																			itemValue="#{item.sectorId}">
+																		</f:selectItems>
+																		
+																		<a4j:support id="idEventRs2" event="onchange"
+																			reRender="id_sectores"
+																			
+																			BypassUpdates="false" ajaxSingle="true" />
+																			
+																		
+																		
+																	</h:selectOneMenu>
+																	 
+																</td>
+
+															</tr>
+
+
+
+															<tr>
+																<td align="left" width="130px"><h:panelGroup>
+																		<h:outputText value="Monto Minimo" />
+																	</h:panelGroup></td>
+																<td align="left" width="100px"><h:inputText
+																		value="#{registroLoteOrdenPagoManaged.montoMin}"
+																		required="true"
+																		disabled="#{registroLoteOrdenPagoManaged.findCcLoteItem.flag_generacion==2}"
+																		requiredMessage="#{msg['cc.errormontominimo']}">
+																		<a4j:support ajaxSingle="true" event="onblur" />
+																	</h:inputText></td>
+															</tr>
+															<tr>
+																<td align="left" width="130px"><h:panelGroup>
+																		<h:outputText value="Monto Fin" />
+																	</h:panelGroup></td>
+																<td align="left" width="100px"><h:inputText
+																		value="#{registroLoteOrdenPagoManaged.montoMax}"
+																		disabled="#{registroLoteOrdenPagoManaged.findCcLoteItem.flag_generacion==2}"
+																		required="true"
+																		requiredMessage="#{msg['cc.errormontofin']}">
+																		<a4j:support ajaxSingle="true" event="onblur" />
+																	</h:inputText></td>
+															</tr>
+															<tr>
+																<td align="left" width="130px"><h:panelGroup>
+																		<h:outputText value="Seleccione Lote a Generar" />
+																	</h:panelGroup></td>
+																<td><rich:comboBox width="140px"
+																		defaultLabel="Selecccione" enableManualInput="false"
+																		selectFirstOnUpdate="true"
+																		directInputSuggestions="true"
+																		binding="#{registroLoteOrdenPagoManaged.cmbHtmlOpUbicable}"
+																		onblur="validaInputCbo(this)" id="id_rsubicable"
+																		immediate="true"
+																		value="#{registroLoteOrdenPagoManaged.seleccionOp}"
+																		valueChangeListener="#{registroLoteOrdenPagoManaged.loadSeleccion}">
+																		<f:selectItem id="id1" itemValue="OPs Ubicables" />
+																		<f:selectItem id="id2" itemValue="OPs Inubicables S/N" />
+																		<f:selectItem id="id3"
+																			itemValue="OPs Inubicables OTROS" />
+																		<a4j:support id="idEventRs" event="onchange"
+																			BypassUpdates="false" ajaxSingle="true" />
+																	</rich:comboBox></td>
+															</tr>
+															<tr>
+																<td><h:selectBooleanCheckbox id="idSn"
+																		style="align:right;" onclick="showOnMap(this)"
+																		valueChangeListener="#{registroLoteOrdenPagoManaged.checkOpParaUnContribuyente}"
+																		value="true">
+																		<a4j:support event="onchange" ajaxSingle="true"
+																			reRender="idContribuyente" />
+																	</h:selectBooleanCheckbox> <h:outputText value="Todos los Contribuyentes" /></td>
+																<td align="left" width="100px"><h:inputText
+																		id="idContribuyente"
+																		disabled="#{registroLoteOrdenPagoManaged.opParaUnaPersona}"
+																		title="Ingresar Valor Solo si se va a Generar OP para una Persona."
+																		value="#{registroLoteOrdenPagoManaged.personaId}">
+																		<a4j:support ajaxSingle="true" event="onblur" />
+																	</h:inputText></td>
+															</tr>
+														</table>
+													</rich:panel>
+												</a4j:outputPanel></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<table align="center" border="0" width="100%">
+										<tr>
+
+											<td style="width: 70%"><a4j:outputPanel>
+													<rich:panel id="id_firmantes"
+														style="width:100%; height: 175px;">
+														<f:facet name="header">		
+												Firmantes
+										</f:facet>
+														<table border="0" width="100%">
+															<tr>
+																<td><h:panelGrid columns="6">
+																		<rich:listShuttle targetListWidth="300px"
+																			id="id_impresion_"
+																			sourceValue="#{registroLoteOrdenPagoManaged.lstCcFirmantesValue}"
+																			targetValue="#{registroLoteOrdenPagoManaged.lstCcFirmantesSeleccionado}"
+																			var="item1" upControlLabel="Arriba"
+																			bottomControlLabel="Ultimo"
+																			copyAllControlLabel="Copiar Todos"
+																			copyControlLabel="Copiar" downControlLabel="Abajo"
+																			removeAllControlLabel="Mover Todos"
+																			removeControlLabel="Mover" topControlLabel="Primero"
+																			listsHeight="100px" sourceListWidth="300px"
+																			sourceCaptionLabel="Firmantes"
+																			targetCaptionLabel="Firmantes Seleccionados">
+																			<rich:column>
+																				<h:outputText value="#{item1}" />
+																			</rich:column>
+																		</rich:listShuttle>
+																		<h:panelGrid columns="2">
+																			<h:outputText value="Ingrese Año a Generar" />
+																			<h:inputText id="id_periodoId"
+																				value="#{registroLoteOrdenPagoManaged.periodo}"
+																				size="4" title="Ingresar año a Generar"
+																				maxlength="4" style="width:100%;" required="true"
+																				requiredMessage="Ingrese el año de la OP a generar">
+																				<a4j:support ajaxSingle="true" event="onblur"
+																					reRender="id_selCuotaAnio"
+																					oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+																					action="#{registroLoteOrdenPagoManaged.loadCuotasAnio}" />
+																			</h:inputText>
+																			<h:panelGrid columns="2">
+																				<h:outputLabel
+																					value="Generar solo 1ra Inscripcion?: "
+																					for="idCheck" />
+																				<h:selectBooleanCheckbox id="idCheck"
+																					title="Primera Inscripcion del Año en curso"
+																					value="#{registroLoteOrdenPagoManaged.soloPrimeraInscripcion}" />
+																			</h:panelGrid>
+																		</h:panelGrid>
+																		<h:panelGrid columns="2">
+																			<h:outputText value="Cuotas del Año:" />
+																			<h:selectManyListbox id="id_selCuotaAnio"
+																				required="true"
+																				requiredMessage="#{msg['cc.errorcuotasanio']}"
+																				value="#{registroLoteOrdenPagoManaged.lstMpCuotasAnioSeleccionados}"
+																				size="9">
+																				<f:selectItems var="var" itemValue="#{var.cuota}"
+																					itemLabel="Cuota N° #{var.cuota}"
+																					value="#{registroLoteOrdenPagoManaged.lstCuotasAnio}" />
+																				<a4j:support ajaxSingle="true" event="onblur" />
+																			</h:selectManyListbox>
+																		</h:panelGrid>
+																	</h:panelGrid></td>
+															</tr>
+														</table>
+													</rich:panel>
+												</a4j:outputPanel></td>
+										</tr>
+									</table>
+
+								</td>
+
+							</tr>
+							<tr>
+								<td align="center"><h:panelGrid columns="2">
+										<h:outputText style="font-weight:bold; color:black;"
+											value="Preliminar de OP por Tipo de Lote:" />
+										<h:commandLink id="btnReporteOps"
+											action="#{registroLoteOrdenPagoManaged.descargarPreviewOrdenesPagoExcel}"
+											immediate="true">
+											<h:graphicImage value="/images/modal/excel.png"
+												style="border:0; height:25px;width:25px;"
+												title="Preliminar de OPs de acuerdo a criterios de seleccion" />
+										</h:commandLink>
+
+									</h:panelGrid> <a4j:commandButton value="Vista Preliminar"
+										id="id_preliminarop"
+										action="#{registroLoteOrdenPagoManaged.motrarLotePreliminar}"
+										oncomplete=" #{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'id_panelPreliminarOP\');': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+										reRender="id_panelPreliminarOP,nuevo_lote" status="ajaxStatus">
+									</a4j:commandButton> <a4j:commandButton id="cmdSalir" value="Salir"
+										style="width:100px;"
+										action="#{registroLoteOrdenPagoManaged.salir}"
+										immediate="true" reRender="panelinclude">
+										<f:setPropertyActionListener
+											value="/sisat/controlycobranza/buscarloteordenpago.xhtml"
+											target="#{sessionManaged.page}" />
+									</a4j:commandButton></td>
+							</tr>
+						</table>
+
+					</td>
+				</tr>
+
+			</table>
+		</a4j:outputPanel>
+	</h:form>
+	<rich:modalPanel onshow="autofocus('formPreliminarOP')"
+		id="id_panelPreliminarOP" moveable="true" resizeable="false"
+		minWidth="1280" minHeight="520">
+		<f:facet name="header">LISTA DE ORDENES DE PAGO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelinks01"
+					styleClass="hidelink" />
+				<rich:componentControl for="id_panelPreliminarOP"
+					attachTo="hidelinks01" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formPreliminarOP">
+			<h:panelGrid width="100%">
+				<a4j:include
+					viewId="/sisat/controlycobranza/listapreliminarordenpago.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+</ui:composition>

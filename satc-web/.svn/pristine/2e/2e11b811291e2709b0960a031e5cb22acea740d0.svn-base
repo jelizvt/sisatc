@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form id="formBuscarLotesOrdinarios">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<rich:hotKey key="return" handler="#{rich:element('cmdBuscarLote')}.click()" selector="#formBuscarLotesOrdinarios"/>
+		
+		<rich:panel rendered="#{reclamarActoLoteOrdinarioManaged.permisoBuscar}" id="p01">
+			<f:facet name="header">
+				<h:outputLabel value="#{msg['cc.actosadministrativo']}" />
+			</f:facet>
+			
+			<table border="0" width="100%">
+				<tr>
+					<td align="left" width="150px">
+						<h:outputText value="Cod Persona :" />
+					</td>
+					<td width="150px">
+						<h:inputText maxlength="50" style="width:50%"
+							value="#{reclamarActoLoteOrdinarioManaged.personaId}" />
+					</td>
+					<td align="left" width="150px">
+						<h:outputText value="Nro de Valor :" />
+					</td>
+					<td width="150px"><h:panelGroup>
+							<h:inputText id="inputnrovalor"
+								value="#{reclamarActoLoteOrdinarioManaged.nroValor}"
+								styleClass="prueba" style="text-align:center" size="17"
+								maxlength="16" tabindex="5">
+							</h:inputText>
+							<rich:jQuery id="maskedo0010" selector=".prueba"
+								query="mask('#{msg['obl.maskNroValor']}')" timing="onload" />
+						</h:panelGroup>
+					</td>
+					<td>
+						<h:outputText id="idXlsLista" value="Lista de valores reclamados : " />
+						<h:commandLink id="newlinkHLXLS" immediate="true" action="#{reclamarActoLoteOrdinarioManaged.generacionArchivosXml}" >
+					       <h:graphicImage value="/images/modal/excel.png" style="border:0" width="22" height="22" />
+					    </h:commandLink>
+					</td>
+				</tr>
+			</table>
+		</rich:panel>
+		
+		<h:panelGrid rendered="#{reclamarActoLoteOrdinarioManaged.permisoBuscar}" columns="3" align="center">
+			<a4j:commandButton value="Buscar" style="width:100px;" id="cmdBuscarLote"
+				action="#{reclamarActoLoteOrdinarioManaged.buscar}" status="ajaxStatus"
+				reRender="id_panelresultados" />
+			<a4j:commandButton value="Limpiar" style="width:100px;"
+				action="#{reclamarActoLoteOrdinarioManaged.limpiar}"
+				status="ajaxStatus" reRender="p01,id_panelresultados" />
+		</h:panelGrid>
+		<rich:panel id="id_panelresultados">
+			<rich:datascroller for="datosactos" maxPages="20"></rich:datascroller>
+			<rich:extendedDataTable id="datosactos"
+				value="#{reclamarActoLoteOrdinarioManaged.lstFindLote}" var="acto"
+				width="100%" height="320px" rows="20" selectionMode="single"
+				noDataLabel="No Se Encontro Información de lotes Ordinarios"
+				rowKeyVar="row" enableContextMenu="false">
+				<rich:column id="x3" width="10%"
+					filterBy="#{acto.loteId}-#{acto.annoActo}">
+					<f:facet name="header" width="10%">Nro Lote</f:facet>
+					<h:outputText value="#{acto.loteId} - #{acto.annoActo}" />
+				</rich:column>
+				<rich:column id="x4" filterBy="#{acto.nroActo}" width="15%">
+					<f:facet name="header">Nro Acto</f:facet>
+					<h:outputText rendered="#{!reclamarActoLoteOrdinarioManaged.permisoReclamar}" value="#{acto.nroActo}" />
+					<a4j:commandLink rendered="#{reclamarActoLoteOrdinarioManaged.permisoReclamar}" ajaxSingle="true" id="newlink33"
+						status="ajaxStatus" disabled="#{acto.notificado == 1}"
+						value="#{acto.nroActo}"
+						
+						action="#{reclamarActoLoteOrdinarioManaged.mostrarPanelReclamarActo}"
+						oncomplete="#{rich:component('panelReclamarActo')}.hide();#{rich:component('panelReclamarActo')}.show();"
+						reRender="panel">
+						<f:setPropertyActionListener value="#{acto}"
+							target="#{reclamarActoLoteOrdinarioManaged.findCcActoItem}"
+							id="r4288" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column id="x41" width="10%" >
+					<f:facet name="header">Cod. Per.</f:facet>
+					<h:outputText value="#{acto.personaId}" />
+				</rich:column>
+				<rich:column id="x51" width="7%">
+					<f:facet name="header">Fecha Emisión</f:facet>
+					<h:outputText value="#{acto.fechaEmision}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x5" width="7%">
+					<f:facet name="header">Fecha Notif.</f:facet>
+					<h:outputText value="#{acto.fechaNotificacion}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				
+				<rich:column id="x52" width="7%">
+					<f:facet name="header">Estado Recl.</f:facet>
+					<h:outputText value="#{acto.estadoReclamoId==1?'Reclamado':acto.estadoReclamoId==0?'Resuelto':''}">
+					</h:outputText>
+				</rich:column>
+				
+				<rich:column id="x53" width="7%">
+					<f:facet name="header">Fecha Reclamo</f:facet>
+					<h:outputText value="#{acto.fechaReclamo}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x6" width="5%">
+					<f:facet name="header">Deuda</f:facet>
+					<h:outputText value="#{acto.montoDeuda}">
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x8" width="20%" filterBy="#{acto.tipoActo}">
+					<f:facet name="header">Tipo Acto</f:facet>
+					<h:outputText value="#{acto.tipoActo}">
+					</h:outputText>
+				</rich:column>
+				<rich:column id="x9" width="10%">
+					<f:facet name="header">Concepto</f:facet>
+					<h:outputText value="#{acto.concepto}">
+					</h:outputText>
+				</rich:column>
+			</rich:extendedDataTable>
+		</rich:panel>
+	</h:form>
+
+	<rich:modalPanel id="panelReclamarActo" minWidth="500" minHeight="300">
+		<f:facet name="header">
+			<h:outputText value="Reclamar Acto" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelReclamarActo" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="panel">
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<table border="0" width="100%">
+						<tr>
+							<td><h:outputText id="succ0" value="Nro. de Acto" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ1"
+										value="#{reclamarActoLoteOrdinarioManaged.findCcActoItem.nroActo}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ2" value="Cod. Persona" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ3"
+										value="#{reclamarActoLoteOrdinarioManaged.findCcActoItem.personaId}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ4" value="Tipo de Acto" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ5"
+										value="#{reclamarActoLoteOrdinarioManaged.findCcActoItem.tipoActo}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ6" value="Fecha Emisión" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ7"
+										value="#{reclamarActoLoteOrdinarioManaged.findCcActoItem.fechaEmision}">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ8" value="Deuda" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ9"
+										value="#{reclamarActoLoteOrdinarioManaged.findCcActoItem.montoDeuda}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td><h:outputText id="succ10" value="Concepto" /></td>
+							<td><h:panelGrid columns="2">
+									<h:outputText id="succ11"
+										value="#{reclamarActoLoteOrdinarioManaged.findCcActoItem.concepto}" />
+								</h:panelGrid></td>
+						</tr>
+						<tr>
+							<td align="left" width="130px"><h:outputText
+									value="Estado de reclamo:" /> <span style="color: red;">*</span></td>
+							<td><rich:comboBox width="250px" defaultLabel="Seleccione"
+									onblur="validaInputCbo(this)"
+									requiredMessage="Ingrese el estado del reclamo"
+									required="true" id="id_tiporelacion"
+									value="#{reclamarActoLoteOrdinarioManaged.cmbValueEstadoReclamacion}"
+									valueChangeListener="#{reclamarActoLoteOrdinarioManaged.loadSeleccion}">
+									<f:selectItem itemValue="Reclamado" itemLabel="1" />
+									<f:selectItem itemValue="Resuelto" itemLabel="0" />
+									<a4j:support id="idEstado" event="onchange" BypassUpdates="false" ajaxSingle="true" />
+								</rich:comboBox>
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="130px">
+								<h:outputText	value="Fecha de Reclamación" /> <span style="color: red;">*</span>
+							</td>
+							<td align="left" width="150px">
+								<rich:calendar locale="en/US"
+									required="true"
+									requiredMessage="Indique la fecha de reclamo"
+									datePattern="dd/MM/yyyy" direction="top-right"
+									enableManualInput="true" inputClass="maskDate"
+									inputStyle="width:80px" id="id_fechadeclaracion"
+									value="#{reclamarActoLoteOrdinarioManaged.fechaReclamacion}">
+									
+								</rich:calendar> <rich:jQuery id="maskedo3" selector=".maskDate"
+									query="mask('99/99/9999')" timing="onload" />
+							</td>
+						</tr>
+						<tr>
+							<td align="left" width="130px">
+								<h:outputText	value="Nro de Expediente" /> <span style="color: red;">*</span>
+							</td>
+							<td align="left" width="150px">
+								<h:inputText maxlength="50" style="width:50%" value="#{reclamarActoLoteOrdinarioManaged.nroExpediente}" required="true" requiredMessage="Indique el numero de expediente del reclamo" />								
+							</td>
+						</tr>
+					</table>
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar" style="width:100px;"
+						action="#{reclamarActoLoteOrdinarioManaged.reclamarActo}"
+						reRender="datosactos,panel"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.hideModalPanel(\'panelReclamarActo\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+					</a4j:commandButton>
+					<a4j:commandButton value="Salir" style="width:100px;"
+						action="#{reclamarActoLoteOrdinarioManaged.salir}"
+						status="ajaxStatus"
+						oncomplete="#{rich:component('panelReclamarActo')}.hide(); return false">
+					</a4j:commandButton>
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+</ui:composition>

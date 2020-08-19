@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+
+	<h:form id="formValoresUbicacion">
+		<h:panelGrid id="panelGridPeriodo" columns="2"
+			columnClasses="colForm2 colForm2">
+			<h:outputLabel value="Periodo: " style="font-size:14px">
+				<span style="color: red;">*</span>
+			</h:outputLabel>
+			<h:inputText maxlength="8"
+				style="font-size: 14px; text-align: center; width:100px;"
+				id="inputTextPeridoId"
+				value="#{administrarDireccionManaged.periodo}" tabindex="1">
+				<a4j:support event="onblur" ajaxSingle="true"
+					action="#{administrarDireccionManaged.onBlurInputTextPeridoId}"
+					reRender="panelGridArancel, panelGridFrecuenciaLimpieza, panelGridFrecuenciaRecojo, panelGridCercaniaParques, panelGridZonaSeguridadUbicacion, barButtons"
+					status="ajaxStatus" focus="inputArancelId"></a4j:support>
+			</h:inputText>
+		</h:panelGrid>
+
+		<br />
+		<rich:separator height="1px"></rich:separator>
+
+		<h:panelGrid id="panelGridArancel" columns="2"
+			columnClasses="colForm2 colForm2">
+			<f:facet name="header">ARANCEL - UBICACION</f:facet>
+			<h:outputLabel value="Valor de Arancel: ">
+				<span style="color: red;">*</span>
+			</h:outputLabel>
+			<h:inputText id="inputArancelId" maxlength="10"
+				style="text-align: right; width:100px;"
+				value="#{administrarDireccionManaged.arancelUbicacion.valorArancel}"
+				requiredMessage="Ingrese un valor de arancel" tabindex="2">
+				<f:convertNumber locale="#{msg['param.localecurrency']}"
+					minFractionDigits="2" maxFractionDigits="2" />
+			</h:inputText>
+		</h:panelGrid>
+
+		<br />
+		<rich:separator height="1px"></rich:separator>
+
+		<h:panelGrid id="panelGridFrecuenciaLimpieza" columns="2"
+			columnClasses="colForm2 colForm2">
+			<f:facet name="header">FRECUENCIA DE LIMPIEZA - BARRIDO</f:facet>
+			<h:outputLabel value="Frecuencia de Barrido: ">
+				<span style="color: red;">*</span>
+			</h:outputLabel>
+			<h:inputText maxlength="10" style="text-align: right; width:100px;"
+				value="#{administrarDireccionManaged.frecuenciaLimpieza.frecuencia}"
+				requiredMessage="Ingrese una frecuencia de limpieza" tabindex="3">
+			</h:inputText>
+			<h:outputLabel value="Tasa MI Anual: ">
+				<span style="color: red;">*</span>
+			</h:outputLabel>
+			<h:inputText maxlength="10" style="text-align: right; width:100px;"
+				value="#{administrarDireccionManaged.frecuenciaLimpieza.tasaMlAnual}"
+				requiredMessage="Ingrese una tasa para cada ml." tabindex="4">
+			</h:inputText>
+		</h:panelGrid>
+
+		<br />
+		<rich:separator height="1px"></rich:separator>
+
+		<h:panelGrid id="panelGridFrecuenciaRecojo" columns="2"
+			columnClasses="colForm2 colForm2">
+			<f:facet name="header">FRECUENCIA DE RECOJO</f:facet>
+			<h:outputLabel value="Frecuencia de Recojo: ">
+				<span style="color: red;">*</span>
+			</h:outputLabel>
+			<h:inputText maxlength="10" style="text-align: right; width:100px;"
+				value="#{administrarDireccionManaged.frecuenciaRecojo.frecuencia}"
+				requiredMessage="Ingrese una frecuencia de recojo" tabindex="5"/>
+		</h:panelGrid>
+
+		<br />
+		<rich:separator height="1px"></rich:separator>
+
+		<h:panelGrid id="panelGridCercaniaParques" columns="2"
+			columnClasses="colForm2 colForm2">
+			<f:facet name="header">CERCANIA DE PARQUES</f:facet>
+			<h:outputLabel value="Grupo de Cercania: ">
+				<span style="color: red;">*</span>
+			</h:outputLabel>
+			<h:selectOneMenu
+				value="#{administrarDireccionManaged.cercaniaParque.grupoCercaniaId}"
+				style="width:100px;" requiredMessage="Seleccione un grupo cercania" tabindex="6">
+				<f:selectItem itemLabel="Seleccione" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems
+					value="#{administrarDireccionManaged.lstSelectItemGrupoCercania}" />
+			</h:selectOneMenu>
+		</h:panelGrid>
+
+		<br />
+		<rich:separator height="1px"></rich:separator>
+
+		<h:panelGrid id="panelGridZonaSeguridadUbicacion" columns="2"
+			columnClasses="colForm2 colForm2">
+			<f:facet name="header">ZONA DE SEGURIDAD - UBICACION</f:facet>
+			<h:outputLabel value="Zona de Seguridad ">
+				<span style="color: red;">*</span>
+			</h:outputLabel>
+			<h:selectOneMenu
+				value="#{administrarDireccionManaged.zonaSeguridadUbicacion.zonaSeguridadId}"
+				style="width:100px;"
+				requiredMessage="Seleccione un zona de seguridad" tabindex="7">
+				<f:selectItem itemLabel="Seleccione" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems
+					value="#{administrarDireccionManaged.lstSelectItemZonaSeguridad}"
+					var="z" itemLabel="#{z.label}" itemValue="#{z.value}" />
+			</h:selectOneMenu>
+		</h:panelGrid>
+		<rich:spacer height="10px"></rich:spacer>
+		<rich:separator height="1px"></rich:separator>
+		<rich:spacer height="10px"></rich:spacer>
+		<div align="right">
+			<h:panelGrid id="barButtons" columns="2">
+				<a4j:commandButton
+					value="#{administrarDireccionManaged.flagEdicion?'Actualizar':'Agregar'}"
+					action="#{administrarDireccionManaged.agregarValoresArancelArbitrios}"
+					oncomplete="#{facesContext.maximumSeverity.ordinal == 0 ? 'Richfaces.hideModalPanel(\'modalPanel\');Richfaces.showModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');return false;'} "
+					ajaxSingle="ajaxStatus" tabindex="8">
+				</a4j:commandButton>
+
+				<a4j:commandButton value="#{msg['mt.admintablasbtncancelar']}"
+					action="#{administrarDireccionManaged.cancelar}"
+					oncomplete="#{rich:component('modalPanel')}.hide();"
+					ajaxSingle="true" reRender="modalPanel" tabindex="9">
+				</a4j:commandButton>
+			</h:panelGrid>
+		</div>
+	</h:form>
+
+</h:panelGrid>
+

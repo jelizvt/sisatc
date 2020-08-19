@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>	
+<h:form id="formReportePartidas">
+	<rich:panel id="idPanelDetalleDsctos">
+	<f:facet name="header">DETALLE DE DESCUENTOS</f:facet>
+	<h:panelGrid columns="3">		
+		<h:outputText value="Nro de Recibo:" />
+		<h:inputText id="id_NroRecibo" maxlength="10" style="width:90%" 
+					 value="#{recibosPagoManaged.nroReciboDetDscto}" 
+					 onkeypress = "validaEnteroPositivo(event);">
+		</h:inputText>
+		<a4j:commandButton id="id_buttonOtrosSaldos" action="#{recibosPagoManaged.previewPartidas()}"
+								value="Descargar"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.pruebaSOATXLS9\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };"/>								
+	</h:panelGrid>
+	</rich:panel>
+	<h:commandLink id="linkIdOtrosxls" styleClass="pruebaSOATXLS9" value="sasas" style="display: none;" action="#{recibosPagoManaged.imprimirDetalleDsctos}" />
+	
+	<rich:panel id="idPanelReportePartidas">
+		<f:facet name="header">RECIBOS DE PAGO</f:facet>
+				<h:panelGrid columns="5">
+			<h:outputLabel value="Fecha Inicio">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{recibosPagoManaged.fechaInicio}" datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Ingrese una fecha de inicio" enableManualInput="true" inputClass="maskDate" inputStyle="width: 60px;padding-left: 5px;" ></rich:calendar>
+			<h:outputLabel value="Fecha fin">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar value="#{recibosPagoManaged.fechaFin}" datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Ingrese una fecha fin" enableManualInput="true" inputClass="maskDate" inputStyle="width: 60px;padding-left: 5px;"></rich:calendar>
+			<a4j:commandButton value="Buscar" action="#{recibosPagoManaged.buscar}"
+				oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')':''}"
+				reRender="id_tablelistaOp" status="ajaxStatus">
+			</a4j:commandButton>
+			<!-- <h:outputLabel value="Nro de recibo">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<h:inputText value="#{recibosPagoManaged.nroRecibo}" />
+			<h:outputLabel value="Cajero">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<h:selectOneMenu value="">
+				<f:selectItem itemLabel="Todos"/>
+				<f:selectItem itemLabel="ibustamante"/>
+				<f:selectItem itemLabel="crojas"/>
+				<f:selectItem itemLabel="moruna"/>
+			</h:selectOneMenu> -->
+			<rich:jQuery id="maskedo3" selector=".maskDate"
+								query="mask('99/99/9999')" timing="onload" />
+		</h:panelGrid>
+		
+		<rich:dataTable id="id_tablelistaOp" value="#{recibosPagoManaged.lstOperaciones}"
+						var="record" height="350px" width="920px" selectedClass="dataTableSelectedRow" sortMode="single"
+						selectionMode="single" rowKeyVar="row" enableContextMenu="false" binding="#{indice}" > 
+						<!-- <a4j:support event="onselectionchange" reRender="infoPanel" requestDelay="400" ajaxSingle="true" id="r21"> 
+						</a4j:support> -->
+						<rich:column width="60px" style="text-align:center;">
+							<f:facet name="header">Item</f:facet>
+							#{indice.rowIndex+1}
+						</rich:column>
+						<rich:column width="100px" id="r01" style="text-align:center;" >
+							<f:facet name="header">Nro Recibo</f:facet>
+							<h:outputText value="#{record.nroRecibo}" />
+						</rich:column>
+						<rich:column width="150px" id="r02" style="text-align:center;">
+							<f:facet name="header">Fecha de Recibo</f:facet>
+							<h:outputText value="#{record.fechaRecibo}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+							</h:outputText>
+						</rich:column>
+						<rich:column width="120px" id="r03" style="text-align:right;">
+							<f:facet name="header">Monto Cobrado</f:facet>
+							<h:outputText value="#{record.montoCobrado}" />
+						</rich:column>
+						<rich:column width="140px" id="r04" style="text-align:center;">
+							<f:facet name="header">Tipo de Operación</f:facet>
+							<h:outputText value="#{record.tipoOperacion}" />
+						</rich:column>
+						<rich:column>
+								<f:facet name="header">Cajero</f:facet>
+								<h:outputText value="#{record.nombreUsuario}" />								
+						</rich:column>
+						<rich:column width="50px" style="text-align:center;">							
+							<f:facet name="header">Ver</f:facet>
+							<!-- recibos tributos -->
+							<a4j:commandLink ajaxSingle="true" action="#{recibosPagoManaged.verRecibo}" rendered="#{record.tipoRecibo eq '1'}"								
+								oncomplete="window.open('../sisat/caja/vistaLecturaRecibo.jsf',null, 'height=420,width=500,status=yes,toolbar=no,menubar=no,location=no')">
+								<h:graphicImage value="/images/modal/preview.png" style="border:0" />
+								<f:setPropertyActionListener value="#{record.reciboId}" target="#{recibosPagoManaged.reciboId}"  />								
+							</a4j:commandLink>
+							<!-- recibos tupa -->
+							<a4j:commandLink ajaxSingle="true" action="#{recibosPagoManaged.verRecibo}" rendered="#{record.tipoRecibo eq '2'}"								
+								oncomplete="window.open('../sisat/caja/vistaLecturaReciboTupa.jsf',null, 'height=420,width=500,status=yes,toolbar=no,menubar=no,location=no')"								
+								>
+								<h:graphicImage value="/images/modal/preview.png" style="border:0" />
+								<f:setPropertyActionListener value="#{record.reciboId}" target="#{recibosPagoManaged.reciboId}"  />								
+							</a4j:commandLink>
+						</rich:column>
+						<rich:column width="50px" style="text-align:center;">
+							<f:facet name="header">Imp.</f:facet>
+							<a4j:commandLink ajaxSingle="true" action="#{recibosPagoManaged.verRecibo}" rendered="#{record.tipoRecibo eq '1'}"								
+								oncomplete="window.open('../sisat/caja/imprimirRecibo.jsf',null, 'height=420,width=500,status=yes,toolbar=no,menubar=no,location=no')">
+								<h:graphicImage value="/images/imprimi2.png" style="border:0" />
+								<f:setPropertyActionListener value="#{record.reciboId}" target="#{recibosPagoManaged.reciboId}"  />								
+							</a4j:commandLink>
+							<a4j:commandLink ajaxSingle="true" action="#{recibosPagoManaged.verRecibo}" rendered="#{record.tipoRecibo eq '2'}"								
+								oncomplete="window.open('../sisat/caja/imprimirReciboTupa.jsf',null, 'height=420,width=500,status=yes,toolbar=no,menubar=no,location=no')"								
+								>
+								<h:graphicImage value="/images/imprimi2.png" style="border:0" />
+								<f:setPropertyActionListener value="#{record.reciboId}" target="#{recibosPagoManaged.reciboId}"  />								
+							</a4j:commandLink>	
+						</rich:column>
+						<rich:column width="55px" style="text-align:center;">
+							<f:facet name="header">Extornar</f:facet>
+							<a4j:commandLink title="#{msg['rv.extornarRecibo']}" status="ajaxStatus" rendered="#{(record.estado eq '1') and record.esExtornable}"
+								style="margin-left: 10px;" action="#{recibosPagoManaged.inicioExtorno}" 
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelextornorecibo\',{top:\'115px\', left:\'40px\'});return false;': 'Richfaces.showModalPanel(\'mpErrors\');'};"
+								reRender="panelextornorecibo"	>
+								<h:graphicImage value="/images/extorno_icon.jpg" style="border:0" />
+								<f:setPropertyActionListener value="#{record.reciboId}" target="#{recibosPagoManaged.reciboId}"  />
+								<f:setPropertyActionListener value="#{record.nroRecibo}" target="#{listaOperacionManaged.nroRecibo}"  />
+							</a4j:commandLink>										
+						</rich:column >
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">Tipo Pago</f:facet>
+							<h:outputText value="TUPA" rendered="#{record.tipoRecibo eq '2'}" />
+							<h:outputText value="Tributos" rendered="#{record.tipoRecibo eq '1'}" />
+						</rich:column>		
+		</rich:dataTable>
+	</rich:panel>
+</h:form>
+
+<rich:modalPanel id="panelextornorecibo" autosized="true" moveable="true" resizeable="false" minWidth="390" minHeight="250">
+		<f:facet name="header">EXTORNAR RECIBO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="iconclosepanelextornorecibo"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelextornorecibo" attachTo="iconclosepanelextornorecibo" 
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="frmExtornoRecibo">	
+			<rich:panel style="width:100%;"	id="id_extornoRecibo"> 
+				<table border="0" width="100%">
+					<tr>
+						<td align="left" width="150px" colspan="2">
+							<h:outputText value="Nro de Recibo a Extornar: " style="color: red; font-size: 14px"/><h:outputText value="#{listaOperacionManaged.nroRecibo}" style="color: red; font-size: 14px"/>
+						</td>												
+					</tr>
+					<tr>
+						<td align="left" width="150px">					
+								
+							<h:outputText value="Usuario de Supervisor4" /><span style="color: red">*</span>
+						</td>
+						<td align="left" width="100%">
+							<h:inputText size="50" value="#{recibosPagoManaged.usuarioSupervisor}" maxlength="100"
+							required="true" requiredMessage="Indique el Usuario de Supervisor"
+							/>
+						</td>
+					</tr>	
+					<tr>
+						<td align="left" width="150px">							
+							<h:outputText value="Password de Supervisor" /><span style="color: red">*</span>
+						</td>
+						<td align="left" width="100%">
+							<h:inputSecret  size="50" value="#{recibosPagoManaged.passwordSupervisor}" maxlength="100"
+							required="true" requiredMessage="Ingrese el password de Supervisor"
+							/>
+						</td>
+					</tr>					
+					<tr>
+						<td align="left" width="150px">							
+							<h:outputText value="Observacion" /><span style="color: red">*</span>
+						</td>
+						<td align="left" width="100%">
+							<h:inputTextarea value="#{recibosPagoManaged.observacion}" cols="50" rows="5" maxlength="500"
+							required="true" requiredMessage="Indique la observacion del extorno"
+							>
+							</h:inputTextarea>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<br />
+							<h:outputText id="succ2" style="font-weight:bold;color:green" value="#{msg['cj.messageMPConfirmExtorno']}" />
+							<br />
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<h:panelGrid id="buttons2" columns="2" columnClasses="coldialogbutton1, coldialogbutton2" width="100%">
+								
+								<a4j:commandButton value="#{msg['elm.MPConfirmLabelSi']}" style="width:100px;"
+									action="#{recibosPagoManaged.extornarRecibo}"
+									reRender="frmListOperacion,id_tablelistaOp"
+									
+									oncomplete=" #{'Richfaces.showModalPanel(\'mpErrors\');Richfaces.hideModalPanel(\'panelextornorecibo\');return false;'};" >						
+								</a4j:commandButton>
+								
+								<a4j:commandButton value="#{msg['elm.MPConfirmLabelNo']}" style="width:100px;"
+									onclick="#{rich:component('panelextornorecibo')}.hide();return false;" />
+							</h:panelGrid>						
+						</td>
+					</tr>
+				</table>
+			</rich:panel>			
+		</h:form>	
+	</rich:modalPanel>
+</html>

@@ -1,0 +1,516 @@
+package com.sat.sisat.estadocuenta.managed;
+
+import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JRRtfExporter;
+
+import org.richfaces.component.html.HtmlComboBox;
+
+import com.sat.sisat.caja.dto.DeudaDTO;
+import com.sat.sisat.common.util.BaseManaged;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.SATWEBParameterFactory;
+import com.sat.sisat.common.util.WebMessages;
+import com.sat.sisat.estadocuenta.business.EstadoCuentaBoRemote;
+import com.sat.sisat.estadocuenta.dto.CrConstanciaNoAdeudo;
+import com.sat.sisat.estadocuenta.dto.CrConstanciaNoAdeudoDTO;
+import com.sat.sisat.persistence.CrudServiceBean;
+import com.sat.sisat.persistence.entity.GnSubconcepto;
+import com.sat.sisat.persistence.entity.MpPersona;
+import com.sat.sisat.predial.dto.FindMpPersona;
+import com.sat.sisat.predial.dto.MpRequerimientoCondicionEspecialDTO;
+
+
+@ManagedBean
+@ViewScoped
+public class RegistrarConstanciaNoAdeudo extends BaseManaged implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@EJB
+	EstadoCuentaBoRemote estadocuentaBo;
+	
+	private Integer conceptoId;
+	private String concepto;
+	private List<SelectItem> listConcepto  = new ArrayList<SelectItem>();
+	private HashMap<String, Integer> mapConcepto= new HashMap<String, Integer>();
+	
+	private Integer subconceptoId;
+	private String[] subconcepto=null; //private String subconcepto;private String[] lstMpTipoPersonaSeleccionados = null;
+	private List<GnSubconcepto>listSub= null;//private List<SelectItem> listSubConcepto  = new ArrayList<SelectItem>();  private List<MpTipoPersona> lstTipoPersona = null;
+	private HashMap<String, Integer> mapSubConcepto= new HashMap<String, Integer>();
+			
+	private Integer anio;
+	private Integer personaId;
+	private List<DeudaDTO> listDeudas = new ArrayList<DeudaDTO>();
+		
+	private String[] anioSeleccionado = null;//lstMpTipoPersonaSeleccionados
+	private List<CrConstanciaNoAdeudo> listAnio = null;//lstTipoPersona
+	private HashMap<String, Integer> mapAnio = new HashMap<String, Integer>();//mapMpTipoPersonaSeleccionados
+	
+	private String[] cuotaSeleccionado = null;
+	private List<CrConstanciaNoAdeudo> listCuota = null;
+	private HashMap<String, Integer> mapCuota = new HashMap<String, Integer>();
+	
+	private String[] propiedadSeleccionado = null;
+	private List<CrConstanciaNoAdeudo> listPropiedad = null;
+	private HashMap<String, Integer> mapPropiedad = new HashMap<String, Integer>();
+	
+	private Boolean sinDeuda;
+	String subconceptoSelect="";
+	String annioSelect="";
+	String predioSelect="";
+	private List<CrConstanciaNoAdeudoDTO> listConstancia = new ArrayList<CrConstanciaNoAdeudoDTO>();
+	private CrConstanciaNoAdeudoDTO constanciaItem= new CrConstanciaNoAdeudoDTO();
+	
+	
+	@PostConstruct
+	public void init() throws Exception {
+		try {
+			
+			/* COMBOBOX:: RECIBO */
+			List<CrConstanciaNoAdeudoDTO> lstGnConcepto = estadocuentaBo.obtenerReciboConstancia(getSessionManaged().getUsuarioLogIn().getUsuarioId());
+			Iterator<CrConstanciaNoAdeudoDTO> iter = lstGnConcepto.iterator();
+			listConcepto = new ArrayList<SelectItem>();
+			
+			while (iter.hasNext()) {
+				CrConstanciaNoAdeudoDTO obj = iter.next();
+				listConcepto.add(new SelectItem(obj.getNumeroRecibo(), String.valueOf(obj.getPersonaId())));//String.valueOf(obj.getReciboId())
+				mapConcepto.put(obj.getNumeroRecibo().trim(),obj.getPersonaId());//obj.getReciboId()
+			}
+			
+			//finMpPersonaItem= new FindMpPersona();
+			Object objtemp = getSessionMap().get("recibo");
+			if (objtemp != null) {
+				System.out.println(objtemp);
+
+				//finMpPersonaItem = (FindMpPersona)objtemp;
+				//getSessionMap().remove("finMpPersonaItem");
+				//mpPersona = new MpPersona();
+				
+				//mpPersona = personaBo.getMpPersona(finMpPersonaItem.getPersonaId());
+				//fechaNacoConst=mpPersona.getFechaDeclaracion();
+				//tipoAccion=Constante.TIPO_ACCION_EDITAR;
+//				if(mpPersona.getFlagEstatal() != null){
+//					flagEstatal = mpPersona.getFlagEstatal().equals(Constante.ESTADO_ACTIVO)? Boolean.TRUE : Boolean.FALSE;
+//					int flagEst = flagEstatal? 1:0;
+//					
+//					if(flagEst == 0)
+//					{
+//						this.setSeleccionTipoEmpresa("No Estatal");
+//						flagEstatal = Boolean.FALSE;
+//					}
+//					else
+//					{
+//						this.setSeleccionTipoEmpresa("Estatal");
+//						flagEstatal = Boolean.TRUE;
+//					}					 
+//					
+//				}else{					
+//					flagEstatal = Boolean.FALSE;
+//				}
+//				obtenerDatos();
+			
+				 
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void buscar() {
+		try {
+			
+			String cuotaSelect="";
+			
+			if (subconcepto != null && subconcepto.length > 0) {
+				for (String p1 : subconcepto) {
+					subconceptoSelect=subconceptoSelect + mapSubConcepto.get(p1)+ ",";
+				}
+			}
+			
+			if (anioSeleccionado != null && anioSeleccionado.length > 0) {
+				for (String p2 : anioSeleccionado) {
+					annioSelect=annioSelect + (p2)+ ",";//mapAnio.get
+				}
+			}
+			
+			if (cuotaSeleccionado != null && cuotaSeleccionado.length > 0) {
+				for (String p3 : cuotaSeleccionado) {
+					cuotaSelect=cuotaSelect + (p3)+ ",";//mapCuota.get
+				}
+			}
+			
+			if (propiedadSeleccionado != null && propiedadSeleccionado.length > 0) {
+				for (String p4 : propiedadSeleccionado) {
+					predioSelect=predioSelect + (p4)+ ",";//mapPropiedad.get
+				}
+			}
+
+			listDeudas = estadocuentaBo.obtenerDeuda(personaId,subconceptoSelect,annioSelect,cuotaSelect,predioSelect);
+			if (listDeudas.size()!=0){
+				addErrorMessage(getMsg("El Contribuyente mantiene deuda en los conceptos seleccionados."));
+			}else{
+				setSinDeuda(Boolean.TRUE);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void guardar() {
+		try {
+			if(listDeudas.size()==0){
+				Integer resultado=estadocuentaBo.actualizarConstancia(personaId, annioSelect, subconceptoSelect,predioSelect,getSessionManaged().getUsuarioLogIn().getUsuarioId(), getSessionManaged().getTerminalLogIn());
+				if (resultado!=null && resultado==Constante.RESULT_SUCCESS){
+					listConstancia = estadocuentaBo.obtenerConstancia(0, personaId);
+				}
+			}
+			
+		} catch (Exception e) { 
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public String salir() {
+		//getSessionMap().remove("findCcLoteDeItem");
+		return sendRedirectPrincipal();
+	}
+	
+	  public void loadGnConceptoById(ValueChangeEvent event) {
+			try{
+				   HtmlComboBox combo=(HtmlComboBox) event.getComponent(); 
+				    String value=combo.getValue().toString();
+					if(value!=null){
+						personaId=(Integer)mapConcepto.get(value);
+					}
+					viewdetalle();
+					
+			}catch(Exception e){
+				e.printStackTrace();
+				WebMessages.messageFatal(e);			
+			}
+		}
+		
+	  public void viewdetalle(){
+		  try{ 
+	  
+			  /* LISTBOX:: SUBCONCEPTO */
+				String subconceptoSeleccionado="";
+				subconcepto = new String[] {};
+			    
+			    listSub = estadocuentaBo.obtenerSubConcepto(personaId);
+				Iterator<GnSubconcepto> it2 = listSub.iterator();
+				while (it2.hasNext()) 
+				{
+					GnSubconcepto obj = it2.next();
+					mapSubConcepto.put(obj.getAbreviacion(),obj.getId().getSubconceptoId());
+					subconceptoSeleccionado = subconceptoSeleccionado + obj.getId().getSubconceptoId()+ ",";
+				}
+				//subconcepto = temp2.split(",");
+				subconcepto = subconceptoSeleccionado.split(",");
+				
+			/* LISTBOX:: AÑOS */
+				String anioSelect = "";
+				anioSeleccionado = new String[] {};
+				
+				listAnio = estadocuentaBo.obtenerAnio(personaId);
+				Iterator<CrConstanciaNoAdeudo> it3 = listAnio.iterator();
+				while (it3.hasNext()) {
+					CrConstanciaNoAdeudo obj = it3.next();
+					mapAnio.put(obj.getAnio(),obj.getConceptoId());
+					anioSelect = anioSelect + obj.getAnio() + ",";
+				}
+				anioSeleccionado = anioSelect.split(",");
+				
+			/* LISTBOX:: CUOTAS */
+				String cuotaSelect = "";
+				cuotaSeleccionado = new String[] {};
+				
+				listCuota = estadocuentaBo.obtenerCuota(personaId);
+				Iterator<CrConstanciaNoAdeudo> it4 = listCuota.iterator();
+				while (it4.hasNext()) {
+					CrConstanciaNoAdeudo obj = it4.next();
+					mapCuota.put(obj.getNumero(),obj.getReciboId());
+					cuotaSelect = cuotaSelect + obj.getNumero() + ",";
+				}
+				cuotaSeleccionado = cuotaSelect.split(",");
+				
+			/* LISTBOX:: PROPIEDADES */
+				String propSelect = "";
+				propiedadSeleccionado = new String[] {};
+				
+				listPropiedad = estadocuentaBo.obtenerPropiedad(personaId);
+				Iterator<CrConstanciaNoAdeudo> it5 = listPropiedad.iterator();
+				while (it5.hasNext()) {
+					CrConstanciaNoAdeudo obj = it5.next();
+					mapPropiedad.put(obj.getReferencia(),obj.getPersonaId());
+					propSelect = propSelect + obj.getReferencia() + ",";
+				}
+				propiedadSeleccionado = propSelect.split(",");
+		  }catch(Exception e){
+	  			e.printStackTrace();
+	  			WebMessages.messageFatal(e);			
+		  }
+	}
+	
+	  public void impresion() {
+			try {
+
+				String cadena = null;
+				java.sql.Connection connection = null;
+				cadena = "reporte_constacia_no_adeudo.jasper";
+
+				CrudServiceBean connj = CrudServiceBean.getInstance();
+				connection = connj.connectJasper();
+				String path_context = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+				String path_report = path_context + "/sisat/reportes/";
+				String path_imagen = path_context + "/sisat/reportes/imagen/";
+				HashMap<String, Object> parameters = new HashMap<String, Object>();
+				Integer persona = constanciaItem.getPersonaId();
+				Integer recibo = constanciaItem.getPersonaId();
+				parameters.put("persona_id", persona);
+				parameters.put("recibo_id", recibo);
+				parameters.put("ruta_imagen", path_imagen);
+				parameters.put("REPORT_LOCALE", new Locale("en", "ENGLISH"));
+				JasperPrint jasperPrint = JasperFillManager.fillReport(
+						(SATWEBParameterFactory.getPathReporte() + cadena),
+						parameters, connection);
+				
+				ByteArrayOutputStream output = new ByteArrayOutputStream();
+				HttpServletResponse response = (HttpServletResponse) FacesContext
+						.getCurrentInstance().getExternalContext()
+						.getResponse();
+					JasperExportManager.exportReportToPdfStream(jasperPrint,output);
+				
+					response.setContentType("application/pdf");
+					response.addHeader("Content-Disposition","attachment;filename=" + cadena.replaceAll(".jasper", ".pdf"));
+
+				response.setContentLength(output.size());
+				ServletOutputStream servletOutputStream = response.getOutputStream();
+				
+				servletOutputStream.write(output.toByteArray(), 0,output.size());
+				
+				servletOutputStream.flush();
+				servletOutputStream.close();
+				FacesContext.getCurrentInstance().responseComplete();
+			
+			
+			} catch (Exception e) {
+				e.printStackTrace();
+				WebMessages.messageFatal(e);
+			}
+		}
+	
+	public HashMap<String, Integer> getMapSubConcepto() {
+		return mapSubConcepto;
+	}
+
+	public void setMapSubConcepto(HashMap<String, Integer> mapSubConcepto) {
+		this.mapSubConcepto = mapSubConcepto;
+	}
+
+	public String getConcepto() {
+		return concepto;
+	}
+
+	public void setConcepto(String concepto) {
+		this.concepto = concepto;
+	}
+
+	public List<SelectItem> getListConcepto() {
+		return listConcepto;
+	}
+
+	public void setListConcepto(List<SelectItem> listConcepto) {
+		this.listConcepto = listConcepto;
+	}
+
+	public HashMap<String, Integer> getMapConcepto() {
+		return mapConcepto;
+	}
+
+	public void setMapConcepto(HashMap<String, Integer> mapConcepto) {
+		this.mapConcepto = mapConcepto;
+	}
+
+	public Integer getAnio() {
+		return anio;
+	}
+
+	public void setAnio(Integer anio) {
+		this.anio = anio;
+	}
+
+	public List<DeudaDTO> getListDeudas() {
+		return listDeudas;
+	}
+
+	public void setListDeudas(List<DeudaDTO> listDeudas) {
+		this.listDeudas = listDeudas;
+	}
+
+	public Integer getSubconceptoId() {
+		return subconceptoId;
+	}
+
+	public void setSubconceptoId(Integer subconceptoId) {
+		this.subconceptoId = subconceptoId;
+	}
+
+	public List<GnSubconcepto> getListSub() {
+		return listSub;
+	}
+
+	public void setListSub(List<GnSubconcepto> listSub) {
+		this.listSub = listSub;
+	}
+
+	public EstadoCuentaBoRemote getEstadocuentaBo() {
+		return estadocuentaBo;
+	}
+
+	public void setEstadocuentaBo(EstadoCuentaBoRemote estadocuentaBo) {
+		this.estadocuentaBo = estadocuentaBo;
+	}
+
+	public String[] getSubconcepto() {
+		return subconcepto;
+	}
+
+	public void setSubconcepto(String[] subconcepto) {
+		this.subconcepto = subconcepto;
+	}
+
+	public String[] getAnioSeleccionado() {
+		return anioSeleccionado;
+	}
+
+	public void setAnioSeleccionado(String[] anioSeleccionado) {
+		this.anioSeleccionado = anioSeleccionado;
+	}
+
+	public List<CrConstanciaNoAdeudo> getListAnio() {
+		return listAnio;
+	}
+
+	public void setListAnio(List<CrConstanciaNoAdeudo> listAnio) {
+		this.listAnio = listAnio;
+	}
+
+	public HashMap<String, Integer> getMapAnio() {
+		return mapAnio;
+	}
+
+	public void setMapAnio(HashMap<String, Integer> mapAnio) {
+		this.mapAnio = mapAnio;
+	}
+
+	public String[] getCuotaSeleccionado() {
+		return cuotaSeleccionado;
+	}
+
+	public void setCuotaSeleccionado(String[] cuotaSeleccionado) {
+		this.cuotaSeleccionado = cuotaSeleccionado;
+	}
+
+	public List<CrConstanciaNoAdeudo> getListCuota() {
+		return listCuota;
+	}
+
+	public void setListCuota(List<CrConstanciaNoAdeudo> listCuota) {
+		this.listCuota = listCuota;
+	}
+
+	public HashMap<String, Integer> getMapCuota() {
+		return mapCuota;
+	}
+
+	public void setMapCuota(HashMap<String, Integer> mapCuota) {
+		this.mapCuota = mapCuota;
+	}
+
+	public String[] getPropiedadSeleccionado() {
+		return propiedadSeleccionado;
+	}
+
+	public void setPropiedadSeleccionado(String[] propiedadSeleccionado) {
+		this.propiedadSeleccionado = propiedadSeleccionado;
+	}
+
+	public List<CrConstanciaNoAdeudo> getListPropiedad() {
+		return listPropiedad;
+	}
+
+	public void setListPropiedad(List<CrConstanciaNoAdeudo> listPropiedad) {
+		this.listPropiedad = listPropiedad;
+	}
+
+	public HashMap<String, Integer> getMapPropiedad() {
+		return mapPropiedad;
+	}
+
+	public void setMapPropiedad(HashMap<String, Integer> mapPropiedad) {
+		this.mapPropiedad = mapPropiedad;
+	}
+
+	public Integer getPersonaId() {
+		return personaId;
+	}
+
+	public void setPersonaId(Integer personaId) {
+		this.personaId = personaId;
+	}
+
+	public Boolean getSinDeuda() {
+		return sinDeuda;
+	}
+
+	public void setSinDeuda(Boolean sinDeuda) {
+		this.sinDeuda = sinDeuda;
+	}
+
+	public List<CrConstanciaNoAdeudoDTO> getListConstancia() {
+		return listConstancia;
+	}
+
+	public void setListConstancia(List<CrConstanciaNoAdeudoDTO> listConstancia) {
+		this.listConstancia = listConstancia;
+	}
+
+	public CrConstanciaNoAdeudoDTO getConstanciaItem() {
+		return constanciaItem;
+	}
+
+	public void setConstanciaItem(CrConstanciaNoAdeudoDTO constanciaItem) {
+		this.constanciaItem = constanciaItem;
+	}
+
+}

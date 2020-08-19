@@ -1,0 +1,412 @@
+package com.sat.sisat.papeletas.managed;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+
+import com.sat.sisat.common.util.BaseManaged;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.common.util.FacesUtil;
+import com.sat.sisat.common.util.SATWEBParameterFactory;
+import com.sat.sisat.common.util.WebMessages;
+import com.sat.sisat.papeleta.business.PapeletaBoRemote;
+import com.sat.sisat.papeleta.dto.RecordPapeletaDTO;
+import com.sat.sisat.persistence.CrudServiceBean;
+import com.sat.sisat.persistence.entity.GnAuditoriaOperacion;
+import com.sat.sisat.persistence.entity.MpTipoDocuIdentidad;
+import com.sat.sisat.persona.business.PersonaBoRemote;
+import com.sat.sisat.vehicular.cns.ReusoFormCns;
+import com.sat.sisat.vehicular.dto.BuscarPersonaDTO;
+
+
+@ManagedBean
+@ViewScoped
+public class RecordInfraccionInfractorManaged extends BaseManaged {
+
+	@EJB
+	PapeletaBoRemote papeletaBo;
+
+	@EJB
+	PersonaBoRemote personaBo;
+
+	private String nroLicencia;
+
+	private ArrayList<RecordPapeletaDTO> records;
+	private int currentRow;
+	private RecordPapeletaDTO currentItem = new RecordPapeletaDTO();
+
+	private String cmbValuetipodocumento;
+	private List<SelectItem> lsttipodocumento = new ArrayList<SelectItem>();
+	private Boolean isDNI = Boolean.FALSE;
+	private Boolean isRUC = Boolean.FALSE;
+	private String nroDocumentoIdentidad;
+	private HashMap<String, Integer> mapRpTipodocumento = new HashMap<String, Integer>();
+	private HashMap<Integer, String> mapIRpTipodocumento = new HashMap<Integer, String>();
+
+	private BuscarPersonaDTO datosInfractor;
+	private BuscarPersonaDTO datosPropietario;
+
+	private Integer infractorId;
+	
+	private Boolean buscDocumento= Boolean.FALSE;
+	private GnAuditoriaOperacion auditoria = new GnAuditoriaOperacion();
+
+	public RecordInfraccionInfractorManaged() throws Exception {
+
+	}
+
+	@PostConstruct
+	public void init() {
+		try {
+			List<MpTipoDocuIdentidad> lstMpTipoDocuIdentidad = personaBo
+					.getAllMpTipoDocumento();
+			Iterator<MpTipoDocuIdentidad> it1 = lstMpTipoDocuIdentidad
+					.iterator();
+			lsttipodocumento = new ArrayList<SelectItem>();
+
+			while (it1.hasNext()) {
+				MpTipoDocuIdentidad obj = it1.next();
+				lsttipodocumento.add(new SelectItem(obj.getDescrpcionCorta(),
+						String.valueOf(obj.getTipoDocIdentidadId())));
+				mapRpTipodocumento.put(obj.getDescrpcionCorta().trim(),
+						obj.getTipoDocIdentidadId());
+				mapIRpTipodocumento.put(obj.getTipoDocIdentidadId(), obj
+						.getDescrpcionCorta().trim());
+			}
+			records = new ArrayList<RecordPapeletaDTO>();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void limpiar() throws Exception {
+		records = new ArrayList<RecordPapeletaDTO>();
+		currentItem = new RecordPapeletaDTO();
+
+		cmbValuetipodocumento = "";
+		nroDocumentoIdentidad = "";
+		nroLicencia = "";
+		datosPropietario = new BuscarPersonaDTO();
+		datosInfractor = new BuscarPersonaDTO();
+		infractorId = 0;
+	}
+
+	public boolean validarDatosAlImprimirRecord() {
+		if (datosInfractor == null) {
+			addErrorMessage(getMsg("Ingrese Infractor a Buscar."));
+			return false;
+		}
+		if (datosInfractor.getNroDocuIdentidad() == null
+				|| datosInfractor.getNroDocuIdentidad().equals("")
+				|| datosInfractor.getNroDocuIdentidad().equals("-")) {
+			addErrorMessage(getMsg("Actualice el DNI del Infractor en la seccion: Registro Infractor."));
+			return false;
+		}
+		return true;
+	}
+
+	public void previewRecord() {
+		validarDatosAlImprimirRecord();
+	}
+
+	public void exportarPdf() {
+		java.sql.Connection connection = null;
+		try {
+			if (validarDatosAlImprimirRecord()) {
+				if (datosInfractor != null && datosInfractor.getPersonaId() > 0
+						&& records.size() == 0) {
+					CrudServiceBean connj = CrudServiceBean.getInstance();
+					connection = connj.connectJasper();
+
+					HashMap<String, Object> parameters = new HashMap<String, Object>();
+					parameters.put("p_responsable", getSessionManaged().getUser().getUsuario());
+					parameters.put("codigo_infractor",datosInfractor.getPersonaId());
+					parameters.put("nombre_infractor",datosInfractor.getApellidosNombres());
+					parameters.put("tipo_documento",datosInfractor.getTipoDocIdentidad());
+					parameters.put("numero_documento",datosInfractor.getNroDocuIdentidad());
+					parameters.put("numero_licencia",datosInfractor.getNumLicencia());
+
+					parameters.put("ruta_image",SATWEBParameterFactory.getPathReporteImagenes());
+					// --
+					JasperPrint jasperPrint = JasperFillManager.fillReport((SATWEBParameterFactory.getPathReporte() + "pa_record_conductornoinf.jasper"),parameters, connection);
+					ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+					JasperExportManager.exportReportToPdfStream(jasperPrint,output);
+					HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+					response.setContentType("application/pdf");
+					response.addHeader("Content-Disposition","attachment;filename=record_infractor_noinfraccion.pdf");
+					response.setContentLength(output.size());
+					ServletOutputStream servletOutputStream = response.getOutputStream();
+					servletOutputStream.write(output.toByteArray(), 0,output.size());
+					servletOutputStream.flush();
+					servletOutputStream.close();
+					FacesContext.getCurrentInstance().responseComplete();
+					
+					registrarAccion(datosInfractor.getPersonaId(),datosInfractor.getApellidosNombres(),datosInfractor.getNroDocuIdentidad(),"RecordInfractorSN");
+				}
+
+				if (records.size() > 0) {
+
+					CrudServiceBean connj = CrudServiceBean.getInstance();
+					connection = connj.connectJasper();
+
+					HashMap<String, Object> parameters = new HashMap<String, Object>();
+					parameters.put("ruta_image",SATWEBParameterFactory.getPathReporteImagenes());
+
+					parameters.put("p_responsable", getSessionManaged().getUser().getUsuario());
+					parameters.put("nombre_infractor",datosInfractor.getApellidosNombres());
+					parameters.put("tipo_documento",datosInfractor.getTipoDocIdentidad());
+					parameters.put("numero_documento",datosInfractor.getNroDocuIdentidad());
+					parameters.put("numero_licencia",datosInfractor.getNumLicencia());
+					parameters.put("fecha_expedicion", DateUtil.convertDateToString(DateUtil.getCurrentDate()));
+					parameters.put("hora_expedicion", DateUtil.getHoraActual());
+					// --
+					parameters.put("persona_infractor_id",(datosInfractor != null && datosInfractor.getPersonaId() != null && datosInfractor.getPersonaId() > 0) ? 
+							                               datosInfractor.getPersonaId() : Integer.valueOf(-1));
+					// --
+					JasperPrint jasperPrint;
+					if (cmbValuetipodocumento != null && cmbValuetipodocumento.trim().length() > 0 && nroDocumentoIdentidad != null && nroDocumentoIdentidad.trim().length() > 0) {
+						 jasperPrint = JasperFillManager.fillReport((SATWEBParameterFactory.getPathReporte() + "pa_record_conductor_documento.jasper"),parameters, connection);
+					}else{
+						 jasperPrint = JasperFillManager.fillReport((SATWEBParameterFactory.getPathReporte() + "pa_record_conductor.jasper"),parameters, connection);
+					}
+					
+					ByteArrayOutputStream output = new ByteArrayOutputStream();
+					JasperExportManager.exportReportToPdfStream(jasperPrint,output);
+					HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+					response.setContentType("application/pdf");
+					response.addHeader("Content-Disposition","attachment;filename=record_infractor.pdf");
+					response.setContentLength(output.size());
+					ServletOutputStream servletOutputStream = response.getOutputStream();
+					servletOutputStream.write(output.toByteArray(), 0,output.size());
+					servletOutputStream.flush();
+					servletOutputStream.close();
+					FacesContext.getCurrentInstance().responseComplete();
+					
+					registrarAccion(datosInfractor.getPersonaId(),datosInfractor.getApellidosNombres(),datosInfractor.getNroDocuIdentidad(),"RecordInfractor");
+				}
+				
+			}
+		} catch (Exception jre) {
+			jre.printStackTrace();
+			WebMessages.messageFatal(jre);
+		} finally {
+			try {
+				if (connection != null) {
+					connection.close();
+					connection = null;
+				}
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	public void buscar() throws Exception {
+		try {
+			if (cmbValuetipodocumento != null
+					&& cmbValuetipodocumento.trim().length() > 0
+					&& nroDocumentoIdentidad != null
+					&& nroDocumentoIdentidad.trim().length() > 0) {
+				Integer tipoDocumento = mapRpTipodocumento.get(cmbValuetipodocumento);
+				datosInfractor = papeletaBo.getInfractorByDocumento(tipoDocumento, nroDocumentoIdentidad);
+				if (datosInfractor != null && datosInfractor.getPersonaId() > Constante.RESULT_PENDING) {
+					 records=papeletaBo.getRecordInfractor(tipoDocumento,nroDocumentoIdentidad, null, null, null);
+//					records = papeletaBo.getRecordInfractor(null, null, null,null, datosInfractor.getPersonaId());//Comentado en Junio 2019, porque no genera el result. de la búsqueda cuando tiene más de un código.
+				}
+			} else if (nroLicencia != null && nroLicencia.trim().length() > 0) {
+				datosInfractor = papeletaBo.getInfractorByNroLicencia(nroLicencia);
+				if (datosInfractor != null&& datosInfractor.getPersonaId() > Constante.RESULT_PENDING) {
+					// records=papeletaBo.getRecordInfractor(null, null,
+					// nroLicencia, null, null);
+					records = papeletaBo.getRecordInfractor(null, null, null,null, datosInfractor.getPersonaId());
+				}
+			} else if (datosInfractor != null
+					&& datosInfractor.getPersonaId() != null
+					&& datosInfractor.getPersonaId() > 0) {
+				datosInfractor = papeletaBo.getInfractorById(datosInfractor.getPersonaId());
+				if (datosInfractor != null && datosInfractor.getPersonaId() > Constante.RESULT_PENDING) {
+					records = papeletaBo.getRecordInfractor(null, null, null,null, datosInfractor.getPersonaId());
+				}
+			} else if (infractorId != null && infractorId > 0) {
+				datosInfractor = papeletaBo.getInfractorById(infractorId);
+				if (datosInfractor != null && datosInfractor.getPersonaId() > Constante.RESULT_PENDING) {
+					// records=papeletaBo.getRecordInfractor(null, null, null,
+					// null, infractorId);
+					records = papeletaBo.getRecordInfractor(null, null, null,null, datosInfractor.getPersonaId());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void setPersonaPapeleta() {
+		String personaPapeleta = FacesUtil
+				.getRequestParameter("personaPapeleta");
+		String destinoRefresh = FacesUtil.getRequestParameter("destinoRefresh");
+
+		FacesUtil.setSessionMapValue(FacesContext.getCurrentInstance(),
+				"personaPapeleta", personaPapeleta);
+
+		BuscarPersonaPapeletasManaged buscarPersonaManaged = (BuscarPersonaPapeletasManaged) getManaged("buscarPersonaPapeletasManaged");
+		buscarPersonaManaged.setPantallaUso(ReusoFormCns.RECORD_INFR_PAPELETAS);
+		buscarPersonaManaged.setDestinoRefresh(destinoRefresh);
+	}
+
+	public void copiaPersona(BuscarPersonaDTO persona, String personaPapeleta) {
+		// personaPapeleta "I" Infractor
+		// personaPapeleta "P" Propietario
+		if (personaPapeleta.equals("I")) {
+			setDatosInfractor(persona);
+		} else {
+			setDatosPropietario(persona);
+		}
+	}
+	
+	public void registrarAccion(Integer persona,String nombre,String doc,String tipo) throws Exception {
+		try{
+		
+			auditoria.setTablaNombre("pa_papeleta");
+			auditoria.setPersonaId(persona);
+			auditoria.setContribuyente(nombre);
+			auditoria.setNroDocIdentidad(doc);
+			auditoria.setCodigoOperacion(tipo);
+			auditoria.setTipoOperacion(Constante.OPERACION_IMPRESION);
+			auditoria.setUsuarioId(getSessionManaged().getUsuarioLogIn().getUsuarioId());
+			auditoria.setTerminalRegistro(getSessionManaged().getTerminalLogIn());
+			papeletaBo.guardarOperacionAuditoria(auditoria);
+			
+		} catch (Exception a) {
+			a.printStackTrace();
+		}
+	}
+
+	public String getNroLicencia() {
+		return nroLicencia;
+	}
+
+	public void setNroLicencia(String nroLicencia) {
+		this.nroLicencia = nroLicencia;
+	}
+
+	public ArrayList<RecordPapeletaDTO> getRecords() {
+		return records;
+	}
+
+	public void setRecords(ArrayList<RecordPapeletaDTO> records) {
+		this.records = records;
+	}
+
+	public int getCurrentRow() {
+		return currentRow;
+	}
+
+	public void setCurrentRow(int currentRow) {
+		this.currentRow = currentRow;
+	}
+
+	public RecordPapeletaDTO getCurrentItem() {
+		return currentItem;
+	}
+
+	public void setCurrentItem(RecordPapeletaDTO currentItem) {
+		this.currentItem = currentItem;
+	}
+
+	public BuscarPersonaDTO getDatosInfractor() {
+		return datosInfractor;
+	}
+
+	public void setDatosInfractor(BuscarPersonaDTO datosInfractor) {
+		this.datosInfractor = datosInfractor;
+	}
+
+	public BuscarPersonaDTO getDatosPropietario() {
+		return datosPropietario;
+	}
+
+	public void setDatosPropietario(BuscarPersonaDTO datosPropietario) {
+		this.datosPropietario = datosPropietario;
+	}
+
+	public String getCmbValuetipodocumento() {
+		return cmbValuetipodocumento;
+	}
+
+	public void setCmbValuetipodocumento(String cmbValuetipodocumento) {
+		this.cmbValuetipodocumento = cmbValuetipodocumento;
+	}
+
+	public List<SelectItem> getLsttipodocumento() {
+		return lsttipodocumento;
+	}
+
+	public void setLsttipodocumento(List<SelectItem> lsttipodocumento) {
+		this.lsttipodocumento = lsttipodocumento;
+	}
+
+	public Boolean getIsDNI() {
+		return isDNI;
+	}
+
+	public void setIsDNI(Boolean isDNI) {
+		this.isDNI = isDNI;
+	}
+
+	public Boolean getIsRUC() {
+		return isRUC;
+	}
+
+	public void setIsRUC(Boolean isRUC) {
+		this.isRUC = isRUC;
+	}
+
+	public String getNroDocumentoIdentidad() {
+		return nroDocumentoIdentidad;
+	}
+
+	public void setNroDocumentoIdentidad(String nroDocumentoIdentidad) {
+		this.nroDocumentoIdentidad = nroDocumentoIdentidad;
+	}
+
+	public HashMap<String, Integer> getMapRpTipodocumento() {
+		return mapRpTipodocumento;
+	}
+
+	public void setMapRpTipodocumento(
+			HashMap<String, Integer> mapRpTipodocumento) {
+		this.mapRpTipodocumento = mapRpTipodocumento;
+	}
+
+	public Integer getInfractorId() {
+		return infractorId;
+	}
+
+	public void setInfractorId(Integer infractorId) {
+		this.infractorId = infractorId;
+	}
+
+	public Boolean getBuscDocumento() {
+		return buscDocumento;
+	}
+
+	public void setBuscDocumento(Boolean buscDocumento) {
+		this.buscDocumento = buscDocumento;
+	}
+}

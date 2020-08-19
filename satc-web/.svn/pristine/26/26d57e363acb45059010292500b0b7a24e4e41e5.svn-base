@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form  id="formbusquedapredio">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	<a4j:loadScript src="/js/sisat.js"/>
+
+     <rich:panel  id="p01" >
+		<f:facet  name="header">		
+			BUSQUEDA DE RESOLUCIONES
+		</f:facet>		
+		
+	</rich:panel>
+		
+	<h:panelGrid columns="3" align="center" >
+			<a4j:commandButton id="id_commandbuscar" value="Buscar" style="width:100px;"	action="#{buscarResolucionesManaged.buscar}" status="ajaxStatus" reRender="id_panelresultadospredio" />
+	</h:panelGrid>
+	    
+		<rich:panel  id="id_panelresultadospredio" style = "width:100%;" >
+			<h:panelGrid columns="3" align="center" >
+				<a4j:commandLink ajaxSingle="true" id="newlink1" action="#{buscarResolucionesManaged.inscripcion}" immediate="true" reRender="panelinclude" >
+                    <h:graphicImage value="/images/modal/new.gif" style="border:0" />
+                    <f:setPropertyActionListener value="/sisat/papeletas/registroresolucion.xhtml" target="#{sessionManaged.page}" />
+                </a4j:commandLink>
+                <rich:toolTip id="x2" for="newlink1" value="Registro de papeleta" />
+			</h:panelGrid>
+			<a4j:region  renderRegionOnly="true">
+			
+			<rich:extendedDataTable 
+				id="datosConstruccion" value="#{buscarResolucionesManaged.records}" var="record" width="100%" height="300px"
+				sortMode="single" selectionMode="single" enableContextMenu="false" 
+				rowKeyVar="row"	>
+				<rich:column id="x4mrda" style="text-align:center" width="5%" >
+	                <f:facet name="header" >Item</f:facet>
+	                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+	            </rich:column>
+   			</rich:extendedDataTable>
+   			</a4j:region>
+        </rich:panel>           
+	</h:form>
+</ui:composition>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+
+	<h:form id="formRegistrorelacionado">
+		<h:panelGrid columns="2">
+
+			<rich:panel id="id_registrorelacionado" width="100%">
+				<!-- 			<f:facet name="header">		 -->
+				<!-- 			Registro Relacionado -->
+				<!-- 		</f:facet> -->
+				<h:panelGrid columns="4">
+					<h:outputText value="Tipo de Relación:" />
+					<span style="color: red;">*</span>
+
+					<rich:comboBox width="200px" defaultLabel="Seleccione"
+						onkeypress="return showListCbo(this,event);"
+						onblur="validaInputCbo(this)"
+						value="#{registroRelacionadoPersonaManaged.cmbValueMpTipoRelacion}"
+						id="id_tiporelacion"
+						binding="#{registroRelacionadoPersonaManaged.cmbMpTipoRelacion}"
+						valueChangeListener="#{registroRelacionadoPersonaManaged.loadMpTipoRelacionById}">
+						<f:selectItems id="id_lsttiporelacion"
+							value="#{registroRelacionadoPersonaManaged.lstMpTipoRelacion}" />
+						<a4j:support id="id_supportlsttiporelacion" event="onchange"
+							reRender="formRegistrorelacionado" ajaxSingle="true" />
+					</rich:comboBox>
+
+				</h:panelGrid>
+
+				<h:panelGrid columns="5">
+
+					<h:panelGroup id="panl2">
+						<h:outputText value="Tipo de Doc. Iden." />
+						<span style="color: red;">*</span>
+					</h:panelGroup>
+					<rich:comboBox width="150px" defaultLabel="Selecccione"
+						onkeypress="return showListCbo(this,event);"
+						onblur="validaInputCbo(this)"
+						value="#{registroRelacionadoPersonaManaged.cmbValuetipodocumentoidentidad}"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						requiredMessage="#{msg['mp.errortipodocumento']}"
+						id="id_tipodocumento"
+						binding="#{registroRelacionadoPersonaManaged.cmbtipodocumentoidentidad}"
+						valueChangeListener="#{registroRelacionadoPersonaManaged.loadMpTipoDocumentoIdentidadById}">
+						<f:selectItems id="id_lsttipodocumento"
+							value="#{registroRelacionadoPersonaManaged.lsttipodocumentoidentidad}" />
+						<a4j:support id="id_supportlsttipodocumento" reRender="nro_doc"
+							event="onchange" BypassUpdates="false" ajaxSingle="true" />
+					</rich:comboBox>
+					<h:panelGroup id="panl3">
+						<h:outputText value="Nro Documento:" />
+						<span style="color: red;">*</span>
+					</h:panelGroup>
+
+					<h:inputText id="nro_doc"
+						requiredMessage="#{msg['mp.errornrodocumento']}" maxlength="12"						
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						value="#{registroRelacionadoPersonaManaged.mpRelacionado.nroDocuIdentidad}">
+						
+					</h:inputText>
+
+					<a4j:commandLink id="id_busquedareniec" status="ajaxStatus"
+						action="#{registroRelacionadoPersonaManaged.consultaReniec()}"
+						rendered="#{registroRelacionadoPersonaManaged.tipoAccion!=3}"
+						reRender="mprelacionadoapepaterno,mprelacionadoapematerno,mprelacionadoprimernombre,mprelacionadosegundonombre,id_consulta_reniec"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');return false;return false; ' : 'Richfaces.showModalPanel(\'mpErrors\');' };">
+
+						<h:graphicImage width="35" height="25"
+							value="/images/modal/reniec.jpg" style="border:0" />
+
+						<rich:toolTip for="id_busquedareniec"
+							value="CONSULTA RENIEC EN LÍNEA" />
+
+					</a4j:commandLink>
+
+				</h:panelGrid>
+
+
+				<h:panelGrid id="idPnlGrid" columns="2">
+					<h:panelGroup id="panl4">
+						<h:outputText value="Apellidos Esposo:"
+							rendered="#{registroRelacionadoPersonaManaged.mpTipoRelacionId == 9}" />
+						<h:outputText value="Apellido Paterno:"
+							rendered="#{registroRelacionadoPersonaManaged.mpTipoRelacionId != 9}" />
+						<span style="color: red;">*</span>
+					</h:panelGroup>
+					<h:inputText id="mprelacionadoapepaterno" style="width:238px;"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						requiredMessage="#{msg['mp.apellidopaternosiningresar']}"
+						styleClass="textUpperCase"
+						onkeypress="return validarCarateres(event)"
+						value="#{registroRelacionadoPersonaManaged.mpRelacionado.apePaterno}">
+						<f:converter converterId="uppeCaseConverter" />
+					</h:inputText>
+					<h:panelGroup id="panl5">
+						<h:outputText value="Nombre(s) Esposo:"
+							rendered="#{registroRelacionadoPersonaManaged.mpTipoRelacionId == 9}" />
+						<h:outputText value="Apellido Materno:"
+							rendered="#{registroRelacionadoPersonaManaged.mpTipoRelacionId != 9}" />
+						<span style="color: red;">*</span>
+					</h:panelGroup>
+
+					<h:inputText id="mprelacionadoapematerno" style="width:238px;"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						requiredMessage="#{msg['mp.apellidomaternosiningresar']}"
+						styleClass="textUpperCase"
+						onkeypress="return validarCarateres(event)"
+						value="#{registroRelacionadoPersonaManaged.mpRelacionado.apeMaterno}">
+						<f:converter converterId="uppeCaseConverter" />
+					</h:inputText>
+					<h:panelGroup id="panl6">
+						<h:outputText value="Apellidos Esposa:"
+							rendered="#{registroRelacionadoPersonaManaged.mpTipoRelacionId == 9}" />
+						<h:outputText value="Primer Nombre:"
+							rendered="#{registroRelacionadoPersonaManaged.mpTipoRelacionId != 9}" />
+						<span style="color: red;">*</span>
+					</h:panelGroup>
+					
+					
+					
+					<h:inputText id="mprelacionadoprimernombre" style="width:238px;"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						requiredMessage="#{msg['mp.primernombresiningresar']}"
+						styleClass="textUpperCase"
+						onkeypress="return validarCarateres(event)"
+						value="#{registroRelacionadoPersonaManaged.mpRelacionado.primerNombre}">
+						<f:converter converterId="uppeCaseConverter" />
+					</h:inputText>
+					<h:outputText value="Nombre(s) Esposa:"
+						rendered="#{registroRelacionadoPersonaManaged.mpTipoRelacionId == 9}" />
+					<h:outputText value="Segundo Nombre:"
+						rendered="#{registroRelacionadoPersonaManaged.mpTipoRelacionId != 9}" />
+					<h:inputText id="mprelacionadosegundonombre" styleClass="textUpperCase"
+						onkeypress="return validarCarateres(event)"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						value="#{registroRelacionadoPersonaManaged.mpRelacionado.segundoNombre}">
+						<f:converter converterId="uppeCaseConverter" />
+					</h:inputText>
+					<h:outputText value="% de Participacion:" />
+					<h:inputText
+						value="#{registroRelacionadoPersonaManaged.mpRelacionado.porcParticipacion}"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}">
+					</h:inputText>
+					<h:outputText value="Telefono:" />
+					<h:inputText onkeypress="return validaEnteroPositivo(event)"
+						maxlength="20"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						value="#{registroRelacionadoPersonaManaged.mpRelacionado.telefono}" />
+					<h:outputText value="Email  :" />
+					<h:inputText maxlength="100" style="width:238px;"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						value="#{registroRelacionadoPersonaManaged.mpRelacionado.email}" />
+					<h:outputText value="Facebook  :" />
+					<h:inputText maxlength="100" style="width:238px;"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						value="#{registroRelacionadoPersonaManaged.mpRelacionado.facebook}" />
+					<h:outputText value="Twitter  :" />
+					<h:inputText maxlength="100" style="width:238px;"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						value="#{registroRelacionadoPersonaManaged.mpRelacionado.twitter}" />
+				</h:panelGrid>
+
+				<h:panelGrid columns="3" align="center">
+					<a4j:commandButton value="Guardar" style="width:100px;"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						action="#{registroRelacionadoPersonaManaged.guardar}"
+						status="ajaxStatus"
+						reRender="id_registrorelacionado,id_principal_relacionado"
+						rendered="#{registroRelacionadoPersonaManaged.tipoAccion==1}"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'panelconfirmarelacionado\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };" />
+					<a4j:commandButton value="Actualizar" style="width:100px;"
+						disabled="#{registroRelacionadoPersonaManaged.tipoAccion==3}"
+						action="#{registroRelacionadoPersonaManaged.actualizarRelacionado}"
+						status="ajaxStatus"
+						reRender="id_registrorelacionado,id_principal_relacionado"
+						rendered="#{registroRelacionadoPersonaManaged.tipoAccion==2}"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'panelconfirmarelacionado\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };" />
+					<a4j:commandButton value="Salir" style="width:100px;"
+						action="#{registroRelacionadoPersonaManaged.salir}"
+						status="ajaxStatus" immediate="true"
+						reRender="id_tiporelacion,formRegistrorelacionado,id_registrorelacionado,id_principal_relacionado,panelregistroderelacionados"
+						oncomplete="#{rich:component('panelregistroderelacionados')}.hide(); return false" />
+				</h:panelGrid>
+			</rich:panel>
+
+			<rich:panel id="id_consulta_reniec" header="Resutlado Consulta RENIEC"
+				style="width:500px; height: 180px;margen-top:opx; " align="left">
+				
+				
+				
+				<table width="100%" border="1" bordercolor="#E7E9EE"
+					style="border-collapse:collapse;font-size: 90%;">
+					<tbody>
+						<tr>
+							<td height="120px" width="80px" rowspan="4"><h:graphicImage
+									width="80" height="120"
+									value="#{registroRelacionadoPersonaManaged.rutaFotoReniec}" alt="Sin Foto">
+								</h:graphicImage></td>
+							<td width="20px"><h:outputText value="Dirección: " /></td>
+							<td width="92"><h:outputText style="color:#060B52"
+									value="#{registroRelacionadoPersonaManaged.resultadoConsultaReniec.datosPersona.direccion}" />
+							</td>
+						</tr>
+						<tr>
+							<td width="20px"><h:outputText value="Ubigeo: " /></td>
+							<td width="92"><h:outputText style="color:#060B52"
+									value="#{registroRelacionadoPersonaManaged.resultadoConsultaReniec.datosPersona.ubigeo}" />
+							</td>
+						</tr>
+						<tr>
+							<td width="20px"><h:outputText value="Estado Civil: " /></td>
+							<td width="92"><h:outputText style="color:#060B52"
+									value="#{registroRelacionadoPersonaManaged.resultadoConsultaReniec.datosPersona.estadoCivil}" />
+							</td>
+						</tr>
+						<tr>
+							<td width="20px"><h:outputText value="Observaciones: " /></td>
+							<td width="92"><h:outputText style="color:#060B52"
+									value="#{registroRelacionadoPersonaManaged.resultadoConsultaReniec.datosPersona.restriccion}" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+
+
+			</rich:panel>
+
+
+		</h:panelGrid>
+	</h:form>
+
+</ui:composition>

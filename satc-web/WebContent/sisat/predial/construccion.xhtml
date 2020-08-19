@@ -1,0 +1,398 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:a4j="http://richfaces.org/a4j"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+     
+     <rich:panel  width="630px" id="id_thispanelconstruccion">
+     	<rich:jQuery query="focus().select()" selector="#formConstruccion :input:visible:enabled:first" name="focusInputdc"/>
+     	
+     	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	 	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	 	<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		<table border="0" width="100%">
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Tipo nivel :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td>
+					<rich:comboBox width="150px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_tiponivelc" binding="#{construccionManaged.cmbtiponivel}"   
+						requiredMessage="Seleccione el Tipo de Nivel"
+						tabindex="1"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{construccionManaged.disabled}"	
+						>
+						<f:selectItems id="id_lsttiponivel" value="#{construccionManaged.lsttiponivel}"/>		
+					</rich:comboBox>
+				</td>
+				<td align="right" width="150px" >
+					<h:outputLabel value="Nro nivel :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td>
+					<table border="0" width="100%" cellpadding="0" cellspacing="1">
+						<tr>
+							<td width="30%">
+								<h:inputText id="id_nronivelconst" maxlength="3" required="true" style="width:100%" value="#{construccionManaged.rpDjconstruccion.nroNivel}" 
+								requiredMessage="Indique el Numero de nivel" validatorMessage="El Numero de nivel no es válido"
+								tabindex="2"
+								onkeypress="return numbersonly(this.value,event)"
+								label="Numero de nivel"
+								disabled="#{construccionManaged.disabled}"
+								>
+									<f:validateLongRange  minimum="1" ></f:validateLongRange>
+								</h:inputText>
+							</td>
+							
+							<td width="50%"  align="right">
+								<h:outputLabel value=" Seccion :" >
+									<span style="color: red;">*</span>
+								</h:outputLabel>
+							</td>
+							<td width="20%">
+								<h:inputText id="id_nroseccconst" maxlength="3" required="true" style="width:100%;text-transform:uppercase;" value="#{construccionManaged.rpDjconstruccion.seccion}"  
+								requiredMessage="Indique la seccion del nivel" validatorMessage="La seccion del nivel no es válido"
+								tabindex="2"
+								label="Seccion"
+								disabled="#{construccionManaged.disabled}"
+								styleClass="seccion"
+								converter="#{upperCaseConverter}"
+								>
+								</h:inputText>
+								
+								<rich:jQuery
+									id="maskSeccion" selector=".seccion"
+									query="mask('a?99')" timing="onload" />
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Año Construccion :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td>
+					<h:inputText id="id_annoonstruccion" required="true" style="width:100%" value="#{construccionManaged.rpDjconstruccion.annoConstruccion}" 
+					requiredMessage="Indique el Año de Construccion" validatorMessage="El año de construcción debe ser mayor a 1753 y menor a #{construccionManaged.annoActualProcesamiento}"
+					tabindex="3"
+					size="4" maxlength="4" onkeypress="return numbersonly(this.value,event)"
+					label="Año de Construcción"	
+					disabled="#{construccionManaged.disabled}"
+					>
+						<f:validateLongRange  minimum="1753" maximum="#{construccionManaged.annoActualProcesamiento}"></f:validateLongRange>
+					</h:inputText>
+				</td>
+				
+				<td  align="right" width="150px" >
+					<h:outputLabel value="Mes Construccion :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				
+				<td>
+					<table border="0" width="100%" cellpadding="0" cellspacing="0">
+						<tr>
+							<td width="100%">
+								<rich:comboBox width="145px" defaultLabel="Selecccione" required="true"  selectFirstOnUpdate="true" directInputSuggestions="false"
+									id="id_mes" binding="#{construccionManaged.cmbmes}" 
+									requiredMessage="Indique el Mes de Construccion"
+									tabindex="4"
+									onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+									disabled="#{construccionManaged.disabled}"
+									>
+									<f:selectItems id="id_lstmes" value="#{construccionManaged.lstmes}"/>		
+								</rich:comboBox>
+							</td>
+						</tr>
+					</table>			
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Area Construida(m2) :" 
+					>
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+					<!-- rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaConstruida}" -->
+				</td>
+				<td>
+					<h:inputText id="id_areaconstruccion" maxlength="12" required="true" style="width:100%" value="#{construccionManaged.rpDjconstruccion.areaConstruccion}" 
+					requiredMessage="Indique el Area Construida (m2) "
+					tabindex="5"
+					onkeypress="return numbersonly(this.value,event)"
+					disabled="#{construccionManaged.disabled}"	
+					>
+					</h:inputText>
+					<!-- rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaConstruida}" -->
+				</td>
+				<td  align="right" width="150px" >
+					<h:outputLabel value="Año Actualización :" />
+				</td>
+				<td>
+					<h:inputText id="id_annactualizacion" style="width:100%" value="#{construccionManaged.rpDjconstruccion.annoActualizacion}" 
+					validatorMessage="El año de actualizacion debe ser igual o mayor a año de construcción y menor al año de la DJ #{construccionManaged.annoDj}"
+					tabindex="3"
+					size="4" maxlength="4" onkeypress="return numbersonly(this.value,event)"
+					label="Año de Actualización"	
+					disabled="#{construccionManaged.disabled}"
+					>
+						<f:validateLongRange  minimum="#{construccionManaged.annoConstruccion}" maximum="#{construccionManaged.annoDj}"></f:validateLongRange>
+					</h:inputText>
+				</td>
+				<!--<td align="left" width="150px" >
+					
+						<h:outputLabel value="Area Terreno(m2) :" 
+							rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaConstruida}"
+						>
+						</h:outputLabel>					
+				</td> 
+				<td>					
+					<h:inputText readonly="true" id="id_areaTerrenocontruc" maxlength="12" required="true" style="width:100%;border: none" value="#{construccionManaged.rpDjconstruccion.areaTerreno}" 
+					requiredMessage="Indique el Area de Terreno (m2) "
+					rendered="#{registroPredioManaged.mapEstadoArea[registroPredioManaged.ubicacionPredioId].areaConstruida}"
+					>
+					</h:inputText>					
+				</td>-->
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Material Predominante :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td colspan="3">
+					<rich:comboBox width="300px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_materialpredom" binding="#{construccionManaged.cmbMaterialPredominante}" 
+						requiredMessage="Seleccione el Material Predominante "
+						tabindex="7"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{construccionManaged.disabled}"
+						>
+						<f:selectItems id="id_lstMaterialPredominante" value="#{construccionManaged.lstMaterialPredominante}"/>		
+					</rich:comboBox>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Estado conservacion :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td colspan="3">
+					<rich:comboBox width="300px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_estadoconcervacion" binding="#{construccionManaged.cmbEstadoConservacion}" 
+						requiredMessage="Seleccione el Estado de conservación "
+						tabindex="8"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{construccionManaged.disabled}"
+						>
+						<f:selectItems id="id_lstEstadoConservacion" value="#{construccionManaged.lstEstadoConservacion}"/>		
+					</rich:comboBox>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Clasif. depreciacion :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td colspan="3">
+					<rich:comboBox width="300px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_tipodepreciacion" binding="#{construccionManaged.cmbTipoDepreciacion}" 
+						requiredMessage="Seleccione la Clasificacion de depreciacion"
+						tabindex="9"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{construccionManaged.disabled}"
+						>
+						<f:selectItems id="id_lstTipoDepreciacion" value="#{construccionManaged.lstTipoDepreciacion}"/>		
+					</rich:comboBox>
+				</td>
+			</tr>
+			
+			
+			<!-- termina -->
+
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Muros y columnas :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				
+				<td colspan="3">
+				
+					<rich:comboBox width="450px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_muros" binding="#{construccionManaged.cmbComponenteConstruccion1}" 
+						requiredMessage="Seleccione el componente Muros y columnas"
+						tabindex="10"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{construccionManaged.disabled}" listWidth="700"
+						>
+						<f:selectItems id="id_lstComponenteConstruccion1" value="#{construccionManaged.lstComponenteConstruccion1}"/>		
+					</rich:comboBox>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Techo :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td colspan="3">
+					<rich:comboBox width="450px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_techos" binding="#{construccionManaged.cmbComponenteConstruccion2}" 
+						requiredMessage="Seleccione el componente Techo"
+						tabindex="11"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{construccionManaged.disabled}" listWidth="700"
+						>
+						<f:selectItems id="id_lstComponenteConstruccion2" value="#{construccionManaged.lstComponenteConstruccion2}"/>		
+					</rich:comboBox>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Piso :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td colspan="3">
+					<rich:comboBox width="450px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_piso" binding="#{construccionManaged.cmbComponenteConstruccion3}" 
+						requiredMessage="Seleccione el componente Piso"
+						tabindex="12"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{construccionManaged.disabled}" listWidth="700"
+						>
+						<f:selectItems id="id_lstComponenteConstruccion3" value="#{construccionManaged.lstComponenteConstruccion3}"/>		
+					</rich:comboBox>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Puerta Ventana :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td colspan="3">
+					<rich:comboBox width="450px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_puertas" binding="#{construccionManaged.cmbComponenteConstruccion4}" 
+						requiredMessage="Seleccione el componente Puertas y Ventanas"
+						tabindex="13"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{construccionManaged.disabled}" listWidth="700"
+						>
+						<f:selectItems id="id_lstComponenteConstruccion4" value="#{construccionManaged.lstComponenteConstruccion4}"/>		
+					</rich:comboBox>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Revestimiento :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td colspan="3">
+					<rich:comboBox width="450px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_revestimiento" binding="#{construccionManaged.cmbComponenteConstruccion5}" 
+						requiredMessage="Seleccione el componente Revestimiento"
+						tabindex="14"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{construccionManaged.disabled}" listWidth="700"
+						>
+						<f:selectItems id="id_lstComponenteConstruccion5" value="#{construccionManaged.lstComponenteConstruccion5}"/>		
+					</rich:comboBox>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Baños :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td colspan="3">
+					<rich:comboBox width="450px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_banios" binding="#{construccionManaged.cmbComponenteConstruccion6}" 
+						requiredMessage="Seleccione el componente Baños"
+						tabindex="15"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{construccionManaged.disabled}" listWidth="700"
+						>
+						<f:selectItems id="id_lstComponenteConstruccion6" value="#{construccionManaged.lstComponenteConstruccion6}"/>		
+					</rich:comboBox>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Inst. Elect. sanitarias :" >
+						<span style="color: red;">*</span>
+					</h:outputLabel>
+				</td>
+				<td colspan="3">
+				
+					<rich:comboBox width="450px" defaultLabel="Selecccione" required="true" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_instalaciones" binding="#{construccionManaged.cmbComponenteConstruccion7}"
+						 requiredMessage="Seleccione el componente Instalaciones Electricas y sanitarias"
+						 tabindex="16"
+						 onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						 disabled="#{construccionManaged.disabled}" listWidth="800"
+						>
+						<f:selectItems id="id_lstComponenteConstruccion7" value="#{construccionManaged.lstComponenteConstruccion7}"/>
+					</rich:comboBox>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="left" width="150px" >
+					<h:outputLabel value="Referencia :" />
+				</td>
+				<td colspan="3">
+					<h:inputText maxlength="100" id="id_referenciaconstruccion" style="width:100%" value="#{construccionManaged.rpDjconstruccion.referencia}"  
+					tabindex="17"
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{construccionManaged.disabled}"	
+					/>					
+				</td>
+			</tr>
+		</table>	
+		
+		<table>
+			<tr>
+				<td align="center" colspan="4">
+					<h:panelGrid align="center" columns="3" width="40%" border="0" style="text-align:center" >
+						<a4j:commandButton value="[G]uardar" style="width:100px;" 
+						action="#{construccionManaged.guardar}" reRender="id_tablapaneldatosconstruccion,id_thispanelconstruccion"
+						oncomplete="if(#{facesContext.maximumSeverity == null}){ if(#{construccionManaged.isEditable==true}){#{rich:component('panelConstruccion')}.hide();}else{focusInputdc();} }else{#{rich:component('mpErrors')}.show();}"
+						accesskey="g"
+						tabindex="19"
+						disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0')}"
+						>
+						</a4j:commandButton>
+						
+						<a4j:commandButton value="[S]alir" style="width:100px;" id="id_salir" action="#{construccionManaged.salir}"
+						 oncomplete="#{rich:component('panelConstruccion')}.hide(); return false"
+						 immediate="true"
+						 accesskey="s"
+						 tabindex="20"
+						 onblur="focusInputdc();"
+						/>
+						
+					</h:panelGrid>
+				</td>
+			</tr>
+		</table>
+		
+     </rich:panel>
+</h:panelGrid>

@@ -1,0 +1,1152 @@
+package com.sat.sisat.vehicular.business;
+
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.Stateless;
+import javax.persistence.Query;
+
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.determinacion.vehicular.dto.DeudaValoresDTO;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.fiscalizacion.dto.DatosNecesariosDeclaracionDTO;
+import com.sat.sisat.persistence.entity.DtDeterminacion;
+import com.sat.sisat.persistence.entity.GnNotaria;
+import com.sat.sisat.persistence.entity.GnTipoDocumento;
+import com.sat.sisat.persistence.entity.GnTipoMoneda;
+import com.sat.sisat.persistence.entity.RvAdquisicion;
+import com.sat.sisat.persistence.entity.RvCategoriaVehiculo;
+import com.sat.sisat.persistence.entity.RvClaseVehiculo;
+import com.sat.sisat.persistence.entity.RvCondicionPropiedad;
+import com.sat.sisat.persistence.entity.RvCondicionVehiculo;
+import com.sat.sisat.persistence.entity.RvDetCondVehiculo;
+import com.sat.sisat.persistence.entity.RvDjvehicular;
+import com.sat.sisat.persistence.entity.RvMarca;
+import com.sat.sisat.persistence.entity.RvModeloVehiculo;
+import com.sat.sisat.persistence.entity.RvMotivoDeclaracion;
+import com.sat.sisat.persistence.entity.RvMotivoDescargo;
+import com.sat.sisat.persistence.entity.RvSustentoVehicular;
+import com.sat.sisat.persistence.entity.RvSustentoVehicularPK;
+import com.sat.sisat.persistence.entity.RvTipoCarroceria;
+import com.sat.sisat.persistence.entity.RvTipoMotor;
+import com.sat.sisat.persistence.entity.RvTipoTraccion;
+import com.sat.sisat.persistence.entity.RvTipoTransmision;
+import com.sat.sisat.persistence.entity.RvTransferenciaPropiedad;
+import com.sat.sisat.persistence.entity.RvVehiculo;
+import com.sat.sisat.predial.business.BaseBusiness;
+import com.sat.sisat.vehicular.dao.VehicularBusinessDao;
+import com.sat.sisat.vehicular.dto.AnexosDeclaVehicDTO;
+import com.sat.sisat.vehicular.dto.BuscarPersonaDTO;
+import com.sat.sisat.vehicular.dto.BuscarVehicularDTO;
+import com.sat.sisat.vehicular.dto.DocumentoSustentatorioDTO;
+import com.sat.sisat.vehicular.dto.HistoricoVehiculodjDTO;
+import com.sat.sisat.vehicular.dto.RvVehiculoDTO;
+import com.sat.sisat.vehicular.dto.VehiculoExistenteDTO;
+
+@Stateless
+public class VehicularBo extends BaseBusiness implements VehicularBoRemote {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2069856119210887966L;
+	private VehicularBusinessDao vehicularDao;
+
+	public VehicularBo() {
+	}
+	
+
+	@PostConstruct
+	public void initialize() {
+		this.vehicularDao = new VehicularBusinessDao();
+		setDataManager(this.vehicularDao);
+	}
+
+	/**
+	 * Obtiene todas las clases de vehiculos de la base de datos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvClaseVehiculo> getAllRvClaseVehiculo() throws Exception {
+		return vehicularDao.getAllRvClaseVehiculo();
+	}
+
+	/**
+	 * Obtiene todas las categorías de vehículos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvCategoriaVehiculo> getAllRvCategoriaVehiculo()
+			throws Exception {
+		return vehicularDao.getAllRvCategoriaVehiculo();
+	}
+
+	/**
+	 * Obtiene todas las marcas de vehículos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvMarca> findRvMarca(int categoria) throws Exception {
+		return vehicularDao.findRvMarca(categoria);
+	}
+
+	/**
+	 * Obtiene modelos de vehículo de acuerdo a marca y categoría
+	 * 
+	 * @param marcaVehiculoId
+	 *            Identificador de marca de vehículo
+	 * @param categoriaVehiculoId
+	 *            Identificador de categoría de vehículo
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvModeloVehiculo> getAllRvModeloVehiculo(int marcaVehiculoId,
+			int categoriaVehiculoId) throws Exception {
+		return vehicularDao.getAllRvModeloVehiculo(marcaVehiculoId,
+				categoriaVehiculoId);
+	}
+
+	/**
+	 * Obtiene las condiciones especiales de vehículos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvCondicionVehiculo> getAllRvCondicionVehiculo()
+			throws Exception {
+		return vehicularDao.getAllRvCondicionVehiculo();
+	}
+
+	/**
+	 * Obtiene todos los tipos de carrocería
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvTipoCarroceria> getAllRvTipoCarroceria() throws Exception {
+		return vehicularDao.getAllRvTipoCarroceria();
+	}
+
+	/**
+	 * Obtiene tipos de transmisión de vehículos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvTipoTransmision> getAllRvTipoTransmision() throws Exception {
+		return vehicularDao.getAllRvTipoTransmision();
+	}
+
+	/**
+	 * Obtiene tipos de tracción de vehículos
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvTipoTraccion> getAllRvTipoTraccion() throws Exception {
+		return vehicularDao.getAllRvTipoTraccion();
+	}
+
+	/**
+	 * Obtiene todos los tipos de motores
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvTipoMotor> getAllRvTipoMotor() throws Exception {
+		return vehicularDao.getAllRvTipoMotor();
+	}
+
+	/**
+	 * Obtiene una lista de documentos que pueden sustentar una dj vehicular
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<DocumentoSustentatorioDTO> getAllRvDocumentoSustentatorio()
+			throws Exception {
+		return vehicularDao.getAllRvDocumentoSustentatorio();
+	}
+
+	/**
+	 * Obtiene un vehículo existente según su placa
+	 * 
+	 * @param placa
+	 *            Placa
+	 * @return
+	 * @throws Exception
+	 */
+	public VehiculoExistenteDTO getVehiculoByPlaca(String placa)
+			throws Exception {
+		return vehicularDao.getVehiculoByPlaca(placa);
+	}
+
+	/**
+	 * Obtiene un vehículo existente según su número de motor
+	 * 
+	 * @param numMotor
+	 *            Número de motor
+	 * @return
+	 * @throws Exception
+	 */
+	public VehiculoExistenteDTO getVehiculoByNumMotor(String numMotor)
+			throws Exception {
+		return vehicularDao.getVehiculoByNumMotor(numMotor);
+	}
+
+	/**
+	 * Obtiene todos los motivos de declaraci{on
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvMotivoDeclaracion> getAllRvMotivoDeclaracion()
+			throws Exception {
+		return vehicularDao.getAllRvMotivoDeclaracion();
+	}
+
+	/**
+	 * Obtiene todos los tipos de adquisición
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvAdquisicion> getAllRvAdquisicion() throws Exception {
+		return vehicularDao.getAllRvAdquisicion();
+	}
+
+	/**
+	 * Obtiene las condiciones de propiedad
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<RvCondicionPropiedad> getAllRvCondicionPropiedad()
+			throws Exception {
+		return vehicularDao.getAllRvCondicionPropiedad();
+	}
+
+	/**
+	 * Obtiene los tipos de moneda
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<GnTipoMoneda> getAllGnTipoMoneda() throws Exception {
+		return vehicularDao.getAllGnTipoMoneda();
+	}
+
+	/**
+	 * Obtiene la lista de notarias registradas
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<GnNotaria> getAllGnNotaria() throws Exception {
+		return vehicularDao.getAllGnNotaria();
+	}
+
+	// Buscar persona
+	/**
+	 * Buscar persona
+	 * 
+	 * @param apePat
+	 *            Apellido paterno
+	 * @param apeMat
+	 *            Apellido Materno
+	 * @param nombres
+	 *            Primer nombre
+	 * @return
+	 * @throws Exception
+	 */
+	public List<BuscarPersonaDTO> findPersona(String apePat, String apeMat,
+			String nombres) throws Exception {
+		return vehicularDao.findPersona(apePat, apeMat, nombres);
+	}
+
+	/**
+	 * Buscar persona
+	 * 
+	 * @param razonSocial
+	 *            Razon Social
+	 * @return
+	 * @throws Exception
+	 */
+	public List<BuscarPersonaDTO> findPersona(String razonSocial)
+			throws Exception {
+		return vehicularDao.findPersona(razonSocial);
+	}
+
+	/**
+	 * Buscar persona
+	 * 
+	 * @param tipoDocuIdentidadId
+	 *            Tipo de documento de identidad
+	 * @param nroDocuIdentidad
+	 *            Número de documento de identidad
+	 * @return
+	 * @throws Exception
+	 */
+	public List<BuscarPersonaDTO> findPersona(int tipoDocuIdentidadId,
+			String nroDocuIdentidad) throws Exception {
+		return vehicularDao.findPersona(tipoDocuIdentidadId, nroDocuIdentidad);
+	}
+
+	/**
+	 * Guarda un nuevo vehículo en la base de datos
+	 * 
+	 * @param vehiculo
+	 *            Vehículo
+	 * @return Identificador del nuevo vehículo guardado
+	 * @throws SisatException
+	 */
+	public Integer guardarVehiculo(RvVehiculo vehiculo) throws SisatException {
+		return vehicularDao.guardarVehiculo(vehiculo);
+	}
+
+	/**
+	 * Modifica datos de vehículo en la base de datos
+	 * 
+	 * @param vehiculo
+	 *            Vehículo
+	 */
+	public void actualizarDatosVehiculo(RvVehiculo vehiculo) {
+		vehicularDao.actualizarDatosVehiculo(vehiculo);
+	}
+
+	/**
+	 * Guarda una nueva declaración en la base de datos
+	 * 
+	 * @param dj
+	 *            Declaración jurada vehicular
+	 * @return Identificador
+	 * @throws SisatException
+	 */
+	public RvDjvehicular guardarDJVehicular(RvDjvehicular dj) throws SisatException {
+		return vehicularDao.guardarDJVehicular(dj);
+	}
+
+	public int guardarDescargoDJVehicular(RvDjvehicular oldDjv, RvDjvehicular dj,
+			List<BuscarPersonaDTO> lstTransferentes,
+			List<AnexosDeclaVehicDTO> lstAnexos) throws SisatException {
+
+		
+		int anhoUltimoAfectacionDJ = oldDjv.getAnnoFinAfectacion();
+		int anhoDescargo = dj.getAnnoAfectacion();
+		/** Obteniendo el anho fiscal en curso*/
+		int anhoFiscal = DateUtil.getAnioActual().intValue();
+		
+		
+		Date fecha = new Date();
+		fecha.setTime(oldDjv.getFechaAdquisicion().getTime());
+		int anhoAdquision = DateUtil.obtenerAnioSegunFecha(fecha);
+		
+		/** Para generacion de DJ menores al anho actual y que no tienen afectacion de impuesto
+		 * es decir dj con anhos de afectacion 2003,2004,2005 y el contribuyente indica que el vehiculo lo vende el 2008, 
+		 * entonces se le debe generar una DJ de descargo para el anho 2008.*/
+		if(anhoUltimoAfectacionDJ < anhoDescargo){
+			anhoUltimoAfectacionDJ = anhoDescargo;
+		}
+		
+		/**
+		 * Dj que reemplazara oldDj para cada iteracion, esta dj representa al vendedor
+		 * */
+		RvDjvehicular djVendedor = null;
+		int djvehicularId = 0;		
+		
+		for (int pivot = anhoDescargo; pivot <= anhoFiscal  && pivot <= anhoUltimoAfectacionDJ; pivot++) {
+			
+			/**
+			 * Obteniendo la Dj activa del vendedor deacuerdo al anho y al vehiculo
+			 * */
+			if(oldDjv.getAnnoFinAfectacion() < anhoDescargo){
+				
+				djVendedor = findDjVehicularByPersonaIdVehiculoIdAnhoAfectacion(oldDjv.getPersonaId(), oldDjv.getVehiculoId(), oldDjv.getAnnoFinAfectacion());
+			}else{
+				djVendedor = findDjVehicularByPersonaIdVehiculoIdAnhoAfectacion(oldDjv.getPersonaId(), oldDjv.getVehiculoId(), pivot);
+			}
+			if(djVendedor == null ){
+				if(anhoAdquision != pivot){
+					throw new SisatException("No ha sido posible encontrar una DJ vehicular para el año: " + pivot);
+				}
+			}
+			
+			if(djVendedor != null){
+				
+				dj.setAnnoAfectacion(pivot);				
+				djvehicularId = vehicularDao.guardarDescargoDJVehicular(dj);
+				
+				if (djvehicularId != 0) {
+		
+					cambiarFlagDjAnio(djvehicularId, Constante.ESTADO_ACTIVO);		
+					cambiarFlagDjAnio(djVendedor.getDjvehicularId(), Constante.ESTADO_INACTIVO);
+					cambiarEstadoDjv(djVendedor.getDjvehicularId(), Constante.ESTADO_INACTIVO);
+		
+					// Guardar Adquirientes
+					RvTransferenciaPropiedad ad = new RvTransferenciaPropiedad();
+					ad.setDjvehicularId(djvehicularId);
+					ad.setTipo("A");
+					ad.setFechaActualizacion(DateUtil.dateToSqlTimestamp(new Date()));
+					ad.setUsuarioId(getUser().getUsuarioId());
+					ad.setFechaRegistro(DateUtil.dateToSqlTimestamp(new Date()));
+					ad.setEstado("1");
+					ad.setTerminal(getUser().getTerminal());		
+					
+					guardarTransferenteAdquiriente(lstTransferentes, ad);		
+					
+					// Anexos
+					RvSustentoVehicular sv = new RvSustentoVehicular();
+					RvSustentoVehicularPK svp = new RvSustentoVehicularPK();
+					svp.setDjvehicularId(djvehicularId);
+					sv.setId(svp);
+					sv.setFechaRegistro(DateUtil.dateToSqlTimestamp(new Date()));
+					sv.setUsuarioId(getUser().getUsuarioId());
+					sv.setTerminal(getUser().getTerminal());					
+					guardarDocAnexosDjVehicular(lstAnexos, sv);					
+		
+					/**
+					 * Creando la DJ de primera inscripcion para el comprador
+					 * */
+					if (pivot <= anhoDescargo + 1) {
+						// desde aqui capturamos todos los datos anteriores y le
+						// asignamos al comprador generandole su DJ pendiente
+						// descargo
+						RvDjvehicular djveh = new RvDjvehicular();
+						// tipo_traccion_id
+						djveh.setTipoTraccionId(dj.getTipoTraccionId());
+						// tipo_transmision_id
+						djveh.setTipoTransmisionId(dj.getTipoTransmisionId());
+						djveh.setTipoMotorId(dj.getTipoMotorId());
+						djveh.setMarcaVehiculoId(dj.getMarcaVehiculoId());
+						// categoria_vehiculo_id
+						djveh.setCategoriaVehiculoId(dj.getCategoriaVehiculoId());
+						// modelo_vehiculo_id
+						djveh.setModeloVehiculoId(dj.getModeloVehiculoId());
+						// num_motor
+						djveh.setNumMotor(dj.getNumMotor());
+						// anno_fabricacion
+						djveh.setAnnoFabricacion(dj.getAnnoFabricacion());
+						// fecha_ins_registros
+						djveh.setFechaInsRegistros(dj.getFechaInsRegistros());
+						// num_cilindros
+						djveh.setNumCilindros(dj.getNumCilindros());
+						// peso_bruto
+						djveh.setPesoBruto(dj.getPesoBruto());
+						// tipo_carroceria_id
+						djveh.setTipoCarroceriaId(dj.getTipoCarroceriaId());
+						// clase_vehiculo_id
+						/** Guardando datos sobre los años de afecctacion */
+						djveh.setClaseVehiculoId(dj.getClaseVehiculoId());
+						djveh.setAnnoIniAfectacion(dj.getAnnoIniAfectacion());
+						djveh.setAnnoFinAfectacion(dj.getAnnoFinAfectacion());
+						djveh.setAnnoAfectacion(dj.getAnnoAfectacion());
+
+						/** Asignamos el adquiriente */
+						if (lstTransferentes != null && lstTransferentes.size() != 0) {
+							// persona_id
+							djveh.setPersonaId(lstTransferentes.get(0).getPersonaId());
+							// tipo_adquisicion_id
+							djveh.setTipoAdquisicionId(1);
+							// rv_motivo_declaracion_id
+							djveh.setRvMotivoDeclaracionId(1);
+							// condicion_vehiculo_id
+							djveh.setCondicionVehiculoId(dj.getCondicionVehiculoId());
+							// notaria_id
+							djveh.setNotariaId(dj.getNotariaId());
+							// vehiculo_id
+							djveh.setVehiculoId(dj.getVehiculoId());
+							// motivo_descargo_id NULL
+							// fecha_declaracion
+							djveh.setFechaDeclaracion(DateUtil.getCurrentDate());
+							// anno_ini_afectacion anno_fin_afectacion null
+							// anno_afectacion
+							djveh.setAnnoDeclaracion(dj.getAnnoDeclaracion());
+							djveh.setUsuarioId(getUser().getUsuarioId());
+							// fecha_adquisicion
+							/** Fecha de adquisicion o fecha de venta, fecha de descargo de la DJ */
+							djveh.setFechaAdquisicion(dj.getFechaDescargo());
+							// val_adq_soles
+							djveh.setValAdqSoles(dj.getValAdqSoles());
+							// tipo_moneda_id
+							/** solo esta considerado para soles */
+							djveh.setTipoMonedaId(1);
+							// tipo_propiedad_id
+							djveh.setTipoPropiedadId(1);
+							djveh.setPorcPropiedad(BigDecimal.valueOf(100.00));
+							djveh.setFechaRegistro(DateUtil.getCurrentDate());
+							djveh.setFechaActualizacion(DateUtil.getCurrentDate());
+							djveh.setEstado(Constante.ESTADO_PENDIENTE);
+							djveh.setFlagDjAnno(Constante.ESTADO_ACTIVO);
+							djveh.setTerminal(getUser().getTerminal());
+							
+							/**
+							 * Guardando la DJ del comprador
+							 * */
+							int idDjComprador = guardarDJVehicular(djveh).getDjvehicularId();
+							
+							// GUARDAR TRANSFERENTE
+							RvTransferenciaPropiedad tp = new RvTransferenciaPropiedad();
+							/** Seleccionamos la nueva dj ingresada */
+							tp.setDjvehicularId(idDjComprador);
+							tp.setTipo("T");
+							tp.setPersonaId(dj.getPersonaId());
+							tp.setFechaActualizacion(DateUtil.dateToSqlTimestamp(new Date()));
+							tp.setUsuarioId(getUser().getUsuarioId());
+							tp.setFechaRegistro(DateUtil.dateToSqlTimestamp(new Date()));
+							tp.setEstado("1");
+							tp.setTerminal(getUser().getTerminal());
+							guardarTransferente(tp);
+						}
+					}
+				}
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+//		int djvehicularId = vehicularDao.guardarDescargoDJVehicular(dj);
+//		if (djvehicularId != 0) {
+//
+//			cambiarFlagDjAnio(djvehicularId, Constante.ESTADO_ACTIVO);
+//
+//			cambiarFlagDjAnio(oldDjv.getDjvehicularId(), Constante.ESTADO_INACTIVO);
+//			cambiarEstadoDjv(oldDjv.getDjvehicularId(), Constante.ESTADO_INACTIVO);
+//
+//			// Guardar Adquirientes
+//			RvTransferenciaPropiedad ad = new RvTransferenciaPropiedad();
+//			ad.setDjvehicularId(djvehicularId);
+//			ad.setTipo("A");
+//			ad.setFechaActualizacion(DateUtil.dateToSqlTimestamp(new Date()));
+//			ad.setUsuarioId(getUser().getUsuarioId());
+//			ad.setFechaRegistro(DateUtil.dateToSqlTimestamp(new Date()));
+//			ad.setEstado("1");
+//			ad.setTerminal(getUser().getTerminal());
+//
+//			/*********************************** ---------------------------------- ***********************************/
+//			guardarTransferenteAdquiriente(lstTransferentes, ad);
+//
+//			/*********************************** ---------------------------------- ***********************************/
+//
+//			// Anexos
+//			RvSustentoVehicular sv = new RvSustentoVehicular();
+//			RvSustentoVehicularPK svp = new RvSustentoVehicularPK();
+//			svp.setDjvehicularId(djvehicularId);
+//			sv.setId(svp);
+//			sv.setFechaRegistro(DateUtil.dateToSqlTimestamp(new Date()));
+//			sv.setUsuarioId(getUser().getUsuarioId());
+//			sv.setTerminal(getUser().getTerminal());
+//
+//			/********************************* ------------------------------------ ************************************/
+//			guardarDocAnexosDjVehicular(lstAnexos, sv);
+//			/********************************* ------------------------------------ ************************************/
+//
+//			// desde aqui capturamos todos los datos anteriores y le
+//			// asignamos al comprador generandole su DJ pendiente
+//			// descargo
+//			RvDjvehicular djveh = new RvDjvehicular();
+//			// tipo_traccion_id
+//
+//			djveh.setTipoTraccionId(dj.getTipoTraccionId());
+//
+//			// tipo_transmision_id
+//
+//			djveh.setTipoTransmisionId(dj.getTipoTransmisionId());
+//
+//			djveh.setTipoMotorId(dj.getTipoMotorId());
+//
+//			djveh.setMarcaVehiculoId(dj.getMarcaVehiculoId());
+//
+//			// categoria_vehiculo_id
+//
+//			djveh.setCategoriaVehiculoId(dj.getCategoriaVehiculoId());
+//
+//			// modelo_vehiculo_id
+//			djveh.setModeloVehiculoId(dj.getModeloVehiculoId());
+//
+//			// num_motor
+//			djveh.setNumMotor(dj.getNumMotor());
+//
+//			// anno_fabricacion
+//			djveh.setAnnoFabricacion(dj.getAnnoFabricacion());
+//
+//			// fecha_ins_registros
+//			djveh.setFechaInsRegistros(dj.getFechaInsRegistros());
+//
+//			// num_cilindros
+//
+//			djveh.setNumCilindros(dj.getNumCilindros());
+//
+//			// peso_bruto
+//
+//			djveh.setPesoBruto(dj.getPesoBruto());
+//
+//			// tipo_carroceria_id
+//
+//			djveh.setTipoCarroceriaId(dj.getTipoCarroceriaId());
+//
+//			// clase_vehiculo_id
+//
+//			djveh.setClaseVehiculoId(dj.getClaseVehiculoId());
+//
+//			/** Asignamos el adquiriente */
+//
+//			if (lstTransferentes != null && lstTransferentes.size() != 0) {
+//				// persona_id
+//				djveh.setPersonaId(lstTransferentes.get(0).getPersonaId());
+//
+//				// tipo_adquisicion_id
+//				djveh.setTipoAdquisicionId(1);
+//
+//				// rv_motivo_declaracion_id
+//				djveh.setRvMotivoDeclaracionId(1);
+//
+//				// condicion_vehiculo_id
+//
+//				djveh.setCondicionVehiculoId(dj.getCondicionVehiculoId());
+//
+//				// notaria_id
+//
+//				djveh.setNotariaId(dj.getNotariaId());
+//
+//				// vehiculo_id
+//				djveh.setVehiculoId(dj.getVehiculoId());
+//
+//				// motivo_descargo_id NULL
+//
+//				// fecha_declaracion
+//				djveh.setFechaDeclaracion(DateUtil.getCurrentDate());
+//
+//				// anno_ini_afectacion anno_fin_afectacion null
+//
+//				// anno_afectacion
+//				djveh.setAnnoDeclaracion(dj.getAnnoDeclaracion());
+//
+//				djveh.setUsuarioId(getUser().getUsuarioId());
+//
+//				// fecha_adquisicion
+//				/** Fecha de adquisicion o fecha de venta */
+//				// djveh.setFechaAdquisicion(formatoTime.dateToSqlTimestamp(getFechaAdquisicion()));
+//				djveh.setFechaAdquisicion(dj.getFechaAdquisicion());
+//
+//				// val_adq_soles
+//				djveh.setValAdqSoles(dj.getValAdqSoles());
+//
+//				// tipo_moneda_id
+//				/** solo esta considerado para soles */
+//				djveh.setTipoMonedaId(1);
+//
+//				// tipo_propiedad_id
+//				djveh.setTipoPropiedadId(1);
+//				djveh.setPorcPropiedad(BigDecimal.valueOf(100.00));
+//
+//				djveh.setFechaRegistro(DateUtil.getCurrentDate());
+//				djveh.setFechaActualizacion(DateUtil.getCurrentDate());
+//
+//				djveh.setEstado(Constante.ESTADO_PENDIENTE);
+//				djveh.setFlagDjAnno(Constante.ESTADO_ACTIVO);
+//
+//				djveh.setTerminal(getUser().getTerminal());
+//
+//				// djveh.setDjvehicularPrevioId(djvehicularId);
+//				int idDjComprador = guardarDJVehicular(djveh);
+//
+//				// GUARDAR TRANSFERENTE
+//				RvTransferenciaPropiedad tp = new RvTransferenciaPropiedad();
+//
+//				/** Seleccionamos la nueva dj ingresada */
+//				tp.setDjvehicularId(idDjComprador);
+//				tp.setTipo("T");
+//				tp.setPersonaId(dj.getPersonaId());
+//				tp.setFechaActualizacion(DateUtil.dateToSqlTimestamp(new Date()));
+//				tp.setUsuarioId(getUser().getUsuarioId());
+//				tp.setFechaRegistro(DateUtil.dateToSqlTimestamp(new Date()));
+//				tp.setEstado("1");
+//				tp.setTerminal(getUser().getTerminal());
+//				guardarTransferente(tp);
+//
+//			}
+//		}
+//
+		return djvehicularId;
+		//return 0;
+	}
+
+
+	public int guardarPendienteDescargoDJVehicular(RvDjvehicular dj,
+			List<BuscarPersonaDTO> lstTransferentes,
+			List<AnexosDeclaVehicDTO> lstAnexos) throws SisatException {
+
+		
+		int anhoUltimoAfectacionDJ = (dj.getAnnoFinAfectacion()> DateUtil.getAnioActual().intValue() ? DateUtil.getAnioActual().intValue():dj.getAnnoFinAfectacion()); // como maximo que año de afectacion debe generar dj de descargo
+		int anhoDescargo = dj.getAnnoAfectacion();
+		
+		/** Obteniendo el anho fiscal en curso*/
+		int anhoFiscal = DateUtil.getAnioActual().intValue();
+		
+		Date fecha = new Date();
+		fecha.setTime(dj.getFechaAdquisicion().getTime());
+		int anhoAdquision = DateUtil.obtenerAnioSegunFecha(fecha);		
+		
+		/** Para generacion de DJ menores al anho actual y que no tienen afectacion de impuesto
+		 * es decir dj con anhos de afectacion 2003,2004,2005 y el contribuyente indica que el vehiculo lo vende el 2008, 
+		 * entonces se le debe generar una DJ de descargo para el anho 2008.*/
+		if(anhoUltimoAfectacionDJ < anhoDescargo){
+			anhoUltimoAfectacionDJ = anhoDescargo;
+		}
+		
+		
+		/**
+		 * Dj que reemplazara oldDj para cada iteracion, esta dj representa al vendedor
+		 * */
+		RvDjvehicular djVendedor = null;
+		int djvehicularId = 0;
+		djvehicularId = dj.getDjvehicularId();
+		
+		if (anhoDescargo <= anhoUltimoAfectacionDJ) {
+			for (int pivot = anhoDescargo; pivot <= anhoFiscal  && pivot <= anhoUltimoAfectacionDJ; pivot++) {
+
+				/**
+				 * Obteniendo la Dj activa del vendedor deacuerdo al anho y al vehiculo, si esta no
+				 * se encuentra entonces no se genera una DJ de descargo para ese año
+				 * */				
+				if (dj.getAnnoFinAfectacion() < anhoDescargo) {
+
+					djVendedor = findDjVehicularByPersonaIdVehiculoIdAnhoAfectacion(dj.getPersonaId(),
+							dj.getVehiculoId(),
+							dj.getAnnoFinAfectacion());
+				} else {
+					djVendedor = findDjVehicularByPersonaIdVehiculoIdAnhoAfectacion(dj.getPersonaId(),
+							dj.getVehiculoId(),
+							pivot);
+				}
+				if (djVendedor == null) {
+					
+					/** Cuando existe una DJ de descargo que no esta afecta al impuesto, es decir el vehiculo genera DDJJ con afectaciones
+					 *  en los años 2009, 2010, 2011 pero se genero una DDJJ de Descargo para el 2008 */
+					if(anhoAdquision == pivot){
+						djVendedor = vehicularDao.findDjVehicularByPersonaIdVehiculoIdAnhoAdquision(dj.getPersonaId(),
+							dj.getVehiculoId(),
+							pivot);
+					}
+										
+					if(djVendedor == null){
+						throw new SisatException("No ha sido posible encontrar una DJ vehicular para el año: " + pivot);
+					}
+				}
+				
+				if (djVendedor != null) {
+					djvehicularId = djVendedor.getDjvehicularId();
+					dj.setAnnoAfectacion(pivot);
+					if (pivot <= anhoDescargo) {
+						/** actualizar solo la dj de descargo */
+						vehicularDao.actualizarDJVehicular(dj);
+						cambiarFlagDjAnio(dj.getDjvehicularId(), Constante.ESTADO_ACTIVO);
+						cambiarFlagDjAnio(djVendedor.getDjvehicularId(), Constante.ESTADO_INACTIVO);
+						cambiarEstadoDjv(djVendedor.getDjvehicularId(), Constante.ESTADO_INACTIVO);
+
+					} else {
+						/** Generacion de dj descargo para los demas años */
+						djvehicularId = vehicularDao.guardarDescargoDJVehicular(dj);
+
+						if (djvehicularId != 0) {
+
+							cambiarFlagDjAnio(djvehicularId, Constante.ESTADO_ACTIVO);
+							cambiarFlagDjAnio(djVendedor.getDjvehicularId(), Constante.ESTADO_INACTIVO);
+							cambiarEstadoDjv(djVendedor.getDjvehicularId(), Constante.ESTADO_INACTIVO);
+
+							// Guardar Adquirientes
+							RvTransferenciaPropiedad ad = new RvTransferenciaPropiedad();
+							ad.setDjvehicularId(djvehicularId);
+							ad.setTipo("A");
+							ad.setFechaActualizacion(DateUtil.dateToSqlTimestamp(new Date()));
+							ad.setUsuarioId(getUser().getUsuarioId());
+							ad.setFechaRegistro(DateUtil.dateToSqlTimestamp(new Date()));
+							ad.setEstado("1");
+							ad.setTerminal(getUser().getTerminal());
+
+							guardarTransferenteAdquiriente(lstTransferentes, ad);
+
+							// Anexos
+							RvSustentoVehicular sv = new RvSustentoVehicular();
+							RvSustentoVehicularPK svp = new RvSustentoVehicularPK();
+							svp.setDjvehicularId(djvehicularId);
+							sv.setId(svp);
+							sv.setFechaRegistro(DateUtil.dateToSqlTimestamp(new Date()));
+							sv.setUsuarioId(getUser().getUsuarioId());
+							sv.setTerminal(getUser().getTerminal());
+							guardarDocAnexosDjVehicular(lstAnexos, sv);
+						}
+					}
+				}
+			}
+		}else{
+			/**Venta del carro despues de sus años de afectacion, solo pasamos a activar la dj de descargo, 
+			 * no afecta las otras DJ*/
+			vehicularDao.actualizarDJVehicular(dj);
+			cambiarFlagDjAnio(dj.getDjvehicularId(), Constante.ESTADO_ACTIVO);
+		}
+
+		return djvehicularId;
+	}
+
+	
+	/**
+	 * Actualiza datos de una declaración jurada en la base de datos
+	 * 
+	 * @param dj
+	 *            Declaración jurada vehicular
+	 * @throws SisatException 
+	 */
+	public void actualizarDJVehicular(RvDjvehicular dj) throws SisatException {
+		vehicularDao.actualizarDJVehicular(dj);
+	}
+
+	/**
+	 * Elimina los transferentes correspondientes a una dj vehicular
+	 * 
+	 * @param djvehicularId
+	 *            Identificador de la dj vehicular
+	 */
+	public void eliminarTransferentesDJ(int djvehicularId) {
+		vehicularDao.eliminarTransferentesDJ(djvehicularId);
+	}
+
+	/**
+	 * Guarda transferentes en una dj vehicular
+	 * 
+	 * @param transfers
+	 *            Lista de transferentes
+	 * @param tp
+	 *            Datos de transferencia
+	 */
+	public void guardarTransferenteAdquiriente(
+			List<BuscarPersonaDTO> transfers, RvTransferenciaPropiedad tp) {
+		vehicularDao.guardarTransferenteAdquiriente(transfers, tp);
+	}
+
+	/**
+	 * Elimina documentos anexos de una dj vehicular
+	 * 
+	 * @param djvehicularId
+	 *            Identificador de la dj vehicular
+	 */
+	public void eliminarAnexosDJ(int djvehicularId) {
+		vehicularDao.eliminarAnexosDJ(djvehicularId);
+	}
+
+	/**
+	 * Guarda documentos anexos de una dj vehicular
+	 * 
+	 * @param anexos
+	 *            Lista de documentos anexos
+	 * @param sv
+	 *            Datos de documentos anexos
+	 */
+	public void guardarDocAnexosDjVehicular(List<AnexosDeclaVehicDTO> anexos,
+			RvSustentoVehicular sv) {
+		vehicularDao.guardarDocAnexosDjVehicular(anexos, sv);
+	}
+
+	public boolean activarDJVehicular(int djId) throws Exception {
+		return vehicularDao.activarDJVehicular(djId);
+	}
+
+	/**
+	 * Buscar declaraciones juradas de vehicular según el contribuyente
+	 * 
+	 * @param personaId
+	 *            Identificador de la persona contribuyente
+	 * @return
+	 * @throws Exception
+	 */
+	public List<BuscarVehicularDTO> findDjVehicular(int personaId)
+			throws Exception {
+		return vehicularDao.findDjVehicular(personaId);
+	}
+
+	/**
+	 * Buscar declaraciones juradas de vehicular según el contribuyente y la
+	 * placa del vehículo
+	 * 
+	 * @param personaId
+	 *            Identificador de la persona contribuyente
+	 * @param placa
+	 *            Placa del vehículo
+	 * @return
+	 * @throws Exception
+	 */
+	public List<BuscarVehicularDTO> findDjVehicular(int personaId, String placa)
+			throws Exception {
+		return vehicularDao.findDjVehicular(personaId, placa);
+	}
+
+	public List<BuscarPersonaDTO> findDjTransferentes(int djVehicularAnteriorId)
+			throws Exception {
+		return vehicularDao.findDjTransferentes(djVehicularAnteriorId);
+	}
+
+	/**
+	 * Obtiene una dj vehicular por el número de identificador
+	 * 
+	 * @param id
+	 *            Identificador único
+	 * @return
+	 * @throws SisatException 
+	 */
+	public RvDjvehicular findDjVehicularById(int id) throws SisatException  {
+		return vehicularDao.findDjVehicularById(id);
+	}
+
+	public RvVehiculo findVehiculoById(int id) {
+		return vehicularDao.findVehiculoById(id);
+	}
+
+	public RvVehiculoDTO findVehiculoDTOById(int id) {
+		return vehicularDao.findVehiculoDTOById(id);
+	}
+
+	public List<BuscarPersonaDTO> findTransferentes(int djvehicularId) {
+		return vehicularDao.findTransferentes(djvehicularId);
+	}
+
+	public List<AnexosDeclaVehicDTO> findAnexos(int djvehicularId) {
+		return vehicularDao.findAnexos(djvehicularId);
+	}
+
+	public Integer existeVehiculoPlaca(String placa) {
+		return vehicularDao.existeVehiculoPlaca(placa);
+	}
+
+	public Integer existeVehiculoMotor(String nroMotor) {
+		return vehicularDao.existeVehiculoMotor(nroMotor);
+	}
+
+	public List<BuscarVehicularDTO> findDjVehicular(int personaId,
+			int vehiculoId) throws Exception {
+		return vehicularDao.findDjVehicular(personaId, vehiculoId);
+	}
+
+	public List<BuscarVehicularDTO> findDjVehicularVehicId(int vehiculoId)
+			throws Exception {
+		return vehicularDao.findDjVehicularVehicId(vehiculoId);
+	}
+
+	public boolean cambiarEstadoDjv(int djId, String estado) {
+		return vehicularDao.cambiarEstadoDjv(djId, estado);
+	}
+
+	public boolean cambiarFlagDjAnio(int djId, String flag) {
+		return vehicularDao.cambiarFlagDjAnio(djId, flag);
+	}
+
+	public List<HistoricoVehiculodjDTO> findHistoricoVehiculoDj(int personaId,
+			String placa) throws SisatException {
+		return vehicularDao.findHistoricoVehiculoDj(personaId, placa);
+	}
+
+	public List<RvMotivoDescargo> getAllRvMotivoDescargo() throws Exception {
+		return vehicularDao.getAllRvMotivoDescargo();
+	}
+
+	public int guardaDetCondVehiculo(RvDetCondVehiculo dcv) {
+		return vehicularDao.guardaDetCondVehiculo(dcv);
+	}
+
+	public void actualizaDetCondVehiculo(RvDetCondVehiculo dcv) {
+		vehicularDao.actualizaDetCondVehiculo(dcv);
+	}
+
+	public void eliminarDetCondVehiculo(int id) {
+		vehicularDao.eliminarDetCondVehiculo(id);
+	}
+
+	public RvDetCondVehiculo obtenerDetCondVehiculo(int djVehicularId) {
+		return vehicularDao.obtenerDetCondVehiculo(djVehicularId);
+	}
+
+	public int duplicarDjvActualizar(int oldDjvId, int userId) throws Exception {
+		return vehicularDao.duplicarDjvActualizar(oldDjvId, userId);
+	}
+
+	public boolean copiarDjvAOtroAnio(int djvId, int anioCrear, int contribId,
+			int usuarioId, String terminal) throws SisatException {
+		// Año a copiar es menor que el año actual
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+
+		/** Se permite copiar DJ para anios anteriores y el anio actual **/
+		if (year < anioCrear) {
+			throw new SisatException(
+					"Solamente es posible crear copias para años anteriores");
+		}
+		if (vehicularDao.existeDjvEnAnio(djvId, contribId, anioCrear)) {
+			throw new SisatException(
+					"Ya existe declaración jurada para el año que desea hacer una copia");
+		}
+		if (!vehicularDao.estaEnRangoAfecVehic(djvId, anioCrear)) {
+			throw new SisatException(
+					"Ud. esta tratando de crear una copia para un año fuera de rango de afectación del vehículo");
+		}
+		if (!vehicularDao.estaEnRangoAfecContrib(djvId, anioCrear)) {
+			throw new SisatException(
+					"El contribuyente no esta afecto para el año que desea hacer la copia");
+		}
+		return vehicularDao.copiarDjvAOtroAnio(djvId, anioCrear, usuarioId,
+				terminal);
+	}
+
+	/*
+	 * public int numRepeatMotor(String nmbMotor){ return
+	 * vehicularDao.numRepeatMotor(nmbMotor); }
+	 */
+
+	public boolean isVehiculoAssociToDj(int vehiculoId) {
+		return vehicularDao.isVehiculoAssociToDj(vehiculoId);
+	}
+
+	/**
+	 * ITANTAMANGO
+	 */
+	@Override
+	public List<BuscarVehicularDTO> findDjVehicular(String codigoCont,
+			String placa, String apellidosNombres, String razon)
+			throws Exception {
+		return vehicularDao.findDjVehicular(codigoCont, placa,
+				apellidosNombres, razon);
+	}
+
+	/**
+	 * ITANTAMANGO
+	 */
+	public List<RvModeloVehiculo> getAllRvModeloVehiculoByPeriodoAfecta(
+			int periodoAfecta, int marcaVehiculoId, int categoriaVehiculoId)
+			throws Exception {
+		return vehicularDao.getAllRvModeloVehiculoByPeriodoAfecta(
+				periodoAfecta, marcaVehiculoId, categoriaVehiculoId);
+	}
+
+	/**
+	 * ITANTAMANGO
+	 */
+	public List<RvMarca> findRvMarca(int categoria, int periodoAfecta)
+			throws Exception {
+		return vehicularDao
+				.findRvMarcaByPeriodoAfecta(categoria, periodoAfecta);
+	}
+	
+	public void guardarTransferente(RvTransferenciaPropiedad tp) throws SisatException{
+		vehicularDao.guardarTransferente(tp);
+	}
+	
+	public RvDjvehicular copiarDJVehicular(RvDjvehicular djvehicular) throws SisatException {
+		RvDjvehicular djcopia = new RvDjvehicular();
+		try{
+			if(djvehicular != null)
+			{
+				djcopia.setAnnoDeclaracion(djvehicular.getAnnoDeclaracion());
+				djcopia.setAnnoFabricacion(djvehicular.getAnnoFabricacion());
+				djcopia.setAnnoFinAfectacion(djvehicular.getAnnoFinAfectacion());
+				djcopia.setAnnoIniAfectacion(djvehicular.getAnnoIniAfectacion());
+				djcopia.setCategoriaVehiculoId(djvehicular.getCategoriaVehiculoId());
+				djcopia.setClaseVehiculoId(djvehicular.getClaseVehiculoId());
+				djcopia.setCondicionVehiculoId(djvehicular.getCondicionVehiculoId());
+				djcopia.setEstado(djvehicular.getEstado());
+				djcopia.setFechaAdquisicion(djvehicular.getFechaAdquisicion());
+				djcopia.setFechaDeclaracion(djvehicular.getFechaDeclaracion());
+				djcopia.setFechaInsRegistros(djvehicular.getFechaInsRegistros());
+				djcopia.setFechaRegistro(djvehicular.getFechaRegistro());
+				djcopia.setFlagDjAnno(djvehicular.getFlagDjAnno());
+				djcopia.setMarcaVehiculoId(djvehicular.getMarcaVehiculoId());
+				djcopia.setModeloVehiculoId(djvehicular.getModeloVehiculoId());
+				djcopia.setNotariaId(djvehicular.getNotariaId());
+				djcopia.setNumCilindros(djvehicular.getNumCilindros());
+				djcopia.setNumMotor(djvehicular.getNumMotor());
+				djcopia.setNumTarjetaPropiedad(djvehicular.getNumTarjetaPropiedad());
+				djcopia.setPersonaId(djvehicular.getPersonaId());
+				djcopia.setPesoBruto(djvehicular.getPesoBruto());
+				djcopia.setPorcPropiedad(djvehicular.getPorcPropiedad());
+				djcopia.setRvMotivoDeclaracionId(djvehicular.getRvMotivoDeclaracionId());
+				djcopia.setTerminal(djvehicular.getTerminal());
+				djcopia.setTipoAdquisicionId(djvehicular.getTipoAdquisicionId());
+				djcopia.setTipoCambioId(djvehicular.getTipoCambioId());
+				djcopia.setTipoCarroceriaId(djvehicular.getTipoCarroceriaId());
+				djcopia.setTipoMonedaId(djvehicular.getTipoMonedaId());
+				djcopia.setTipoMotorId(djvehicular.getTipoMotorId());
+				djcopia.setTipoPropiedadId(djvehicular.getTipoPropiedadId());
+				djcopia.setTipoTraccionId(djvehicular.getTipoTraccionId());
+				djcopia.setTipoTransmisionId(djvehicular.getTipoTransmisionId());
+				djcopia.setUsuarioId(djvehicular.getUsuarioId());
+				djcopia.setValAdqOtraMoneda(djvehicular.getValAdqOtraMoneda());
+				djcopia.setValAdqSoles(djvehicular.getValAdqSoles());
+				djcopia.setVehiculoId(djvehicular.getVehiculoId());		
+			}
+			
+		}catch(Exception e){
+			throw new SisatException(e.getMessage());
+		}
+		return djcopia;
+	}
+	
+	public RvDjvehicular findDjVehicularByPersonaIdVehiculoIdAnhoAfectacion(int personaId, int vehiculoId, int anhoAfectacion) throws SisatException{
+		return vehicularDao.findDjVehicularByPersonaIdVehiculoIdAnhoAfectacion(personaId, vehiculoId, anhoAfectacion);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<GnTipoDocumento> obtenerTipoDocumentos() throws SisatException {
+		
+		List<GnTipoDocumento> result  = null;
+		try{
+			Query q = em.createQuery("from GnTipoDocumento"); 
+			
+			result = q.getResultList();
+				
+		}catch (Exception e) {
+			throw new SisatException(e.getMessage(),e);
+		}
+
+		return result;
+	} 
+	public void eliminarDJVehicular(HistoricoVehiculodjDTO djvehicular) throws SisatException{
+		vehicularDao.eliminarDJVehicular(djvehicular, this.getUser().getUsuarioId(), this.getUser().getTerminal());
+	}
+	
+	public List<HistoricoVehiculodjDTO> findHistoricoVehiculoDjTodo(int personaId,
+			String placa) throws SisatException {
+		return vehicularDao.findHistoricoVehiculoDjTodo(personaId, placa);
+	}
+	
+	public List<DeudaValoresDTO> getValorVehicular(Integer personaId,String anio,Integer djId)throws Exception {
+		return vehicularDao.getValorVehicular(personaId,anio,djId);
+	}
+	
+//	public int guardarOperacionAuditoria(GnAuditoriaOperacion auditoria)
+//			throws Exception{
+//				return vehicularDao.guardarOperacionAuditoria(auditoria);
+//	}
+	
+	public List<RvMotivoDeclaracion> getAllRvMotivoDeclaracionByDj(int djId,int anio)
+			throws Exception {
+		return vehicularDao.getAllRvMotivoDeclaracionByDj(djId,anio);
+	}
+	
+	public DatosNecesariosDeclaracionDTO obtenerReqDj(int djVehicularId) {
+		return vehicularDao.obtenerReqDj(djVehicularId);
+	}
+	
+	public DtDeterminacion obtenerDeterminacionByDj(int djVehicularId,int personaId) {
+		return vehicularDao.obtenerDeterminacionByDj(djVehicularId,personaId);
+	}
+}

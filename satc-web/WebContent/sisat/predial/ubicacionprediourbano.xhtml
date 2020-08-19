@@ -1,0 +1,340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:a4j="http://richfaces.org/a4j"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+
+    <rich:panel  id="ubicacionprediop02" >
+		<f:facet name="header">		
+			DIRECCION PREDIO URBANO
+		</f:facet>
+		<table border="0" width="100%">
+			<tr>
+				<td colspan="6">
+					<table cellpadding="0" width="100%" >
+						<tr>
+							<td align="left" width="80px" >
+								<h:outputLabel value="Tipo via :" >
+									<span style="color: red;">*</span>
+								</h:outputLabel>
+							</td>
+							<td>
+								<h:inputText id="id_ubictipovia" readonly="true" style="width:80%;" value="#{ubicacionPredioUrbanoManaged.tipoVia}" disabled="#{ubicacionPredioUrbanoManaged.disabled}" />
+								<h:inputHidden required="true" requiredMessage="El campo Tipo y Nombre de via es requerido" id="id_via" value="#{ubicacionPredioUrbanoManaged.viaId}" />
+							</td>
+							<td align="left" width="80px" >
+								<h:outputText value="Nombre via :" />
+							</td>
+							<td>
+								<h:inputText id="id_ubicnombrevia"  readonly="true" style="width:80%;" value="#{ubicacionPredioUrbanoManaged.nombreVia}" disabled="#{ubicacionPredioUrbanoManaged.disabled}"/>
+							</td>
+							<td align="left" width="80px" >
+								<a4j:commandButton oncomplete="#{rich:component('panelBuscarViaPred')}.show();" style="width:100px;" value="Buscar [V]ia" reRender="panelBuscarViaPred"
+								id="id_commandBuscarViaupu" action="#{ubicacionPredioUrbanoManaged.setParameter}"
+								tabindex="1"
+								accesskey="v"
+								immediate="true"
+								>
+									<f:param name="paramParent" value="UbicacionPredio" />
+								</a4j:commandButton>
+								<h:inputHidden id="id_denominacionurbana" value="#{ubicacionPredioUrbanoManaged.denoUrbanaId}" />
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<table cellpadding="2" cellspacing="0" border="0">
+					
+						<tr>
+							<td align="left" width="80px" >
+								<h:outputLabel value="Numero 1 :" >
+									<span style="color: red;">*</span>									
+								</h:outputLabel>
+							</td>
+							<td>
+								<h:inputHidden id="txtNumeroCuadra" value="#{ubicacionPredioUrbanoManaged.numeroCuadra}" /> 
+								<h:inputText id="id_numero1" maxlength="10"  style="width:62px" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.numero}" 
+								tabindex="2" required="true" requiredMessage="El Campo Numero 1 es requerido"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								onblur="validaCuadra(this)"
+								disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+								>
+								</h:inputText>
+							</td>
+							<td align="left" >
+								<h:outputText value="Letra 1 :" />
+							</td>
+							<td>
+								<h:inputText id="id_letra1" style="width:62px" maxlength="5"  value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.letra}" 
+								tabindex="3"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+								/>
+							</td>
+							<td align="left" >
+								<h:outputText value="Numero 2 :" />
+							</td>
+							<td>
+								<h:inputText id="id_numero2" style="width:62px"  maxlength="10"  value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.numero2}" 
+								tabindex="4"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+								/>
+							</td>
+							<td align="left" >
+								<h:outputText value="Letra 2 :" />
+							</td>
+							<td>
+							
+								<h:inputText id="id_letra2" style="width:62px" maxlength="5" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.letra2}" 
+								tabindex="5"
+								styleClass="textUpperCase" converter="uppeCaseConverter"
+								disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+								/>
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+				</td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<HR width="100%" align="left"/>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="left" width="80px" >
+					<h:outputText value="Tipo edificacion:" />
+				</td>
+				
+				<td>
+					<rich:comboBox width="220px" defaultLabel="Seleccione" selectFirstOnUpdate="true" directInputSuggestions="false"
+						 id="id_tipoedificio" binding="#{ubicacionPredioUrbanoManaged.cmbtipoedificio}" value="#{ubicacionPredioUrbanoManaged.cmbvaluetipoedificio}"
+						 immediate="true" valueChangeListener="#{ubicacionPredioUrbanoManaged.selectTipoEdificacion}" enableManualInput="false"
+						 tabindex="7" 
+						 onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						 disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+						>
+						<a4j:support id="id_supporttipoedificio" event="onchange" reRender="#{rich:clientId('id_nombreedificio')},#{rich:clientId('id_pisoedificio')}" immediate="true" />
+						<f:selectItem id="si00" itemLabel="--" itemValue="--" />	
+						<f:selectItems id="id_lsttipoedificio" value="#{ubicacionPredioUrbanoManaged.lsttipoedificio}"/>
+					</rich:comboBox>
+				</td>
+			
+				<td align="left" width="80px" >
+					<h:outputText value="Nombre edif. :" />
+				</td>
+				<td>
+					<h:inputText maxlength="50" id="id_nombreedificio" style="width:100%;" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.nombreEdificiacion}"  readonly="#{!ubicacionPredioUrbanoManaged.selEdificio}" 
+					styleClass="textUpperCase"
+					disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+					>
+						<f:converter converterId="uppeCaseConverter"/>
+					</h:inputText>
+				</td>
+				<td align="left" width="80px" >
+					<h:outputText value="Piso :" />
+				</td>
+				<td>
+					<h:inputText maxlength="2"  id="id_pisoedificio" style="width:100%;" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.piso}" readonly="#{!ubicacionPredioUrbanoManaged.selEdificio}" 
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+					>
+					</h:inputText>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="80px" >
+					<h:outputText value="Tipo interior :" />
+				</td>
+				<td>
+					<rich:comboBox width="220px" defaultLabel="Seleccione" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_tipointerior" binding="#{ubicacionPredioUrbanoManaged.cmbtipointerior}" value="#{ubicacionPredioUrbanoManaged.cmbvaluetipointerior}"
+						immediate="true" valueChangeListener="#{ubicacionPredioUrbanoManaged.selectTipoInterior}" enableManualInput="false"
+						tabindex="8"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+						>
+						<a4j:support id="id_supporttipointerior" event="onchange" reRender="#{rich:clientId('id_numerointerior')},#{rich:clientId('id_letrainterior')}" immediate="true" ajaxSingle="true"/>
+						<f:selectItem id="si01tipointerior" itemLabel="--" itemValue="--" />
+						<f:selectItems id="id_lsttipointerior" value="#{ubicacionPredioUrbanoManaged.lsttipointerior}"/>
+					</rich:comboBox>
+				</td>
+				<td align="left" width="80px" >
+					<h:outputText value="Numero :" />
+				</td>
+				<td>
+					<h:inputText maxlength="10" id="id_numerointerior"  style="width:100%;" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.numeroInterior}" readonly="#{!ubicacionPredioUrbanoManaged.selInterior}" required="#{ubicacionPredioUrbanoManaged.selInterior}" 
+					requiredMessage="Indique el Numero del interior"
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+					/>
+				</td>
+				<td align="left" width="80px" >
+					<h:outputText value="Letra :" /> 
+				</td>
+				<td>
+					<h:inputText maxlength="5" id="id_letrainterior"  style="width:100%;" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.letraInterior}" readonly="#{!ubicacionPredioUrbanoManaged.selInterior}"
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+					/>
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="80px" >
+					<h:outputText value="Tipo ingreso :" />
+				</td>
+				<td>
+					<rich:comboBox width="220px" defaultLabel="Seleccione" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_tipoingreso" binding="#{ubicacionPredioUrbanoManaged.cmbtipoingreso}" value="#{ubicacionPredioUrbanoManaged.cmbvaluetipoingreso}"
+						immediate="true" valueChangeListener="#{ubicacionPredioUrbanoManaged.selectTipoIngreso}" enableManualInput="false"
+						tabindex="9"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+						>
+						<a4j:support id="id_supporttipoingreso" event="onchange" reRender="#{rich:clientId('id_numeroingreso')}" immediate="true" ajaxSingle="true"/>
+						<f:selectItem id="si02" itemLabel="--" itemValue="--" />
+						<f:selectItems id="id_lsttipoingreso" value="#{ubicacionPredioUrbanoManaged.lsttipoingreso}"/>
+						
+					</rich:comboBox>
+				</td>
+				<td align="left" width="80px" >
+					<h:outputText value="Numero :" />
+				</td>
+				<td>
+					<h:inputText id="id_numeroingreso" maxlength="40" style="width:100%;" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.nombreIngreso}" readonly="#{!ubicacionPredioUrbanoManaged.selIngreso}" required="#{ubicacionPredioUrbanoManaged.selIngreso}" 
+					requiredMessage="Indique el Numero de Ingreso"
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+					/>
+				</td>
+				<td align="left" width="80px" >
+					
+				</td>
+				<td>
+					
+				</td>
+			</tr>
+			<tr>
+				<td align="left" width="80px" >
+					<h:outputText value="Tipo agrupam. :" />
+				</td>
+				<td>
+					<rich:comboBox width="220px" defaultLabel="Seleccione" selectFirstOnUpdate="true" directInputSuggestions="false"
+						id="id_tipoagrupamiento" binding="#{ubicacionPredioUrbanoManaged.cmbtipoagrupamiento}" value="#{ubicacionPredioUrbanoManaged.cmbvaluetipoagrupamiento}"
+						immediate="true" valueChangeListener="#{ubicacionPredioUrbanoManaged.selectTipoAgrupamiento}" enableManualInput="false"
+						tabindex="10"
+						onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+						disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+						>
+						<a4j:support id="id_supporttipoagrupamiento" event="onchange" reRender="#{rich:clientId('id_nombreagrupamiento')}" immediate="true" ajaxSingle="true"/>
+						<f:selectItem id="si03" itemLabel="--" itemValue="--" />
+						<f:selectItems id="id_lsttipoagrupamiento" value="#{ubicacionPredioUrbanoManaged.lsttipoagrupamiento}"/>
+					</rich:comboBox>
+				</td>
+				<td align="left" width="80px" >
+					<h:outputText value="Nom agrupam. :" />
+				</td>
+				<td>
+					<h:inputText id="id_nombreagrupamiento" maxlength="40" style="width:100%;" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.nombreAgrupamiento}" readonly="#{!ubicacionPredioUrbanoManaged.selAgrupamiento}" required="#{ubicacionPredioUrbanoManaged.selAgrupamiento}"
+					requiredMessage="Indique el Nombre del Agrupamiento"
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+					/>
+				</td>
+				<td align="left" width="80px" >
+				</td>
+				<td>
+				</td>
+			</tr>
+			
+			<tr>
+				<td align="left" width="80px" >
+					<h:outputText value="Manzana :" />
+				</td>
+				<td>
+					<h:inputText maxlength="5" id="id_manzana"  style="width:100%;" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.manzana}" 
+					tabindex="11"
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+					/>
+				</td>
+				<td align="left" width="80px" >
+					<h:outputText value="Lote :" />
+				</td>
+				<td>
+					<h:inputText maxlength="5" id="id_lote"  style="width:100%;" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.lote}" 
+					tabindex="12"
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+					/>
+				</td>
+				<td align="left" width="80px" >
+					
+				</td>
+				<td>
+					
+				</td>
+			</tr>			
+			<tr>
+				<td align="left" width="80px" >
+					<h:outputText value="Referencia :" />
+				</td>
+				<td colspan="5">
+					<h:inputText maxlength="100" id="referencia"  style="width:100%;" value="#{ubicacionPredioUrbanoManaged.rpDjdireccion.referencia}" 
+					tabindex="13"
+					styleClass="textUpperCase" converter="uppeCaseConverter"
+					disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+					/>
+				</td>	
+			</tr>
+		</table>
+     </rich:panel>
+     
+     
+     <rich:panel  id="p03sectorcatastral" >
+		<f:facet name="header">		
+			UBICACION CATASTRAL TRIBUTARIA
+		</f:facet>
+		<table border="0" width="100%">
+			<tr>
+				<td align="left" width="80px" >
+					<h:outputText value="Cod. catastral :" />
+				</td>
+				
+				<td>
+					<h:inputText maxlength="5" id="id_sectorcatastral" style="width:100%;" value="#{ubicacionPredioUrbanoManaged.codigoSectorCatastral}" 
+					tabindex="14"
+					readonly="true"
+					disabled="#{ubicacionPredioUrbanoManaged.disabled}"
+					/>
+				</td>
+			</tr>
+		</table>
+     </rich:panel>
+
+	<h:panelGrid columns="2" align="center" >
+		<a4j:commandButton value="[G]rabar" style="width:100px;"	action="#{ubicacionPredioUrbanoManaged.guardar}"   reRender="id_paneldireccionpredio, id_tablapaneldatosconstruccion"
+			oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.hideModalPanel(\'panelUbicacionPredioUrbano\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };" 
+			tabindex="16"
+			accesskey="g"
+			disabled="#{(registroPredioManaged.rpDjpredial.estado=='1' or registroPredioManaged.rpDjpredial.estado=='0')}"
+		/>
+		<a4j:commandButton value="[S]alir" style="width:100px;"	action="#{ubicacionPredioUrbanoManaged.salir}" immediate="true" oncomplete="#{rich:component('panelUbicacionPredioUrbano')}.hide(); return false"
+			onblur="focusInputupu();"
+			tabindex="17"
+			accesskey="s"
+		/>
+    </h:panelGrid>
+
+  
+</h:panelGrid>

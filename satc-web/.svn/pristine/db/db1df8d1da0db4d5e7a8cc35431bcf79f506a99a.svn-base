@@ -1,0 +1,890 @@
+package com.sat.sisat.papeletas.managed;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+
+import com.sat.sisat.caja.dto.CjPersona;
+import com.sat.sisat.caja.dto.DeudaDTO;
+import com.sat.sisat.common.util.BaseManaged;
+import com.sat.sisat.common.util.Constante;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.common.util.FacesUtil;
+import com.sat.sisat.common.util.WebMessages;
+import com.sat.sisat.descargo.business.DescargoBoRemote;
+import com.sat.sisat.descargo.dto.ReciboPagoDescargo;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.menus.business.MenuBoRemote;
+import com.sat.sisat.menus.dto.SimpleMenuDTO;
+import com.sat.sisat.papeleta.dto.FindPapeletas;
+import com.sat.sisat.persistence.entity.CdDescargo;
+import com.sat.sisat.persistence.entity.GnTipoDocumento;
+
+@ManagedBean
+@ViewScoped
+public class DescargoPapeletasManaged extends BaseManaged implements Serializable {
+
+	private static final long serialVersionUID = -1953592327390761744L;
+	
+	@EJB	
+	private DescargoBoRemote descargoBo;
+	
+	@EJB
+	private MenuBoRemote menuBo;
+	
+	private CdDescargo cdDescargo = new CdDescargo();
+	
+	private List<DeudaDTO> listCtaCte = new ArrayList<DeudaDTO>();
+	
+	private Set<DeudaDTO> idDeudasEliminar;
+	
+	private DeudaDTO deudaDTOSeleccionada = new DeudaDTO();
+	
+	private BigDecimal insolutoCancelado = new BigDecimal(0);
+	private BigDecimal derechoEmisionCancelado = new BigDecimal(0);
+	private BigDecimal totalDeudaCancelada = new BigDecimal(0);
+	private List<ReciboPagoDescargo> listpagos = new ArrayList<ReciboPagoDescargo>();
+	
+	private int deudaId;
+	
+	private List<SelectItem> lstTipoDocumento;
+	
+	private HashMap<String, Integer> mapGnTipodocumento = new HashMap<String, Integer>();
+	
+	private int tipoDescargo;
+	private Integer tipoDocumentoId;
+	private String nroDocumento;
+	private Date fechaDocumento;
+	private String observacion;
+	
+	private BigDecimal totalPrescribir;
+	private BigDecimal totalCompensar;
+	private BigDecimal totalDescargo;
+
+	private String tipoDocumento;
+	
+	private BigDecimal montoACompensar;
+	
+	private String usuario;
+	
+	private String numeroPapeleta;
+	//para nuevos criterios de busqueda
+	private String placaCb;
+	private String infractorCb;
+	//para seleccionar papeletas
+	private Boolean todasPapeletas = Boolean.FALSE;
+	
+	private BigDecimal totalDescargoPapeleta;
+	
+	public static String papeletaElimina=""; 
+	
+	private int estadoValidaDocumento = 1;
+	
+	FindPapeletas findPapeleta = new FindPapeletas();
+	
+	// INICIO PERMISOS PARA EL MODULO -=CRAMIREZ=-
+		private List<SimpleMenuDTO> listPermisosSubmenu = new ArrayList<SimpleMenuDTO>();
+		private boolean permisoDescargo;
+		private boolean permisoPrescripciones;
+	// FIN PERMISOS PARA EL MODULO
+	
+	@PostConstruct
+	public void initialize(){
+		nroDocumento = "000-000-00000000-2019";
+		permisosMenu();
+		try {
+			idDeudasEliminar = new HashSet<DeudaDTO>();			
+			
+			List<GnTipoDocumento> list = descargoBo.obtenerTipoDocumentosDescargo();
+			lstTipoDocumento = new ArrayList<SelectItem>();			
+
+			for (GnTipoDocumento it : list) {
+				lstTipoDocumento.add(new SelectItem(it.getDescripcion(), String.valueOf(it.getTipoDocumentoId())));
+				mapGnTipodocumento.put(it.getDescripcion(), it.getTipoDocumentoId());
+			}
+			usuario = getSessionManaged().getUsuarioLogIn().getNombreUsuario();
+			
+		} catch (SisatException ex) {
+			addErrorMessage(ex.getMessage());
+		} catch (Exception ex) {
+			String msg = "No se ha podido cargar la cuenta corriente";
+			System.out.println(msg + ex);
+			addErrorMessage(msg);
+		}
+	}
+	
+	public void permisosMenu() {	
+		try {
+			int submenuId = Constante.DESCARGAR_PAPELETA;
+			
+			int permisoDescargoId = Constante.DESCARGO;
+			int permisoPrescripcionesId = Constante.PRESCRIPCIONES;
+			
+			permisoDescargo = false;
+			permisoPrescripciones = false;
+			
+			listPermisosSubmenu  = menuBo.getAccesosSubmenuUsuario( getSessionManaged().getUsuarioLogIn().getUsuarioId() , submenuId);
+			
+			Iterator<SimpleMenuDTO> menuIterar = listPermisosSubmenu.iterator();
+			while (menuIterar.hasNext()) {
+				SimpleMenuDTO lsm = menuIterar.next();
+				if(lsm.getItemId() == permisoDescargoId) {
+					permisoDescargo = true;
+				}
+				if(lsm.getItemId() == permisoPrescripcionesId) {
+					permisoPrescripciones = true;
+				}
+			}
+			
+		} catch (SisatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	//para seleccionar todas las papeletas existentes
+	public void seleccionAllPapeletas(ValueChangeEvent ev){
+		String nv = ev.getNewValue().toString();
+		if(nv.equals("true")){
+			for (DeudaDTO de : listCtaCte) {
+				de.setSelected(true);
+			}
+		}
+		else{
+			for (DeudaDTO de : listCtaCte) {
+				de.setSelected(false);
+			}
+		}		
+	}
+	
+	public void inicioDescargo(){
+		limpiar();
+		totalDescargo= new BigDecimal(0);
+		for (DeudaDTO de : listCtaCte) {
+			if (de.isSelected()) {
+				totalDescargo=de.getTotalDeuda().add(totalDescargo);
+			}
+		}
+		if(totalDescargo.compareTo(new BigDecimal(0)) == 0){
+			WebMessages.messageError("Seleccione las deudas a descargar");
+		}
+	}
+	
+	public void inicioPrescricion(){
+		limpiar();
+		totalPrescribir = new BigDecimal(0);
+		for (DeudaDTO de : listCtaCte) {
+			if (de.isSelected()) {
+				totalPrescribir=de.getTotalDeuda().add(totalPrescribir);
+			}
+		}
+		if(totalPrescribir.compareTo(new BigDecimal(0)) == 0){
+			WebMessages.messageError("Seleccione las deudas a prescribir");
+		}
+	}
+	
+	public void inicioCompensacion(){
+		limpiar();
+		totalCompensar = new BigDecimal(0);
+		for (DeudaDTO de : listCtaCte) {
+			if (de.isSelected()) {
+				totalCompensar=de.getTotalDeuda().add(totalCompensar);
+			}
+		}
+		if(totalCompensar.compareTo(new BigDecimal(0)) == 0){
+			WebMessages.messageError("Seleccione las deudas a compensar");
+		}
+	}
+	
+	public void limpiar(){
+		//this.tipoDocumentoId=1;
+		this.nroDocumento="";
+		this.fechaDocumento=null;
+		this.observacion="";
+		this.totalPrescribir = new BigDecimal(0);
+		this.totalCompensar = new BigDecimal(0);
+		//this.tipoDocumento="Acta";
+	}
+	
+	public void validarUltimosDigitos() throws Exception {
+		//obtener anio de la papeleta para proceder hacer la visualizacion
+		
+		validaNumeroDocumento();
+		
+		String anio_papeleta, verifica_anio;
+		verifica_anio = nroDocumento.substring(nroDocumento.length() - 5, nroDocumento.length() - 4);
+		
+		if (verifica_anio.equals("-")) {
+			anio_papeleta = nroDocumento.substring(nroDocumento.length() - 4);
+		}
+		else {anio_papeleta = "SN";}
+		if (nroDocumento.equals("___-___-________-___") || nroDocumento.equals(null) || nroDocumento.substring(17).equals("____")
+				|| nroDocumento.substring(20, 21).equals("_") || nroDocumento.substring(21).equals("_")) {
+			setNroDocumento(null);
+		} else {
+			int valor = Integer.parseInt(String.valueOf(nroDocumento.substring(17)));
+			Calendar c = new GregorianCalendar();
+			int annio = Integer.parseInt(String.valueOf(c.get(Calendar.YEAR)));
+			if (valor > annio) {
+				WebMessages.messageError("Verifique los datos del año");
+			} 
+
+		}
+	}
+	
+	public void validaNumeroDocumento(){
+		System.out.println("validaNumeroDocumento");
+		System.out.println(this.nroDocumento);
+		try {
+			estadoValidaDocumento = descargoBo.validaNumeroDocumento(this.nroDocumento);
+		
+			if(estadoValidaDocumento == 1) {
+				WebMessages.messageError("El número de documento ya está registrado");
+				return;
+			}
+		
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+
+	public void buscar() throws Exception{
+		try{
+			if(getInfractorCb()!=null && !getInfractorCb().isEmpty()){//para enviar datos: infractor
+				findPapeleta.setInfractorCbf(getInfractorCb());				
+				List<FindPapeletas> records = new ArrayList<FindPapeletas>();
+				records = descargoBo.buscarPapeletasCriteria(findPapeleta);
+				if(records.size()>0){					
+					findPapeleta=records.get(0);//selecciona el primer registro
+					if(findPapeleta.getEstado().equals(Constante.ESTADO_PAPELETA_DEFINITIVO)){
+						listCtaCte = descargoBo.obtenerTodaDeudaPapeletas(findPapeleta.getInfractorId(),0);
+					}else{
+						WebMessages.messageInfo("Papeleta Nro "+findPapeleta.getNumPapeleta()+" con fecha de infraccion "+DateUtil.convertDateToString(findPapeleta.getFechaInfraccion())+" "+findPapeleta.getEstadoPapeleta());
+					}
+				}else{
+					listCtaCte = new ArrayList<DeudaDTO>();
+				}
+			}
+			else if(getPlacaCb()!=null && !getPlacaCb().isEmpty()){//para enviar datos: placa				
+				findPapeleta.setPlacaCbf(getPlacaCb());				
+				List<FindPapeletas> records = new ArrayList<FindPapeletas>();
+				records = descargoBo.buscarPapeletasCriteria(findPapeleta);
+				if(records.size()>0){
+					findPapeleta=records.get(0);//selecciona el primer registro
+					if(findPapeleta.getEstado().equals(Constante.ESTADO_PAPELETA_DEFINITIVO)){
+						listCtaCte = descargoBo.obtenerTodaDeudaPapeletas(0,0);
+					}else{
+						WebMessages.messageInfo("Papeleta Nro "+findPapeleta.getNumPapeleta()+" con fecha de infraccion "+DateUtil.convertDateToString(findPapeleta.getFechaInfraccion())+" "+findPapeleta.getEstadoPapeleta());
+					}
+				}else{
+					listCtaCte = new ArrayList<DeudaDTO>();
+				}
+			}
+			else if(getNumeroPapeleta()!=null && !getNumeroPapeleta().isEmpty()){//para enviar datos: papeleta
+				findPapeleta.setNumPapeleta(getNumeroPapeleta());
+				List<FindPapeletas> records = new ArrayList<FindPapeletas>();
+				records = descargoBo.buscarPapeletasCriteria(findPapeleta);
+				if(records.size()>0){
+					findPapeleta=records.get(0);
+					if(findPapeleta.getEstado().equals(Constante.ESTADO_PAPELETA_DEFINITIVO)){
+						listCtaCte = descargoBo.obtenerTodaDeudaPapeletas(0,findPapeleta.getPapeletaId());
+					}else{
+						WebMessages.messageInfo("Papeleta Nro "+findPapeleta.getNumPapeleta()+" con fecha de infraccion "+DateUtil.convertDateToString(findPapeleta.getFechaInfraccion())+" "+findPapeleta.getEstadoPapeleta());
+					}
+				}else{
+					listCtaCte = new ArrayList<DeudaDTO>();
+				}
+			}			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	//Busqueda para realizar Descargos y prescripciones	seleccionados
+	public void buscaEliminar() throws Exception{
+		try{
+			if(!papeletaElimina.isEmpty() && papeletaElimina!=null) { 
+				setNumeroPapeleta(papeletaElimina);				
+				findPapeleta.setNumPapeleta(getNumeroPapeleta());
+				List<FindPapeletas> records = new ArrayList<FindPapeletas>();
+				records = descargoBo.buscarPapeletasCriteria(findPapeleta);				
+				if(records.size()>0){					
+					findPapeleta=records.get(0);
+					if(findPapeleta.getEstado().equals(Constante.ESTADO_PAPELETA_DEFINITIVO)){
+						listCtaCte = descargoBo.obtenerTodaDeudaPapeletas(0,findPapeleta.getPapeletaId());
+					}else{
+						WebMessages.messageInfo("Papeleta Nro "+findPapeleta.getNumPapeleta()+" con fecha de infraccion "+DateUtil.convertDateToString(findPapeleta.getFechaInfraccion())+" "+findPapeleta.getEstadoPapeleta());
+					}
+				}else{
+					listCtaCte = new ArrayList<DeudaDTO>();
+				}
+			}	
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}	
+	//Realizar descargas multiples, varios registros seleccionados a la vez
+	public void descargoMultiple(){
+		Date fechaCompensacion  = DateUtil.getCurrentDate();
+		
+		int k=0,i=0;
+		String infractor="", placa="";
+		List<BigDecimal> totalPapeleta = new ArrayList<BigDecimal>();
+		totalDescargo = new BigDecimal(0);
+		totalDescargoPapeleta = new BigDecimal(0);
+		List<String> papeletaSeleccionada = new ArrayList<String>();
+		List<DeudaDTO> listCtaCteAEliminar = new ArrayList<DeudaDTO>();
+		if(validaPapeleta()){
+			for (DeudaDTO de : listCtaCte) {
+				i++;
+				if (de.isSelected()) {			
+					papeletaSeleccionada.add(de.getDescripcion());
+					totalDescargo=de.getTotalDeuda().add(totalDescargo);
+					k++;
+				}
+			}
+			listCtaCte.clear();
+			for (int j=0;j<k;j++){
+				//buscar papeletas seleccionadas
+				
+				try{
+					papeletaElimina=papeletaSeleccionada.get(j);
+					buscaEliminar();
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				for (DeudaDTO de : listCtaCte) {
+						papeletaSeleccionada.add(de.getDescripcion());
+						totalPapeleta.add(de.getTotalDeuda());
+						idDeudasEliminar.add(de);
+						listCtaCteAEliminar.add(de);
+						infractor=String.valueOf(de.getPersonaId());
+						placa=de.getPlacaPar();
+				}
+				listCtaCte.clear();
+				//se realiza el descargo
+				if (!idDeudasEliminar.isEmpty()) {
+					totalDescargoPapeleta = totalPapeleta.get(j);
+					try {
+						//Eliminar Deudas y agregar registro
+						cdDescargo.setTipoDocumentoId(tipoDocumentoId);
+						cdDescargo.setNroDocumento(nroDocumento);
+						cdDescargo.setFechaDocumento(fechaDocumento);
+						cdDescargo.setObservacion("Servidor :"+usuario+". Total Descargado: "+totalDescargo+". Obsv: "+observacion);
+						cdDescargo.setTipoDescargo(Constante.TIPO_DESCARGO_DESCARGO);
+						cdDescargo.setEstado(Constante.ESTADO_DESCARGADO);
+						cdDescargo.setFechaRegistro(DateUtil.getCurrentDate());
+						cdDescargo.setTotalDescargado(totalDescargoPapeleta);
+						
+						//===========================
+						cdDescargo.setPersonaId(findPapeleta.getInfractorId());
+						cdDescargo.setUsuarioId(getSessionManaged().getUsuarioLogIn().getUsuarioId());
+						cdDescargo.setTerminal(getSessionManaged().getTerminalLogIn());
+						//===========================
+						descargoBo.descargarDeudas(cdDescargo, listCtaCteAEliminar,fechaCompensacion,0, "" , "", listpagos);
+						//descargoBo.descargarPapeletas(cdDescargo, listCtaCteAEliminar,findPapeleta.getPapeletaId());
+						
+					} catch (SisatException e) {
+						addErrorMessage(e.getMessage());
+					}
+				}
+				listCtaCteAEliminar.clear();
+			}
+			try{
+				idDeudasEliminar.clear();
+				if (k<i){
+					if (!getInfractorCb().isEmpty() && getInfractorCb() != null){
+						setInfractorCb(infractor);
+						buscar();
+						setNumeroPapeleta("");
+					}
+					else if
+					(!getPlacaCb().isEmpty() && getPlacaCb() != null){
+						setPlacaCb(placa);
+						buscar();
+						setNumeroPapeleta("");
+					}
+					else if
+					(!getNumeroPapeleta().isEmpty() && getNumeroPapeleta() != null){
+						setNumeroPapeleta(papeletaElimina);
+						buscar();
+					}
+				}
+				else {
+					if (!getInfractorCb().isEmpty() && getInfractorCb() != null){
+						setNumeroPapeleta("");
+					}
+					else if
+					(!getPlacaCb().isEmpty() && getPlacaCb() != null){
+						setNumeroPapeleta("");
+					}
+				}
+				papeletaElimina="";
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	//Realizar prescripciones multiples, varios registros seleccionados a la vez
+	public void prescribirMultiple(){
+		Date fechaCompensacion  = DateUtil.getCurrentDate();
+		int k=0,i=0;
+		String infractor="", placa="";
+		List<BigDecimal> totalPapeleta = new ArrayList<BigDecimal>();
+		totalDescargo = new BigDecimal(0);
+		totalDescargoPapeleta = new BigDecimal(0);
+		List<String> papeletaSeleccionada = new ArrayList<String>();
+		List<DeudaDTO> listCtaCteAEliminar = new ArrayList<DeudaDTO>();
+		if(validaPapeleta()){
+			for (DeudaDTO de : listCtaCte) {
+				i++;
+				if (de.isSelected()) {
+					papeletaSeleccionada.add(de.getDescripcion());
+					totalDescargo=de.getTotalDeuda().add(totalDescargo);
+					k++;
+				}
+			}
+			listCtaCte.clear();
+			for (int j=0;j<k;j++){
+				//buscar papeletas seleccionadas
+				
+				try{
+					papeletaElimina=papeletaSeleccionada.get(j);
+					buscaEliminar();
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				for (DeudaDTO de : listCtaCte) {
+						papeletaSeleccionada.add(de.getDescripcion());
+						totalPapeleta.add(de.getTotalDeuda());
+						idDeudasEliminar.add(de);
+						listCtaCteAEliminar.add(de);
+						infractor=String.valueOf(de.getPersonaId());
+						placa=de.getPlacaPar();
+				}
+				listCtaCte.clear();
+				//se realiza el descargo
+				if (!idDeudasEliminar.isEmpty()) {
+					totalDescargoPapeleta = totalPapeleta.get(j);
+					try {
+						//Eliminar Deudas y agregar registro
+						cdDescargo.setTipoDocumentoId(tipoDocumentoId);
+						cdDescargo.setNroDocumento(nroDocumento);
+						cdDescargo.setFechaDocumento(fechaDocumento);
+						cdDescargo.setObservacion("Servidor :"+usuario+". Total Prescrito: "+totalDescargo+" Nro Papeleta "+findPapeleta.getNumPapeleta()+" con fecha "+findPapeleta.getFechaInfraccion()+" . Obsv: "+observacion);
+						cdDescargo.setTipoDescargo(Constante.TIPO_DESCARGO_PRESCRIPCION);
+						cdDescargo.setEstado(Constante.ESTADO_PRESCRITO);
+						cdDescargo.setFechaRegistro(DateUtil.getCurrentDate());
+						cdDescargo.setTotalDescargado(totalDescargoPapeleta);
+						//===========================
+						cdDescargo.setPersonaId(findPapeleta.getInfractorId());
+						cdDescargo.setUsuarioId(getSessionManaged().getUsuarioLogIn().getUsuarioId());
+						cdDescargo.setTerminal(getSessionManaged().getTerminalLogIn());
+						//===========================
+						descargoBo.descargarDeudas(cdDescargo, listCtaCteAEliminar,fechaCompensacion,0, "" , "", listpagos);
+						
+						//descargoBo.descargarPapeletas(cdDescargo, listCtaCteAEliminar,findPapeleta.getPapeletaId());
+							
+					} catch (SisatException e) {
+						addErrorMessage(e.getMessage());		
+					}
+				}
+				listCtaCteAEliminar.clear();
+			}
+			try{
+				idDeudasEliminar.clear();
+				if (k<i){
+					if (!getInfractorCb().isEmpty() && getInfractorCb() != null){
+						setInfractorCb(infractor);
+						buscar();
+						setNumeroPapeleta("");
+					}
+					else if
+					(!getPlacaCb().isEmpty() && getPlacaCb() != null){
+						setPlacaCb(placa);
+						buscar();
+						setNumeroPapeleta("");
+					}
+					else if
+					(!getNumeroPapeleta().isEmpty() && getNumeroPapeleta() != null){
+						setNumeroPapeleta(papeletaElimina);	
+						buscar();
+					}
+				}
+				else {
+					if (!getInfractorCb().isEmpty() && getInfractorCb() != null){
+						setNumeroPapeleta("");
+					}
+					else if
+					(!getPlacaCb().isEmpty() && getPlacaCb() != null){
+						setNumeroPapeleta("");
+					}
+				}
+				papeletaElimina="";
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	//Solo descarga un registro, ya no se utiliza
+	public void descargo() {
+		if(validaPapeleta()){
+			List<DeudaDTO> listCtaCteAEliminar = new ArrayList<DeudaDTO>();
+			
+			totalDescargo = new BigDecimal(0);			
+			for (DeudaDTO de : listCtaCte) {				
+				if (de.isSelected()) {
+					totalDescargo=de.getTotalDeuda().add(totalDescargo);
+					idDeudasEliminar.add(de);
+					listCtaCteAEliminar.add(de);
+				}
+			}
+			
+			if (!idDeudasEliminar.isEmpty()) {
+				try {
+					//Eliminar Deudas y agregar registro
+					cdDescargo.setTipoDocumentoId(tipoDocumentoId);
+					cdDescargo.setNroDocumento(nroDocumento);
+					cdDescargo.setFechaDocumento(fechaDocumento);	
+					cdDescargo.setObservacion("Servidor :"+usuario+". Total Descargado: "+totalDescargo+". Obsv: "+observacion);
+					cdDescargo.setTipoDescargo(Constante.TIPO_DESCARGO_DESCARGO);
+					cdDescargo.setEstado(Constante.ESTADO_DESCARGADO);
+					cdDescargo.setFechaRegistro(DateUtil.getCurrentDate());				
+					cdDescargo.setTotalDescargado(totalDescargo);
+							
+					descargoBo.descargarPapeletas(cdDescargo, listCtaCteAEliminar,findPapeleta.getPapeletaId());
+							
+					listCtaCte = descargoBo.obtenerTodaDeudaPapeletas(findPapeleta.getInfractorId(),findPapeleta.getPapeletaId());
+							
+					idDeudasEliminar.clear();
+							
+				} catch (SisatException e) {
+					addErrorMessage(e.getMessage());				
+				}
+			}
+		}
+	}
+	//Solo prescribe un registro, ya no se utiliza
+	public void prescribir() {		
+		if(validaPapeleta()){
+			List<DeudaDTO> listCtaCteAEliminar = new ArrayList<DeudaDTO>();
+			
+			totalDescargo = new BigDecimal(0);
+			for (DeudaDTO de : listCtaCte) {
+				if (de.isSelected()) {
+					totalDescargo=de.getTotalDeuda().add(totalDescargo);
+					idDeudasEliminar.add(de);
+					listCtaCteAEliminar.add(de);
+				}
+			}		
+			
+			if (!idDeudasEliminar.isEmpty()) {
+				//funcion a eliminar
+				//System.out.println("POR PRESCRIPCION se eliminará de la bd de deudas ");
+				try {
+					//Eliminar Deudas y agregar registro
+					cdDescargo.setTipoDocumentoId(tipoDocumentoId);
+					cdDescargo.setNroDocumento(nroDocumento);
+					cdDescargo.setFechaDocumento(fechaDocumento);	
+					cdDescargo.setObservacion("Servidor :"+usuario+". Total Prescrito: "+totalDescargo+" Nro Papeleta "+findPapeleta.getNumPapeleta()+" con fecha "+findPapeleta.getFechaInfraccion()+" . Obsv: "+observacion);
+					cdDescargo.setTipoDescargo(Constante.TIPO_DESCARGO_PRESCRIPCION);
+					cdDescargo.setEstado(Constante.ESTADO_PRESCRITO);
+					cdDescargo.setFechaRegistro(DateUtil.getCurrentDate());
+					cdDescargo.setTotalDescargado(totalDescargo);
+					
+					descargoBo.descargarPapeletas(cdDescargo, listCtaCteAEliminar,findPapeleta.getPapeletaId());
+					
+					listCtaCte = descargoBo.obtenerTodaDeudaPapeletas(findPapeleta.getInfractorId(),findPapeleta.getPapeletaId());
+					
+					idDeudasEliminar.clear();
+					
+				} catch (SisatException e) {
+					addErrorMessage(e.getMessage());				
+				}
+			}
+		}
+	}
+	
+	public Boolean validaPapeleta(){
+		if(listCtaCte!=null&&listCtaCte.size()>0){
+			//se verifica que exista una seleccion
+			int i=0;
+			for (DeudaDTO de : listCtaCte) {
+				if (de.isSelected()) {
+					i++;
+				}
+			}	
+			if (i>0){
+				return Boolean.TRUE;
+			}
+			else {
+				WebMessages.messageError("Seleccione la papeleta(s) a descargar");
+				return Boolean.FALSE;
+			}
+			//DeudaDTO de=listCtaCte.get(0);
+			//if (!de.isSelected()) {
+				//WebMessages.messageError("Seleccione la papeleta a descargar");
+				//return Boolean.FALSE;
+			//}
+		}else{
+			WebMessages.messageError("Seleccione la papeleta a descargar");
+			return Boolean.FALSE;
+		}
+		//return Boolean.TRUE;		
+	}
+	
+	public void valueChangeListenerItem(DeudaDTO deudaDTO){
+		if(deudaDTO.isSelected()){
+			if(deudaDTOSeleccionada.equals(deudaDTO)){
+				deudaDTOSeleccionada = new DeudaDTO();
+			}
+		}
+		else{
+			deudaDTOSeleccionada = deudaDTO;
+		}
+	}
+	
+	public void changeListenerCmbTipoDocumento(ValueChangeEvent event){
+		String cmbValueSelect = (String) event.getNewValue();
+		Integer id = mapGnTipodocumento.get(cmbValueSelect);
+		if(id != null){
+			this.tipoDocumentoId = id;
+		}		
+	}
+	
+	public String salir(){
+		FacesUtil.closeSession("DescargoDeudasManaged");
+		return sendRedirectPrincipal();
+	}
+	
+	
+	public List<DeudaDTO> getListCtaCte() {
+		return listCtaCte;
+	}
+	
+	
+	public DescargoBoRemote getDescargoBo() {
+		return descargoBo;
+	}
+
+	public void setDescargoBo(DescargoBoRemote descargoBo) {
+		this.descargoBo = descargoBo;
+	}
+
+	public DeudaDTO getDeudaDTOSeleccionada() {
+		return deudaDTOSeleccionada;
+	}
+
+	public void setDeudaDTOSeleccionada(DeudaDTO deudaDTOSeleccionada) {
+		this.deudaDTOSeleccionada = deudaDTOSeleccionada;
+	}
+
+	public BigDecimal getInsolutoCancelado() {
+		return insolutoCancelado;
+	}
+
+	public void setInsolutoCancelado(BigDecimal insolutoCancelado) {
+		this.insolutoCancelado = insolutoCancelado;
+	}
+
+	public BigDecimal getDerechoEmisionCancelado() {
+		return derechoEmisionCancelado;
+	}
+
+	public void setDerechoEmisionCancelado(BigDecimal derechoEmisionCancelado) {
+		this.derechoEmisionCancelado = derechoEmisionCancelado;
+	}
+
+	public BigDecimal getTotalDeudaCancelada() {
+		return totalDeudaCancelada;
+	}
+
+	public void setTotalDeudaCancelada(BigDecimal totalDeudaCancelada) {
+		this.totalDeudaCancelada = totalDeudaCancelada;
+	}
+
+	public int getDeudaId() {
+		return deudaId;
+	}
+
+	public void setDeudaId(int deudaId) {
+		this.deudaId = deudaId;
+	}
+
+	public CdDescargo getCdDescargo() {
+		return cdDescargo;
+	}
+
+	public void setCdDescargo(CdDescargo cdDescargo) {
+		this.cdDescargo = cdDescargo;
+	}
+
+	public List<SelectItem> getLstTipoDocumento() {
+		return lstTipoDocumento;
+	}
+
+	public void setLstTipoDocumento(List<SelectItem> lstTipoDocumento) {
+		this.lstTipoDocumento = lstTipoDocumento;
+	}
+	
+	public int getTipoDescargo() {
+		return tipoDescargo;
+	}
+
+	public void setTipoDescargo(int tipoDescargo) {
+		this.tipoDescargo = tipoDescargo;
+	}
+
+	public Integer getTipoDocumentoId() {
+		return tipoDocumentoId;
+	}
+
+	public void setTipoDocumentoId(Integer tipoDocumentoId) {
+		this.tipoDocumentoId = tipoDocumentoId;
+	}
+
+	public String getNroDocumento() {
+		return nroDocumento;
+	}
+
+	public void setNroDocumento(String nroDocumento) {
+		this.nroDocumento = nroDocumento;
+	}
+
+	public Date getFechaDocumento() {
+		return fechaDocumento;
+	}
+
+	public void setFechaDocumento(Date fechaDocumento) {
+		this.fechaDocumento = fechaDocumento;
+	}
+
+	public String getObservacion() {
+		return observacion;
+	}
+
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
+	}
+
+	public DescargoPapeletasManaged(){
+		getSessionManaged().setLinkRegresar("/sisat/papeletas/descargopapeletas.xhtml");
+	}
+
+	public BigDecimal getTotalPrescribir() {
+		return totalPrescribir;
+	}
+
+	public void setTotalPrescribir(BigDecimal totalPrescribir) {
+		this.totalPrescribir = totalPrescribir;
+	}
+	
+	public BigDecimal getTotalCompensar() {
+		return totalCompensar;
+	}
+
+
+	public void setTotalCompensar(BigDecimal totalCompensar) {
+		this.totalCompensar = totalCompensar;
+	}	
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public BigDecimal getTotalDescargo() {
+		return totalDescargo;
+	}
+
+	public void setTotalDescargo(BigDecimal totalDescargo) {
+		this.totalDescargo = totalDescargo;
+	}
+
+	public BigDecimal getMontoACompensar() {
+		return montoACompensar;
+	}
+
+	public void setMontoACompensar(BigDecimal montoACompensar) {
+		this.montoACompensar = montoACompensar;
+	}
+	
+	public String getNumeroPapeleta() {
+		return numeroPapeleta;
+	}
+
+	public void setNumeroPapeleta(String numeroPapeleta) {
+		this.numeroPapeleta = numeroPapeleta;
+	}
+	//Para nuevos criterios de busqueda
+	public String getPlacaCb() {
+		return placaCb;
+	}
+
+	public void setPlacaCb(String placaCb) {
+		this.placaCb = placaCb;
+	}
+	
+	public String getInfractorCb() {
+		return infractorCb;
+	}
+
+	public void setInfractorCb(String infractorCb) {
+		this.infractorCb = infractorCb;
+	}
+	//para seleccion multiple
+	public Boolean getTodasPapeletas() {
+		return todasPapeletas;
+	}
+
+	public void setTodasPapeletas(Boolean todasPapeletas) {
+		this.todasPapeletas = todasPapeletas;
+	}
+
+	public List<SimpleMenuDTO> getListPermisosSubmenu() {
+		return listPermisosSubmenu;
+	}
+
+	public void setListPermisosSubmenu(List<SimpleMenuDTO> listPermisosSubmenu) {
+		this.listPermisosSubmenu = listPermisosSubmenu;
+	}
+
+	public boolean isPermisoDescargo() {
+		return permisoDescargo;
+	}
+
+	public void setPermisoDescargo(boolean permisoDescargo) {
+		this.permisoDescargo = permisoDescargo;
+	}
+
+	public boolean isPermisoPrescripciones() {
+		return permisoPrescripciones;
+	}
+
+	public void setPermisoPrescripciones(boolean permisoPrescripciones) {
+		this.permisoPrescripciones = permisoPrescripciones;
+	}
+	
+}

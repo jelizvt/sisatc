@@ -1,0 +1,79 @@
+@CHARSET "UTF-8";
+
+* {
+	outline: none;
+	border: 0;
+}
+
+body {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	background-position: center top;
+	background-color: #69b4f1;
+	font-family: Arial, "Lucida Sans Unicode", Helvetica, sans-serif;
+	font-size: 12px;
+	color: #333333;
+	background-repeat: repeat-x;
+	background-image: url(../images/fondo_index.jpg);
+}
+
+#main {
+	position: fixed;
+	top: 15%;
+	left: 50%;
+	margin-left: -250px;
+	width: 500px;
+	height: 500px;
+	text-align: center;
+}
+
+.spacer-logo-form {
+	height: 20px;
+}
+
+.msg-error-login {
+	height: 20px;
+	margin: 0px;
+	padding: 0px;
+	color: red;
+	font-weight: 300;
+}
+
+.fondito {
+	height: 219px;
+	width: 325px;
+	margin: auto;
+	background-image: url(../images/inicio_sesion.png);
+}
+
+.layer-one {
+	height: 10px;
+}
+
+.layer-two {
+	height: 30px;
+}
+
+.title-login-form {
+	color: #FFFFFF;
+	font-weight: 400;
+	text-align: justify;
+}
+
+.style_caja {
+	border: 1px #B3BEE0 solid;
+	width: 170px;
+	color: #666666;
+	font-size: 12px;
+}
+
+input[type="submit"].style_btn_ingresar {
+	background-image: url(../images/btn.png);
+	width: 70px;
+	height: 24px;
+	color: #FFF;
+	cursor: pointer;
+	background-color: transparent;
+	font-family: inherit;
+}

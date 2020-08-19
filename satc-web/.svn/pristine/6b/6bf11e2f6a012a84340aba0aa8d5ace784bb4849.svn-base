@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<script type="text/javascript">
+		function buscarEnter(e) {
+		  tecla = (document.all) ? e.keyCode : e.which;
+		  if (tecla==Event.KEY_RETURN) $('formCajaUbicaPersona:btnBuscarContrib').click();
+		}
+	</script>
+
+	<style type="">
+.dataSelect tr {
+	height: 22px;
+}
+
+.dataSelect {
+	padding: 0px;
+}
+
+
+.col1{
+	width: 700px;
+}
+
+.col1_1{
+	width: 270px;
+}
+.col1_2{
+	width: 270px;
+}
+
+.col1_1_1{
+	width: 125px;
+	padding-left: 10px;	
+}
+.col1_1_2{
+	width: 130px;
+}
+
+.col1_1_3{
+	width: 30px;
+}
+
+.col1r_1{
+	width: 110px;
+}
+.col1r_2{
+	width: 373px;
+}
+
+.seleccionado{
+	background-color: #C3D9ED;
+	border: 1px solid #75A7D5;
+	font-weight: bold;	
+	
+}
+
+input{
+	padding-left: 5px;
+}
+
+.row{
+	height: 22px;
+}
+
+.row-busqueda{
+	height: 25px;
+}
+</style>
+
+	<h:form id="formCajaUbicaPersona" >
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		
+		<rich:hotKey key="return"
+			handler="#{rich:element('cmdBuscarPersonaCaja')}.click()"
+			selector="#formCajaUbicaPersona" />
+		<rich:panel id="id_listadoPredioconDeuda">
+			<f:facet name="header">
+				UBICAR AL CONTRIBUYENTE O PAPELETA CON DEUDA PARA COBRAR 
+			</f:facet>
+			
+			
+			<h:panelGrid columns="1" cellpadding="0" cellspacing="0" columnClasses="col1" id="panelBusqueda" rowClasses="row-busqueda">
+				<h:panelGrid columns="2" cellpadding="0" cellspacing="0" columnClasses="col1_1, col1_2" >
+					<h:panelGrid columns="2" cellpadding="0" cellspacing="0"  columnClasses="col1_1_1, col1_1_2" styleClass="#{cajaPersonaManaged.selectedOptBusc eq 1? 'seleccionado':''}" >
+						<h:outputLabel value="Cod. Nuevo: " />
+						<h:inputText id="inputTextCodNuevo" value="#{cajaPersonaManaged.personaId}" onkeyup="buscarEnter(event)" onkeypress="return validaEnteroPositivo(event)">
+							<a4j:support event="onclick" ajaxSingle="true" reRender="panelBusqueda" focus="inputTextCodNuevo" action="#{cajaPersonaManaged.limpiarBusc}">
+								<f:setPropertyActionListener target="#{cajaPersonaManaged.selectedOptBusc}" value="1" />
+							</a4j:support>							
+						</h:inputText> 
+						
+					</h:panelGrid>
+					<h:panelGrid columns="2" cellpadding="0" cellspacing="0" columnClasses="col1_1_1, col1_1_2" styleClass="#{cajaPersonaManaged.selectedOptBusc eq 7? 'seleccionado':''}">
+						<h:outputLabel value="Cod. Anterior: " />
+						<h:inputText id="inputTextCodAnterior" styleClass="textUpperCase" value="#{cajaPersonaManaged.codAnterior}" onkeypress="return validaEnteroPositivo(event)" maxlength="12" >
+							<a4j:support event="onclick" ajaxSingle="true" reRender="panelBusqueda" focus="inputTextCodAnterior" action="#{cajaPersonaManaged.limpiarBusc}">
+								<f:setPropertyActionListener target="#{cajaPersonaManaged.selectedOptBusc}" value="7" />
+							</a4j:support>
+						</h:inputText>
+					</h:panelGrid>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="2" cellpadding="0" cellspacing="0" columnClasses="col1_1, col1_2" >
+					<h:panelGrid columns="2" cellpadding="0" cellspacing="0" columnClasses="col1_1_1, col1_1_2" styleClass="#{cajaPersonaManaged.selectedOptBusc eq 5? 'seleccionado':''}">
+						<h:outputLabel value="Nro. Placa: " />
+						<h:inputText id="inputTextNroPlaca" styleClass="placa" value="#{cajaPersonaManaged.nroPlaca}" maxlength="10" >
+							<f:converter converterId="uppeCaseConverter"/>
+							<a4j:support event="onclick" ajaxSingle="true" reRender="panelBusqueda" focus="inputTextNroPlaca" action="#{cajaPersonaManaged.limpiarBusc}">
+								<f:setPropertyActionListener target="#{cajaPersonaManaged.selectedOptBusc}" value="5" />
+							</a4j:support>
+						</h:inputText>
+						<rich:jQuery
+											id="maskPlaca" selector=".placa"
+											query="mask('*****?***',{placeholder:' '})" timing="onload" />
+					</h:panelGrid>
+					<h:panelGrid columns="2" cellpadding="0" cellspacing="0" columnClasses="col1_1_1, col1_1_2" styleClass="#{cajaPersonaManaged.selectedOptBusc eq 4? 'seleccionado':''}">
+						<h:outputLabel value="Nro. Papeleta: " />
+						<h:inputText id="inputTextNroPapeleta" styleClass="papeleta" value="#{cajaPersonaManaged.nroPapeleta}">
+							<f:converter converterId="uppeCaseConverter"/>
+							<a4j:support event="onclick" ajaxSingle="true" reRender="panelBusqueda" focus="inputTextNroPapeleta" action="#{cajaPersonaManaged.limpiarBusc}">
+								<f:setPropertyActionListener target="#{cajaPersonaManaged.selectedOptBusc}" value="4" />
+							</a4j:support>
+						</h:inputText>
+						
+						<rich:jQuery id="mask12" selector=".papeleta"
+															query="mask('*99999-99')" timing="onload" />
+															
+					</h:panelGrid>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="1" cellpadding="0" cellspacing="0" styleClass="#{cajaPersonaManaged.selectedOptBusc eq 6? 'seleccionado':''}">
+					<h:panelGrid columns="2" cellpadding="0" cellspacing="0" columnClasses="col1_1_1, col1r_2">
+						<h:outputLabel value="Apellidos/Nombres: " />
+						<h:inputText id="inputTextApellidosNombres" size="74" value="#{cajaPersonaManaged.apellidosNombres}" styleClass="textUpperCase" onkeypress="return validarCarateres(event)" maxlength="50" >
+							<f:converter converterId="uppeCaseConverter" />
+							<a4j:support event="onclick" ajaxSingle="true" reRender="panelBusqueda" focus="inputTextApellidosNombres" action="#{cajaPersonaManaged.limpiarBusc}">
+								<f:setPropertyActionListener target="#{cajaPersonaManaged.selectedOptBusc}" value="6" />
+							</a4j:support>
+						</h:inputText>
+					</h:panelGrid>					
+				</h:panelGrid>
+				
+				<h:panelGrid id="pnlCamposBuscar2" columns="2" cellpadding="0" cellspacing="0" columnClasses="col1_1_1, col1_1_2" styleClass="#{cajaPersonaManaged.selectedOptBusc eq 3? 'seleccionado':''}">
+					<rich:comboBox id="cboTipoDocumento" defaultLabel="Tipo Doc." selectFirstOnUpdate="true"
+						binding="#{cajaPersonaManaged.cmbtipoDoc}" requiredMessage="Seleccione un documento" immediate="true"						
+						tabindex="6" width="90px">
+						<f:selectItems id="id_cmbtipodocumento" value="#{cajaPersonaManaged.lstTipoDoc}"  />
+						<a4j:support event="onselect" ajaxSingle="true" reRender="panelBusqueda" focus="txtNrodoc" >
+								<f:setPropertyActionListener target="#{cajaPersonaManaged.selectedOptBusc}" value="3" />
+						</a4j:support>
+					</rich:comboBox>					
+					<h:inputText id="txtNrodoc"  
+						value="#{cajaPersonaManaged.nroDocumentoIdentidad}"						
+						onkeypress="return validaEnteroPositivo(event)" styleClass="textUpperCase" tabindex="7">
+						<f:converter converterId="uppeCaseConverter" />
+						<a4j:support event="onclick" ajaxSingle="true" reRender="panelBusqueda" focus="txtNrodoc"  action="#{cajaPersonaManaged.limpiarBusc}">
+								<f:setPropertyActionListener target="#{cajaPersonaManaged.selectedOptBusc}" value="3" />
+						</a4j:support>
+					</h:inputText>
+				</h:panelGrid>				
+				
+				<a4j:commandButton status="ajaxStatus" id="cmdBuscarPersonaCaja"
+									value="[B]uscar" style="width:100px;"
+									actionListener="#{cajaPersonaManaged.buscar}" tabindex="10"
+									accesskey="b" reRender="tbllistaPersona"
+									oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}" />
+			</h:panelGrid>			
+			<table style="width: 975px; border: 0" cellpadding="0" cellspacing="0">				
+				<tr>
+					<td colspan="2" height="250" valign="top"
+						style="background-color: #FFF; border: 1px solid silver"><rich:datascroller
+							for="tbllistaPersona" maxPages="20"></rich:datascroller> <rich:dataTable
+							id="tbllistaPersona" value="#{cajaPersonaManaged.contribuyentes}"
+							var="record" rows="100" width="970px;">
+							<f:facet name="header">
+								<rich:columnGroup>
+									<rich:column width="130px">Código Administrado</rich:column>
+									<rich:column width="420px">Nombre Administrado</rich:column>
+									<rich:column width="70px">Tipo Doc.</rich:column>
+									<rich:column width="90px">Nro Doc.</rich:column>
+									<rich:column width="130px">Nro Papeleta</rich:column>
+									<rich:column width="130px">Placa de Vehiculo</rich:column>
+									<rich:column width="95px">
+										<h:selectBooleanCheckbox value="#{cajaPersonaManaged.todasPapeletas}" valueChangeListener="#{cajaPersonaManaged.valueChangeListenerTodasPapeletas}" >
+										<a4j:support event="onchange" ajaxSingle="true" reRender="tbllistaPersona"></a4j:support>
+										</h:selectBooleanCheckbox> Todos 
+									</rich:column>
+								</rich:columnGroup>
+							</f:facet>
+							<rich:subTable id="tblCobPap" value="#{record.papeletas}"
+								var="pap" rowKeyVar="rowKey" rows="100" rowClasses="row">
+								<rich:column rowspan="#{record.papeletas.size()}"
+									rendered="#{rowKey eq 0}" style="text-align: center;" width="125px;">
+									<a4j:commandLink ajaxSingle="true" id="newlink3"
+										reRender="panelGridMensajes,panelinclude"
+										action="#{cajaPersonaManaged.seleccionaPersona}">
+										<h:outputText value="#{record.codigoAdministrado}" />
+										<f:setPropertyActionListener value="#{pap}"
+											target="#{cajaPersonaManaged.currentItem}" id="r426" />
+										<f:setPropertyActionListener
+											value="/sisat/caja/cuentaCorriente.xhtml"
+											target="#{sessionManaged.page}" />
+									</a4j:commandLink>
+								</rich:column>
+								<rich:column rowspan="#{record.papeletas.size()}"
+									rendered="#{rowKey eq 0}">
+									<a4j:commandLink ajaxSingle="true" id="newlink30"
+										reRender="panelinclude"
+										action="#{cajaPersonaManaged.seleccionaPersona}">
+										<h:outputText value="#{record.nombreAdministrado}" />
+										<f:setPropertyActionListener value="#{pap}"
+											target="#{cajaPersonaManaged.currentItem}" id="r427" />
+										<f:setPropertyActionListener
+											value="/sisat/caja/cuentaCorriente.xhtml"
+											target="#{sessionManaged.page}" />
+									</a4j:commandLink>
+								</rich:column>
+								<rich:column rowspan="#{record.papeletas.size()}"
+									rendered="#{rowKey eq 0}" style="text-align: center;">
+            							#{record.tipoDocIden}
+        							</rich:column>
+								<rich:column rowspan="#{record.papeletas.size()}"
+									rendered="#{rowKey eq 0}" style="text-align: center;">
+            							#{record.numDocIden}
+        							</rich:column>
+								<rich:column style="text-align: center;">
+									<a4j:commandLink id="newlink31"
+										action="#{cajaPersonaManaged.cobrarPapeleta}"
+										oncomplete="#{cajaPersonaManaged.contribYDosCajeros ? 'Richfaces.showModalPanel(\'modalContribuyenteOtroCajero\')' : 'Richfaces.showModalPanel(\'modalCobrando\')'} "
+										reRender="modalCobrando" status="ajaxStatus">
+										<h:outputText value="#{pap.nroPapeleta}" />
+										<f:setPropertyActionListener value="#{pap}"
+											target="#{cajaPersonaManaged.currentItem}" id="r428" />
+									</a4j:commandLink>
+								</rich:column>	
+																	
+								<rich:column style="text-align: center;">
+									<a4j:commandLink id="newlink32"
+										action="#{cajaPersonaManaged.cobrarPapeleta}"
+										oncomplete="Richfaces.showModalPanel('modalCobrando')"
+										reRender="modalCobrando" status="ajaxStatus">
+										<h:outputText value="#{pap.placa}" />
+										<f:setPropertyActionListener value="#{pap}"
+											target="#{cajaPersonaManaged.currentItem}" id="r429" />
+									</a4j:commandLink>
+								</rich:column>
+								<rich:column style="text-align: left;padding-left: 17px;">									
+									<h:selectBooleanCheckbox value="#{pap.seleccionado}" rendered="#{pap.deudaId > 0}">
+										<a4j:support event="onchange" ajaxSingle="true" action="#{cajaPersonaManaged.agregarPapeleta}">
+											<f:setPropertyActionListener target="#{cajaPersonaManaged.deudaId}" value="#{pap.deudaId}" />
+											<f:setPropertyActionListener value="#{pap}"	target="#{cajaPersonaManaged.currentItem}" />
+										</a4j:support>
+									</h:selectBooleanCheckbox>
+								</rich:column>
+							</rich:subTable>
+						</rich:dataTable></td>
+				</tr>
+			</table>
+			<table>
+			
+			<tr> 
+				<td>
+				  	<a4j:commandButton value="Registro para Bono Cajamarquino"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'modalBono\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="modalBono" status="ajaxStatus">
+					</a4j:commandButton>
+				</td>
+				<td  width="685px;">
+				</td>
+				<td align="right">
+				  	<a4j:commandButton value="Cobrar Papeletas" action="#{cajaPersonaManaged.cobrarPapeletas}"
+					oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'modalCobrando\')' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+					reRender="modalCobrando" status="ajaxStatus">
+					</a4j:commandButton>
+				</td>
+		
+			</tr>
+	
+			</table>
+			
+		</rich:panel>
+	</h:form>
+	<!-- popup2 -->
+	<rich:modalPanel id="modalCobrando" width="900" autosized="true"
+		top="110" styleClass="sisatModalPanel"
+		onshow="$('incCajaCobPap:formCajaCobranzaPapeleta:txtMontoSoles').focus();">
+		<f:facet name="header">CAJA</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideIconCobPap"
+					styleClass="hidelink" onclick="submitLiberarContrib();return false"/>	
+										
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+		<a4j:jsFunction name="submitLiberarContrib"
+			action="#{cajaPersonaManaged.liberarContribuyente}"	ajaxSingle="true"		
+			oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'modalCobrando\');': 'Richfaces.showModalPanel(\'mpErrors\');'};"/>
+		</h:form>	
+		<a4j:include id="incCajaCobPap"
+			viewId="/sisat/caja/cajaCobranzaPapeleta.xhtml"></a4j:include>
+	</rich:modalPanel>	
+
+
+<!-- pop up bono -->
+
+	<rich:modalPanel id="modalBono" width="300" autosized="true"
+		top="110" styleClass="sisatModalPanel"
+		onshow="$('incCajaCobPap:formCajaCobranzaPapeleta:txtMontoSoles').focus();">
+		<f:facet name="header">BONO CAJAMARQUINO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideIconBono"
+					styleClass="hidelink" onclick="submitLiberarContrib();return false"/>	
+							
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+		<a4j:jsFunction name="submitLiberarContrib"
+			action="#{cajaPersonaManaged.liberarContribuyente2}"	ajaxSingle="true"		
+			oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'modalBono\');': 'Richfaces.showModalPanel(\'mpErrors\');'};"/>
+		</h:form>	
+		<a4j:include id="incCajaBono"
+			viewId="/sisat/caja/cajaBonoCajamarquino.xhtml"></a4j:include>
+	</rich:modalPanel>	
+
+</ui:composition>
+
+
+
+

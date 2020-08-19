@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	
+	
+	<h:form id="id_formRecaudaciones">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js"/>
+		<style>
+.prueba{
+}
+</style>
+		
+	<rich:panel id="a01">
+	<f:facet name="header">
+	RECAUDACIONES
+	</f:facet>
+		
+		<table width="100%" border="0">
+
+
+		<tr>
+		<td>
+		<h:outputText value="Fecha Desde: " />
+		</td>
+		<td align="left" width="15%">
+					<rich:calendar
+							inputStyle="width:100px"
+							locale="en/US" datePattern="dd/MM/yyyy" enableManualInput="true"
+							inputClass="maskDate"
+							id="idFechaInicioReca"
+							value="#{reportesManaged.fechaInicio}">
+							
+					</rich:calendar> <rich:jQuery id="maskedo1" selector=".maskDate"
+							query="mask('99/99/9999')" timing="onload" />
+							</td>
+		<td>
+		<h:outputText value="Fecha Hasta: " />
+		</td>
+		<td align="left" width="15%">
+					<rich:calendar
+							inputStyle="width:100px"
+							locale="en/US" datePattern="dd/MM/yyyy" enableManualInput="true"
+							inputClass="maskDate"
+							id="idFechaFinReca"
+							value="#{reportesManaged.fechaFin}">
+					</rich:calendar> <rich:jQuery id="maskedo2" selector=".maskDate"
+							query="mask('99/99/9999')" timing="onload" />
+							</td>
+
+
+		<td>
+		<h:outputText value="Tipo de Salida" />
+		</td>
+		<td>
+		
+		<rich:comboBox id="cmb_tipoSalidaReca" defaultLabel="Escoger Salida" 
+		onblur="validaInputCbo(this)"  onkeypress="return showListCbo(this,event)"
+		binding="#{reportesManaged.cmbtipoGrafico}"
+		immediate="true"
+		valueChangeListener="#{reportesManaged.loadTipoSalida}"
+		directInputSuggestions="true">
+		<f:selectItems id="id_lsTipoGrafico" value="#{reportesManaged.lstTipoGrafico}"/>
+		<a4j:support id="id_supporttlsTipoGrafico" event="onchange" immediate="true" ajaxSingle="true"></a4j:support>
+		</rich:comboBox>
+		</td>
+		<td>
+		<h:outputText value="Unidades" />
+		</td>
+		<td>
+
+		<rich:comboBox id="cmb_unidades" defaultLabel="Escoger Unidades" 
+		onblur="validaInputCbo(this)"  onkeypress="return showListCbo(this,event)"
+		binding="#{reportesManaged.cmbUnidades}"
+		immediate="true"
+		valueChangeListener="#{reportesManaged.loadUnidades}"
+		directInputSuggestions="true">
+		<f:selectItems id="id_lsUnidades" value="#{reportesManaged.lstUnidades}"/>
+		<a4j:support id="id_supporttlsUnidades" event="onchange" immediate="true" ajaxSingle="true"></a4j:support>
+		</rich:comboBox>		
+		</td>
+		</tr>
+		
+		<tr>
+		<td colspan="8">
+		<h:selectOneRadio id="id_selTipoPredio"
+		value="#{reportesManaged.selectedTipoAgrupaContri}"
+		layout="lineDirection">
+		<f:selectItem id="si1" itemLabel="Agrupar por Año Deuda" itemValue="1" />
+		<f:selectItem id="si2" itemLabel="Agrupar por Concepto" itemValue="2" />
+		</h:selectOneRadio></td>
+		</tr>
+		
+		<tr>
+		<td>
+		<a4j:commandButton  value="Limpiar campos"  reRender="a01" style="width:100px" action="#{reportesManaged.limpiarCamposReca}">
+		</a4j:commandButton>
+		</td>
+		<td colspan="7">
+
+
+		<a4j:commandButton id="id_buttonReca" action="#{reportesManaged.validaCampos}" value="Emitir Report"  
+		oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.prueba\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' };">
+		</a4j:commandButton>
+		
+		<div style="display: none;">
+		<h:commandLink id="linkId" styleClass="prueba" value="sasas" action="#{reportesManaged.mostrarRecaudacion}"  />
+		</div>
+		</td>
+	
+		</tr>
+		</table>
+		
+		<br></br>
+
+		</rich:panel>
+
+	<br>
+	</br>
+	
+	
+	<a4j:jsFunction name="funcionEmite" actionListener="#{reportesManaged.mostrarRecaudacion}" >
+				
+	</a4j:jsFunction>
+	</h:form>
+</ui:composition>

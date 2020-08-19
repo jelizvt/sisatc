@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="satc-ear">
+        <wb-resource deploy-path="/" source-path="/EarContent" tag="defaultRootSource"/>
+        <dependent-module archiveName="satc-genres.jar" deploy-path="/lib" handle="module:/resource/satc-genres/satc-genres">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="satc-repositorio.jar" deploy-path="/lib" handle="module:/resource/satc-repositorio/satc-repositorio">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="satc-web.war" deploy-path="/" handle="module:/resource/satc-web/satc-web">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="satc-ejb.jar" deploy-path="/" handle="module:/resource/satc-ejb/satc-ejb">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+    </wb-module>
+</project-modules>

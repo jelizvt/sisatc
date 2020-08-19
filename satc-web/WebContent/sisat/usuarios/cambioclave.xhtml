@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="frmCambioclave" prependId="false">
+		<rich:panel id="pnlCambioClave" style="margin-top: 10px;">
+			<f:facet name="header">Cambiar Clave</f:facet>
+			<table width="100%">
+				<tbody>
+					<tr>
+						<td width="40%">
+							<table cellspacing="5" cellpadding="2">
+								<tbody>
+									<tr>
+										<td>Clave Actual:</td>
+										<td><h:inputSecret
+												value="#{cambioClaveManaged.claveActual}" /></td>
+									</tr>
+									<tr>
+										<td>Clave Nueva:</td>
+										<td><h:inputSecret
+												value="#{cambioClaveManaged.claveNueva}" /></td>
+									</tr>
+									<tr>
+										<td>Clave Nueva (Repetir):</td>
+										<td><h:inputSecret
+												value="#{cambioClaveManaged.claveNuevaRepeat}" /></td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr>
+										<td colspan="2" align="center"><a4j:commandButton
+												value="Guardar" action="#{cambioClaveManaged.saveNewPass}"
+												reRender="pnlSaveMessage" style="width: 100px;"></a4j:commandButton>
+											<a4j:commandButton value="Limpiar"
+												action="#{cambioClaveManaged.clean}"
+												reRender="frmCambioclave"
+												style="width: 100px; margin-left: 4px;"></a4j:commandButton></td>
+									</tr>									
+								</tfoot>
+									<tr>
+										<td>
+											<h:outputText style="color: red;" value="*Cuando la clave sea cambiada correctamente, el sistema se reiniciará automáticamente."></h:outputText>
+										</td>
+									</tr>
+							</table>
+						</td>
+						<td><h:panelGroup id="pnlSaveMessage">
+								<h:outputText rendered="#{cambioClaveManaged.saveCorrecto}"
+									value="#{cambioClaveManaged.saveMessage}" style="color: blue;" />
+								<h:outputText rendered="#{!cambioClaveManaged.saveCorrecto}"
+									value="#{cambioClaveManaged.saveMessage}" style="color: red;" />
+							</h:panelGroup></td>
+					</tr>
+				</tbody>
+			</table>
+
+		</rich:panel>
+	</h:form>
+
+</ui:composition>

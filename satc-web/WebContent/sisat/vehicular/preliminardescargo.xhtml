@@ -1,0 +1,305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:f="http://java.sun.com/jsf/core">
+<head>
+<title>SATC - Vista Preliminar de la Declaración</title>
+<meta content="Microsoft Visual Studio .NET 7.1" name="GENERATOR" />
+<meta content="Visual Basic .NET 7.1" name="CODE_LANGUAGE" />
+<meta content="JavaScript" name="vs_defaultClientScript" />
+<meta content="http://schemas.microsoft.com/intellisense/ie5"
+	name="vs_targetSchema" />
+
+<script language="javascript">
+
+		function Printer(){
+			//text=document.getElementById("DivDatosContri");
+			window.print();
+			}
+		
+		function Impresion(){
+			document.getElementById("divCabecera").style.display="none";
+			Printer();
+			document.getElementById("divCabecera").style.display="";			
+		}
+		
+		function HabilitarGrabar(){
+			if(document.getElementById("chkOk").checked==true){
+				document.getElementById("btnGrabar").style.display="";
+				}
+			else{
+				document.getElementById("btnGrabar").style.display="none";			
+			}
+		}
+		
+		function Refrescar(){
+			window.location.reload(true);
+		}
+		
+		function Contador() {
+			TimerId = setTimeout("Refrescar()",60000);
+	    }
+	    
+</script>
+<style type="text/css">
+
+.tituloResumen {
+	text-align: center;
+	padding-top: 15px;
+	font-weight: bold;
+	font-family: Arial,Verdana,sans-serif;
+}
+.subTituloResumen {
+	text-align: center;
+	padding-top: 15px;
+	font-weight: bold;
+	font-family: Arial,Verdana,sans-serif;
+}
+
+.tituloSeccion {
+	font-weight: bold;
+	padding-top: 20px;
+	font-family: Arial,Verdana,sans-serif;
+	font-size: 13px; 
+}
+
+.tituloTabla {
+	font-weight: bold; 
+	font-size: 12px; 
+	font-family: Arial,Verdana,sans-serif;
+}
+.contenidoTabla{
+	font-size: 12px; 
+	font-family: Arial,Verdana,sans-serif;
+	text-align: center;
+}
+
+.border1{
+border: solid 1px #C0C0C0;
+}
+.border2{
+border-bottom: solid 1px #C0C0C0;
+border-top: solid 1px #C0C0C0;
+}
+.border3{
+border-right: solid 1px #C0C0C0;
+}
+.border4{
+border-left: solid 1px #C0C0C0;
+border-bottom: solid 1px #C0C0C0;
+border-right: solid 1px #C0C0C0;
+}
+.border5{
+border-bottom: solid 1px #C0C0C0;
+}
+
+.tableBodyCss{
+padding-left: 5px;
+color: #000;
+}
+
+.tableHeadCss{
+padding: 2px 2px 2px 2px;
+text-align: center;
+white-space: nowrap;
+background-color: #EAF0F8;
+}
+</style>
+</head>
+<body>
+	<a4j:loadStyle src="/css/vehicular/resumen.css"></a4j:loadStyle>
+	<h:form>
+		<div id="divCabecera">
+			<table width="100%">
+				<tbody align="center">
+					<tr>
+						<td><h:commandButton value="#{msg['gn.imprimir']}"
+								onclick="Impresion()" /></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="divResumen">
+			<div class="tituloResumen">
+				<span>#{msg['gn.satc']}</span>
+			</div>
+			<div class="subTituloResumen">
+				<span>#{msg['rv.djv']} - Descargo - #{preliminarDescargoManaged.anioDecla}</span>
+			</div>
+			<div class="tituloSeccion">#{msg['rv.datoscontribuyente']}</div><br/>
+			<table width="100%">
+				<tbody>						
+					<tr class="tableHeadCss">
+						<td width="10%" class="tituloTabla border1">#{msg['rv.codigoPersona']}:</td>
+						<td width="70%" class="tituloTabla border2">#{msg['rv.nombrerazonsocial']}:</td>
+						<td width="20%" class="tituloTabla border1">#{msg['gn.documento']}:</td>
+					</tr>
+					<tr>
+						<td class="contenidoTabla border4">#{sessionManaged.contribuyente.personaId}</td>
+						<td class="contenidoTabla border5">#{sessionManaged.contribuyente.apellidosNombres}</td>						
+						<td class="contenidoTabla border4">#{sessionManaged.contribuyente.tipoDocumentoIdentidad} - #{sessionManaged.contribuyente.nroDocuIdentidad}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="tituloSeccion">#{msg['rv.datosdeclaracion']}</div><br/>
+			<table width="100%">
+				<tbody>		
+					<tr>
+						<td width="25%" class="tituloTabla">#{msg['gn.numero']}:</td>
+						<td width="25%" class="tituloTabla">#{preliminarDescargoManaged.prelim.numeroDecla}</td>
+						<td width="25%" class="tituloTabla"></td>
+						<td width="25%" class="tituloTabla"></td>
+					</tr>
+					<tr class="tableHeadCss">
+						<td class="tituloTabla border1">#{msg['gn.motivo']}:</td>
+						<td class="tituloTabla border2 border3">#{msg['rv.motivodescargo']}:</td>
+						<td class="tituloTabla border2">#{msg['gn.fechaDescargo']}:</td>
+						<td class="tituloTabla border1">#{msg['gn.fecha']}:</td>
+					</tr>
+					<tr>
+						<td class="contenidoTabla border4">#{preliminarDescargoManaged.prelim.tipoAdqui}</td>
+						<td class="contenidoTabla border3 border5">#{preliminarDescargoManaged.prelim.motivoDecla}</td>
+						<td class="contenidoTabla border5"><h:outputText
+								value="#{preliminarDescargoManaged.prelim.fechaDescargo}">
+								<f:convertDateTime locale="#{msg['param.localedate']}"
+									pattern="#{msg['param.datepattern']}" 
+									timeZone="#{aplicationManaged.timeZone}"/>
+							</h:outputText></td>
+						<td class="contenidoTabla border4"><h:outputText
+								value="#{preliminarDescargoManaged.prelim.fechaDecla}">
+								<f:convertDateTime locale="#{msg['param.localedate']}"
+									pattern="#{msg['param.datepattern']}" 
+									timeZone="#{aplicationManaged.timeZone}"/>
+						</h:outputText></td>
+					</tr>	
+					<tr class="tableHeadCss">
+						<td class="tituloTabla border1" colspan="4">Glosa</td>						
+					</tr>
+					<tr><td class="contenidoTabla border1" colspan="4"><h:outputText
+								value="#{preliminarDescargoManaged.prelim.glosa}" /></td></tr>				
+				</tbody>
+			</table>
+			<div class="tituloSeccion">#{msg['rv.datosvehiculo']}</div><br/>
+			<table width="100%">
+				<tbody>	
+					<tr class="tableHeadCss">
+						<td width="25%" class="tituloTabla border1">#{msg['rv.placa']}:</td>
+						<td width="25%" class="tituloTabla border2 border3">#{msg['rv.nromotor']}:</td>
+						<td width="25%" class="tituloTabla border2">#{msg['rv.fechaprimerainsreg']}:</td>
+						<td width="25%" class="tituloTabla border1">#{msg['rv.aniofabricacion']}:</td>
+					</tr>
+					<tr>
+						<td class="contenidoTabla border4">#{preliminarDescargoManaged.prelim.placaVehic}</td>
+						<td class="contenidoTabla border3 border5">#{preliminarDescargoManaged.prelim.nroMotorVehic}</td>
+						<td class="contenidoTabla border5"><h:outputText
+								value="#{preliminarDescargoManaged.prelim.fechaPrimeraInsReg}">
+								<f:convertDateTime locale="#{msg['param.localedate']}"
+									pattern="#{msg['param.datepattern']}" 
+									timeZone="#{aplicationManaged.timeZone}"/>
+							</h:outputText></td>
+						<td class="contenidoTabla border4">#{preliminarDescargoManaged.prelim.anioFabric}</td>
+					</tr>
+					<tr class="tableHeadCss">
+						<td class="tituloTabla border1">#{msg['rv.clase']}:</td>
+						<td class="tituloTabla border2 border3">#{msg['rv.categoria']}:</td>
+						<td class="tituloTabla border2">#{msg['rv.marca']}:</td>
+						<td class="tituloTabla border1">#{msg['rv.modelo']}:</td>
+					</tr>
+					<tr>
+						<td class="contenidoTabla border4">#{preliminarDescargoManaged.prelim.claseVehic}</td>
+						<td class="contenidoTabla border3 border5">#{preliminarDescargoManaged.prelim.categoriaVehic}</td>
+						<td class="contenidoTabla border5">#{preliminarDescargoManaged.prelim.marcaVehic}</td>
+						<td class="contenidoTabla border4">#{preliminarDescargoManaged.prelim.modeloVehic}</td>						
+					</tr>
+				</tbody>
+			</table>
+			<h:panelGroup
+				rendered="#{not empty preliminarDescargoManaged.lstTransferentes}">
+				<div class="tituloSeccion">#{msg['rv.datosadquirientes']}</div>	<br/>			
+				<table width="100%" cellpadding="0" cellspacing="0">
+					<thead align="left" class="tableHeadCss">
+						<tr>
+							<th width="10%" class="tituloTabla border1">#{msg['gn.id']}</th>
+							<th width="15%" class="tituloTabla border2 border3">#{msg['gn.tipodoc']}</th>
+							<th width="20%" class="tituloTabla border2">#{msg['gn.nrodoc']}</th>
+							<th width="55%" class="tituloTabla border1">#{msg['gn.apenomorazonsocial']}</th>
+						</tr>
+					</thead>
+					<tbody>
+						<ui:repeat var="record"
+							value="#{preliminarDescargoManaged.lstTransferentes}">
+							<tr>
+								<td align="center" class="contenidoTabla border4">#{record.personaId}</td>
+								<td class="contenidoTabla border3 border5">#{record.tipoDocIdentidad}</td>
+								<td class="contenidoTabla border5">#{record.nroDocuIdentidad}</td>
+								<td class="contenidoTabla border4">#{record.apellidosNombres} #{record.apellidosNombres !=
+									null ? record.razonSocial != null ? ' - ': '' : ''}
+									#{record.razonSocial}</td>
+							</tr>
+						</ui:repeat>
+					</tbody>
+				</table>
+			</h:panelGroup>
+			<div class="tituloSeccion">#{msg['rv.documentosadjuntos']}</div><br/>		
+			<table width="100%" cellpadding="2" cellspacing="2">
+				<thead align="left" class="tableHeadCss">
+					<tr>
+						<th width="35%" class="tituloTabla border1">#{msg['gn.descripciondoc']}</th>
+						<th width="35%" class="tituloTabla border2">#{msg['rv.glosa']}</th>
+						<th width="30%" class="tituloTabla border1">#{msg['gn.docadjunto']}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<ui:repeat var="record"
+						value="#{preliminarDescargoManaged.lstAnexos}">
+						<tr>
+							<td class="contenidoTabla border4">#{record.descripcionDoc}</td>
+							<td class="contenidoTabla border5">#{record.glosaDoc}</td>
+							<td class="contenidoTabla border4">#{record.nomDocAdjunto}</td>
+						</tr>
+					</ui:repeat>
+				</tbody>
+			</table>
+			<br /> <br /> <br /> <br/> 
+			<table align="center" width="100%">
+				<tbody>
+					<tr>
+						<td align="center">--------------------------------------------------------------------</td>
+					</tr>
+					<tr>
+						<td align="center" class="tituloTabla"	>#{sessionManaged.contribuyente.apellidosNombres}</td>
+					</tr>
+				</tbody>
+			</table>
+			<br /> <br />
+			<table align="center" width="100%">
+				<tbody>
+					<tr>
+						<td colspan="5" width="50%" align="left"><span id="Label27"
+							style="font-weight: bold; FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Registrado por : </strong></span> <span
+							id="emisor" style="font-weight: bold; FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText
+									value="#{preliminarDescargoManaged.prelim.usuario}" /></span> <br /> <span id="Label28"
+							style="font-weight: bold; FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Fecha de Registro : </strong></span> <span
+							id="fechaActualid" style="font-weight: bold; FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText
+									value="#{preliminarDescargoManaged.prelim.fechaDecla}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+								</h:outputText></span></td>
+						<td colspan="5" width="50%" align="right"><span id="Label27"
+							style="font-weight: bold; FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Emitido por : </strong></span> <span
+							id="emisor" style="font-weight: bold; FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText
+									value="#{preliminarDescargoManaged.usuarioActual}" /></span> <br /> <span id="Label28"
+							style="font-weight: bold; FONT-SIZE: 10px; FONT-FAMILY: Arial"><strong>Fecha de Emision : </strong></span> <span
+							id="fechaActualid" style="font-weight: bold; FONT-SIZE: 10px; FONT-FAMILY: Arial"><h:outputText
+									value="#{preliminarDescargoManaged.fechaActual}">
+									<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+								</h:outputText></span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</h:form>
+</body>
+
+</html>

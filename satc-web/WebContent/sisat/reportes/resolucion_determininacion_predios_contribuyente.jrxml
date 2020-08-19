@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="resolucion_determininacion_predios_contribuyente" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.3579476910000023"/>
+	<property name="ireport.x" value="43"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:\\reportes_rs\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="p_periodo" class="java.lang.Integer"/>
+	<parameter name="p_persona_id" class="java.lang.Integer"/>
+	<parameter name="p_determinacion_id" class="java.lang.Integer"/>
+	<parameter name="p_determinacion_fisca_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[exec sp_anexo_rd_predial $P{p_periodo},$P{p_persona_id}]]>
+	</queryString>
+	<field name="persona_id" class="java.lang.Integer"/>
+	<field name="apellidos_nombres" class="java.lang.String"/>
+	<field name="predio_id" class="java.lang.Integer"/>
+	<field name="dj_id" class="java.lang.Integer"/>
+	<field name="desc_domicilio" class="java.lang.String"/>
+	<field name="nro_docu_identidad" class="java.lang.String"/>
+	<field name="tipo_documento" class="java.lang.String"/>
+	<field name="desc_domicilio_fiscal" class="java.lang.String"/>
+	<field name="nro_requerimiento" class="java.lang.String"/>
+	<variable name="v_fiscalizado" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{v_fiscalizado}]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
+	<variable name="v_nofiscalizado" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{v_nofiscalizado}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="predios" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{predio_id}]]></groupExpression>
+		<groupHeader>
+			<band height="11" splitType="Immediate">
+				<subreport>
+					<reportElement x="0" y="0" width="555" height="11"/>
+					<subreportParameter name="p_determinacion_id">
+						<subreportParameterExpression><![CDATA[$P{p_determinacion_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_predio_id">
+						<subreportParameterExpression><![CDATA[$F{predio_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_fiscalizado">
+						<subreportParameterExpression><![CDATA[$V{v_nofiscalizado}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_periodo">
+						<subreportParameterExpression><![CDATA[$P{p_periodo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_dj_segun">
+						<subreportParameterExpression><![CDATA[new String("DECLARACION JURADA")]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["resolucion_determininacion_construcciones_predio.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+			<band height="17">
+				<subreport>
+					<reportElement x="0" y="7" width="555" height="10"/>
+					<subreportParameter name="p_determinacion_id">
+						<subreportParameterExpression><![CDATA[$P{p_determinacion_fisca_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_predio_id">
+						<subreportParameterExpression><![CDATA[$F{predio_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_fiscalizado">
+						<subreportParameterExpression><![CDATA[$V{v_fiscalizado}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_periodo">
+						<subreportParameterExpression><![CDATA[$P{p_periodo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="p_dj_segun">
+						<subreportParameterExpression><![CDATA[new String("FISCALIZACION")]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["resolucion_determininacion_construcciones_predio.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="128">
+			<staticText>
+				<reportElement x="2" y="31" width="179" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATOS DEL CONTRIBUYENTE :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="43" width="63" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="65" y="43" width="258" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre / Razón Social:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="2" y="85" width="74" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[Domicilio Fiscal:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="2" y="54" width="63" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{persona_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="65" y="54" width="489" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{apellidos_nombres}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="65" width="118" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Documento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="118" y="65" width="114" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro Documento:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="0" y="76" width="118" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo_documento}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="118" y="76" width="114" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_docu_identidad}.equals( null )?"---":$F{nro_docu_identidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="76" y="86" width="479" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desc_domicilio_fiscal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="101" width="179" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATOS DEL PREDIO :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="113" width="32" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Código:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="143" y="113" width="411" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desc_domicilio}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="34" y="113" width="54" height="11" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{predio_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="15" width="97" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REQUERIMIENTO N°    :]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="100" y="15" width="192" height="12" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nro_requerimiento}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="226" y="0" width="56" height="12">
+					<printWhenExpression><![CDATA[Boolean.valueOf($V{PAGE_NUMBER}.intValue() ==1) ?
+Boolean.TRUE : Boolean.FALSE]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[ANEXO N° 01]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="127" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="100" y="112" width="43" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+</jasperReport>

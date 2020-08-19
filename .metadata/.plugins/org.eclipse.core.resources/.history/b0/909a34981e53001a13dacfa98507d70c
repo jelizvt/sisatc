@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>	
+<h:form id="formReportePartidas">
+	<rich:panel id="idPanelDetalleDsctos">
+	<f:facet name="header">DETALLE DE DESCUENTOS</f:facet>
+	
+	<h:panelGrid columns="5">		
+	
+		<h:outputText value="Nro de Recibo:" />
+			
+		<h:inputText id="id_NroRecibo" maxlength="10" style="width:90%" 
+					 value="#{recibosPagoManaged.nro_recibo}" 
+					 onkeypress = "validaEnteroPositivo(event);">
+		</h:inputText>
+		
+		<h:outputLabel value="Seleccione Periodo:*" for="idSelectOneArea"></h:outputLabel>
+			<h:selectOneMenu id="idSelectTramo" style="width:150px;"
+			value="#{recibosPagoManaged.periodo_recibo}">
+			<f:selectItems value="#{recibosPagoManaged.periodosRecibo}"
+			var="items" itemLabel="#{items.label}"
+			itemValue="#{items.value}" />
+		</h:selectOneMenu>
+	
+	
+		
+		<a4j:commandButton value="Consultarrrr" action="#{recibosPagoManaged.consultarRecibo}"
+				oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')':''}"
+				reRender="idPanelReportePartidas" status="ajaxStatus">
+		</a4j:commandButton>
+			
+										
+	</h:panelGrid>
+	
+	</rich:panel>
+	<h:commandLink id="linkIdOtrosxls" styleClass="pruebaSOATXLS9" value="sasas" style="display: none;" action="#{recibosPagoManaged.imprimirDetalleDsctos}" />
+	
+	<rich:panel id="idPanelReportePartidas">
+		<f:facet name="header">Detalle de Recibo</f:facet>
+		
+		<h:outputText style="color : red" rendered="#{recibosPagoManaged.listaConsultaRecibo[0].flag_extorno == '1'}" value="RECIBO EXTORNADO (INVÁLIDO)" />
+		
+		<h:panelGrid columns="4" style="width : 550px" >
+		
+			<h:outputText value="Nº Recibo" />
+			<h:outputText value="#{recibosPagoManaged.listaConsultaRecibo[0].nro_recibo }" />
+			
+			<h:outputText value="Fecha Pago" />
+			<h:outputText value="#{recibosPagoManaged.listaConsultaRecibo[0].fecha_pago}">
+								<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+							</h:outputText>
+			
+			
+			<h:outputText value="Datos" />
+			<h:outputText value="#{recibosPagoManaged.listaConsultaRecibo[0].datos }" />
+			
+			<h:outputText value="Total Pagado" />
+			<h:outputText value="#{recibosPagoManaged.listaConsultaRecibo[0].total_pagado }" />
+			
+			
+			<h:outputText value="Tipo de Recibo" />			
+			<h:outputText value="TUPA" rendered="#{recibosPagoManaged.listaConsultaRecibo[0].tipo_recibo eq '2'}" />
+							
+			
+			
+			
+		
+			
+		
+			
+		</h:panelGrid>
+		
+		<rich:dataTable id="id_tablelistaOp" value="#{recibosPagoManaged.listaConsultaRecibo}"
+						var="record" height="50px" width="920px" selectedClass="dataTableSelectedRow" sortMode="single"
+						selectionMode="single" rowKeyVar="row" enableContextMenu="false" binding="#{indice}" > 
+						
+											
+						<rich:column width="60px" style="text-align:center;">
+							<f:facet name="header">Item</f:facet>
+							#{indice.rowIndex+1}
+						</rich:column>
+						<rich:column width="100px" id="r01" style="text-align:center;" >
+							<f:facet name="header">Rubro</f:facet>
+							<h:outputText value="#{record.tributo}" />
+						</rich:column>						
+						
+						<rich:column width="50px" style="text-align:center;">
+							<f:facet name="header">Periodo</f:facet>
+							<h:outputText value="#{record.periodo}" />
+						</rich:column>
+						
+						<rich:column width="50px" style="text-align:center;">
+							<f:facet name="header">Cuotas</f:facet>
+							<h:outputText value="#{record.cuotas}" />
+						</rich:column>
+						
+						<rich:column width="120px" style="text-align:center;">
+							<f:facet name="header">Nº Papeleta</f:facet>
+							<h:outputText value="#{record.nro_papeleta}" />
+						</rich:column>						
+						
+						
+						<rich:column width="120px" style="text-align:right;">
+							<f:facet name="header">Monto</f:facet>
+							<h:outputText value="#{record.monto_pagado}" />
+						</rich:column>	
+
+					
+						
+						
+		</rich:dataTable>
+	</rich:panel>
+</h:form>
+
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:form id="formBusquedaRecibos">
+	<rich:hotKey key="return"
+			handler="#{rich:element('btnBuscar')}.click()"
+			selector="#formBusquedaRecibos" />
+	<rich:panel>
+		<f:facet name="header">Busqueda de Recibos por Referencia</f:facet>
+		<h:panelGrid columns="2">
+
+			<h:outputLabel value="Referencia">:</h:outputLabel>
+			<h:inputText value="#{duplicadoRecibosManaged.referencia}" size="100" converter="uppeCaseConverter" styleClass="textUpperCase">
+			</h:inputText>
+
+		</h:panelGrid>
+		<a4j:commandButton id="btnBuscar" value="Buscar" action="#{duplicadoRecibosManaged.buscar}" reRender="panelDataTableRecibos" status="ajaxStatus"></a4j:commandButton>
+	</rich:panel>
+
+	<rich:panel id="panelDataTableRecibos">
+		<rich:dataTable value="#{duplicadoRecibosManaged.listCjReciboPago}" var="itemRecibo">
+			<h:column>
+				<f:facet name="header">
+					<div style="width: 80px">Nro. Recibo</div>
+				</f:facet>
+				<div style="width: 80px;text-align: center;">
+					<h:outputText value="#{itemRecibo.nroRecibo}" />
+				</div>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<div style="width: 110px">Fecha</div>
+				</f:facet>
+				<div style="width: 110px;text-align: center;">
+					<h:outputText value="#{itemRecibo.fechaRecibo}" >
+						<f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" timeZone="#{msg['param.timezone']}" />
+					</h:outputText>
+				</div>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<div style="width: 50px">Duplicado</div>
+				</f:facet>
+				<div style="width: 50px; text-align: center;">
+					<!-- Recibos Tributos -->
+					<a4j:commandLink ajaxSingle="true" id="linkReciboTributos"
+						action="#{duplicadoRecibosManaged.verRecibo(itemRecibo.reciboId)}"
+						rendered="#{itemRecibo.tipoRecibo eq '1'}" reRender="panelinclude"
+						oncomplete="window.open('../sisat/caja/imprimirDuplicadoRecibo.jsf',null, 'height=420,width=500,status=yes,toolbar=no,menubar=no,location=no')">
+						<h:graphicImage value="/images/imprimi2.png" style="border:0" />						
+					</a4j:commandLink>
+					<!-- recibos tupa -->
+					<a4j:commandLink ajaxSingle="true" id="linkReciboTupa"
+						action="#{duplicadoRecibosManaged.verRecibo(itemRecibo.reciboId)}"
+						rendered="#{itemRecibo.tipoRecibo eq '2'}" reRender="panelinclude"
+						oncomplete="window.open('../sisat/caja/imprimirDuplicadoReciboTupa.jsf',null, 'height=420,width=500,status=yes,toolbar=no,menubar=no,location=no')">
+						<h:graphicImage value="/images/imprimi2.png" style="border:0" />						
+					</a4j:commandLink>
+				</div>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<div style="width: 70px">Tipo Operac.</div>
+				</f:facet>
+				<div style="width: 70px;text-align: center;">
+					<h:outputText value="#{itemRecibo.tipoOperacion}" />
+				</div>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<div style="width: 70px">Monto</div>
+				</f:facet>
+				<div style="width: 70px;text-align: right;">
+					<h:outputText value="#{itemRecibo.montoCobrado}" >					
+					</h:outputText>
+				</div>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<div style="width: 70px">Conceptos</div>
+				</f:facet>
+				<div style="width: 70px;text-align: center;">
+					<h:outputText value="#{itemRecibo.tipoRecibo eq '1'? 'IMPUESTOS':'TUPA' }" />
+				</div>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<div style="width: 620px">Referencia</div>
+				</f:facet>
+				<div style="width: 620px">
+					<h:outputText value="#{itemRecibo.referencia}" />
+				</div>
+			</h:column>
+			<h:column>
+				<f:facet name="header">
+					<div style="width: 80px">Cajero</div>
+				</f:facet>
+				<div style="width: 80px">
+					<h:outputText value="#{itemRecibo.nombreUsuario}" />
+				</div>
+			</h:column>
+		</rich:dataTable>
+	</rich:panel>
+</h:form>
+</html>

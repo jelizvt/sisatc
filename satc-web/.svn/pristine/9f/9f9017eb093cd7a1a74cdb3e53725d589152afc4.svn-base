@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<style type="">
+		.className {
+		    text-align: right;
+		}
+		.classNameCenter {
+		    text-align: center;
+		}
+	</style>
+
+	<h:form id="formRecepcionValores">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		
+	<rich:panel id="pnlheader">
+        <f:facet name="header">
+        	Recepción / Devolución de Valores
+        </f:facet>
+        <h:panelGrid columns="2">
+        	<h:outputText for="txtInforme" value="Nro Lote Origen :" />
+        	<h:outputText id="txtInforme" maxlength="14" 
+        		value="#{recepcionValoresManaged.informeTransferido.nroLoteOrigen} - #{recepcionValoresManaged.informeTransferido.estadoTransferencia}" />
+        </h:panelGrid>
+        <br/>
+        	<fieldset>
+				<legend><b>Relación de Valores</b></legend>
+				<h:panelGrid columns="2">
+					<h:commandLink id="btnExcel0"
+						action="#{recepcionValoresManaged.exportRecibirXls()}"
+						styleClass="button1" immediate="true">
+						<h:graphicImage value="/images/modal/excel.png"
+							style="border:0;width:23px;height:23px;" />
+					</h:commandLink>
+					<h:outputText value="#{recepcionValoresManaged.valoresRecibir.size()} registros encontrados"/>
+				</h:panelGrid>
+				<rich:extendedDataTable id="edt" value="#{recepcionValoresManaged.valoresRecibir}" width="100%" height="190px"
+					sortMode="single" selectionMode="single" enableContextMenu="false" var="record"
+					rowKeyVar="row" rows="8">
+					<rich:column id="c0" style="text-align:center" width="4%" >
+		                <f:facet name="header" >Item</f:facet>
+		                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		            </rich:column>
+					<rich:column id="c1" style="text-align:center" width="5%" >
+						<f:facet name="header" width="10%">Tipo Valor</f:facet>
+						<h:outputText value="#{record.tipoValor}" />
+					</rich:column>
+					
+					<rich:column id="c12" style="text-align:center" width="5%" >
+						<f:facet name="header" width="10%">Concepto</f:facet>
+						<h:outputText value="#{record.concepto}" />
+					</rich:column>
+					<rich:column id="c13" style="text-align:center" width="5%" >
+						<f:facet name="header" width="10%">Periodo</f:facet>
+						<h:outputText value="#{record.periodo}" />
+					</rich:column>
+					
+					<rich:column id="c3" style="text-align:center" width="10%" >
+						<f:facet name="header" width="10%">Nro de Valor</f:facet>
+						<h:outputText value="#{record.nroValor}" />
+					</rich:column>
+					
+					<rich:column id="c4" style="text-align:center" width="6%" >
+						<f:facet name="header" width="10%">Código</f:facet>
+						<h:outputText value="#{record.personaId}" />
+					</rich:column>
+					
+					<rich:column id="c5" style="text-align:center" width="20%" >
+						<f:facet name="header" width="10%">Contribuyente</f:facet>
+						<h:outputText value="#{record.apellidosNombresPersona}" />
+					</rich:column>
+										<rich:column id="c6" style="text-align:center" width="20%" >
+						<f:facet name="header" width="10%">Dirección Fiscal</f:facet>
+						<h:outputText value="#{record.direccionFiscal}" />
+					</rich:column>
+					
+					<rich:column id="c7" style="text-align:center" width="5%" >
+						<f:facet name="header" width="10%">Deuda</f:facet>
+						<h:outputText value="#{record.montoDeuda}" />
+					</rich:column>
+					
+					<rich:column id="c8" style="text-align:center" width="6%" >
+						<f:facet name="header" width="10%">Exigibilidad</f:facet>
+						<h:outputText value="#{record.exigibilidad}" />
+					</rich:column>
+					
+					<rich:column id="c9" style="text-align:center" width="5%" >
+						<f:facet name="header" width="10%">Estado</f:facet>
+						<h:outputText value="#{record.estadoRecepcion}" />
+					</rich:column>
+					
+					<rich:column id="c10" width="4%"
+						rendered="#{recepcionValoresManaged.informeTransferido.estadoTransferenciaId==1}">
+						<a4j:commandLink ajaxSingle="true" id="cldelete"
+							oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'valorDev\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+							reRender="valorDev" status="ajaxStatus">
+							<h:graphicImage value="/images/modal/delete.gif" style="border:0;width:14px;height:14px;" />
+							<f:setPropertyActionListener value="#{record}" target="#{recepcionValoresManaged.detalleDevolver}" />
+						</a4j:commandLink>
+					</rich:column>
+				</rich:extendedDataTable>
+				<rich:datascroller for="edt" maxPages="5" fastStep="3"/>
+	        </fieldset>
+	        
+	        <fieldset>
+				<legend><b>Listado de valores a devolver</b></legend>
+				<h:panelGrid columns="2">
+					<h:commandLink id="btnExcel1"
+						action="#{recepcionValoresManaged.exportDevolverXls()}"
+						styleClass="button1" immediate="true">
+						<h:graphicImage value="/images/modal/excel.png"
+							style="border:0;width:23px;height:23px;" />
+					</h:commandLink>
+					<h:outputText value="#{recepcionValoresManaged.valoresDevolver.size()} registros encontrados"/>
+				</h:panelGrid>
+				<rich:extendedDataTable id="edt1" value="#{recepcionValoresManaged.valoresDevolver}" width="100%" height="190px"
+					sortMode="single" selectionMode="single" enableContextMenu="false" 
+					rowKeyVar="row" rows="8" var="record">
+					
+					<rich:column id="c0" style="text-align:center" width="5%" >
+		                <f:facet name="header" >Item</f:facet>
+		                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		            </rich:column>
+		            <rich:column id="x9" style="text-align:center" width="5%" >
+						<f:facet name="header" width="10%">Tipo Valor</f:facet>
+						<h:outputText value="#{record.tipoValor}" />
+					</rich:column>
+					<rich:column id="x10" style="text-align:center" width="10%" >
+						<f:facet name="header" width="10%">Nro Valor</f:facet>
+						<h:outputText value="#{record.nroValor}" />
+					</rich:column>
+					<rich:column id="x11" style="text-align:center" width="5%" >
+						<f:facet name="header" width="10%">Código</f:facet>
+						<h:outputText value="#{record.personaId}" />
+					</rich:column>
+					<rich:column id="x12" style="text-align:center" width="20%" >
+						<f:facet name="header" width="10%">Contribuyente</f:facet>
+						<h:outputText value="#{record.apellidosNombresPersona}" />
+					</rich:column>
+					<rich:column id="x13" style="text-align:center" width="7%" >
+						<f:facet name="header" width="10%">Deuda</f:facet>
+						<h:outputText value="#{record.montoDeuda}" />
+					</rich:column>
+					
+					<rich:column id="x14" style="text-align:center" width="7%" >
+						<f:facet name="header" width="10%">Exigibilidad</f:facet>
+						<h:outputText value="#{record.exigibilidad}" />
+					</rich:column>
+					<rich:column id="x15" style="text-align:center" width="15%" >
+						<f:facet name="header" width="10%">Motivo</f:facet>
+						<h:outputText value="#{record.motivoDevolucion}" />
+					</rich:column>
+					<rich:column id="x16" style="text-align:center" width="20%" >
+						<f:facet name="header" width="10%">Observación</f:facet>
+						<h:outputText value="#{record.observacion}" />
+					</rich:column>
+				</rich:extendedDataTable>
+				
+				<rich:datascroller for="edt1" maxPages="5" fastStep="3"/>
+				
+				<h:panelGrid width="100%" rendered="#{recepcionValoresManaged.informeTransferido.estadoTransferenciaId==1}" >
+        			<a4j:commandButton id="btnGuardar" value="Guardar y Recibir Informe"
+        				oncomplete="#{rich:component('mpConfirmacion')}.show();"
+        				reRender="valorDev"  
+        				/>
+        		</h:panelGrid>
+			</fieldset>
+		</rich:panel>
+	</h:form>    
+		
+	<rich:modalPanel id="valorDev" autosized="true" style="height:170px">
+        <h:form id="formDevolverValor">
+	        <fieldset>
+	            <legend><b>Valor a devolver</b></legend>
+	            <h:panelGrid columns="1">
+	            	<h:outputText value="#{recepcionValoresManaged.detalleDevolver.nroValor}"/>
+		            <h:outputText value="#{recepcionValoresManaged.detalleDevolver.apellidosNombresPersona}"/>
+	            </h:panelGrid>
+	            <h:panelGrid columns="2">
+		            <h:outputText for="idSelectOneMotivo" value="Motivo" />
+		            <h:selectOneMenu id="idSelectOneMotivo"
+						value="#{recepcionValoresManaged.motivoDevolucionId}" style="width:185px;">
+						<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+						<f:selectItems
+							value="#{recepcionValoresManaged.listaMotivoDevolucion}"
+							var="item" itemLabel="#{item.descripcion}"
+							itemValue="#{item.id}"></f:selectItems>
+					</h:selectOneMenu>
+	            	<h:outputText for="txtAreObservacion" value="Observación"/>
+	            	<h:inputTextarea id="txtAreObservacion" value="#{recepcionValoresManaged.observacionDevolucion}"
+	            		style="width:180px;" />
+	            </h:panelGrid>
+	            
+	            <h:panelGrid columns="2" columnClasses="classNameCenter">
+		        	<h:commandButton value="Aceptar"
+					action="#{recepcionValoresManaged.registraDevolucion()}"
+					reRender="pnlheader"
+					oncomplete="#{rich:component('valorDev')}.hide();"
+					status="ajaxStatus"
+					 />
+					 
+		        	<h:commandButton value="Cancelar" onclick="#{rich:component('valorDev')}.hide(); return false;" />
+	        	</h:panelGrid>
+	        	
+	        </fieldset>
+        </h:form>
+     </rich:modalPanel>
+
+	<rich:modalPanel id="mpConfirmacion" autosized="true"
+		width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose" styleClass="hidelink" />
+				<rich:componentControl for="mpConfirmacion"
+					attachTo="imgclose" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea guardar la recepcion del lote #{recepcionValoresManaged.informeTransferido.nroLoteOrigen} ?" />
+				
+				<h:panelGrid columns="2" columnClasses="classNameCenter">
+					<a4j:commandButton value="Aceptar"
+						action="#{recepcionValoresManaged.recibirInforme()}" 
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirmaRecepcion\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						reRender="panelconfirmaRecepcion">
+					</a4j:commandButton>	 
+					<a4j:commandButton value="Cancelar"
+						onclick="#{rich:component('mpConfirmacion')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>      
+
+	<rich:modalPanel id="panelconfirmaRecepcion" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="imgclose1" styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmaRecepcion"
+					attachTo="imgclose1" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1" columnClasses="classNameCenter">
+				<h:outputText id="otSucc1" style="font-weight:bold;color:green"
+					value="El registro se realizó satisfactoriamente" />
+				<a4j:commandButton value="Aceptar" style="width:100px;" action="#{sessionManaged.sendRedirectPrincipal}" >
+					<f:setPropertyActionListener
+						value="/sisat/coactivav2/transferenciaValores.xhtml"
+						target="#{sessionManaged.page}" />
+				</a4j:commandButton>
+			</h:panelGrid>
+		</h:form>	
+	</rich:modalPanel>
+	   
+</ui:composition>

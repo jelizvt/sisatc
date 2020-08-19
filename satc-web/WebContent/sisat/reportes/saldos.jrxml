@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="saldos" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="tipo_saldo" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\jboss-as-7.1.0.Final\\modules\\com\\sqlserver\\main\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tramo_id" class="java.lang.Integer"/>
+	<parameter name="ruta_image" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[exec sp_mostrar_saldos_entre_fechas_totales $P{tramo_id},$P{tipo_saldo}]]>
+	</queryString>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="total_anterior" class="java.math.BigDecimal"/>
+	<field name="total_generado" class="java.math.BigDecimal"/>
+	<field name="total_pagos" class="java.math.BigDecimal"/>
+	<field name="total_descargo" class="java.math.BigDecimal"/>
+	<field name="total_saldo" class="java.math.BigDecimal"/>
+	<field name="actual" class="java.lang.String"/>
+	<field name="anterior" class="java.lang.String"/>
+	<variable name="saldo_predial" class="java.math.BigDecimal" incrementType="Report" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[new Double(0)]]></initialValueExpression>
+	</variable>
+	<variable name="contar_datos" class="java.lang.Integer" calculation="System"/>
+	<group name="grupo_predial">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<subreport>
+					<reportElement stretchType="RelativeToTallestObject" x="1" y="0" width="555" height="16"/>
+					<subreportParameter name="tramo_id">
+						<subreportParameterExpression><![CDATA[$P{tramo_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="tipo_saldo">
+						<subreportParameterExpression><![CDATA[$P{tipo_saldo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreport_predial.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grupo_vehicular">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<subreport>
+					<reportElement stretchType="RelativeToTallestObject" x="1" y="0" width="555" height="16"/>
+					<subreportParameter name="tramo_id">
+						<subreportParameterExpression><![CDATA[$P{tramo_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="tipo_saldo">
+						<subreportParameterExpression><![CDATA[$P{tipo_saldo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreport_vehicular.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grupo_limpiezapublica">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<printWhenExpression><![CDATA[((($F{total_saldo} != null)) ? Boolean.TRUE : Boolean.FALSE)]]></printWhenExpression>
+				<subreport>
+					<reportElement stretchType="RelativeToTallestObject" x="1" y="0" width="555" height="16"/>
+					<subreportParameter name="tramo_id">
+						<subreportParameterExpression><![CDATA[$P{tramo_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="tipo_saldo">
+						<subreportParameterExpression><![CDATA[$P{tipo_saldo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<returnValue subreportVariable="cont_results" toVariable="contar_datos"/>
+					<subreportExpression><![CDATA["subreport_limpieza.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grupo_parquesjardines">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<subreport>
+					<reportElement stretchType="RelativeToTallestObject" x="1" y="0" width="555" height="16"/>
+					<subreportParameter name="tramo_id">
+						<subreportParameterExpression><![CDATA[$P{tramo_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="tipo_saldo">
+						<subreportParameterExpression><![CDATA[$P{tipo_saldo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreport_parquesjardines.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grupo_serenazgo">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<subreport>
+					<reportElement stretchType="RelativeToTallestObject" x="1" y="0" width="555" height="16"/>
+					<subreportParameter name="tramo_id">
+						<subreportParameterExpression><![CDATA[$P{tramo_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="tipo_saldo">
+						<subreportParameterExpression><![CDATA[$P{tipo_saldo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreport_serenazgo.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grupo_papeletas">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<subreport>
+					<reportElement stretchType="RelativeToTallestObject" x="1" y="0" width="555" height="16"/>
+					<subreportParameter name="tramo_id">
+						<subreportParameterExpression><![CDATA[$P{tramo_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="tipo_saldo">
+						<subreportParameterExpression><![CDATA[$P{tipo_saldo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreport_papeleta.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grupo_costas">
+		<groupExpression><![CDATA[$F{tipo}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<subreport>
+					<reportElement x="1" y="0" width="554" height="16"/>
+					<subreportParameter name="tipo_saldo">
+						<subreportParameterExpression><![CDATA[$P{tipo_saldo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="tramo_id">
+						<subreportParameterExpression><![CDATA[$P{tramo_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreport_costas.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grupo_gastos">
+		<groupExpression><![CDATA[$F{tipo}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<subreport>
+					<reportElement x="1" y="0" width="555" height="16"/>
+					<subreportParameter name="tramo_id">
+						<subreportParameterExpression><![CDATA[$P{tramo_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="tipo_saldo">
+						<subreportParameterExpression><![CDATA[$P{tipo_saldo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreport_gastos.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grupo_multas">
+		<groupExpression><![CDATA[$F{tipo}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<subreport>
+					<reportElement x="1" y="0" width="555" height="16"/>
+					<subreportParameter name="tramo_id">
+						<subreportParameterExpression><![CDATA[$P{tramo_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="tipo_saldo">
+						<subreportParameterExpression><![CDATA[$P{tipo_saldo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreport_multas.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="grupo_alcabala">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<subreport>
+					<reportElement x="1" y="0" width="554" height="16"/>
+					<subreportParameter name="tramo_id">
+						<subreportParameterExpression><![CDATA[$P{tramo_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="tipo_saldo">
+						<subreportParameterExpression><![CDATA[$P{tipo_saldo}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["subreport_alcabala.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="85" y="0" width="470" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SERVICIO DE ADMINISTRACIÓN TRIBUTARIA DE CAJAMARCA]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="85" y="50" width="470" height="29"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="85" y="26" width="470" height="24"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Reporte de Saldos]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="1" y="61" width="84" height="18"/>
+				<textElement verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="1" y="0" width="84" height="50"/>
+				<imageExpression><![CDATA[$P{ruta_image}+"logo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="27" y="0" width="106" height="22"/>
+				<box>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tributo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="133" y="0" width="38" height="22"/>
+				<box>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Año]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="0" width="79" height="22"/>
+				<box>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Generado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="0" width="80" height="22"/>
+				<box>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pagos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="403" y="0" width="72" height="22"/>
+				<box>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Variación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="0" width="26" height="22"/>
+				<box>
+					<pen lineWidth="0.25" lineStyle="Solid"/>
+					<topPen lineWidth="0.25" lineStyle="Solid"/>
+					<leftPen lineWidth="0.25" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.25" lineStyle="Solid"/>
+					<rightPen lineWidth="0.25" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ítem]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement mode="Transparent" x="171" y="0" width="73" height="22" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="9" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{anterior}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="475" y="0" width="80" height="22" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{actual}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<summary>
+		<band height="20">
+			<textField pattern="#,##0.00">
+				<reportElement x="475" y="0" width="80" height="20"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_saldo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="244" y="0" width="79" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_generado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="323" y="0" width="80" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_pagos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="403" y="0" width="72" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_descargo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="171" y="0" width="73" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_anterior}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="0" width="170" height="20"/>
+				<box>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTALES]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<style type="">
+		.classLeft {
+		    text-align: left;
+		}
+		.classCenter {
+		    text-align: right;
+		}
+	</style>
+	
+	<h:form id="formMantenedorCostas">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		
+		<rich:panel id="pnlheader">
+	        <f:facet name="header">
+	        	Periodo de Costas
+	        </f:facet>
+	        
+		    <rich:extendedDataTable id="edtLista" value="#{manteCostasManaged.records}" width="100%" height="190px"
+				sortMode="single" selectionMode="single" enableContextMenu="false" var="record"
+				rowKeyVar="row" rows="10">
+				<rich:column id="c0" style="text-align:center" width="4%" >
+		               <f:facet name="header" >Item</f:facet>
+		               <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+		           </rich:column>
+				<rich:column id="c1" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Periodo</f:facet>
+					<h:outputText value="#{record.descripcion}" />
+				</rich:column>
+				<rich:column rendered="#{manteCostasManaged.permisoModificarActualizar}" id="c2" style="text-align:center" width="4%">
+          			<f:facet name="header">Editar</f:facet>
+					<a4j:commandLink ajaxSingle="true" id="clEditar"
+						action="#{manteCostasManaged.editar()}" >
+						<f:setPropertyActionListener
+							value="/sisat/coactivav2/mantenedorDetalleCostas.xhtml"
+							target="#{sessionManaged.page}" />
+						<h:graphicImage value="/images/editar2.png" style="border:0;" />
+						<f:setPropertyActionListener value="#{record}"
+							target="#{manteCostasManaged.selected}" id="palEditar" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column rendered="#{manteCostasManaged.permisoDuplicar}" id="c3" width="4%" style="text-align:center">
+					<f:facet name="header">Duplicar</f:facet>
+					<a4j:commandLink ajaxSingle="true" id="clDuplicar"
+						oncomplete="#{rich:component('mpDuplicarCostas')}.show();"
+						reRender="mpDuplicarCostas" status="ajaxStatus">
+						<h:graphicImage value="/images/acumula.png" style="border:0;width:14px;height:14px;" />
+						<f:setPropertyActionListener value="#{record}"
+							target="#{manteCostasManaged.selected}"
+							id="pal1" />
+					</a4j:commandLink>
+				</rich:column>
+			</rich:extendedDataTable>
+			<rich:datascroller for="edtLista" maxPages="5" fastStep="3"/>
+		</rich:panel>
+	</h:form>    
+	
+	<rich:modalPanel id="mpDuplicarCostas" autosized="true" width="400" height="150">
+		<f:facet name="header">
+			<h:outputText value="Duplicar Costas a periodo" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					styleClass="hidelink" id="hidelink3" />
+				<rich:componentControl for="mpDuplicarCostas" attachTo="hidelink3"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+        <h:form id="formDuplicarCostas">
+            <h:panelGrid columns="2" columnClasses="classCenter">
+	            <h:outputText for="idArea" value="Periodo a copiar :" />
+	            <h:outputText for="idArea" value="#{manteCostasManaged.selected.descripcion}" />
+            	
+            	<h:outputText for="idPeriodo" value="Periodo :"/>	
+            	<h:inputText value="#{manteCostasManaged.nuevoPeriodo}" style="width:60px" maxlength="4" />
+            </h:panelGrid>
+            <br></br>	            
+            <h:panelGrid columns="2" columnClasses="classCenter">
+	        	<h:commandButton value="Aceptar"
+				action="#{manteCostasManaged.duplicar()}"
+				oncomplete="#{facesContext.maximumSeverity == null ? '' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+				status="ajaxStatus"
+				 />
+	        	<h:commandButton value="Cancelar" onclick="#{rich:component('mpDuplicarCostas')}.hide(); return false;" />
+        	</h:panelGrid>
+        	
+        </h:form>
+     </rich:modalPanel>
+</ui:composition>

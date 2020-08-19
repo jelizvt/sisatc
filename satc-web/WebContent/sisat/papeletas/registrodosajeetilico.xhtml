@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+	<h:form id="formRegistroDosajeEtilico">
+		<rich:jQuery query="focus().select()"
+			selector="#formRegistroDosajeEtilico :input:visible:enabled:first"
+			name="focusInputdc" />
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+
+		<script type="text/javascript">
+		  function autofocus(containerId) {
+		       var element = jQuery(":input:visible:enabled:first", '#'+containerId);
+		       if (element != null) {
+		         	element.focus().select();
+		       }
+		  }
+		</script>
+		<table align="center" border="0" cellpadding="1" cellspacing="1"
+			width="70%">
+			<tr>
+				<td width="50%"><rich:panel style="width:100%; height: 80;"
+						id="panelDosajeEtilicoId">
+						<f:facet name="header">
+							<h:outputText style="font-weight:bold"
+								value="SOBRE EL DOSAJE ETÍLICO" />
+						</f:facet>
+						<table width="100%" border="0">
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['pa.nropapeleta']} :" /> <span
+									style="color: red;">*</span></td>
+								<td width="100px"><h:inputHidden
+										value="#{registroDosajeEtilicoManaged.papeletaId}" /> <h:inputText
+										value="#{registroDosajeEtilicoManaged.nroPapeleta}"
+										required="true" requiredMessage="Ingrese un nro de papeleta"
+										id="txtNroPapeleta" size="10" maxlength="10"
+										style="width:147px;" styleClass="dosaje">
+										<a4j:support ajaxSingle="true" event="onblur"
+											oncomplete="#{facesContext.maximumSeverity == null ? '': 'Richfaces.showModalPanel(\'mpErrors\');' };"
+											action="#{registroDosajeEtilicoManaged.validarUltimosDigitosPapeletas}" />
+									</h:inputText> <rich:jQuery id="mask13" query="mask('D99999-99')"
+										selector=".dosaje" timing="onload" /></td>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['gn.fecha']} :" /> <span style="color: red;">*</span>
+								</td>
+								<td align="left" width="120px"><rich:calendar
+										locale="en/US" datePattern="dd/MM/yyyy"
+										enableManualInput="true" inputClass="maskDate"
+										id="id_fechainfraccion" required="true"
+										requiredMessage="Indique la fecha de infracción"
+										inputStyle="width:60px"
+										value="#{registroDosajeEtilicoManaged.fechaInfraccion}"
+										immediate="true">
+									</rich:calendar> <rich:jQuery id="maskedo4" selector=".maskDate"
+										query="mask('99/99/9999')" timing="onload" /></td>
+								<td align="left" width="80px"></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['pa.nrolicencia']} :">
+									</h:outputLabel></td>
+
+								<td width="170px"><h:inputText id="txtNroLicencia"
+										size="10" maxlength="10"
+										binding="#{registroDosajeEtilicoManaged.txtNumeroLicencia}"
+										style="width:150px;text-transform:uppercase;"
+										value="#{registroDosajeEtilicoManaged.numeroLicencia}"
+										immediate="true" styleClass="licencia"
+										converter="#{uppeCaseConverter}" /> <rich:jQuery id="masklic"
+										selector=".licencia" query="mask('**9999999')" timing="onload" /></td>
+
+								<td><h:outputLabel value="#{msg['pa.nroplaca']} :" /></td>
+								<td><h:inputText
+										value="#{registroDosajeEtilicoManaged.nroPlaca}"
+										id="txtNroPlaca" size="10" maxlength="10"
+										style="width:100%;text-transform:uppercase;"
+										styleClass="placa" converter="#{uppeCaseConverter}" /> <rich:jQuery
+										id="maskPlaca" selector=".placa"
+										query="mask('******?**',{placeholder:' '})" timing="onload" /></td>
+								<td align="left" width="80px"></td>
+								<td></td>
+							</tr>
+						</table>
+					</rich:panel></td>
+			</tr>
+			<tr>
+				<td width="50%"><rich:panel style="width:100%; height: 150px;"
+						id="id_panelDatosInfractor">
+						<f:facet name="header">
+							<h:outputText style="font-weight:bold"
+								value="DATOS DEL INFRACTOR (*)" />
+						</f:facet>
+						<table width="100%" border="0">
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['gn.codigoPersona']} :" /></td>
+								<td><h:inputText id="txtInfractorId"
+										value="#{registroDosajeEtilicoManaged.datosInfractor.personaId}"
+										style="width:100%" disabled="true" /></td>
+								<td colspan="2" 
+										align="right">
+										<a4j:commandButton  rendered="#{registroDosajeEtilicoManaged.permisoBuscar}"
+										id="cmdBuscarInfractor" value="#{msg['gn.buscar']}"
+										immediate="true"
+										action="#{registroDosajeEtilicoManaged.setPersonaPapeleta}"
+										oncomplete="#{rich:component('id_panelBuscarPersonaPapeletas')}.show()">
+										<f:param name="destinoRefresh" value="id_panelDatosInfractor" />
+									</a4j:commandButton> 
+										<a4j:commandButton id="cmdActualizarInfractor"
+										 rendered="#{registroDosajeEtilicoManaged.permisoModificarActualizar}"
+										value="Actualizar" immediate="true"
+										action="#{registroDosajeEtilicoManaged.actualizarPersona}"
+										oncomplete="#{rich:component('modalActualizaPersona')}.show()"
+										reRender="modalActualizaPersona"
+										disabled="#{!(registroDosajeEtilicoManaged.datosInfractor.personaId>0) or registroDosajeEtilicoManaged.datosInfractor.personaId==137619 or registroDosajeEtilicoManaged.datosInfractor.personaId==1823}">
+										<f:param name="actualizaPersona" value="S" />
+										<f:param name="personaPapeleta" value="I" />
+									</a4j:commandButton> 
+										<a4j:commandButton 
+										 rendered="#{registroDosajeEtilicoManaged.permisoAgregarRegistrar}"
+										 id="cmdNuevoInfractor" value="Nuevo"
+										immediate="true"
+										action="#{registroDosajeEtilicoManaged.registrarPersona}"
+										oncomplete="#{rich:component('modalActualizaPersona')}.show()"
+										reRender="modalActualizaPersona">
+										<f:param name="actualizaPersona" value="N" />
+										<f:param name="personaPapeleta" value="I" />
+									</a4j:commandButton></td>
+							</tr>
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['mp.apellidosnombres']} :" /></td>
+								<td colspan="3"><h:inputText
+										id="txtApellidosNombresInfractor"
+										value="#{registroDosajeEtilicoManaged.datosInfractor.apellidosNombres}"
+										style="width:100%" disabled="true" required="true"
+										requiredMessage="Ingrese los apellidos y nombres del infractor" />
+								</td>
+							</tr>
+
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['gn.tipodoc']} :" /></td>
+								<td><h:inputText id="txtTipoDocIdentidadInfractor"
+										value="#{registroDosajeEtilicoManaged.datosInfractor.tipoDocIdentidad}"
+										style="width:100%" disabled="true" /></td>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['gn.nrodoc']} :" /></td>
+								<td><h:inputText id="txtNroDocuIdentidadInfractor"
+										value="#{registroDosajeEtilicoManaged.datosInfractor.nroDocuIdentidad}"
+										style="width:100%" disabled="true" /></td>
+							</tr>
+							<tr>
+								<td align="left" width="120px"><h:outputLabel
+										value="#{msg['rp.direccion']} :" /></td>
+								<td colspan="3"><h:inputText id="txtDireccionInfractor"
+										value="#{registroDosajeEtilicoManaged.datosInfractor.direccionCompleta}"
+										style="width:100%" disabled="true" required="true"
+										requiredMessage="Ingrese la direccion del infractor" /></td>
+							</tr>
+
+							<tr>
+								<td align="left" width="100px"></td>
+								<td colspan="2"></td>
+								<td></td>
+							</tr>
+						</table>
+					</rich:panel></td>
+			</tr>
+
+			<tr>
+				<td width="50%" align="center"><rich:panel
+						style="width:100%; height: 180px; background-color: transparent;border:0">
+						<table width="10%" border="0" cellpadding="0" cellspacing="2"
+							align="center">
+							<tr>
+								<td><a4j:commandButton value="Guardar" style="width:100px;"
+										action="#{registroDosajeEtilicoManaged.guardar}"
+										oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'panelconfirma2\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+										id="id_guardarcommand"
+										reRender="id_panelDatosInfractor, panelDosajeEtilicoId" /></td>
+								<td><a4j:commandButton value="Limpiar" style="width:100px;"
+										action="#{registroDosajeEtilicoManaged.limpiar}"
+										oncomplete="focusInputdc()"
+										reRender="panelDosajeEtilicoId,id_panelDatosInfractor">
+									</a4j:commandButton></td>
+							</tr>
+						</table>
+					</rich:panel></td>
+			</tr>
+		</table>
+	</h:form>
+	<rich:modalPanel id="id_panelBuscarPersonaPapeletas" autosized="true"
+		onshow="autofocus('frmBuscarPersonaPapeletas');focusInputCodigoPersona()"
+		width="800" height="500">
+		<f:facet name="header">#{msg['pa.buscarpersonas']}</f:facet>
+
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="hideIconAddPerson" styleClass="hidelink" />
+				<rich:componentControl for="id_panelBuscarPersonaPapeletas"
+					attachTo="hideIconAddPerson" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/papeletas/buscarpersonapapeletas.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+	<rich:modalPanel id="modalActualizaPersona" autosized="true"
+		width="600" height="180">
+		<f:facet name="header">#{msg['rv.registrarpersona']}</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideIconRP"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalActualizaPersona"
+					attachTo="hideIconRP" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<a4j:include
+			viewId="/sisat/papeletas/actualizapersonadosajeetilico.xhtml" />
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelconfirma2" autosized="true" width="300">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi2"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirma" attachTo="hlpconfi2"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:panelGrid columns="1">
+			<a4j:outputPanel ajaxRendered="true">
+				<h:panelGrid columns="2">
+					<h:outputText id="succ2" style="font-weight:bold;color:green"
+						value="El registro se realizó satisfactoriamente" />
+				</h:panelGrid>
+			</a4j:outputPanel>
+			<h:panelGrid columns="2">
+				<a4j:commandButton value="Aceptar" style="width:100px;"
+					onclick="focusInputdc();#{rich:component('panelconfirma2')}.hide();return false;" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</rich:modalPanel>
+
+</ui:composition>

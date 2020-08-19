@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<h:form id="formDescargoPredial">
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		<a4j:loadScript src="/js/sisat.js" />
+		<style type="text/css">
+			.extdt-empty-cell {
+				width: 0;
+			}
+			th.extdt-empty-cell {
+				width: 0;
+			}
+			.extdt-hsep {
+				display: none;
+			}
+		</style>
+	
+		<table align="center" border="0" width="100%" cellpadding="2" cellspacing="2">
+			<tr>
+				<td width="50%"> 
+					<rich:panel style="width:100%; height: 150px;" id="id_paneldatosdescargo">
+						<f:facet name="header">
+							<h:outputText style="font-weight:bold" value="#{msg['rp.titulodatosdescargo']}" />
+						</f:facet>
+						
+						<table border="0" width="100%" >
+							<tr>
+								<td><h:outputLabel value="#{msg['rp.fechadeclaracion']} :" /></td>
+								<td>
+									<h:inputText value="#{descargoPredialManaged.fechaDeclaracion}" disabled="true" style="width:60px;" >
+									</h:inputText>
+								</td>
+								
+								<td>
+									<h:outputLabel value="#{msg['rp.fechadescargo']} :" >
+										<span style="color: red;">*</span>
+									</h:outputLabel>
+								</td>
+								<td>
+									<rich:calendar locale="en/US"
+										datePattern="dd/MM/yyyy" enableManualInput="true"
+										inputClass="maskDate" required="true"
+										id="id_fechadescargo"
+										value="#{descargoPredialManaged.fechaDescargo}"
+										requiredMessage="Indique la fecha de descargo"
+										inputStyle="width:60px">
+									</rich:calendar> <rich:jQuery id="maskedo4" selector=".maskDate" query="mask('99/99/9999')" timing="onload" />
+								</td>
+							</tr>
+							<tr>
+								<td width="20%">
+									<h:outputLabel value="Tipo de descargo :" >
+										<span style="color: red;">*</span>
+									</h:outputLabel>
+								</td>
+								<td width="30%">
+									<rich:comboBox value="#{descargoPredialManaged.tipoDescargo}"
+										defaultLabel="#{msg['param.defaultlabelcombo']}" width="120"
+										onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+										rendered="#{!descargoPredialManaged.descargado}"
+										>
+ 										<!--<f:selectItem itemValue="Descargo pendiente" itemLabel="2" /> -->
+ 										<f:selectItem itemValue="Descargo definitivo" itemLabel="1" />
+									</rich:comboBox>
+								</td>
+								<td width="20%">
+									<h:outputLabel value="#{msg['rp.motivodescargo']} :" >
+										<span style="color: red;">*</span>
+									</h:outputLabel>
+								</td>
+								<td width="30%">
+									<rich:comboBox value="#{descargoPredialManaged.motivoDescargo}"
+										defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+										onkeypress="return showListCbo(this,event);" onblur="validaInputCbo(this)"
+										rendered="#{!descargoPredialManaged.descargado}"
+										>
+										<f:selectItems id="itmMotivoDescargo" value="#{descargoPredialManaged.lstMotivoDescargo}" />
+									</rich:comboBox>
+								</td>
+							</tr>
+							
+							<tr>
+								<td>
+									<h:outputLabel value="#{msg['rp.glosa']} :" />
+								</td>
+								<td colspan="3">
+									 <h:inputTextarea value="#{descargoPredialManaged.glosa}" cols="60" rows="2" 
+									 disabled="#{descargoPredialManaged.descargado}"
+									 >
+									 </h:inputTextarea>
+								</td>
+							</tr>
+						</table>
+					</rich:panel>
+				</td>
+				
+				<td width="50%">
+					<rich:panel style="width:100%; height: 150px;" id="id_paneldatospredio">
+						<f:facet name="header">
+							<h:outputText style="font-weight:bold" value="#{msg['rp.titulodatospredio']}" />
+						</f:facet>
+						<table border="0" width="100%" >
+							<tr>
+								<td width="20%">
+									<h:outputLabel value="#{msg['rp.tipopredio']} :" />
+								</td>
+								<td width="30%" >
+									<h:inputText id="txtTipPred" value="#{descargoPredialManaged.tipoPredio=='U'?'Urbana':'Rural'}" disabled="true" style="width:100%;" />
+								</td>
+								<td width="20%"><h:outputLabel value="Código de predio :" /></td>
+								<td width="30%">
+									<h:inputText value="#{descargoPredialManaged.codigoPredio}" disabled="true" style="width:100%;"/>
+								</td>
+							</tr>
+							<tr>
+								<td><h:outputLabel value="#{msg['rp.direccion']} :" /></td>
+								<td colspan="3">
+									<h:inputText id="txtDirecPred" value="#{descargoPredialManaged.direccion}" disabled="true" style="width:100%;"/>
+								</td>
+							</tr>
+							<tr>
+								<td width="20%"><h:outputLabel value="#{msg['rp.condicionpropiedad']} :" /></td>
+								<td >
+									<h:inputText id="txtCondProp" value="#{descargoPredialManaged.condicionPropiedad}" disabled="true" style="width:100%;"/>
+								</td>
+								<td width="80%" colspan="3">
+								</td>
+							</tr>
+							
+							<tr>
+								<td width="20%"><h:outputLabel value="Area Terreno (m2/has):" /></td>
+								<td >
+								<!-- caso hectareas -->
+									<h:inputText value="#{descargoPredialManaged.area}" disabled="true" style="width:100%;" rendered="#{descargoPredialManaged.tipoPredio!='U'}">
+										<f:convertNumber  pattern="#0.000000"/>
+									</h:inputText>
+								<!-- caso urban -->	
+									<h:inputText value="#{descargoPredialManaged.area}" disabled="true" style="width:100%;" rendered="#{descargoPredialManaged.tipoPredio=='U'}">
+										<f:convertNumber  pattern="#0.00"/>
+									</h:inputText>	
+								</td>
+								
+								<td width="20%">
+									<h:outputLabel value="#{msg['rp.porcentajepropiedad']} :" >
+									</h:outputLabel>
+								</td>
+								<td >
+									 <h:inputText maxlength="3" value="#{descargoPredialManaged.porcentajePropiedad}"
+										 style=" width:100%;" id="id_porcentajepropiedad" 
+										 disabled="true">
+										 <f:convertNumber  pattern="#0.00" />
+									</h:inputText>
+								</td>
+							</tr>
+						</table>
+					</rich:panel>
+				</td>
+			</tr>
+			
+			<tr>
+				<td colspan="2">
+						<rich:panel id="pnlTransferente" style="height:240px; width: 100%;">
+							<f:facet name="header">#{msg['rv.titulodatosadquiriente']}</f:facet>
+							<table width="100%">
+								<tbody>
+									<tr>
+										<td width="180">
+											<h:outputLabel value="#{msg['rv.notaria']} :" >
+												<span style="color: red;">*</span>
+											</h:outputLabel>
+										</td>
+										<td><rich:comboBox
+												value="#{descargoPredialManaged.selectedNotaria}"
+												defaultLabel="#{msg['param.defaultlabelcombo']}" width="300"
+												onkeypress="return showListCbo(this,event)"
+												onblur="validaInputCbo(this)"
+												rendered="#{!descargoPredialManaged.descargado}"
+												>
+												<f:selectItems value="#{descargoPredialManaged.lstNotarias}"></f:selectItems>
+											</rich:comboBox>
+											<h:inputText id="txtSelNotaria" value="#{descargoPredialManaged.selectedNotaria}" rendered="#{descargoPredialManaged.descargado}"  readonly="true" style="width:10%;" />
+										</td>
+									</tr>
+									<tr>
+										<td width="180">
+											<h:outputLabel value="Forma adquisición :" >
+												<span style="color: red;">*</span>
+											</h:outputLabel>
+										</td>
+										<td>
+											<h:selectOneRadio
+												id="Radio" border="0"
+												value="#{descargoPredialManaged.formaAdquisicion}"
+												immediate="true"												
+												styleclass="radio" >
+												<f:selectItem id="porc" itemValue="P" 
+													itemLabel="Porc. propiedad (%)" />
+												<f:selectItem id="met" itemValue="M"
+													itemLabel="Area terreno (m2/has)" />
+													<a4j:support event="onchange" reRender="tblTransferentes" bypassUpdates="false" ajaxSingle="true"></a4j:support>
+											</h:selectOneRadio>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							
+							<a4j:commandButton
+								actionListener="#{descargoPredialManaged.agregarAdquiriente}"
+								value="Buscar adquiriente"
+								oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'modalSelecTransferente\')'}"
+								disabled="#{descargoPredialManaged.descargado}">
+							</a4j:commandButton>
+							
+							<span style="color: red;">*</span>
+							
+							<a4j:commandButton action="#{descargoPredialManaged.nuevoAdquiriente}" immediate="true"
+								value="Agregar adquiriente" reRender="id_panelprincipalregistropersona"
+								oncomplete="#{facesContext.maximumSeverity != null ? 'Richfaces.showModalPanel(\'mpErrors\')' : 'Richfaces.showModalPanel(\'modalRegistroPersonaBasico\')'}"
+								>
+								<f:param name="destinoRefresh" value="tblTransferentes" />
+							</a4j:commandButton>
+							
+							<rich:extendedDataTable id="tblTransferentes"
+								value="#{descargoPredialManaged.lstTransferentes}" var="record"
+								width="100%" height="120px" sortMode="single" selectionMode="single"
+								enableContextMenu="false"
+								noDataLabel="#{msg['rv.noexistentransferentes']}">
+				
+								<rich:column width="10%">
+									<f:facet name="header">#{msg['gn.id']}</f:facet>
+									<h:outputText value="#{record.personaId}" />
+								</rich:column>
+				
+								<rich:column width="20%">
+									<f:facet name="header">#{msg['gn.tipodoc']}</f:facet>
+									<h:outputText value="#{record.tipoDocIdentidad}" />
+								</rich:column>
+				
+								<rich:column width="10%">
+									<f:facet name="header">#{msg['gn.nrodoc']}</f:facet>
+									<h:outputText value="#{record.nroDocuIdentidad}" />
+								</rich:column>
+								<rich:column width="45%">
+									<f:facet name="header">#{msg['gn.apenomorazonsocial']}</f:facet>
+									<h:outputText	value="#{record.apellidosNombres} #{record.apellidosNombres != null ? record.razonSocial != null ? ' - ': '' : ''} #{record.razonSocial}" />
+								</rich:column>
+								<rich:column width="10%">
+									<f:facet name="header">Cant. Adquisición</f:facet>
+									 <h:inputText id="porcentajepropiedad" required="true" style="width:80%;" value="#{record.porcentaje}" requiredMessage="Indique el porcentaje de la propiedad"
+									 	onkeypress="return numbersonly(this.value,event)"
+									 	rendered="#{!descargoPredialManaged.descargado and descargoPredialManaged.formaAdquisicion == 'P'}">
+					                </h:inputText>
+					                <h:outputText value="#{record.porcentaje}" rendered="#{descargoPredialManaged.descargado and descargoPredialManaged.formaAdquisicion == 'P'} " />
+					                
+					                <h:inputText id="areapropiedad" required="true" style="width:80%;" value="#{record.porcentaje}" requiredMessage="Indique área de la propiedad"
+									 	onkeypress="return numbersonly4dec(this.value,event)"
+									 	rendered="#{!descargoPredialManaged.descargado and descargoPredialManaged.formaAdquisicion == 'M'}">
+					                </h:inputText>
+					                <h:outputText value="#{record.porcentaje}" rendered="#{descargoPredialManaged.descargado and descargoPredialManaged.formaAdquisicion == 'M'} " />
+								</rich:column>
+								<rich:column width="5%" style="text-align:center" >
+									<a4j:commandLink ajaxSingle="true"
+										id="id_linkdeldocanexos"
+										oncomplete="#{rich:component('deletePanelUsosPredio')}.show()">
+										<h:graphicImage value="/images/modal/delete.gif" style="border:0" />
+										<f:setPropertyActionListener value="#{record}" target="#{descargoPredialManaged.transferente}" id="r48" />
+									</a4j:commandLink>
+								</rich:column>
+								
+							</rich:extendedDataTable>
+						</rich:panel>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="2">		
+						<rich:panel id="pnlAnexos" style="height: 220px; width: 100%;">
+							<f:facet name="header">#{msg['rv.tituloanexos']}</f:facet>
+							<a4j:commandButton value="#{msg['rv.agregardocs']}"
+								actionListener="#{descargoPredialManaged.mostrarPanelDocSustent}"
+								immediate="true"
+								oncomplete="Richfaces.showModalPanel('modalSelecDocAnexos')"
+								reRender="tblAnexos,tblDocSusnten"
+								disabled="#{descargoPredialManaged.descargado}"
+								>
+							</a4j:commandButton>
+							
+							<span style="color: red;">*</span>	
+							<rich:extendedDataTable id="tblAnexos"
+								value="#{descargoPredialManaged.lstAnexos}" var="record"
+								width="100%" height="150px" sortMode="single" selectionMode="single"
+								enableContextMenu="false" noDataLabel="#{msg['rv.noexistenanexos']}">
+				
+								<rich:column width="40" style="text-align: center">
+									<a4j:commandButton title="#{msg['gn.eliminar']}"
+										actionListener="#{descargoPredialManaged.eliminarAnexoDeLista}"
+										image="/images/remove.png" reRender="tblAnexos"
+										style="width: 16px; height: 16px;"
+										rendered="#{!descargoPredialManaged.descargado}"
+										>
+									</a4j:commandButton>
+								</rich:column>
+				
+								<rich:column width="50%">
+									<f:facet name="header">#{msg['gn.descripciondoc']}</f:facet>
+									<h:outputText value="#{record.descripcionDoc}" />
+								</rich:column>
+				
+								<rich:column width="20%">
+									<f:facet name="header">#{msg['rp.glosa']}</f:facet>
+									<h:inputText value="#{record.glosaDoc}"
+										styleClass="textUpperCase" style="width: 100%"
+										rendered="#{!descargoPredialManaged.descargado}"
+									>
+										<f:converter converterId="uppeCaseConverter"/>
+									</h:inputText>
+									<h:outputText value="#{record.glosaDoc}" rendered="#{descargoPredialManaged.descargado}" />
+								</rich:column>
+				
+								<rich:column width="20%">
+									<f:facet name="header">#{msg['gn.docadjunto']}</f:facet>
+									<h:outputText value="#{record.nomDocAdjunto}" />
+								</rich:column>
+							</rich:extendedDataTable>
+						</rich:panel>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div style="width: 100%; text-align: center; margin-top: 20px;">
+						
+							<a4j:commandButton value="#{msg['gn.presentacionpreliminar']}"
+								actionListener="#{descargoPredialManaged.verPreview}"
+								oncomplete="#{facesContext.maximumSeverity== null ? 'openWindow(\'../sisat/predial/preliminardescargopred.jsf\')' : 'Richfaces.showModalPanel(\'mpErrors\')' }"
+								reRender="pnlPreliminar,panelconfirma,mpErrors"
+								style="width: 150px;"
+								rendered="#{!descargoPredialManaged.descargado}"
+							/>
+								
+							<a4j:commandButton value="#{msg['gn.cancelar']}"
+								action="#{sessionManaged.sendRedirectPrincipal}" immediate="true"
+								style="width: 150px; margin-left:2px;">
+								<f:setPropertyActionListener value="/sisat/predial/listadjpredio.xhtml" target="#{sessionManaged.page}" />
+							</a4j:commandButton>
+							
+						</div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="2">
+						<div style="width: 100%; text-align: center; margin-top: 20px;">
+							<h:panelGroup id="pnlPreliminar">
+								<table style="margin: 0 auto;" >
+									<tbody>
+										<tr>
+											<td>
+												<h:outputLabel value=" #{msg['gn.avisocreardeclaj']}"
+													rendered="#{descargoPredialManaged.estadoDecla=='2'}" />
+											</td>
+											<td>
+												<h:selectBooleanCheckbox
+													value="#{descargoPredialManaged.datosCorrectos}"
+													rendered="#{descargoPredialManaged.estadoDecla=='2'}"
+													disabled="#{descargoPredialManaged.descargado}"
+													>
+													<a4j:support event="onchange"
+														actionListener="#{descargoPredialManaged.changeDatosCorrectos}"
+														reRender="pnlPreliminar" />
+												</h:selectBooleanCheckbox>
+											</td>
+											<td>
+												<a4j:commandButton id="btnGenerarDjV"
+													rendered="#{(descargoPredialManaged.estadoDecla=='2') and (descargoPredialManaged.datosCorrectos)}"
+													value="#{msg['gn.generardj']}"
+													action="#{descargoPredialManaged.generarDJ}"
+													oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');Richfaces.showModalPanel(\'panelconfirmageneradj\'); ' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+													style="width:100px;"
+													immediate="true"
+													reRender="pnlPreliminar"
+													disabled="#{descargoPredialManaged.descargado}"
+													status="ajaxStatus"
+												/>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</h:panelGroup>
+						</div>
+				</td>
+			</tr>
+
+		</table>
+	</h:form>
+	
+	<rich:modalPanel id="panelconfirmageneradj" autosized="true" width="300">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfigdj"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirmageneradj"
+					attachTo="hlpconfigdj" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<a4j:outputPanel ajaxRendered="true">
+					<h:panelGrid columns="2">
+						<h:outputText id="succgdj" style="font-weight:bold;color:blue"
+							value="Se registro la Declaracion Jurada Nro #{descargoPredialManaged.djId} satisfactoriamente" />
+					</h:panelGrid>
+				</a4j:outputPanel>
+				<h:panelGrid columns="2">
+					<a4j:commandButton value=" Aceptar " style="width:100px;"
+						action="#{sessionManaged.sendRedirectPrincipal}"
+						immediate="true" >
+						<f:setPropertyActionListener
+								value="/sisat/predial/listadjpredio.xhtml"
+								target="#{sessionManaged.page}" />
+					</a4j:commandButton>	
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>	
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="modalRegistroPersonaBasico" autosized="true"
+		width="800" height="460">
+		<f:facet name="header">Agregar Persona</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidePersona"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalRegistroPersonaBasico"
+					attachTo="hidePersona" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/persona/registropersonabasico.xhtml"/>
+		</h:panelGrid>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="modalSelecTransferente" autosized="true"
+		width="800" height="500">
+		<f:facet name="header">#{msg['rv.agregaradquirientes']}</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hideIconST"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalSelecTransferente"
+					attachTo="hideIconST" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:panelGrid width="100%">
+			<a4j:include viewId="/sisat/vehicular/buscarpersona.xhtml" />
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="deletePanelUsosPredio" autosized="true" width="200">
+		<f:facet name="header">
+			<h:outputText value="Confirmacion" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imagecloseusospredio" styleClass="hidelink" />
+				<rich:componentControl for="deletePanelUsosPredio"
+					attachTo="id_imagecloseusospredio" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid columns="1">
+				<h:outputText value="Desea eliminar registro actual ?" />
+				<h:panelGrid columns="2">
+					<a4j:commandButton value="Aceptar"
+						action="#{descargoPredialManaged.delete}" reRender="tblTransferentes"
+						immediate="true"
+						oncomplete="#{rich:component('deletePanelUsosPredio')}.hide();" />
+					<a4j:commandButton value="Cancelar" onclick="#{rich:component('deletePanelUsosPredio')}.hide();return false;" />
+				</h:panelGrid>
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+	
+	<rich:modalPanel id="modalSelecDocAnexos" autosized="true" width="800" height="600">
+		<f:facet name="header">
+			<h:outputText value="#{msg['rv.tituloanexos']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="gpSelecDocAnexos" styleClass="hidelink" />
+				<rich:componentControl for="modalSelecDocAnexos"
+					attachTo="gpSelecDocAnexos" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:extendedDataTable id="tblDocSusnten"
+				value="#{descargoPredialManaged.lstDocSusten}" var="item"
+				width="780" height="550px">
+				<rich:column width="30">
+					<h:selectBooleanCheckbox value="#{item.selected}" />
+				</rich:column>
+				<rich:column width="350">
+					<f:facet name="header">
+						<h:outputLabel value="#{msg['gn.descripciondoc']}" />
+					</f:facet>
+					<h:outputText value="#{item.descripcion}" />
+				</rich:column>
+				<rich:column width="180">
+					<f:facet name="header">
+						<h:outputLabel value="#{msg['rv.glosa']}" />
+					</f:facet>
+					<h:inputText value="#{item.glosa}" styleClass="textUpperCase"
+						style="width: 100%" >
+							<f:converter converterId="uppeCaseConverter"/>
+						</h:inputText>
+				</rich:column>
+				<rich:column width="200">
+					<f:facet name="header">
+						<h:outputLabel value="#{msg['gn.docadjunto']}" />
+					</f:facet>
+				</rich:column>
+			</rich:extendedDataTable>
+			<div style="width: 100%; text-align: center; margin-top: 10px;">
+				<a4j:commandButton value="#{msg['gn.aceptar']}"
+					actionListener="#{descargoPredialManaged.agregarAnexos}"
+					oncomplete="Richfaces.hideModalPanel('modalSelecDocAnexos')"
+					reRender="tblAnexos"></a4j:commandButton>
+				
+				<a4j:commandButton value="#{msg['gn.cancelar']}" immediate="true"
+					onclick="Richfaces.hideModalPanel('modalSelecDocAnexos')"
+					style="margin-left:4px;"></a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+	
+</ui:composition>

@@ -1,0 +1,409 @@
+package com.sat.sisat.caja.managed;
+
+import java.io.ByteArrayOutputStream;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
+import net.sf.jasperreports.engine.export.JRXlsExporterParameter;
+
+import com.sat.sisat.caja.business.CajaBoRemote;
+import com.sat.sisat.caja.dto.CajeroDTO;
+import com.sat.sisat.caja.dto.CjReciboPagoEntity;
+import com.sat.sisat.caja.dto.consultaRecibojava;
+import com.sat.sisat.common.util.BaseManaged;
+import com.sat.sisat.common.util.DateUtil;
+import com.sat.sisat.common.util.SATWEBParameterFactory;
+import com.sat.sisat.common.util.WebMessages;
+import com.sat.sisat.exception.SisatException;
+import com.sat.sisat.persistence.CrudServiceBean;
+
+
+
+@ManagedBean
+@ViewScoped
+public class RecibosPagoManaged extends BaseManaged {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8244061841067591867L;
+
+	@EJB
+	CajaBoRemote cajaBo;
+	
+	public String nro_recibo;
+	private List<consultaRecibojava> listaConsultaRecibo = new ArrayList<consultaRecibojava>();
+	
+
+	public Integer periodo_recibo=2020;
+	public List<SelectItem> periodosRecibo= new ArrayList<SelectItem>();
+	
+	
+
+	private Date fechaInicio = Calendar.getInstance().getTime();
+
+	private Date fechaFin = Calendar.getInstance().getTime();
+
+	private List<CajeroDTO> listaCajeros;
+	
+	private String nroRecibo;
+	
+	private List<CjReciboPagoEntity> lstOperaciones = new ArrayList<CjReciboPagoEntity>();
+	
+	private Integer reciboId;
+	
+	private Integer cajeroId;
+	
+	private String nroReciboDetDscto;
+	
+	private String observacion;
+	private String usuarioSupervisor;
+	private String passwordSupervisor;
+	
+	@PostConstruct
+	public void init() {	
+		
+		
+		periodosRecibo.add(new SelectItem( 2020 , "2020"));
+		periodosRecibo.add(new SelectItem( 2019 , "2019"));
+		periodosRecibo.add(new SelectItem( 2018 , "2018"));
+		periodosRecibo.add(new SelectItem( 2017 , "2017"));
+		periodosRecibo.add(new SelectItem( 2016 , "2016"));
+		periodosRecibo.add(new SelectItem( 2015 , "2015"));	
+		
+		
+		
+	}
+
+//	public void buscar() {
+//
+//		try {
+//			listaCajeros = cajaBo.obtenerCajeros(fechaInicio, fechaFin);
+//		} catch (SisatException e) {
+//
+//			addErrorMessage(e.getMessage());
+//		}
+//
+//	}
+
+	public void buscar() {
+		try {		
+			
+			//int cajero_id = getSessionManaged().getUsuarioLogIn().getUsuarioId();
+			
+			this.setLstOperaciones(cajaBo.obtenerListadoOperaciones(0, DateUtil.moverHoraAlInicioDelDia(fechaInicio), DateUtil.moverHoraAlFinalDelDia(fechaFin)));
+		} catch (Exception ex) {						
+			WebMessages.messageError("No ha sido posible recuperar la lista de operaciones.".concat(ex.getMessage()));
+		}
+	}
+	
+	public void previewPartidas() {
+
+	}
+	
+	public void consultarRecibo() throws SisatException
+	{
+		this.setListaConsultaRecibo(cajaBo.consultarRecibo(nro_recibo, this.periodo_recibo));
+		
+	}
+	
+
+	public void verRecibo(){
+		/** Direccionando segun el tipo de recibo a ser impreso */ 	
+		getSessionManaged().getSessionMap().put("caja.imprimirecibo.reciboId", reciboId);		
+	}	
+	
+	
+	public void buscarRecibo()
+	{
+		
+	}
+	
+	public void imprimirDetalleDsctos(){
+		java.sql.Connection connection=null;
+		try {
+			CrudServiceBean connj=CrudServiceBean.getInstance();
+			connection=connj.connectJasper();
+//			String path_context = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+//			String path_report = path_context + "/sisat/reportes/";
+//			String path_imagen = path_context + "/sisat/reportes/imagen/";
+			HashMap<String, Object> parameters = new HashMap<String, Object>();
+			//nroRecibo = lstOperaciones.get(0).getNroRecibo() ;
+			parameters.put("recibo_id", nroReciboDetDscto);		
+			//String path = SATWEBParameterFactory.getPathReporteImagenes();
+			parameters.put("ruta_image", SATWEBParameterFactory.getPathReporteImagenes());
+			
+//			parameters.put("ruta_image",path_imagen);
+			JasperPrint jasperPrint = JasperFillManager.fillReport((SATWEBParameterFactory.getPathReporte() + "stp_prueba_detdsctos.jasper"),parameters,connection);
+			
+			ByteArrayOutputStream output = new ByteArrayOutputStream();			
+			
+			 JRXlsExporter exporterXls = new JRXlsExporter ();  
+			    exporterXls.setParameter(JRXlsExporterParameter.JASPER_PRINT, jasperPrint);  
+			    exporterXls.setParameter(JRXlsExporterParameter.IGNORE_PAGE_MARGINS, true);  
+			    exporterXls.setParameter(JRXlsExporterParameter.IS_COLLAPSE_ROW_SPAN, true);  
+			    exporterXls.setParameter(JRXlsExporterParameter.IS_WHITE_PAGE_BACKGROUND, false);  
+			    exporterXls.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_COLUMNS, true);  
+			    exporterXls.setParameter(JRXlsExporterParameter.IS_REMOVE_EMPTY_SPACE_BETWEEN_ROWS, true);  
+			    exporterXls.setParameter(JRXlsExporterParameter.MAXIMUM_ROWS_PER_SHEET, 20000); 
+			    exporterXls.setParameter(JRXlsExporterParameter.IS_DETECT_CELL_TYPE, true);  
+			    exporterXls.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, "detalle_dsctos_" +nroReciboDetDscto+ ".xls");  
+			    exporterXls.setParameter(JRXlsExporterParameter.OUTPUT_STREAM, output);  
+			    exporterXls.exportReport();   
+
+
+			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response.setContentType("application/vnd.ms-excel");  
+		    response.setHeader("Content-Disposition", "attachment;filename=" + "detalle_dsctos_" + nroReciboDetDscto + ".xls");  
+			response.setContentLength(output.size());
+			ServletOutputStream servletOutputStream = response.getOutputStream();
+			servletOutputStream.write(output.toByteArray(), 0, output.size());
+			servletOutputStream.flush();
+			servletOutputStream.close();
+			FacesContext.getCurrentInstance().responseComplete();
+			
+		} catch (Exception jre) {
+			jre.printStackTrace();
+		}finally{
+	    	 try{
+	    		 if(connection!=null){
+	    			 connection.close();
+	    			 connection=null;
+	    		 }
+	    	 }catch(Exception e){}
+	     }
+	}	
+	
+	public void imprimirDetalleDsctosPDF()
+	{
+		java.sql.Connection connection=null;
+		try {
+			CrudServiceBean connj=CrudServiceBean.getInstance();
+			connection=connj.connectJasper();			
+			
+			HashMap<String, Object> parameters = new HashMap<String, Object>();
+				
+			
+			Calendar cal = Calendar.getInstance();				
+			
+			parameters.put("recibo_id", nroReciboDetDscto);
+			//parameters.put("usuarioIdAsString",this.getUser().getUsuario());
+//			parameters.put("SUBREPORT_DIR", SATWEBParameterFactory.getPathReporte());
+			parameters.put("ruta_image", SATWEBParameterFactory.getPathReporteImagenes());
+			parameters.put("REPORT_LOCALE", new Locale("en", "ENGLISH"));
+			
+			SimpleDateFormat s = new SimpleDateFormat("dd.MM.yyyy.HH.mm.ss");
+			String nombre = "detalle_dscto_"+nroReciboDetDscto;
+			
+			JasperPrint jasperPrint = JasperFillManager
+					.fillReport((SATWEBParameterFactory.getPathReporte() + "stp_prueba_detdsctos.jasper"),
+							parameters,
+							connection);
+
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+			JasperExportManager.exportReportToPdfStream(jasperPrint, output);
+
+			HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext()
+					.getResponse();
+			response.setContentType("application/pdf");
+			response.addHeader("Content-Disposition", "attachment;filename=".concat(nombre).concat(".pdf"));
+			response.setContentLength(output.size());
+			ServletOutputStream servletOutputStream = response.getOutputStream();
+			servletOutputStream.write(output.toByteArray(), 0, output.size());
+			servletOutputStream.flush();
+			servletOutputStream.close();
+			FacesContext.getCurrentInstance().responseComplete();
+			
+		} catch (Exception jre) {
+			jre.printStackTrace();
+			WebMessages.messageFatal(jre);
+		}finally{
+	    	 try{
+	    		 if(connection!=null){
+	    			 connection.close();
+	    			 connection=null;
+	    		 }
+	    	 }catch(Exception e){}
+	     }
+	}
+	
+	public void inicioExtorno(){
+		limpiar();	
+		//reciboId = lstOperaciones.get(0).getReciboId() ;
+	}
+	
+	public void limpiar(){
+		this.observacion="";
+		this.usuarioSupervisor="";
+		this.passwordSupervisor="";
+	}
+	
+	
+	public void extornarRecibo(){
+		 try 
+		 {
+			 //Verificar Usuario y password del Supervisor para efectuar el extorno
+			 int isSupervisorValido = cajaBo.buscarSupervisor(usuarioSupervisor, passwordSupervisor);
+			 if(isSupervisorValido == 1 ){
+				//contatenar observacion con supervisor.
+				 observacion = observacion + ". Supervisor: "+usuarioSupervisor;
+				 //Extornar
+				 cajaBo.extornarRecibo(reciboId, observacion, getSessionManaged().getUsuarioLogIn().getUsuarioId(), getSessionManaged().getTerminalLogIn());
+				 addInfoMessage("Se extorno el recibo correctamente");
+				 buscar();
+			 }else{				 			
+				 addInfoMessage("Supervisor no Valido. No se ha extornado el recibo");	
+			 }			 
+		 } catch (SisatException ex) {
+				addErrorMessage(ex.getMessage());
+		 } catch (Exception ex) {
+				String msg = "No se ha podido extornar el recibo";
+				System.out.println(msg + ex);
+				addErrorMessage(msg);
+		 }
+	}
+	
+	public Date getFechaInicio() {
+		return fechaInicio;
+	}
+
+	public Date getFechaFin() {
+		return fechaFin;
+	}
+
+	public void setFechaInicio(Date fechaInicio) {
+		this.fechaInicio = fechaInicio;
+	}
+
+	public void setFechaFin(Date fechaFin) {
+		this.fechaFin = fechaFin;
+	}
+
+	public List<CajeroDTO> getListaCajeros() {
+		return listaCajeros;
+	}
+
+	public void setListaCajeros(List<CajeroDTO> listaCajeros) {
+		this.listaCajeros = listaCajeros;
+	}
+
+	public String getNroRecibo() {
+		return nroRecibo;
+	}
+
+	public void setNroRecibo(String nroRecibo) {
+		this.nroRecibo = nroRecibo;
+	}
+
+	public List<CjReciboPagoEntity> getLstOperaciones() {
+		return lstOperaciones;
+	}
+
+	public void setLstOperaciones(List<CjReciboPagoEntity> lstOperaciones) {
+		this.lstOperaciones = lstOperaciones;
+	}
+
+	public Integer getReciboId() {
+		return reciboId;
+	}
+
+	public void setReciboId(Integer reciboId) {
+		this.reciboId = reciboId;
+	}
+
+	public Integer getCajeroId() {
+		return cajeroId;
+	}
+
+	public void setCajeroId(Integer cajeroId) {
+		this.cajeroId = cajeroId;
+	}
+
+	public String getObservacion() {
+		return observacion;
+	}
+
+	public void setObservacion(String observacion) {
+		this.observacion = observacion;
+	}
+
+	public String getUsuarioSupervisor() {
+		return usuarioSupervisor;
+	}
+
+	public void setUsuarioSupervisor(String usuarioSupervisor) {
+		this.usuarioSupervisor = usuarioSupervisor;
+	}
+
+	public String getNroReciboDetDscto() {
+		return nroReciboDetDscto;
+	}
+
+	public void setNroReciboDetDscto(String nroReciboDetDscto) {
+		this.nroReciboDetDscto = nroReciboDetDscto;
+	}
+
+	public String getPasswordSupervisor() {
+		return passwordSupervisor;
+	}
+
+	public void setPasswordSupervisor(String passwordSupervisor) {
+		this.passwordSupervisor = passwordSupervisor;
+	}
+	
+	public String getNro_recibo() {
+		return nro_recibo;
+	}
+
+	public void setNro_recibo(String nro_recibo) {
+		this.nro_recibo = nro_recibo;
+	}
+
+	public Integer getPeriodo_recibo() {
+		return periodo_recibo;
+	}
+
+	public void setPeriodo_recibo(Integer periodo_recibo) {
+		this.periodo_recibo = periodo_recibo;
+	}
+
+	public List<SelectItem> getPeriodosRecibo() {
+		return periodosRecibo;
+	}
+
+	public void setPeriodosRecibo(List<SelectItem> periodosRecibo) {
+		this.periodosRecibo = periodosRecibo;
+	}
+
+	public List<consultaRecibojava> getListaConsultaRecibo() {
+		return listaConsultaRecibo;
+	}
+
+	public void setListaConsultaRecibo(List<consultaRecibojava> listaConsultaRecibo) {
+		this.listaConsultaRecibo = listaConsultaRecibo;
+	}
+
+	
+
+}

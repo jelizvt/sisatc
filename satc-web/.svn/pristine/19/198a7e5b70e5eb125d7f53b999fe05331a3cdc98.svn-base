@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<a4j:loadScript src="/js/sisat.js" />
+	<a4j:loadScript src="/js/jquery-1.7.1.js" />
+	<rich:panel id="pnlBuscaVehiculo" style="min-width: 1000px;">
+		<f:facet name="header">
+			#{msg['rv.titulonuevadjv']}	
+		</f:facet>
+		<h:form id="frmBuscaVehiculo" >
+			<h:panelGroup>
+				<h:outputLabel value="#{msg['rv.placa']}: ">
+					<span style="color: red;">*</span>
+				</h:outputLabel>
+				<h:inputText id="txtPlacaBusc" value="#{nuevadjBuscaVehiculoManaged.placaBuscar}" maxlength="15" required="true"
+					requiredMessage="Placa: Es un campo obligatorio." onkeypress="focusPressEnter(event,'frmBuscaVehiculo:idBtnBuscarVehiculo')"
+					styleClass="textUpperCase">
+					<f:converter converterId="uppeCaseConverter" />
+				</h:inputText>
+				<h:outputLabel value="#{msg['rv.nromotor']}: " style="padding-left:10px;">
+				</h:outputLabel>
+				<h:inputText id="txtMotorBusc" value="#{nuevadjBuscaVehiculoManaged.motorBuscar}" maxlength="40"
+					onkeypress="return validaPlacaMotor(event)" styleClass="textUpperCase">
+					<f:converter converterId="uppeCaseConverter" />
+				</h:inputText>
+				<a4j:commandButton id="idBtnBuscarVehiculo" value="#{msg['gn.buscar']}"
+					action="#{nuevadjBuscaVehiculoManaged.buscarVehiculo}"
+					reRender="pnlBuscaVehiculo"
+					oncomplete="#{facesContext.maximumSeverity != null? 'Richfaces.showModalPanel(\'mpErrors\')' : ''}"
+					style="margin-left:10px; width: 100px;">
+				</a4j:commandButton>
+			</h:panelGroup>
+			<div style="height: 90px;">
+				<div style="margin-top: 40px; margin-bottom: 20px; color: blue;">
+					<h:outputText value="#{nuevadjBuscaVehiculoManaged.mensaje}" />
+					<br />
+					<h:panelGroup id="msgNroMotor"
+						rendered="#{nuevadjBuscaVehiculoManaged.renderedMsgMotor}">
+						<h:outputText
+							value="Pero MOTOR está registrado en otro vehículo, continuar si esta seguro"
+							style="color: #fdb05d; font-weight: bold;" />
+					</h:panelGroup>
+				</div>
+				<rich:dataTable value="#{nuevadjBuscaVehiculoManaged.lstExistentes}"
+					var="record"
+					rendered="#{not empty nuevadjBuscaVehiculoManaged.lstExistentes}">
+
+					<rich:column width="50">
+						<f:facet name="header">#{msg['rv.nroDJ']}</f:facet>
+						<h:outputText value="#{record.djvehicularNro}" />
+					</rich:column>
+
+					<rich:column width="100">
+						<f:facet name="header">#{msg['rv.placa']}</f:facet>
+						<h:outputText value="#{record.placa}" />
+					</rich:column>
+
+					<rich:column width="100">
+						<f:facet name="header">#{msg['rv.nromotor']}</f:facet>
+						<h:outputText value="#{record.nroMotor}" />
+					</rich:column>
+
+					<rich:column width="150">
+						<f:facet name="header">#{msg['rv.categoria']}</f:facet>
+						<h:outputText value="#{record.categoria}" />
+					</rich:column>
+
+					<rich:column width="100">
+						<f:facet name="header">#{msg['rv.marca']}</f:facet>
+						<h:outputText value="#{record.marca}" />
+					</rich:column>
+
+					<rich:column width="150">
+						<f:facet name="header">#{msg['rv.modelo']}</f:facet>
+						<h:outputText value="#{record.modelo}" />
+					</rich:column>
+
+					<rich:column width="40">
+						<f:facet name="header">#{msg['gn.sporcentaje']}</f:facet>
+						<h:outputText value="#{record.porcentajeDecla}" />
+					</rich:column>
+					
+					<rich:column width="150">
+						<f:facet name="header">#{msg['gn.codigoPersona']}</f:facet>
+						<h:outputText value="#{record.codPersona}" />
+					</rich:column>
+
+					<rich:column width="150">
+						<f:facet name="header">#{msg['gn.contribuyente']}</f:facet>
+						<h:outputText value="#{record.contribuyente}" />
+					</rich:column>
+
+					<rich:column width="80">
+						<f:facet name="header">#{msg['rv.motivo']}</f:facet>
+						<h:outputText value="#{record.motivoDecla}" />
+					</rich:column>
+
+				</rich:dataTable>
+			</div>
+			<div style="margin-top: 20px;">
+				<a4j:commandButton value="#{msg['gn.cancelar']}" immediate="true"
+					action="#{sessionManaged.sendRedirectPrincipal}"
+					style="width: 100px;">
+					<f:setPropertyActionListener
+						value="/sisat/vehicular/buscarvehicular.xhtml"
+						target="#{sessionManaged.page}" />
+				</a4j:commandButton>
+
+				<a4j:commandButton value="#{msg['gn.continuar']}"
+					reRender="panelinclude"
+					disabled="#{!nuevadjBuscaVehiculoManaged.renderedBotonContinuar}"
+					action="#{nuevadjBuscaVehiculoManaged.continuar}" immediate="true"
+					style="width: 100px; margin-left:10px;">
+					<f:setPropertyActionListener
+						value="/sisat/vehicular/nuevadjregistro.xhtml"
+						target="#{sessionManaged.page}" />
+				</a4j:commandButton>
+
+			</div>
+
+		</h:form>
+	</rich:panel>
+</ui:composition>

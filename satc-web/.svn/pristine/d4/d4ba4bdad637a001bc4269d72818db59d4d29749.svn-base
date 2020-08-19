@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" width="100%">
+	<h:form id="formBuscarDireccion">
+
+		<style type="">
+		.col1FormVia {
+			width: 100px;
+		}
+		
+		.col2FormVia {
+			width: 400px;
+		}
+		
+		.colform {
+			width: 485px;
+		}
+		
+		.colForm2 {
+			width: 200px;
+		}
+		</style>
+
+		<rich:panel id="id_panelbuscardireccion" width="970px">
+			<f:facet name="header">ADMINISTRACION DE DIRECCIONES</f:facet>
+			<a4j:region>
+				<a4j:region>
+					<h:panelGrid id="id_panelDatosBusqueda" columns="2"
+						columnClasses="colform colform" style="width:100%">
+
+						<h:panelGrid columns="2" columnClasses="col1FormVia, col2FormVia">
+							<h:outputLabel value="Tipo Via : ">
+								<span style="color: red;">*</span>
+							</h:outputLabel>
+							<rich:comboBox id="comboBoxTipoViaId"
+								valueChangeListener="#{administrarDireccionManaged.changeListenerComboBoxTipoVia}"
+								defaultLabel="Seleccione" enableManualInput="true"
+								required="true" requiredMessage="Ingrese tipo via" tabindex="1">
+								<f:selectItems value="#{administrarDireccionManaged.lsttipovia}" />
+								<a4j:support event="onselect"
+									reRender="comboBoxTipoViaId, comboBoxViaId, id_panelDatosBusqueda"
+									bypassUpdates="false" ajaxSingle="true"
+									oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+									focus="comboBoxViaId"></a4j:support>
+							</rich:comboBox>
+							<h:outputLabel value="Via : ">
+								<span style="color: red;">*</span>
+							</h:outputLabel>
+							<rich:comboBox id="comboBoxViaId"
+								valueChangeListener="#{administrarDireccionManaged.changeListenerComboBoxVia}"
+								defaultLabel="Seleccione"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								enableManualInput="true"
+								value="#{administrarDireccionManaged.comboBoxVia}"
+								required="true" requiredMessage="Ingrese via" tabindex="2">
+
+								<f:selectItems
+									value="#{administrarDireccionManaged.listSelectItemGnVia}" />
+								<a4j:support event="onselect" bypassUpdates="false"
+									ajaxSingle="true"
+									reRender="comboBoxViaId, id_panelDatosBusqueda"
+									oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+									focus="comboBoxSectorId"></a4j:support>
+							</rich:comboBox>
+						</h:panelGrid>
+
+						<h:panelGrid columns="2" columnClasses="col1FormVia, col2FormVia">
+							<h:outputLabel value="Sector : ">
+								<span style="color: red;">*</span>
+							</h:outputLabel>
+							<rich:comboBox id="comboBoxSectorId"
+								valueChangeListener="#{administrarDireccionManaged.changeListenerComboBoxSector}"
+								defaultLabel="Seleccione" enableManualInput="true"
+								required="true" requiredMessage="Ingrese sector" tabindex="3">
+								<f:selectItems value="#{administrarDireccionManaged.lstsector}" />
+								<a4j:support event="onselect"
+									reRender="comboBoxSectorId, comboBoxLugarId, id_panelDatosBusqueda"
+									bypassUpdates="false" ajaxSingle="true"
+									oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+									focus="comboBoxLugarId"></a4j:support>
+							</rich:comboBox>
+							<h:outputLabel value="Lugar :">
+								<span style="color: red;">*</span>
+							</h:outputLabel>
+							<rich:comboBox id="comboBoxLugarId"
+								valueChangeListener="#{administrarDireccionManaged.changeListenerComboBoxLugar}"
+								defaultLabel="Seleccione"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								enableManualInput="true"
+								value="#{administrarDireccionManaged.comboBoxLugar}"
+								required="true" requiredMessage="Ingrese lugar" tabindex="4">
+								<f:selectItems
+									value="#{administrarDireccionManaged.listSelectItemGnLugar}" />
+								<a4j:support event="onselect" bypassUpdates="false"
+									ajaxSingle="true"
+									reRender="comboBoxLugarId, id_panelDatosBusqueda"
+									oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+									focus="btnBuscar"></a4j:support>
+							</rich:comboBox>
+						</h:panelGrid>
+
+					</h:panelGrid>
+
+					<div style="width: 770px">
+						<h:panelGrid columns="1" columnClasses="columnButtonM"
+							width="100%">								
+							<a4j:commandButton id="btnBuscar" value="Buscar"
+								style="width:100px;"
+								action="#{administrarDireccionManaged.buscar}"
+								reRender="id_tableviasbv, tableDataScroller" status="ajaxStatus"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								tabindex="5" />
+
+						</h:panelGrid>
+					</div>
+
+				</a4j:region>
+				<rich:separator height="1px"></rich:separator>
+				<a4j:region>				
+					<div style="width:300px">
+						<h:panelGrid columns="3" columnClasses="col1FormVia,col1FormVia,columnButtonM"
+							width="100%">
+							<h:outputLabel value="Ubicacion ID :"/>							
+							
+							<h:inputText maxlength="10" size="10" style="width:95px"
+								value="#{administrarDireccionManaged.ubicacionId}"								
+								tabindex="6" />
+							
+							<a4j:commandButton id="btnBuscar2" value="Buscar"
+								style="width:100px;"
+								action="#{administrarDireccionManaged.buscar}"
+								reRender="id_tableviasbv, tableDataScroller"
+								status="ajaxStatus"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								tabindex="5" />
+
+						</h:panelGrid>
+					</div>
+				</a4j:region>
+				
+
+				<rich:separator height="1px"></rich:separator>
+
+				
+
+					<h:panelGrid id="panelGridDataUbicacion" columns="4">
+						<h:panelGrid columns="2" columnClasses="col1FormVia, col1FormVia">
+							<h:outputLabel value="Numero de Cuadra: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel>
+							<h:inputText maxlength="10" size="10" style="width:50px"
+								value="#{administrarDireccionManaged.currentItem.numeroCuadra}"
+								required="true" requiredMessage="Ingrese nro cuadra"
+								tabindex="6" />
+						</h:panelGrid>
+						<h:panelGrid id="panelGridComboBoxLado" columns="2"
+							columnClasses="col1FormVia, col1FormVia">
+							<h:outputLabel value="Lado de Cuadra: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel>
+							<rich:comboBox id="comboBoxLado"
+								value="#{administrarDireccionManaged.valueComboBoxLado}"
+								valueChangeListener="#{administrarDireccionManaged.changeListenerComboBoxLado}"
+								required="true" requiredMessage="Seleccione lado" width="80px"
+								enableManualInput="true" defaultLabel="Seleccione" tabindex="7">
+								<f:selectItems
+									value="#{administrarDireccionManaged.listLadoCuadra}" />
+								<a4j:support event="onchange" ajaxSingle="true"
+									oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+									reRender="panelGridComboBoxLado">
+								</a4j:support>
+							</rich:comboBox>
+						</h:panelGrid>
+						<h:panelGrid columns="2" columnClasses="col1FormVia, col1FormVia">
+							<h:outputLabel value="Numero de Manzana: ">
+								<span style="color: red;">*</span>
+							</h:outputLabel>
+							<h:inputText maxlength="10" size="5" style="width:50px"
+								value="#{administrarDireccionManaged.currentItem.numeroManzana}"
+								required="true" requiredMessage="Ingrese nro manzana"
+								tabindex="8" onkeypress="return validaEnteroPositivo(event)" />
+						</h:panelGrid>
+						<h:panelGrid columns="1" columnClasses="columnButtonR"
+							width="100%">
+							<a4j:commandButton value="Agregar" style="width:100px;"
+								action="#{administrarDireccionManaged.agregarUbicacion}"
+								reRender="id_tableviasbv, tableDataScroller, panelGridDataUbicacion"
+								status="ajaxStatus"
+								oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+								tabindex="9" />
+						</h:panelGrid>
+					</h:panelGrid>
+
+				
+
+			</a4j:region>
+			
+			<rich:separator height="1px"></rich:separator>
+
+			<rich:extendedDataTable id="id_tableviasbv"
+				value="#{administrarDireccionManaged.records}" var="record"
+				width="990px" selectionMode="single" rows="8"
+				enableContextMenu="false"
+				noDataLabel="No se encontraron coincidencias" rowKeyVar="row"
+				height="225px">
+				<rich:column width="30px">
+					<a4j:commandLink ajaxSingle="true" id="newlinkSeleccionar"
+						action="#{administrarDireccionManaged.seleccionItem}"						
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.showModalPanel(\'modalPanel\')':'Richfaces.showModalPanel(\'mpErrors\')'}; return false;"
+						reRender="modalPanel">
+						<h:graphicImage value="/images/modal/limpieza.jpg"
+							style="border:0" />
+						<f:setPropertyActionListener value="#{record}"
+							target="#{administrarDireccionManaged.currentItem}" />
+					</a4j:commandLink>
+				</rich:column>
+				<rich:column width="8%" id="r00bv">
+					<f:facet name="header">Ubicacion Id</f:facet>
+					<h:outputText value="#{record.ubicacionId}" />					
+					<h:inputHidden value="#{record.ubicacionId}" />
+				</rich:column>
+				<rich:column width="14%" id="r01bv">
+					<f:facet name="header">Sector</f:facet>
+					<h:outputText value="#{record.sector}" />
+					<h:inputHidden value="#{record.sectorId}" />
+					<h:inputHidden value="#{record.ubicacionId}" />
+				</rich:column>
+				<rich:column width="18%" id="r02bv">
+					<f:facet name="header">Lugar</f:facet>
+					<h:outputText value="#{record.lugar}" />
+				</rich:column>
+				<rich:column width="14%" id="r03bv">
+					<f:facet name="header">Tipo Via</f:facet>
+					<h:outputText value="#{record.tipoVia}" />
+				</rich:column>
+				<rich:column width="18%" id="r04bv">
+					<f:facet name="header">Via</f:facet>
+					<h:outputText value="#{record.via}" />
+				</rich:column>
+				<rich:column width="5%" id="r05bv">
+					<f:facet name="header">Cdra.</f:facet>
+					<h:outputText value="#{record.numeroCuadra}" />
+				</rich:column>
+				<rich:column width="9%" id="r06bv">
+					<f:facet name="header">Lado</f:facet>
+					<h:outputText rendered="#{record.lado==1}"
+						value="#{record.lado} - DER" />
+					<h:outputText rendered="#{record.lado==2}"
+						value="#{record.lado} - IZQ" />
+				</rich:column>
+				<rich:column width="9%" id="r07bv">
+					<f:facet name="header">Manz.</f:facet>
+					<h:outputText value="#{record.numeroManzana}" />
+				</rich:column>
+			</rich:extendedDataTable>
+			
+			<rich:datascroller id="tableDataScroller" align="center"
+				for="id_tableviasbv" renderIfSinglePage="false" status="ajaxStatus"
+				pageIndexVar="pageIndex" pagesVar="pages">
+				<f:facet name="pages">
+					<h:outputText value="#{pageIndex} / #{pages}" />
+				</f:facet>
+			</rich:datascroller>
+		
+		</rich:panel>
+
+	</h:form>
+	
+	
+
+ <rich:modalPanel id="modalPanel" width="400" autosized="true">
+
+			<f:facet name="header">INGRESO DE DATOS PARA LA UBICACION ID: #{administrarDireccionManaged.currentItem.ubicacionId}</f:facet>
+			<f:facet name="controls">
+				<h:panelGroup>
+					<h:graphicImage value="/images/modal/close.png"
+						styleClass="hidelink" id="hidelink"
+						onclick="submitClear();return false">
+					</h:graphicImage>
+					<rich:componentControl for="modalPanel" attachTo="hidelink"
+						operation="hide" event="onclick">
+					</rich:componentControl>
+				</h:panelGroup>
+			</f:facet>
+			<a4j:include viewId="/sisat/administracion/popupUbicacionValores.xhtml" />
+		</rich:modalPanel>
+</ui:composition>

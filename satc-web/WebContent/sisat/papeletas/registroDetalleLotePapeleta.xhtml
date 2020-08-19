@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	
+	<h:form  id="myform">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+	<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+	<a4j:loadScript src="/js/sisat.js"/>
+	
+	<a4j:outputPanel id="idPanelPrincipalRegistroPapeleta">
+		<table align="center" border="0" style="width:100%;" >
+			<tr>
+				<td >
+					<rich:panel style="width:100%;">
+						<table style="width:100%;" border="0" cellpadding="2" cellspacing="0">
+							<tr>
+								<td width="80px">
+									<h:outputText value="Nro de oficio : " />
+								</td>
+								<td width="80px">
+									<h:inputText value="#{registroDetalleLotePapeletasManaged.cargaLote.numOficio}" style="border:none" readonly="true" />
+								</td>
+								<td width="80px">
+									<h:outputText value="Nro de lote : " />
+								</td>
+								<td width="80px">
+									<h:inputText value="#{registroDetalleLotePapeletasManaged.cargaLote.cargaLotesId}" style="border:none" readonly="true"  />
+								</td>
+								<td>
+								</td>
+							</tr>
+						</table>	
+					</rich:panel>
+				</td>
+			</tr>
+			<tr>
+				<td> 
+		    		<rich:panel style="width:100%;" id="idPanelDatosInfractor">
+					    	<f:facet name="header">		
+								REGISTRO DE  PAPELETAS  - DETALLE DE LOTE
+							</f:facet>
+							<table style="width:100%;" border="0">
+								<tr>
+									<td align="center">
+										<rich:extendedDataTable 
+												id="datosPapeletas" 
+												value="#{registroDetalleLotePapeletasManaged.gridDetalleLotes}" 
+												var="record"  height="300px" style="width:100%;height:300px"
+												sortMode="single" selectionMode="single" enableContextMenu="false" 
+												rowKeyVar="row"	>
+												
+												<rich:column id="x1" width="5%" 
+													style="text-align:center;background-color:#{record.estadoIntValue == 3 ?'#99FF99':(record.estadoIntValue == 4 ?'#51B2FF':'#FFFFFF')}">
+									                <f:facet name="header" >Item</f:facet>
+									                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+									            </rich:column>			
+									            <rich:column id="x2" width="10%" style="text-align:center;background-color:#{record.estadoIntValue == 3 ?'#99FF99':(record.estadoIntValue == 4 ?'#51B2FF':'#FFFFFF')}">
+									                <f:facet name="header">Placa</f:facet>
+									                <h:outputText value="#{record.placa} "/>
+									            </rich:column>							
+									                <f:facet name="header"  >Nro Papeleta</f:facet>
+												<rich:column id="x3" width="10%" style="text-align:center;background-color:#{record.estadoIntValue == 3 ?'#99FF99':(record.estadoIntValue == 4 ?'#51B2FF':'#FFFFFF')}">
+									                <h:outputText value="#{record.numPapeleta}"/>
+									            </rich:column>
+									            <rich:column id="x4" width="10%" style="text-align:center;background-color:#{record.estadoIntValue == 3 ?'#99FF99':(record.estadoIntValue == 4 ?'#51B2FF':'#FFFFFF')}">
+									                <f:facet name="header" >Fecha Infraccion</f:facet>
+									                <h:outputText value="#{record.fechaInfraccion}">
+									                <f:convertDateTime pattern="dd/MM/yyyy"/>
+									                </h:outputText>
+									            </rich:column>
+									            <rich:column id="x5" width="35%" style="text-align:center;background-color:#{record.estadoIntValue == 3 ?'#99FF99':(record.estadoIntValue == 4 ?'#51B2FF':'#FFFFFF')}">
+									                <f:facet name="header">Infractor</f:facet>
+									                <h:outputText value="#{record.nombresApellidosInfractor}"/>
+									            </rich:column>   
+									            <rich:column id="x6" width="10%" style="text-align:center;background-color:#{record.estadoIntValue == 3 ?'#99FF99':(record.estadoIntValue == 4 ?'#51B2FF':'#FFFFFF')}">
+									                <f:facet name="header">Infraccion</f:facet>
+									                <h:outputText value="#{record.infraccion}"/>
+									            </rich:column>             		
+									            <rich:column id="x7" width="10%" style="text-align:center;background-color:#{record.estadoIntValue == 3 ?'#99FF99':(record.estadoIntValue == 4 ?'#51B2FF':'#FFFFFF')}">
+									                <f:facet name="header">Estado</f:facet>
+									                <h:outputText value="#{record.estado}"/>
+									            </rich:column>
+									            
+									            <rich:column id="x8" width="10%" style="text-align:center;background-color:#{record.estadoIntValue== 3 ?'#99FF99':(record.estadoIntValue == 4 ?'#51B2FF':'#FFFFFF')}">
+									            	<f:facet name = "header">Actualizar</f:facet>
+									            	<a4j:commandLink id="newlink3" action="#{registroDetalleLotePapeletasManaged.actualizacion}" immediate="true" reRender="panelinclude" rendered="#{record.estadoIntValue != 4}" >
+									                    <h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+									                    <f:setPropertyActionListener value="#{record}" target="#{registroDetalleLotePapeletasManaged.currentItem}" id="r427"/>
+									                    <f:setPropertyActionListener value="/sisat/papeletas/registropapeleta.xhtml" target="#{sessionManaged.page}" />
+									                </a4j:commandLink>
+									                <rich:toolTip for="newlink3" value="Actualizacion" />
+										        </rich:column>		                
+								   			</rich:extendedDataTable>
+									</td>
+								</tr>
+								<tr>
+									<td align="center">
+										<!-- 
+										<a4j:commandButton id="btnNuevaPapeleta" value = "Nuevo" immediate="true" reRender="panelinclude" action="#{registroDetalleLotePapeletasManaged.inscripcion}" style="width:100px;">
+											<f:setPropertyActionListener value="/sisat/papeletas/registropapeleta.xhtml" target="#{sessionManaged.page}" />
+										</a4j:commandButton>
+										 -->
+										<a4j:commandButton id="btnregresar" value = "Regresar"  action="#{sessionManaged.sendRedirectPrincipal}" reRender="panelinclude" style="width:100px;">
+											<f:setPropertyActionListener value="/sisat/papeletas/buscaroficiolotes.xhtml" target="#{sessionManaged.page}" />
+										</a4j:commandButton>
+									</td>
+								</tr>
+							</table>
+						</rich:panel>	
+					</td>
+			</tr>
+		</table>
+	</a4j:outputPanel>
+	</h:form>
+	
+</ui:composition>

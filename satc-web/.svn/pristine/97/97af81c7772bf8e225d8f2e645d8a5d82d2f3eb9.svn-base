@@ -1,0 +1,610 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:o="http://omnifaces.org/ui">
+<head>
+
+<title>SISAT.2018.2</title>
+
+	
+<link rel="stylesheet" href="/css/manuales.css" type="text/css"
+	charset="utf-8" />
+<script type="text/javascript" src="/js/jquery-1.3.2.js"></script>
+<style>
+.link-mensaje-1 {
+	font-size: 10pt;
+	color: #FF5555 !important;
+}
+
+.link-mensaje-2 {
+	font-size: 10pt;
+	color: #FFFFAA !important;
+}
+</style>
+</head>
+<body onload="mueveReloj(); loadDate()">
+	<a4j:loadStyle src="/css/fontawesome/css/all.css"></a4j:loadStyle>
+	<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+	<a4j:loadStyle src="/css/principal.css"></a4j:loadStyle>
+	<a4j:loadStyle src="/css/manuales.css"></a4j:loadStyle>
+	<a4j:loadScript src="/js/principal.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+	<a4j:loadScript src="/css/fontawesome/js/all.js" />
+	
+	<o:importConstants type="com.sat.sisat.common.util.Constante"  />
+
+	<rich:hotKey key="esc"
+		handler="if(ActiveModal.activeModalPanel){Richfaces.hideModalPanel(ActiveModal.activeModalPanel);}" />
+	<!-- Para navegacion de manuales -->
+	<ul id="navigation">
+		<li class="admin"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/1_1_Manual_de_Usuario_Administración_v_1.8.0.pdf"
+			title="Aministracción" target="_blank"></a></li>
+		<li class="caja"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/1_2_Manual_de_Usuario_Caja_v_1.8.0.pdf"
+			title="Caja" target="_blank"></a></li>
+		<li class="coactiva"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/1_3_Manual_de_Usuario_Coactiva V 1.8.0.pdf"
+			title="Coactiva" target="_blank"></a></li>
+		<li class="consulta"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/1_4_Manual_de_Usuario_Consultas_v_1.8.0.pdf"
+			title="Consultas" target="_blank"></a></li>
+		<li class="control"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/1_5_Manual_de_Usuario_Control V 1.8.0.pdf"
+			title="Control" target="_blank"></a></li>
+		<li class="fisca"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/1_6_Manual_de_Usuario_Fiscalización V 1.8.0.pdf"
+			title="Fiscalización" target="_blank"></a></li>
+		<li class="papeleta"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/1_7_Manual_de_Usuario_Papeletas_v_1.8.0.pdf"
+			title="Papeletas" target="_blank"></a></li>
+		<li class="tramite"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/1_8_Manual_de_Usuario_TrámiteDocumentario_v_1.8.0.pdf"
+			title="Trámite Documentario" target="_blank"></a></li>
+		<li class="tributo"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/1_9_Manual_de_Usuario_Tributos V 1.8.0.pdf"
+			title="Tributos" target="_blank"></a></li>
+		<li class="calidad"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/2_1_Calidad en Uso.pdf"
+			title="Calidad de Uso" target="_blank"></a></li>
+		<li class="procedimiento"><a
+			href="http://172.26.128.130/visorPDF/web/viewer.html?file=http://172.26.128.130/manualesSISAT/3_1_PROCEDIMIENTO DE ALTA, BAJA Y CAMBIO DE USUARIO.pdf"
+			title="Procedimiento Alta, Baja y Cambio de Usuario" target="_blank"></a></li>
+		<!-- <li><font color="gray">Ayuda</font></li>  -->
+	</ul>
+	<!--Hasta aqui -->
+
+	<div id="main-principal">
+		<div class="header">
+			<div class="logo">
+				<img src="#{request.contextPath}/images/logo_main.png" style="width: 100%;
+				"/>
+			</div>
+			<!-- 			<div class="title" style="color: red;"> -->
+
+			<div style="font-size: 18px;" class="title">
+				SERVICIO DE ADMINISTRACION TRIBUTARIA DE CAJAMARCA<br /> 
+				<font size="2px">SISAT MENU DESDE BD</font> <br />
+				
+				<font face="roman" color="red" >
+				
+				<h:outputText value="ADVERTENCIA " id="outputAdv"
+					rendered="#{sessionManaged.renderExpiraDias}" />
+				<h:outputText
+					value="Su clave de Acceso expira en #{sessionManaged.dias} días. Cambie su Clave y evite el bloqueo al sistema."
+					id="outputDias" rendered="#{sessionManaged.renderExpiraDias}" />
+					
+				</font>
+
+				<!-- 				<h:form>
+					<div style="display: block; float: left">
+						<h:selectOneMenu value="#{skinBean.skin}" border="0"
+							layout="pageDirection" title="Changing skin"
+							style="font-size: 8; font-family: comic" onchange="submit()">
+
+							<f:selectItem itemLabel="Esmeralda" itemValue="emeraldTown" />
+							<f:selectItem itemLabel="ruby" itemValue="ruby" />
+							<f:selectItem itemLabel="Oceano" itemValue="deepMarine" />
+							<f:selectItem itemLabel="Cereza" itemValue="japanCherry" />
+							<f:selectItem itemLabel="Azul cielo" itemValue="blueSky" />
+							<f:selectItem itemLabel="Vino" itemValue="wine" />
+							<f:selectItem itemLabel="Plomo" itemValue="glassX" />
+							<f:selectItem itemLabel="Gris" itemValue="DEFAULT" />
+							<f:selectItem itemLabel="clasico" itemValue="classic" />
+							<f:selectItem itemLabel="laguna" itemValue="laguna" />
+							<f:selectItem itemLabel="Jeans" itemValue="darkX" />
+						</h:selectOneMenu>
+					</div>
+				</h:form>
+ -->
+
+			</div>
+			<div class="dat_user">
+				<table width="280" border="0" cellpadding="2" cellspacing="2">
+					<tr>
+						<td>Usuario:</td>
+						<td>#{sessionManaged.usuarioLogIn.nombres}
+							#{sessionManaged.usuarioLogIn.apellidos}</td>
+					</tr>
+					<tr>
+						<td>Fecha:</td>
+						<td id="tdDate"></td>
+					</tr>
+					<tr>
+						<td>Hora:</td>
+						<td id="tdTime"></td>
+					</tr>
+
+
+					<!-- 					<tr style="color: red;"> -->
+					<!-- 						<td>Base de datos:</td> -->
+					<!-- 						<td>#{principalManaged.nombreBD}</td> -->
+					<!-- 					</tr> -->
+
+				</table>
+			</div>
+		</div>
+		<h:form prependId="false">
+			<!-- Controller menu Tributos -->
+			<a4j:commandLink id="cmlTributos">
+				<f:setPropertyActionListener value="false"
+					target="#{sessionManaged.tributoPage}" />
+				<f:setPropertyActionListener value="false"
+					target="#{sessionManaged.datosContribuyente}" />
+			</a4j:commandLink>
+		</h:form>
+
+		<div class="menu">
+			<h:form id="frmMenu">
+				<rich:jQuery id="maskedo3" selector=".maskDate"
+					query="mask('99/99/9999')" timing="onload" />
+				<div class="lis_menu">
+					<ul id="nav">
+					<ui:repeat var="menu" value="#{sessionManaged.listMenus}" varStatus="status">
+							
+						<li class="top"><a href="#"
+								class="top_link">#{menu.menu}</a>
+								<ul class="sub">
+									<ui:repeat var="submenu" value="#{menu.listMenus}" varStatus="status">
+										<li>
+										<h:commandLink  rendered="#{submenu.subMenuId == 1}"
+												value="#{submenu.submenu}"	
+												action="#{busquedaPersonaManaged.noFisca}"
+												onclick="jQuery('#cmlTributos').click()">
+												<f:setPropertyActionListener
+													value="#{submenu.url}"	
+													target="#{sessionManaged.page}" />
+												<f:setPropertyActionListener value="1"
+													target="#{sessionManaged.selectedMenu}" />		
+											</h:commandLink>
+											
+										<h:commandLink  rendered="#{submenu.subMenuId != 1
+																and submenu.subMenuId != sessionManaged.contantesMenu.CARTERA_VALORES_TRIB
+																and submenu.subMenuId != sessionManaged.contantesMenu.CARTERA_VALORES_NO_TRIB
+																and submenu.subMenuId != sessionManaged.contantesMenu.CONSULTA_DE_VEHICULOS
+																and submenu.tipoUrl != 1}" value="#{submenu.submenu}"	
+												action="#{sessionManaged.sendRedirectPrincipal}"
+												onclick="jQuery('#cmlTributos').click()">
+												<f:setPropertyActionListener
+													value="#{submenu.url}"	
+													target="#{sessionManaged.page}" />
+												<f:setPropertyActionListener value="1"
+													target="#{sessionManaged.selectedMenu}" />			
+											</h:commandLink>
+											
+										
+										<h:commandLink  rendered="#{submenu.subMenuId == sessionManaged.contantesMenu.CARTERA_VALORES_TRIB and submenu.tipoUrl != 1}" value="#{submenu.submenu}"	
+												action="#{sessionManaged.sendRedirectPrincipal}"
+												onclick="jQuery('#cmlTributos').click()">
+												<f:setPropertyActionListener
+													value="#{submenu.url}"	
+													target="#{sessionManaged.page}" />
+												<f:setPropertyActionListener value="1"
+													target="#{sessionManaged.selectedMenu}" />										
+												<f:setPropertyActionListener  value="1"
+												target="#{sessionManaged.materiaId}" />			
+												
+											</h:commandLink>
+											
+											<h:commandLink  rendered="#{submenu.subMenuId == sessionManaged.contantesMenu.CARTERA_VALORES_NO_TRIB and submenu.tipoUrl != 1}" value="#{submenu.submenu}"	
+												action="#{sessionManaged.sendRedirectPrincipal}"
+												onclick="jQuery('#cmlTributos').click()">
+												<f:setPropertyActionListener
+													value="#{submenu.url}"	
+													target="#{sessionManaged.page}" />
+												<f:setPropertyActionListener value="1"
+													target="#{sessionManaged.selectedMenu}" />										
+												<f:setPropertyActionListener  value="2"
+												target="#{sessionManaged.materiaId}" />			
+											</h:commandLink>
+											
+											<h:commandLink  rendered="#{submenu.subMenuId == sessionManaged.contantesMenu.CONSULTA_DE_VEHICULOS and submenu.tipoUrl != 1}" 
+												value="#{submenu.submenu}"	
+												>
+												<f:setPropertyActionListener target="#{sessionManaged.page}"
+													value="/sisat/vehicular/buscarvehicular.xhtml" />
+												<f:setPropertyActionListener
+													value="#{submenu.url}"	
+													target="#{sessionManaged.page}" />
+												<f:setPropertyActionListener value="7"
+													target="#{sessionManaged.selectedMenu}" />
+												<f:setPropertyActionListener
+													target="#{buscarVehicularManaged.desactiva}" value="1" />
+												<f:setPropertyActionListener
+													target="#{buscarVehicularManaged.lstDjVehicular}" value='' />	
+											</h:commandLink>
+											
+											<h:commandLink rendered="#{submenu.tipoUrl == 1}" value="#{submenu.submenu}"
+												onclick="window.open('#{submenu.url}',null, 'height=500,width=1000,status=yes,toolbar=no,menubar=no,location=no')">
+											</h:commandLink>
+										</li>
+									</ui:repeat>	
+								</ul>
+						</li>
+					</ui:repeat>
+					
+					  <!--  <li class="top"><a href="#"
+							class="#{sessionManaged.selectedMenu == 1 ? 'top_link_selected' : 'top_link'}">DESCARGOS</a>
+							<ul class="sub">
+							<li>
+								<h:commandLink value="Validar Persona "	
+										actionListener="#{principalManaged.tributosAction}"
+										action="#{sessionManaged.sendRedirectPrincipal}"
+										onclick="jQuery('#cmlTributos').click()">
+										<f:setPropertyActionListener
+											value="/sisat/controlycobranza/validarPersonaDescargoDeuda.xhtml"	
+											target="#{sessionManaged.page}" />
+										<f:setPropertyActionListener value="1"
+											target="#{sessionManaged.selectedMenu}" />																							
+									</h:commandLink>
+								</li>
+								<li>	
+									<h:commandLink value="Validar Descargo "	
+										actionListener="#{principalManaged.tributosAction}"
+										action="#{sessionManaged.sendRedirectPrincipal}"
+										onclick="jQuery('#cmlTributos').click()">
+										<f:setPropertyActionListener
+											value="/sisat/controlycobranza/validarDescargoDeuda.xhtml"	
+											target="#{sessionManaged.page}" />
+										<f:setPropertyActionListener value="1"
+											target="#{sessionManaged.selectedMenu}" />																							
+									</h:commandLink>
+								</li>
+								
+								<li>	
+									<h:commandLink value="Detalle Descargo "	
+										actionListener="#{principalManaged.tributosAction}"
+										action="#{sessionManaged.sendRedirectPrincipal}"
+										onclick="jQuery('#cmlTributos').click()">
+										<f:setPropertyActionListener
+											value="/sisat/controlycobranza/detalleDescargoDeuda.xhtml"	
+											target="#{sessionManaged.page}" />
+										<f:setPropertyActionListener value="1"
+											target="#{sessionManaged.selectedMenu}" />																							
+									</h:commandLink>
+								</li>
+							</ul>
+					</li>  -->
+					
+						
+					</ul>
+				</div>
+				<div class="btn_">
+					<ul>
+						<li><h:commandLink title="Regresar"
+								action="#{sessionManaged.sendRedirectPrincipal}">
+								<f:setPropertyActionListener
+									value="#{sessionManaged.linkRegresar}"
+									target="#{sessionManaged.page}" />
+								<img src="#{request.contextPath}/images/regresar.png" border="0"
+									width="19" height="20" />
+							</h:commandLink></li>
+						<li><h:commandLink title="Inicio"
+								action="#{sessionManaged.sendRedirectPrincipal}">
+								<f:setPropertyActionListener value="/sisat/bienvenida.xhtml"
+									target="#{sessionManaged.page}" />
+								<f:setPropertyActionListener value="false"
+									target="#{sessionManaged.tributoPage}" />
+								<f:setPropertyActionListener value="false"
+									target="#{sessionManaged.datosContribuyente}" />
+								<img src="#{request.contextPath}/images/home.png" border="0" />
+							</h:commandLink></li>
+						<li title="Nueva Ventana"><a
+							href="#{request.contextPath}/sisat/principal.jsf" target="_blank"
+							title="Nueva Ventana"><img
+								src="#{request.contextPath}/images/new_wind.png" border="0" /></a></li>
+						<li title="Cerrar Sessión"><h:graphicImage
+								value="/images/close_sess.png" title="Cerrar Sesión">
+								<a4j:support event="onclick"
+									action="#{sessionManaged.liberarContribuyente}"
+									oncomplete=" window.location ='#{request.contextPath}/index.jsp';"></a4j:support>
+							</h:graphicImage></li>
+					</ul>
+				</div>
+			</h:form>
+		</div>
+		<h:panelGroup rendered="#{sessionManaged.tributoPage}">
+			<div class="contribuyente_data">
+				<div class="bloque_c_1">
+					<h:panelGroup rendered="#{!sessionManaged.moduloFisca}">
+						<a id="btnMenuTrib" href="#"><img
+							src="#{request.contextPath}/images/dat_contri.png" width="48"
+							height="32" id="sprytrigger1" /> </a>
+					</h:panelGroup>
+					<div id="divMenuTributos" class="tooltipContent">
+						<div class="cont_smenu">
+							<div class="cont_smenu_1"></div>
+							<div class="cont_smenu_2">
+								<h:form prependId="false">
+								<ui:repeat var="menu" value="#{sessionManaged.listMenuContribuyete}" varStatus="status">
+									<div class="vertical-menu">
+										  <a href="#" class="active">#{menu.menu}</a>
+										  <ui:repeat var="submenu" value="#{menu.listMenus}" varStatus="status">
+										  		
+										  		<!-- Ver Datos Generales -->
+												<td><a4j:commandLink rendered="#{submenu.tipoUrl != 2 and 
+														submenu.subMenuId == sessionManaged.contantesMenu.VER_DATOS_GENERALES}" 
+														value="#{submenu.submenu}"
+													action="#{busquedaPersonaManaged.verDatos}">
+													<f:setPropertyActionListener
+														value="#{sessionManaged.contribuyente}"
+														target="#{busquedaPersonaManaged.finMpPersonaItem}"
+														id="r42" />
+													<f:setPropertyActionListener
+														value="#{submenu.url}"
+														target="#{sessionManaged.page}" />
+												</a4j:commandLink></td>
+												<!-- Fin Ver Datos Generales -->
+												
+												<!-- Ver Editar Generales -->
+												<td><a4j:commandLink rendered="#{submenu.tipoUrl != 2 and 
+														submenu.subMenuId == sessionManaged.contantesMenu.EDITAR_DATOS_GENERALES}" 
+														value="#{submenu.submenu}"
+													action="#{busquedaPersonaManaged.edit}">
+													<f:setPropertyActionListener
+														value="#{sessionManaged.contribuyente}"
+														target="#{busquedaPersonaManaged.finMpPersonaItem}"
+														id="r425" />
+													<f:setPropertyActionListener
+														value="#{submenu.url}"
+														target="#{sessionManaged.page}" />
+												</a4j:commandLink></td> 
+												<!-- Fin Editar Datos Generales -->
+												
+												<!-- Ver Imprimir Generales -->
+												 <a4j:commandLink rendered="#{submenu.tipoUrl == 2 and 
+														submenu.subMenuId == sessionManaged.contantesMenu.IMPRIMIR_DECLARACION}"
+														 value="#{submenu.submenu}"
+													action="#{busquedaPersonaManaged.imprimir}"
+													oncomplete="window.open('#{submenu.url}');return false;">
+													<f:setPropertyActionListener
+														value="#{sessionManaged.contribuyente}" 
+														target="#{busquedaPersonaManaged.finMpPersonaItem}"
+														id="r425"/>
+												</a4j:commandLink> 
+										  		<!-- Fin Editar Datos Generales -->
+										  		
+										  		
+										  		<a4j:commandLink rendered="#{submenu.tipoUrl != 2 and
+										  				submenu.subMenuId != sessionManaged.contantesMenu.VER_DATOS_GENERALES and
+										  				submenu.subMenuId != sessionManaged.contantesMenu.EDITAR_DATOS_GENERALES and 
+										  				submenu.subMenuId != sessionManaged.contantesMenu.IMPRIMIR_DECLARACION
+										  				}" 
+										  				value="#{submenu.submenu}"
+														action="#{sessionManaged.sendRedirectPrincipal}">
+														<f:setPropertyActionListener
+															value="#{submenu.url}"
+															target="#{sessionManaged.page}" />
+												</a4j:commandLink>
+										  </ui:repeat>
+									</div>
+								</ui:repeat>
+		
+									 <!--  <table id="tblMenuTrib" width="1160" border="0" cellpadding="0"
+										cellspacing="0">
+										<ui:repeat var="menu" value="#{sessionManaged.listMenuContribuyete}" varStatus="status">
+											<tr>
+												<th>#{menu.menu}</th>
+											</tr> 
+											<tr>
+												<ui:repeat var="submenu" value="#{menu.listMenus}" varStatus="status">
+													<td>
+														<a4j:commandLink value="#{submenu.submenu}"
+														action="#{sessionManaged.sendRedirectPrincipal}">
+														<f:setPropertyActionListener
+															value="#{sessionManaged.contribuyente}"
+															target="#{busquedaPersonaManaged.finMpPersonaItem}"
+															id="r42" />
+														<f:setPropertyActionListener
+															value="#{submenu.url}"
+															target="#{sessionManaged.page}" />
+														</a4j:commandLink>
+													</td>
+												</ui:repeat>
+											</tr>
+										</ui:repeat>
+										
+									</table> -->
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="bloque_c_2">
+					<table width="1202" border="0" cellspacing="0" cellpadding="0"
+						style="font-weight: bold;">
+						<tr>
+							<td width="92">Contribuyente:</td>
+							<td width="350">#{sessionManaged.contribuyente.apellidosNombres}</td>
+							<td width="50">Codigo:</td>
+							<td width="150">#{sessionManaged.contribuyente.personaId}</td>
+							<td width="60">Domicilio:</td>
+							<td width="500">#{sessionManaged.contribuyente.domicilioPersona}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</h:panelGroup> 
+
+		<h:panelGroup rendered="#{sessionManaged.datosContribuyente}">
+			<div class="contribuyente_data">
+				<div class="bloque_c_2">
+					<table width="1325" border="0" cellspacing="0" cellpadding="0"
+						style="font-weight: bold; margin: 0 auto;">
+						<tr>
+							<td style="color: #D71646; font-size: 90%" width="92">Contribuyente:</td>
+							<td style="color: #2914E6; font-size: 100%" width="458">#{sessionManaged.contribuyente.apellidosNombres}</td>
+							<td style="color: #D71646; font-size: 90%" width="45">Codigo:</td>
+							<td style="color: #2914E6; font-size: 100%" width="55">#{sessionManaged.contribuyente.personaId}</td>
+							<td style="color: #D71646; font-size: 95%" width="60">Domicilio:</td>
+							<td style="color: #2914E6; font-size: 100%" width="615">#{sessionManaged.contribuyente.domicilioPersona}</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</h:panelGroup>
+
+		<h:form>
+			<h:panelGrid id="panelGridMensajes" width="100%" cellpadding="0"
+				cellspacing="0" onshow="ActiveModal.addModal(this)"
+				onhide="ActiveModal.removeModal('x')">
+
+				<ui:repeat var="iter"
+					value="#{sessionManaged.listMensajes.entrySet().toArray()}">
+					<a4j:outputPanel rendered="#{iter.value.tipoColor == 1}">
+						<div
+							style="height: 20px; padding-left: 10px; padding-top: 4px; background-color: #FFFFAA">
+							<a4j:commandLink styleClass="link-mensaje-1"
+								value="#{iter.value.mensaje}"
+								action="#{sessionManaged.removerMensaje(iter.key)}"
+								reRender="panelGridMensajes"
+								title="Click sobre el link para quitar este mensaje."></a4j:commandLink>
+						</div>
+					</a4j:outputPanel>
+					<a4j:outputPanel rendered="#{iter.value.tipoColor == 2}">
+						<div
+							style="height: 20px; padding-left: 10px; padding-top: 4px; background-color: #FF5555">
+							<a4j:commandLink styleClass="link-mensaje-2"
+								value="#{iter.value.mensaje}"
+								action="#{sessionManaged.removerMensaje(iter.key)}"
+								reRender="panelGridMensajes"
+								title="Click sobre el link para quitar este mensaje."></a4j:commandLink>
+						</div>
+					</a4j:outputPanel>
+				</ui:repeat>
+			</h:panelGrid>
+		</h:form>
+		<h:panelGrid id="panelinclude" width="100%" style="float: left;">
+			<ui:include src="#{sessionManaged.page}">
+			</ui:include>
+		</h:panelGrid>
+	</div>
+
+	<rich:modalPanel id="mpErrors" autosized="true" width="450"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+
+		<f:facet name="header">
+			<h:outputText value="#{msg['gn.mensajes']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hidelink3ss"
+					styleClass="hidelink" />
+				<rich:componentControl for="mpErrors" attachTo="hidelink3ss"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<h:panelGrid style="padding-left:20px;">
+				<rich:messages
+					style="#{facesContext.maximumSeverity.ordinal==0? 'color: blue;' : 'color: red'}" />
+			</h:panelGrid>
+			<div style="width: 100%; text-align: center">
+				<a4j:commandButton id="btnReturn" value="#{msg['gn.aceptar']}">
+					<rich:componentControl for="mpErrors" attachTo="btnReturn"
+						operation="hide" event="onclick" />
+				</a4j:commandButton>
+			</div>
+		</h:form>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelconfirma" autosized="true" width="300"
+		onshow="ActiveModal.addModal(this)"
+		onhide="ActiveModal.removeModal('x')">
+
+		<f:facet name="header">
+			<h:outputText value="Confirmación" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi"
+					styleClass="hidelink" />
+				<rich:componentControl for="panelconfirma" attachTo="hlpconfi"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:panelGrid columns="1">
+			<a4j:outputPanel ajaxRendered="true">
+				<h:panelGrid columns="2">
+					<h:outputText id="succ" style="font-weight:bold;color:green"
+						value="El registro se realizó satisfactoriamente" />
+				</h:panelGrid>
+			</a4j:outputPanel>
+			<h:panelGrid columns="2">
+				<a4j:commandButton value="Aceptar" style="width:100px;"
+					onclick="#{rich:component('panelconfirma')}.hide();return false;" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<rich:modalPanel id="panelSizeRejected" autosized="true" width="320">
+
+		<f:facet name="header">
+			<h:outputText value="#{msg['panel.RejectSizeFile']}" />
+		</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="iconcloseRejectSize" styleClass="hidelink" />
+				<rich:componentControl for="panelSizeRejected"
+					attachTo="iconcloseRejectSize" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+
+		<h:panelGrid columns="1"
+			columnClasses="coldialogContentDialogRejectSize " width="100%">
+
+			<h:panelGrid columns="1"
+				columnClasses="coldialogContentDialogRejectSize" width="100%">
+				<h:outputText id="rejectSizeMessage"
+					style="font-weight:bold;color:green"
+					value="#{msg['panel.RejectSizeFile.mensaje']}" />
+			</h:panelGrid>
+
+			<h:panelGrid columns="1"
+				columnClasses="coldialogContentDialogRejectSize " width="100%">
+				<a4j:commandButton value="#{msg['panel.RejectSizeFile.aceptar']}"
+					style="width:100px;"
+					onclick="#{rich:component('panelSizeRejected')}.hide();return false;" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</rich:modalPanel>
+
+	<a4j:region id="editando">
+		<a4j:status id="ajaxStatus" for="editando"
+			onstart="#{rich:component('waitPanel')}.show('',{height:'50px', width:'200px'})"
+			onstop="#{rich:component('waitPanel')}.hide()" />
+	</a4j:region>
+
+	<rich:modalPanel id="waitPanel" style="text-align:center">
+		<h:outputText value="Porfavor Espere ....." style="font-weight:bold;"
+			id="r71" />
+	</rich:modalPanel>
+</body>
+</html>

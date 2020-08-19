@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<style type="">
+		.classRight {
+		    text-align: right;
+		}
+		.classCenter {
+		    text-align: center;
+		}
+		.classLeft {
+		    text-align: left;
+		}
+	</style>
+	
+	<h:form id="formReporteSituacionExigibilidad">
+		<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+		<a4j:loadScript src="/js/jquery.maskMoney.js" />
+		<a4j:loadScript src="/js/sisat.js" />
+		<a4j:loadStyle src="/css/sisat.css"></a4j:loadStyle>
+		
+	<rich:hotKey key="return"
+			handler="#{rich:element('btnBuscar')}.click()"
+			selector="#formReporteSituacionExigibilidad" />
+		
+	<h:panelGrid columns="1" style="width:100%;" cellpadding="0" cellspacing="0">	
+	    <rich:panel>
+	        <f:facet name="header">
+	        	Situacion de exigibilidad
+	        </f:facet>
+			<h:panelGrid columns="2">
+				<h:outputText for="txtLotExigible" value="Nro Lote: " />
+				<h:inputText id="txtLotExigible" value="#{reporteSituacionExigibilidadManaged.nroLote}"/>
+				<h:outputText value="Fecha Recepcion" />
+				<h:panelGroup>
+					<h:panelGrid columns="4">
+		        		<h:outputText for="calFechaDesde" value="Desde :" />
+		        		<h:panelGroup>
+			        		<rich:calendar id="calFechaDesde"
+								value="#{reporteSituacionExigibilidadManaged.fechaDesde}"
+								enableManualInput="true" inputClass="maskDate"
+								locale="#{msg['param.localedate']}"
+								datePattern="#{msg['param.datepattern']}" inputSize="10"
+								tabindex="5" inputStyle="text-align:center">
+							</rich:calendar>
+							<rich:jQuery id="maskedo001" selector=".maskDate"
+								query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+						</h:panelGroup>	
+		        		<h:outputText for="calFechaHasta" value="Hasta :" />
+		        		<h:panelGroup>
+			        		<rich:calendar id="calFechaHasta"
+								value="#{reporteSituacionExigibilidadManaged.fechaHasta}"
+								enableManualInput="true" inputClass="maskDate"
+								locale="#{msg['param.localedate']}"
+								datePattern="#{msg['param.datepattern']}" inputSize="10"
+								tabindex="5" inputStyle="text-align:center">
+							</rich:calendar>
+							<rich:jQuery id="maskedo002" selector=".maskDate"
+								query="mask('#{msg['obl.maskFecha']}')" timing="onload" />
+						</h:panelGroup>
+					</h:panelGrid>
+	        	</h:panelGroup>
+	        	
+				<h:outputText for="txtTipDeuda" value="Tipo de Deuda(materia)" />
+	        	<h:selectOneMenu id="idSelectOneTipDeuda" style="width:150px;"
+	        	value="#{reporteSituacionExigibilidadManaged.materiaId}">
+	        		<f:selectItem itemLabel="Seleccione" noSelectionOption="true" />
+					<f:selectItem itemLabel="Tributario" itemValue="1" />
+					<f:selectItem itemLabel="No Tributario" itemValue="2" />	
+	        	</h:selectOneMenu>
+	        	
+	        	<a4j:commandButton id="btnBuscar" value="Buscar" style="width:100px" 
+				action="#{reporteSituacionExigibilidadManaged.buscar()}" reRender="panel"
+				status="ajaxStatus" />
+			</h:panelGrid>
+		</rich:panel>
+		
+		<rich:panel id="panel">
+			<h:panelGrid columns="2">
+				<h:commandLink id="btnExcel"
+					action="#{reporteSituacionExigibilidadManaged.exportXls()}"
+					styleClass="button1" immediate="true">
+					<h:graphicImage value="/images/modal/excel.png"
+						style="border:0;width:23px;height:23px;" />
+				</h:commandLink>
+				<h:outputText value="#{reporteSituacionExigibilidadManaged.records.size()} registros encontrados"/>
+			</h:panelGrid>
+            <rich:extendedDataTable id="edtResult" value="#{reporteSituacionExigibilidadManaged.records}" width="100%" height="210px"
+				sortMode="single" selectionMode="single" enableContextMenu="false" var="record" 
+				rowKeyVar="row" rows="10" >
+				<rich:column id="e1" style="text-align:center" width="5%" >
+	                <f:facet name="header" >Item</f:facet>
+	                <h:outputText value="#{component.parent.parent.rowIndex+1}"/>
+	            </rich:column>
+	            <rich:column id="e2" style="text-align:center" width="5%" >
+					<f:facet name="header" width="10%">Nro Lote</f:facet>
+					<h:outputText value="#{record.loteId}" />
+				</rich:column>
+				<rich:column id="e3" style="text-align:center" width="10%" >
+					<f:facet name="header" width="5%">Tipo valor</f:facet>
+					<h:outputText value="#{record.tipoValor}" />
+				</rich:column>
+				<rich:column id="e8" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Concepto</f:facet>
+					<h:outputText value="#{record.concepto}" />
+				</rich:column>
+				<rich:column id="e9" style="text-align:center" width="10%" >
+					<f:facet name="header" width="5%">Periodo</f:facet>
+					<h:outputText value="#{record.periodoDeuda}" />
+				</rich:column>
+				<rich:column id="e4" style="text-align:center" width="10%" >
+					<f:facet name="header" width="10%">Cantidad valores</f:facet>
+					<h:outputText value="#{record.cantidadValores}" />
+				</rich:column>
+				<rich:column id="e5" style="text-align:right" width="15%" >
+					<f:facet name="header" width="10%">Total deuda recibida</f:facet>
+					<h:outputText value="#{record.totalDeudaRecibida}" />
+				</rich:column>
+				<rich:column id="e6" style="text-align:right" width="15%" >
+					<f:facet name="header" width="10%">Total deuda pagada</f:facet>
+					<h:outputText value="#{record.totalDeudaPagada}" />
+				</rich:column>
+				<rich:column id="e7" style="text-align:center" width="20%" >
+					<f:facet name="header" width="10%">Cantidad valores pendientes</f:facet>
+					<h:outputText value="#{record.cantidadValoresPendiente}" />
+				</rich:column>
+			</rich:extendedDataTable>
+			<rich:datascroller for="edtResult" maxPages="5" fastStep="3"/>
+			
+		</rich:panel>
+	</h:panelGrid>
+	</h:form>
+
+</ui:composition>

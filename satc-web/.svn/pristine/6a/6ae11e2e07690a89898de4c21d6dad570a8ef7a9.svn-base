@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+
+
+	<h:form>
+		<rich:extendedDataTable id="tblDocSusnten"
+			value="#{sustentoAlcabalaManaged.lstDocSusten}" var="item"
+			width="780" height="550px">
+			<rich:column width="30">
+				<h:selectBooleanCheckbox id="chkDoc" value="#{item.selected}"
+					onchange="focusNroDocAnexos(this)" />
+			</rich:column>
+			<rich:column width="350">
+				<f:facet name="header">
+					<h:outputLabel value="#{msg['gn.descripciondoc']}" />
+				</f:facet>
+				<h:outputText value="#{item.descripcion}" />
+			</rich:column>
+			<rich:column width="180">
+				<f:facet name="header">
+					<h:outputLabel value="#{msg['rv.glosa']}" />
+				</f:facet>
+				<h:inputText id="txtGlosa" value="#{item.glosa}"
+					styleClass="textUpperCase" style="width: 100%">
+						<f:converter converterId="uppeCaseConverter"/>
+					</h:inputText>
+					
+			</rich:column>
+
+
+			<rich:column width="100" style="align:center">
+			<f:facet name="header">
+			<h:outputLabel value="#{msg['gn.docadjunto']}" />
+			</f:facet>
+			<h:panelGroup id="pnelDocAdjn">
+			<a4j:commandButton id="id_findreffilename" immediate="true" action="#{sustentoAlcabalaManaged.setParameters}" 
+						 oncomplete="#{rich:component('panelfileupload')}.show();" style="width:17px;"  image="/images/plus.png"
+						 tabindex="3" reRender="pnelDocAdjn">
+			<f:param name="paramParentFileUpload" value="AL"/>
+			<rich:toolTip value="Adjuntar Documento" />
+			<f:setPropertyActionListener value="#{item}" target="#{sustentoAlcabalaManaged.currentItem}" id="r427"/>
+			</a4j:commandButton>
+			<h:outputText  id="nomDocAdj" value=" #{item.nomDocAdjunto}" />
+			</h:panelGroup>
+			</rich:column>
+			
+		</rich:extendedDataTable>
+		<div style="width: 100%; text-align: center; margin-top: 10px;">
+			<a4j:commandButton id="id_cmdAceptarAnexos"
+				style="width: 100px;" 
+				value="#{msg['gn.aceptar']}"
+				actionListener="#{sustentoAlcabalaManaged.agregarAnexos}"
+				reRender="#{rich:clientId('tblAnexos2')},tblDocSusnten"
+				oncomplete="#{rich:component('id_panelAnexarDocumentos')}.hide()"
+				></a4j:commandButton>
+			<a4j:commandButton value="#{msg['gn.cancelar']}" immediate="true"
+				
+				oncomplete="#{rich:component('id_panelAnexarDocumentos')}.hide()"
+				style="margin-left:4px; width: 100px;"></a4j:commandButton>
+		</div>
+	</h:form>
+
+
+
+		<rich:modalPanel onshow="autofocus('formFileUpload')"
+		id="panelfileupload" moveable="true" resizeable="false" minWidth="450"
+		minHeight="120">
+		<f:facet name="header">ADJUNTAR ARCHIVO</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png"
+					id="id_imagefileupload" styleClass="hidelink" />
+				<rich:componentControl for="panelfileupload"
+					attachTo="id_imagefileupload" operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form id="formFileUpload">
+			<h:panelGrid>
+				<a4j:include viewId="/sisat/predial/fileupload.xhtml" />
+			</h:panelGrid>
+		</h:form>
+	</rich:modalPanel>
+
+</ui:composition>

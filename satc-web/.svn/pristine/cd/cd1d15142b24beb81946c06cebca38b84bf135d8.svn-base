@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich" width="100%">
+	<h:form id="formMasivoAlcabala">
+
+	<rich:panel id="p02">
+			<f:facet name="header">
+				<h:outputLabel value="Para Alcabala" />
+			</f:facet>
+			
+			<table align="center" border="0" cellpadding="2" cellspacing="2"  width="20%" >
+				<tr>
+					<td colspan="2">
+						<h:outputLabel value="Anio:" />
+						<h:inputText maxlength="15"
+							style=" width:60px;" id="id_anio"
+							value="#{historiaDeterminacionPeriodoManaged.anio}"
+							ajaxSingle="true" required="true"
+							requiredMessage="Indique inicio"
+							onkeypress="return numbersonly(this.value,event)"	
+							validatorMessage="Minimo 2006 maximo 3000"
+							>
+							<f:validateDoubleRange minimum="2006" maximum="3000">
+							</f:validateDoubleRange>
+						</h:inputText>	
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h:outputLabel
+							value="Incio Persona ID:">
+						</h:outputLabel>
+						
+						<h:inputText maxlength="15"
+							style=" width:60px;" id="id_iniciopersona"
+							value="#{historiaDeterminacionPeriodoManaged.personaId1}"
+							ajaxSingle="true" required="true"
+							requiredMessage="Indique inicio"
+							onkeypress="return numbersonly(this.value,event)"	
+							validatorMessage="Minimo 0 maximo 100000"
+							>
+							<f:validateDoubleRange minimum="0" maximum="1000000">
+							</f:validateDoubleRange>
+						</h:inputText>																
+					</td>
+					<td>
+						<h:outputLabel
+							value="Fin Persona ID:">
+						</h:outputLabel>
+						<h:inputText maxlength="15"
+							style=" width:60px;" id="id_finpersona"
+							value="#{historiaDeterminacionPeriodoManaged.personaId2}"
+							ajaxSingle="true" required="true"
+							requiredMessage="Indique inicio"
+							onkeypress="return numbersonly(this.value,event)"
+								validatorMessage="Minimo 0 maximo 100000"
+							>
+							<f:validateDoubleRange minimum="0" maximum="1000000">
+							</f:validateDoubleRange>
+						</h:inputText>
+					</td>
+				</tr>
+				<tr>	
+					<td colspan="2" align="center">
+						<a4j:commandButton value="Determinacion Masiva para Alcabala"
+							style="width:200px;"
+							action="#{historiaDeterminacionPeriodoManaged.generarDeterminacionParaAlcabala}"
+							status="ajaxStatus"
+							id="id_determiAlcabala" />
+					</td>
+				</tr>								
+			</table>			
+		</rich:panel>
+
+	</h:form>
+ 
+</ui:composition>

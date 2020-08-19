@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<h:panelGrid xmlns="http://www.w3.org/1999/xhtml"
+     xmlns:h="http://java.sun.com/jsf/html"
+     xmlns:a4j="http://richfaces.org/a4j"
+     xmlns:rich="http://richfaces.org/rich"
+     xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:ui="http://java.sun.com/jsf/facelets" width="100%">
+     
+     <rich:jQuery query="focus().select()" selector="#id_buscarviaotrosfrentes" name="focusInputbvof"/>
+     
+     <rich:panel id="id_thispanelotrosfrentes"  width="100%" >
+			<table border="0" cellpadding="0" width="100%" >
+				<tr>
+					<td align="left" width="80px" >
+						<h:outputLabel value="Tipo via :" >
+							<span style="color: red;">*</span>
+						</h:outputLabel>
+					</td>
+					<td>
+						<h:inputText id="id_ubictipovia" readonly="true" value="#{otrosFrentesManaged.tipoVia}" 
+						style="width:100%;border: none"
+						/>
+						<h:inputHidden required="true" id="id_via" value="#{otrosFrentesManaged.viaId}" requiredMessage="El campo Tipo y Nombre de via es requerido" />
+					</td>
+					<td align="left" width="80px" >
+						<h:outputLabel value="Nombre via :" />
+					</td>
+					<td>
+						<h:inputText id="id_ubicnombrevia"  readonly="true"  value="#{otrosFrentesManaged.nombreVia}" 
+						style="width:100%;border: none"
+						/>
+					</td>
+					<td align="left" width="80px" >
+						<a4j:commandButton id="id_buscarviaotrosfrentes"
+						immediate="true"
+						oncomplete="#{rich:component('panelBuscarViaPred')}.show();" style="width:100px;" value="[B]uscar" reRender="panelBuscarViaPred"
+						tabindex="1" action="#{otrosFrentesManaged.setParameter}"
+						 accesskey="b"
+						>
+							<f:param name="paramParent" value="OtrosFrentes"/>
+						</a4j:commandButton>
+					</td>	
+				</tr>
+				<tr>
+					<td align="left" width="80px" >
+						<h:outputLabel value="Numero 1 :" >
+							<span style="color: red;">*</span>
+						</h:outputLabel>
+					</td>
+					<td>
+						<h:inputHidden id="txtNumeroCuadra" value="#{otrosFrentesManaged.numeroCuadra}" /> 
+						<h:inputText required="true" id="id_numero1" maxlength="10"  style="width:100%" value="#{otrosFrentesManaged.numero1}" tabindex="2"
+						requiredMessage="El campo Numero 1 es requerido"
+						styleClass="textUpperCase" converter="uppeCaseConverter"
+						>
+						</h:inputText>
+					</td>
+					<td colspan="3" >
+					</td>
+				</tr>
+				<tr>
+					<td align="left" width="80px" >
+						<h:outputLabel value="Frente (mts) :" >
+							<span style="color: red;">*</span>
+						</h:outputLabel>
+					</td>
+					<td>
+						<h:inputText style="width:60px;" maxlength="15"
+							required="true" id="id_frente" tabindex="3"
+							value="#{otrosFrentesManaged.frente}"
+							requiredMessage="Indique el Frente (mts)"
+							onkeypress="return numbersonly(this.value,event)">
+						</h:inputText>
+					</td>
+					<td colspan="3" >
+					</td>
+				</tr>
+			</table>
+     </rich:panel>
+     <table>
+			<tr>
+				<td align="center" colspan="4">
+					<h:panelGrid align="center" columns="3" width="40%" border="0" style="text-align:center" >
+						
+						<a4j:commandButton value="[G]uardar" style="width:100px;" 
+						action="#{otrosFrentesManaged.guardar}" reRender="id_tablaotrosfrentes,id_thispanelotrosfrentes"
+						tabindex="4" 
+						accesskey="g"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\');' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						 />
+						
+						<a4j:commandButton value="[S]alir" style="width:100px;" id="id_salir" action="#{otrosFrentesManaged.salir}"
+						 oncomplete="#{rich:component('id_panelOtrosFrentes')}.hide(); return false"
+						 immediate="true"
+						 tabindex="5"
+						 accesskey="s"
+						 onblur="focusInputbvof();"
+						/>
+						
+					</h:panelGrid>
+				</td>
+			</tr>
+		</table>
+		
+    
+    
+</h:panelGrid>
+
+

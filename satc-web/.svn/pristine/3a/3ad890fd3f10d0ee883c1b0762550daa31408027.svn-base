@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich">
+	<a4j:loadScript src="/js/jquery.maskedinput-1.3.js" />
+	<a4j:loadScript src="/js/jquery.maskMoney.js" />
+	<a4j:loadScript src="/js/sisat.js" />
+		<h:form id="id_formBuscarDetCarteraVehicular">
+			<rich:panel id="id_panelresultados">
+				<f:facet name="header">
+					<h:outputLabel value="#{msg['rv.lotecarteravehicular']}" />
+				</f:facet>
+				<h:panelGrid columns="4">
+							<h:outputText width="100px" value="Referencia:" />
+							<rich:comboBox defaultLabel="Seleccione" enableManualInput="false"
+								width="400" onblur="validaInputCbo(this)"
+								value="#{busquedaDetalleLoteCarteraVehicularManaged.cmbTipoProgramaRequerimiento}"
+								required="false" requiredMessage="Seleccione un tipo de Programa"
+								id="id_cmbtipoprograma"
+								binding="#{busquedaDetalleLoteCarteraVehicularManaged.cmbxTipoProgramaRequerimiento}"
+								valueChangeListener="#{busquedaDetalleLoteCarteraVehicularManaged.loadTipoProgramaRequerimiento}">
+								<f:selectItems
+									value="#{busquedaDetalleLoteCarteraVehicularManaged.listaTipoProgramaRequerimiento}" />
+								<a4j:support  event="onchange" bypassUpdates="false" ajaxSingle="true"></a4j:support>
+			
+							</rich:comboBox>
+
+							<a4j:commandButton id="idBtnGenerar" value="Generar"
+								disabled="#{busquedaDetalleLoteCarteraVehicularManaged.conRegistro==true}"
+								reRender="id_panelresultados" style="float:left;width:80px;"
+								action="#{busquedaDetalleLoteCarteraVehicularManaged.generar}"
+								immediate="true">
+								<rich:toolTip for="idBtnGenerar"
+									value="Generar Requerimientos Masivos."></rich:toolTip>
+							</a4j:commandButton>
+			
+							<a4j:commandButton id="idBtnSalir" value="Salir" style="width:80px;"
+								action="#{busquedaDetalleLoteCarteraVehicularManaged.salir}"
+								immediate="true">
+								<f:setPropertyActionListener
+									value="/sisat/fiscalizacion/buscarcarteravehicular.xhtml"
+									target="#{sessionManaged.page}" />
+								<rich:toolTip for="idBtnSalir"
+									value="Regresa a la Lista de Carteras."></rich:toolTip>
+							</a4j:commandButton>
+						</h:panelGrid>
+				<br></br>
+				<br></br>
+				<rich:datascroller for="datosdetlotesrv" maxPages="12"></rich:datascroller>
+				<rich:extendedDataTable rows="12" id="datosdetlotesrv"
+								value="#{busquedaDetalleLoteCarteraVehicularManaged.lstloteDetalle}"
+								var="detalleloterv" width="100%" height="310px" selectionMode="single"
+								noDataLabel="No se Encontró Información" rowKeyVar="row"
+								enableContextMenu="false">
+			<!-- Link de Ver -->
+				<rich:column rendered="#{busquedaLoteCarteraVehicularManaged.permisoVerDetalle}" style="text-align:center" id="x21" width="3%">
+					<f:facet name="header">Ver</f:facet>
+					<rich:toolTip for="newlinka" value="Ver"></rich:toolTip>
+					<a4j:commandLink ajaxSingle="true" id="newlinka1"
+						reRender="modalVer"
+						oncomplete="#{rich:component('modalVer')}.hide();#{rich:component('modalVer')}.show();">
+
+						<h:graphicImage value="/images/modal/preview.png" style="border:0" />
+						<f:setPropertyActionListener value="#{detalleloterv}"
+							target="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem}"
+							id="r4253" />
+
+					</a4j:commandLink>
+				</rich:column>
+				<!-- Fin link VEr -->
+				<!-- Link de Editar -->
+<!-- 							<rich:column style="text-align:center" id="x200" width="3%"> -->
+<!-- 								<f:facet name="header">Editar</f:facet> -->
+<!-- 								<rich:toolTip for="newlinkcc" value="Editar."></rich:toolTip> -->
+<!-- 								<a4j:commandLink ajaxSingle="true" id="newlinkcc" -->
+<!-- 									action="#{busquedaLoteCarteraVehicularManaged.edit}" -->
+<!-- 									reRender="modalConfDescargar" -->
+<!-- 									oncomplete="#{rich:component('modalConfDescargar')}.hide();#{rich:component('modalConfDescargar')}.show();"> -->
+<!-- 									<h:graphicImage value="/images/modal/edit.gif" style="border:0" /> -->
+<!-- 								</a4j:commandLink> -->
+<!-- 							</rich:column> -->
+				<rich:column rendered="#{busquedaLoteCarteraVehicularManaged.permisoModificarActualizar}"  style="text-align:center" id="x212" width="3%">
+					<f:facet name="header">Edit</f:facet>
+					<rich:toolTip for="newlinkab" value="Editar"></rich:toolTip>
+					<a4j:commandLink ajaxSingle="true" id="newlinkab"
+						reRender="modalEditar"
+						oncomplete="#{rich:component('modalEditar')}.hide();#{rich:component('modalEditar')}.show();">
+
+						<h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+						<f:setPropertyActionListener value="#{detalleloterv}"
+							target="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem}"
+							id="r4253" />
+
+					</a4j:commandLink>
+				</rich:column>
+				<!-- Fin link Editar -->
+							<!-- Link de Eliminar -->
+								<rich:column  rendered="#{busquedaLoteCarteraVehicularManaged.permisoEliminar}"  style="text-align:center" id="x2" width="4%">
+									<f:facet name="header">Desc.</f:facet>
+									<rich:toolTip for="newlinka" value="Descargar."></rich:toolTip>
+									<a4j:commandLink ajaxSingle="true" id="newlinka"
+										reRender="modalConfDescargar"
+										oncomplete="#{rich:component('modalConfDescargar')}.hide();#{rich:component('modalConfDescargar')}.show();">
+				
+										<h:graphicImage value="/images/modal/delete.gif" style="border:0" />
+										<f:setPropertyActionListener value="#{detalleloterv}"
+											target="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem}"
+											id="r4253" />
+				
+									</a4j:commandLink>
+								</rich:column>
+							<!-- Fin link Eliminar -->
+								<rich:column id="idcampo1" width="3%" filterBy="#{detalleloterv.codigo}"
+									style="text-align:center">
+									<f:facet name="header">Item</f:facet>
+									<h:outputText value="#{detalleloterv.codigo}" />
+								</rich:column>
+								<rich:column id="idcampo2" width="4%" filterBy="#{detalleloterv.personaId}"
+									style="text-align:center">
+									<f:facet name="header">Código</f:facet>
+									<h:outputText value="#{detalleloterv.personaId}" />
+								</rich:column>
+								<rich:column id="idcampo3" width="20%" filterBy="#{detalleloterv.propietario}"
+									style="text-align:center">
+									<f:facet name="header">Nombre/Razón Social</f:facet>
+									<div align="left">
+										<h:outputText value="#{detalleloterv.propietario}"/>
+									</div>
+								</rich:column>
+								<rich:column id="idcampo4" width="6%" filterBy="#{detalleloterv.fechaInscripcion}"
+									style="text-align:center">
+									<f:facet name="header">Fec.Insc.</f:facet>
+									<h:outputText value="#{detalleloterv.fechaInscripcion}">
+									<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+								</rich:column>
+								<rich:column id="idcampo5" width="5%" filterBy="#{detalleloterv.placa}"
+									style="text-align:center">
+									<f:facet name="header">Placa</f:facet>
+									<h:outputText value="#{detalleloterv.placa}" />
+								</rich:column>
+								<rich:column id="idcampo6" width="5%" filterBy="#{detalleloterv.placaAntigua}"
+									style="text-align:center">
+									<f:facet name="header">Placa Ant.</f:facet>
+									<h:outputText value="#{detalleloterv.placaAntigua}" />
+								</rich:column>
+									<rich:column id="idcampo7" width="5%" filterBy="#{detalleloterv.annoAfectacion}"
+									style="text-align:center">
+									<f:facet name="header">Año Afec.</f:facet>
+									<h:outputText value="#{detalleloterv.annoAfectacion}" />
+								</rich:column>
+								
+								<rich:column id="idcampo8" width="5%" filterBy="#{detalleloterv.annoFabricacion}"
+									style="text-align:center">
+									<f:facet name="header">Año Fabr.</f:facet>
+									<h:outputText value="#{detalleloterv.annoFabricacion}" />
+								</rich:column>
+							
+								<rich:column id="idcampo9" width="9%" filterBy="#{detalleloterv.marcaDescripcion}"
+									style="text-align:center">
+									<f:facet name="header">Marca</f:facet>
+									<h:outputText value="#{detalleloterv.marcaDescripcion}" />
+								</rich:column>
+								<rich:column id="idcampo10" width="18%" filterBy="#{detalleloterv.modeloDescripcion}"
+									style="text-align:center">
+									<f:facet name="header">Modelo</f:facet>
+									<div align="left">
+									<h:outputText value="#{detalleloterv.modeloDescripcion}" />
+									</div>
+								</rich:column>
+									<rich:column id="idcampo11" width="8%" filterBy="#{detalleloterv.estadoDescripcion}"
+									style="text-align:center">
+									<f:facet name="header">Estado</f:facet>
+									<h:outputText value="#{detalleloterv.estadoDescripcion}" />
+								</rich:column>
+									<rich:column id="idcampo12" width="5%" filterBy="#{detalleloterv.djvehicularNro}"
+									style="text-align:center">
+									<f:facet name="header">Nro. DJ</f:facet>
+									<h:outputText value="#{detalleloterv.djvehicularNro}" />
+								</rich:column>
+
+			</rich:extendedDataTable>
+			</rich:panel>
+		</h:form>
+	<!-- Panel de Confirmación de eliminación -->
+	<rich:modalPanel id="modalConfDescargar" width="350" autosized="true"
+		top="110" styleClass="sisatModalPanel">
+		<f:facet name="header">Confirmación de Descarga</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi1"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalConfDescargar" attachTo="hlpconfi1"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:panel id="p0100">
+				
+					<table width="400">
+						<tr>
+							<td>
+								<h:outputText id="tdCodigoContribuyente"
+								value="Código de Contribuyente :" />
+							</td>
+							<td>
+								<h:inputText   id="txtCodigoDescarga" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.personaId}">									
+								</h:inputText>
+							</td>							
+						</tr>
+						<tr>
+							<td><h:outputText id="tdNombreContribuyente"
+									value="Nombre o Razón Social :" />
+							</td>
+							<td>
+								<h:inputText size="40" id="txtNombresDescarga" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.propietario}">									
+								</h:inputText>
+							</td>									
+						</tr>
+						<tr>
+							<td><h:outputText id="tdPlacaAnterior"
+									value="Placa anterior:" />
+							</td>
+							<td>
+								<h:inputText size="10" id="txtPlacaAnteriorDescarga" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.placaAntigua}">									
+								</h:inputText>
+							</td>									
+						</tr>
+						<tr>
+							<td><h:outputText id="tdPlaca"
+									value="Placa:" />
+							</td>
+							<td>
+								<h:inputText size="10" id="txtPlacaDescarga" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.placa}">									
+								</h:inputText>
+							</td>
+						</tr>
+						<tr>
+							<td><h:outputText id="tdPlaca1"
+									value="Estado:" />
+							</td>
+							<td>
+								<h:inputText size="40" id="txtPlacaDescarga1111" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.estadoDescripcion}">									
+								</h:inputText>
+							</td>							
+						</tr>												
+						<tr>
+							<td><h:outputText 
+									id="tdJustificacion" /></td>
+							<td><h:inputTextarea 
+							value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.glosa}" cols="40" rows="8" id="txtJustificacion"
+							disabled="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.estado != 1}"
+							>
+								</h:inputTextarea></td>
+						</tr>
+						<tr>
+							<td>
+								
+							</td>
+							<td>
+						<a4j:commandButton  value="Salir" style="width:100px;"	 status="ajaxStatus" 
+							immediate="true"  
+			 				oncomplete="#{rich:component('modalConfDescargar')}.hide(); return false"
+			 				>
+			 				</a4j:commandButton>								
+						<a4j:commandButton value="Descargar" style="width:100px;"
+						execute="@form"
+						action="#{busquedaDetalleLoteCarteraVehicularManaged.descargarOmiso}"
+						reRender="datosactos,panel"
+						oncomplete="#{facesContext.maximumSeverity == null ? 'Richfaces.hideModalPanel(\'mpErrors\'); Richfaces.showModalPanel(\'panelconfirma\'); return false' : 'Richfaces.showModalPanel(\'mpErrors\');' };"
+						disabled="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.estado != 1}"
+						>
+
+					</a4j:commandButton>
+								
+								
+							</td>
+						</tr>
+					</table>
+
+				
+			</rich:panel>
+
+		</h:form>
+	</rich:modalPanel>
+	<!-- Fin de panel de confirmación de descarga de requerimiento -->
+	<!-- Panel de Ver -->
+	<rich:modalPanel id="modalVer" width="550" autosized="true"
+		top="110" styleClass="sisatModalPanel">
+		<f:facet name="header">Ver</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi11"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalVer" attachTo="hlpconfi11"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:panel id="p01001">			
+				<table>	
+					<tr bgcolor="84B4DB" >
+						<td colspan="4">
+							Datos del Contribuyente
+						</td>
+					</tr>							
+					<tr>
+						<td>
+							<h:outputText id="tdCodigoVer"
+							value="Código:" />
+													
+						</td>
+						<td>
+							<h:inputText size="10" id="txtCodigoVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.personaId}">									
+							</h:inputText>						
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdNombresVer"
+							value="Nombres o Razón Social:" />
+													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtNombresVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.propietario}">									
+							</h:inputText>
+						</td>
+					</tr>				
+					<tr>
+						<td>
+							<h:outputText id="tdDireccionVer"
+							value="Dirección:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtDireccionVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.direccion}">									
+							</h:inputText>
+						</td>
+					</tr>																							
+			<!-- Datos del vehiculo -->	
+					<tr bgcolor="84B4DB" >
+						<td colspan="4">
+							Datos del Vehículo
+						</td>
+					</tr>		
+						
+					<tr>
+						<td>
+							<h:outputText size="20" id="tdPlacaVer"
+							value="Placa:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtPlacaVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.placa}">									
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdPlacaAnteriorVer"
+							value="Placa antigua:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtPlacaAnteriorVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.placaAntigua}">									
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdAnnoFabricacionVer"
+							value="Año de fabricación :" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtPAnnoFabricacionVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.annoFabricacion}">									
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdFechaInscripcionVer"
+							value="Fecha de Inscripción:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtFechaInscripcionVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.fechaInscripcion}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />									
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdAnnoAfectacionVer"
+							value="Año de afectación:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtFechaAfectacionVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.annoAfectacion}">																    
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdClaseVer"
+							value="Clase:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtClaseVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.claseDescripcion}">																    
+							</h:inputText>
+						</td>
+					</tr>																				
+					<tr>
+						<td>
+							<h:outputText id="tdCategoriaVer"
+							value="Categoria:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtCategoriaVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.categoriaDescripcion}">																    
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdMarcaVer"
+							value="Marca:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtMarcaVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.marcaDescripcion}">																    
+							</h:inputText>
+						</td>
+					</tr>
+																				<tr>
+						<td>
+							<h:outputText id="tdModeloVer"
+							value="Modelo:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtModeloVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.modeloDescripcion}">																    
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdCarroceriaVer"
+							value="Carroceria:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtCarroceriaVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.carroceriaDescripcion}">																    
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdTipoMotorVer"
+							value="Tipo de Motor:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtTipoMotorVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.tipoMotorDescripcion}">																    
+							</h:inputText>
+						</td>
+					</tr>	
+																			<tr>
+						<td>
+							<h:outputText id="tdNumeroCilindrosVer"
+							value="Número de cilindros:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtNumeroCilindrosVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.numeroCilindros}">																    
+							</h:inputText>
+						</td>
+					</tr>	
+					<tr bgcolor="84B4DB" >
+						<td colspan="4">
+							Estado
+						</td>
+					</tr>	
+					<tr>
+						<td colspan="4">
+							<h:inputText size="90" id="txtNumeroEstadoVer" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.estadoDescripcion}">																    
+							</h:inputText>
+						</td>											
+					</tr>
+					</table>								
+			</rich:panel>
+			<!-- Fin Datos del vehiculo -->
+						
+
+		</h:form>
+	</rich:modalPanel>
+	<!-- Fin de panel de Ver -->
+<!-- Panel de Editar -->
+	<rich:modalPanel id="modalEditar" width="400" autosized="true"
+		top="110" styleClass="sisatModalPanel">
+		<f:facet name="header">Ver</f:facet>
+		<f:facet name="controls">
+			<h:panelGroup>
+				<h:graphicImage value="/images/modal/close.png" id="hlpconfi111"
+					styleClass="hidelink" />
+				<rich:componentControl for="modalEditar" attachTo="hlpconfi111"
+					operation="hide" event="onclick" />
+			</h:panelGroup>
+		</f:facet>
+		<h:form>
+			<rich:panel id="p010011">			
+				<table>	
+					<tr bgcolor="84B4DB" >
+						<td colspan="4">
+							Datos del Contribuyente
+						</td>
+					</tr>							
+					<tr>
+						<td>
+							<h:outputText id="tdCodigoEditar"
+							value="Código:" />
+													
+						</td>
+						<td>
+							<h:inputText size="10" id="txtCodigoEditar" disabled="true"  value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.personaId}">									
+							</h:inputText>						
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdNombresEditar"
+							value="Nombres o Razón Social:" />
+													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtNombresEditar" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.propietario}">									
+							</h:inputText>
+						</td>
+					</tr>				
+					<tr>
+						<td>
+							<h:outputText id="tdDireccionEditar"
+							value="Dirección:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtDireccionEditar" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.direccion}">									
+							</h:inputText>
+						</td>
+					</tr>																							
+			<!-- Datos del vehiculo -->	
+					<tr bgcolor="84B4DB" >
+						<td colspan="4">
+							Datos del Vehículo
+						</td>
+					</tr>		
+						
+					<tr>
+						<td>
+							<h:outputText size="20" id="tdPlacaEditar"
+							value="Placa:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtPlacaEditar" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.placa}">									
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdPlacaAnteriorEditar"
+							value="Placa antigua:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtPlacaAnteriorEditar" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.placaAntigua}">									
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdAnnoFabricacionEditar"
+							value="Año de fabricación :" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtPAnnoFabricacionEditar" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.annoFabricacion}">									
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdFechaInscripcionEditar"
+							value="Fecha de Inscripción:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtFechaInscripcionEditar" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.fechaInscripcion}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />									
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h:outputText id="tdAnnoAfectacionEditar"
+							value="Año de afectación:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtFechaAfectacionEditar" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.annoAfectacion}">																    
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p>Clase:</p>													
+						</td>
+							<td align="left" width="250px"><rich:comboBox width="250px"
+									defaultLabel="Seleccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.claseDescripcion}"
+									requiredMessage="Seleccione la clase del vehículo."
+									required="true" id="id_claseVehiculo"
+									binding="#{busquedaDetalleLoteCarteraVehicularManaged.cmbClaseVehiculo}"
+									valueChangeListener="#{busquedaDetalleLoteCarteraVehicularManaged.loadClaseVehiculos}">
+									<f:selectItems id="id_lstClaseVehiculos"
+											value="#{busquedaDetalleLoteCarteraVehicularManaged.listaClaseVehiculos}" />																	
+								</rich:comboBox></td>						
+					</tr>																				
+					<tr>
+						<td>
+							<p>Categoria:</p>													
+						</td>
+							<td align="left" >
+							<rich:comboBox width="250px"
+									defaultLabel="Seleccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.categoriaDescripcion}"
+									requiredMessage="Seleccione la categoria del vehículo."
+									required="true" id="id_categoriaVehiculo"
+									binding="#{busquedaDetalleLoteCarteraVehicularManaged.cmbCategoriaVehiculo}"
+									valueChangeListener="#{busquedaDetalleLoteCarteraVehicularManaged.loadCategoriaVehiculos}">
+									<f:selectItems id="id_lstCategoriaVehiculos"
+											value="#{busquedaDetalleLoteCarteraVehicularManaged.listaCategoriaVehiculos}" />
+																					
+								</rich:comboBox>
+							</td>	
+					</tr>
+					<tr>
+						<td>
+							<p>Marca:</p>													
+						</td>
+							<td align="left" >
+							<rich:comboBox width="250px"
+									defaultLabel="Seleccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.marcaDescripcion}"
+									requiredMessage="Seleccione la marca del vehículo."
+									required="true" id="cmbMarcaVehiculo"
+									binding="#{busquedaDetalleLoteCarteraVehicularManaged.cmbMarcaVehiculo}"
+									valueChangeListener="#{busquedaDetalleLoteCarteraVehicularManaged.loadMarcaVehiculos}">
+									<f:selectItems id="id_lstMarcaVehiculos"
+											value="#{busquedaDetalleLoteCarteraVehicularManaged.listaMarcaVehiculos}" />																	
+								</rich:comboBox>
+							</td>
+					</tr>
+					<tr>																				
+						<td>
+							<p>Modelo:</p>													
+						</td>
+						<td>
+							<rich:comboBox id="cboModeloVehiculo"
+								value="#{nuevadjRegistroManaged.selectedModeloVehic}"
+								defaultLabel="#{msg['param.defaultlabelcombo']}" width="200"
+								
+								onkeypress="return showListCbo(this,event)"
+								onblur="validaInputCbo(this)">
+								<f:selectItems id="itmModelo"
+									value="#{nuevadjRegistroManaged.lstModelo}" />
+							</rich:comboBox>						
+						</td>						
+						<td>
+							<h:inputText size="70" id="txtModeloEditar"  value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.modeloDescripcion}">																    
+							</h:inputText>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<p>Carroceria:</p>													
+						</td>
+							<td align="left" >
+							<rich:comboBox width="250px"
+									defaultLabel="Seleccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.carroceriaDescripcion}"
+									requiredMessage="Seleccione el tipo de carroceria del vehículo."
+									id="id_carroceriaVehiculo"
+									binding="#{busquedaDetalleLoteCarteraVehicularManaged.cmbCarroceriaVehiculo}"
+									valueChangeListener="#{busquedaDetalleLoteCarteraVehicularManaged.loadCarroceriaVehiculos}">
+									<f:selectItems id="id_lstCarroceriaVehiculos"
+											value="#{busquedaDetalleLoteCarteraVehicularManaged.listaCarroceriaVehiculos}" />																	
+								</rich:comboBox>
+							</td>						
+
+					</tr>
+					<tr>
+						<td>
+							<p>Tipo de Motor:</p>													
+						</td>
+							<td align="left" >
+							<rich:comboBox width="250px"
+									defaultLabel="Seleccione" enableManualInput="false"
+									selectFirstOnUpdate="true" directInputSuggestions="false"
+									value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.tipoMotorDescripcion}"
+									requiredMessage="Seleccione el tipo de motor del vehículo."
+									required="true" id="id_motorVehiculo"
+									binding="#{busquedaDetalleLoteCarteraVehicularManaged.cmbMotorVehiculo}"
+									valueChangeListener="#{busquedaDetalleLoteCarteraVehicularManaged.loadMotorVehiculos}">
+									<f:selectItems id="id_lstMotorVehiculos"
+											value="#{busquedaDetalleLoteCarteraVehicularManaged.listaMotorVehiculos}" />																	
+								</rich:comboBox>
+							</td>
+					</tr>	
+																			<tr>
+						<td>
+							<h:outputText id="tdNumeroCilindrosEditar"
+							value="Número de cilindros:" />													
+						</td>
+						<td>
+							<h:inputText size="70" id="txtNumeroCilindrosEditar"  value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.numeroCilindros}">																    
+							</h:inputText>
+						</td>
+					</tr>	
+					<tr bgcolor="84B4DB" >
+						<td colspan="4">
+							Estado
+						</td>
+					</tr>	
+					<tr>
+						<td colspan="4">
+							<h:inputText size="90" id="txtNumeroEstadoEditar" disabled="true" value="#{busquedaDetalleLoteCarteraVehicularManaged.omisoItem.estadoDescripcion}">																    
+							</h:inputText>
+						</td>											
+					</tr>
+					</table>								
+			</rich:panel>
+			<!-- Fin Datos del vehiculo -->
+						
+
+		</h:form>
+	</rich:modalPanel>
+	<!-- Fin de panel de Editar -->
+</ui:composition>
+

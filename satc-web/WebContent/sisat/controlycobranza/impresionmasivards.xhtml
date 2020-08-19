@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<rich:panel id="id_preliminarRDs">
+		<h:outputLabel value="Ingrese Año de Lotes :">
+			<span class="requiredField">*</span>
+		</h:outputLabel>
+		<h:inputText id="id_periodoId" maxlength="4" size="4" required="true"
+			requiredMessage="Ingrese Año de Lotes a Imprimir" style="width:50px"
+			styleClass="anio"
+			value="#{registroLoteOrdinarioContribManaged.periodo}"
+			onkeypress="validaEnteroPositivo(event);">
+			<a4j:support ajaxSingle="true" event="onblur" />
+		</h:inputText>
+		<rich:jQuery id="maskPlaca" selector=".anio" query="mask('9999')"
+			timing="onload" />
+		<h:panelGrid columns="5">
+			<h:selectBooleanCheckbox id="idSn2" style="align:right;"
+				onclick="showOnMap(this)"
+				valueChangeListener="#{registroLoteOrdinarioContribManaged.checkFechasEmision}"
+				value="true">
+				<a4j:support event="onchange" ajaxSingle="true"
+					reRender="idFechaEmision1,idFechaEmision2" />
+			</h:selectBooleanCheckbox>
+			<h:outputLabel value="Fecha Emisión Inicial:">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar id="idFechaEmision1"
+				disabled="#{registroLoteOrdinarioContribManaged.selected1}"
+				value="#{registroLoteOrdinarioContribManaged.fechaInicio}"
+				datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Fecha de inicio de la Emisión:"
+				enableManualInput="true">
+				<a4j:support ajaxSingle="true" event="onblur" />
+			</rich:calendar>
+			<h:outputLabel value="Fecha Emisión Final:">
+				<span class="requiredField">*</span>
+			</h:outputLabel>
+			<rich:calendar id="idFechaEmision2"
+				disabled="#{registroLoteOrdinarioContribManaged.selected1}"
+				value="#{registroLoteOrdinarioContribManaged.fechaFin}"
+				datePattern="dd/MM/yyyy" inputSize="8" required="true"
+				requiredMessage="Fecha fin de la Emisión:"
+				enableManualInput="true">
+				<a4j:support ajaxSingle="true" event="onblur" />
+			</rich:calendar>
+			<h:selectBooleanCheckbox id="idSn1" style="align:right;"
+				onclick="showOnMap(this)"
+				valueChangeListener="#{registroLoteOrdinarioContribManaged.checkMontoMinimo}"
+				value="true">
+				<a4j:support event="onchange" ajaxSingle="true" reRender="idMonto" />
+			</h:selectBooleanCheckbox>
+			<h:outputText value="Monto mayor a:" />
+			<h:inputText id="idMonto" required="true" requiredMessage="Ingrese monto mínimo de la RD"
+				disabled="#{registroLoteOrdinarioContribManaged.selected}"
+				value="#{registroLoteOrdinarioContribManaged.montoMinimo}">
+				<a4j:support ajaxSingle="true" event="onblur" />
+			</h:inputText>
+			<h:outputLabel value="" />
+			<h:outputLabel value="" />
+			<h:selectBooleanCheckbox id="idSn3" style="align:right;"
+				onclick="showOnMap(this)"
+				valueChangeListener="#{registroLoteOrdinarioContribManaged.checkLotes}"
+				value="true">
+				<a4j:support event="onchange" ajaxSingle="true"
+					reRender="idRangoLotes1,idRangoLotes2" />
+			</h:selectBooleanCheckbox>
+			<h:outputText value="Por Rango de Lotes: Lote Inicio" />
+			<h:inputText id="idRangoLotes1" required="true" requiredMessage="Ingrese Lote de Inicio"
+				disabled="#{registroLoteOrdinarioContribManaged.selected2}"
+				value="#{registroLoteOrdinarioContribManaged.loteInicio}">
+				<a4j:support ajaxSingle="true" event="onblur" />
+			</h:inputText>
+			<h:outputText value="Lote Fin" />
+			<h:inputText id="idRangoLotes2" required="true" requiredMessage="Ingrese Lote Fin"
+				disabled="#{registroLoteOrdinarioContribManaged.selected2}"
+				value="#{registroLoteOrdinarioContribManaged.loteFin}">
+				<a4j:support ajaxSingle="true" event="onblur" />
+			</h:inputText>
+		</h:panelGrid>
+	</rich:panel>
+	<h:panelGrid align="center" columns="3" width="40%" border="0"
+		style="text-align:center">
+		<a4j:commandButton id="id_buttonRdsMasiva"
+			action="#{registroLoteOrdinarioContribManaged.previewRds}"
+			value="Imprimir"
+			oncomplete="#{facesContext.maximumSeverity == null ? 'jQuery(\'.masivard\').click();': 'Richfaces.showModalPanel(\'mpErrors\');' }; ">
+
+		</a4j:commandButton>
+		<h:commandLink id="linkId2" styleClass="masivard" value="xxxx"
+			style="display: none;"
+			action="#{registroLoteOrdinarioContribManaged.impresionMasivaRDs}" />
+
+	</h:panelGrid>
+</ui:composition>
+
+

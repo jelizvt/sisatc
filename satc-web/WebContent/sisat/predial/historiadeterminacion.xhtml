@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich">
+      
+      <h:form id="formListaDjPredio">
+			<a4j:loadScript src="/js/jquery.maskedinput-1.3.js"/>
+			<a4j:loadScript src="/js/jquery.maskMoney.js"/>
+			<rich:dataTable  style="width:100%;" id="id_listadjpredio" value="#{historiaDeterminacionManaged.records}" var="record" rowKeyVar="row">
+				<f:facet name="header" >
+					<h:outputText value="DETERMINACION DEL IMPUESTO PREDIAL :: #{historiaDeterminacionManaged.codigoPredio}">
+	                </h:outputText>		
+				</f:facet>
+				<rich:column>
+					<f:facet name="header">Predial</f:facet>
+	            	<a4j:commandLink ajaxSingle="true" id="newlinkPr" action="#{historiaDeterminacionManaged.detalleDeterminacion}" >
+	            		<h:graphicImage value="/images/modal/edit.gif" style="border:0" />
+	                    <f:setPropertyActionListener value="/sisat/predial/detalledeterminacion.xhtml" target="#{sessionManaged.page}" />
+	                    <f:setPropertyActionListener value="#{record}" target="#{historiaDeterminacionManaged.currentItem}" id="r427"/>
+	                </a4j:commandLink>
+		        </rich:column>
+		        <rich:column>
+					<f:facet name="header">HR</f:facet>
+	            	<h:commandLink  ajaxSingle="true" id="newlink33" action="#{historiaDeterminacionManaged.createHR}" >
+	            		 <h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+	                    <f:setPropertyActionListener value="#{record}" target="#{historiaDeterminacionManaged.currentItem}" id="r4277"/>
+	                </h:commandLink>
+		        </rich:column>
+		        <rich:column >
+					<f:facet name="header">PU</f:facet>
+	            	<h:commandLink  ajaxSingle="true" id="newlinkPU" action="#{historiaDeterminacionManaged.createPU}" >
+	            		 <h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+	                    <f:setPropertyActionListener value="#{record}" target="#{historiaDeterminacionManaged.currentItem}" id="r4278"/>
+	                </h:commandLink>
+		        </rich:column>
+		       <rich:column >
+					<f:facet name="header">PR</f:facet>
+	            	<h:commandLink  ajaxSingle="true" id="newlinkPR" action="#{historiaDeterminacionManaged.createPR}" >
+	            		 <h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+	                    <f:setPropertyActionListener value="#{record}" target="#{historiaDeterminacionManaged.currentItem}" id="r4279"/>
+	                </h:commandLink>
+		        </rich:column>
+		         <rich:column >
+					<f:facet name="header">HL</f:facet>
+	            	<h:commandLink  ajaxSingle="true" id="newlinkHL" action="#{historiaDeterminacionManaged.createHL}" >
+	            		 <h:graphicImage value="/images/modal/pdf.png" style="border:0" />
+	                    <f:setPropertyActionListener value="#{record}" target="#{historiaDeterminacionManaged.currentItem}" id="r4280"/>
+	                </h:commandLink>
+		        </rich:column>
+	            <rich:column  style="text-align:center">
+	                <f:facet name="header">Año</f:facet>
+	                <h:outputText value="#{record.annoDeterminacion}">
+	                </h:outputText>
+	            </rich:column>
+				<rich:column  style="text-align:center">
+	                <f:facet name="header">Fecha Determinacion</f:facet>
+	                <h:outputText value="#{record.fechaRegistro}">
+	                	<f:convertDateTime pattern="dd/MM/yyyy" />
+	                </h:outputText>
+	            </rich:column>						
+	            <rich:column  style="text-align:center">
+	                <f:facet name="header">Base Imponible</f:facet>
+	                <h:outputText value="#{record.baseImponible}"/>
+	            </rich:column>
+	            <rich:column  style="text-align:center">
+	                <f:facet name="header">Base Exonerada</f:facet>
+	                <h:outputText value="#{record.baseExonerada}"/>
+	            </rich:column>
+	            <rich:column  style="text-align:center">
+	                <f:facet name="header">Base Afecta</f:facet>
+	                <h:outputText value="#{record.baseAfecta}">
+	                </h:outputText>
+	            </rich:column>
+				<rich:column  style="text-align:center">
+	                <f:facet name="header">Impuesto</f:facet>
+	                <h:outputText value="#{record.impuesto}">
+	                </h:outputText>
+	            </rich:column>		
+	            <rich:column  style="text-align:right">
+	                <f:facet name="header">Nro Cuotas</f:facet>
+	                <h:outputText value="#{record.nroCuotas}"/>
+	                
+	            </rich:column>
+	            <rich:column  style="text-align:right">
+	                <f:facet name="header">Cuota</f:facet>
+	                
+	                <h:outputText value="#{record.impuesto/record.nroCuotas}">
+	                	<f:convertNumber  pattern="#0.00" />
+	                </h:outputText>
+	            </rich:column>
+   			</rich:dataTable>
+	        
+			<h:panelGrid columns="2" align="center" width="100%" >
+					<a4j:commandButton value="Salir" style="width:150px;"	action="#{historiaDeterminacionManaged.salir}" reRender="panelinclude" >
+						<f:setPropertyActionListener value="/sisat/predial/buscarpredio.xhtml" target="#{sessionManaged.page}" />
+					</a4j:commandButton>
+			</h:panelGrid>
+		</h:form>
+		
+	
+	
+</ui:composition>
